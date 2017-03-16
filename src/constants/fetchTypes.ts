@@ -1,0 +1,1 @@
+export const FETCH_FOLLOWERS = 'FETCH_FOLLOWERS';
