@@ -7,7 +7,9 @@ import DashBoard from './components/DashBoard/DashBoard'
 import Header from './components/Header/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import UserStore from './store/UserStore';
+import UserStore from './store/UserStore'; 
+require('font-awesome/css/font-awesome.css')
+
 useStrict(true);
 const render = () => (
     <Router>

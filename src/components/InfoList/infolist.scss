@@ -1,0 +1,23 @@
+@import '../../styles/variable.scss';
+.container {
+  display: flex;
+}
+
+@mixin baseItem {
+  padding: 5px;
+  font-size: $smallIcon;
+  color: $subFontColor;
+  &::hover {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+}
+
+.infoitem {
+  @include baseItem;
+}
+
+.active {
+  @include baseItem;
+  cursor:pointer;
+}

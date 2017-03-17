@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+require('./loadingspinner.scss');
 interface ILoadingSpinner {
   isLoading: boolean;
 }
@@ -7,7 +7,7 @@ interface ILoadingSpinner {
 const LoadingSpinner = ({ isLoading }: ILoadingSpinner) => {
 
   return isLoading ? (
-    <div className='spinner-loading'>
+    <div className='spinner_loading'>
       <i className='fa fa-spinner fa-spin'></i>
     </div>) : <div>
 

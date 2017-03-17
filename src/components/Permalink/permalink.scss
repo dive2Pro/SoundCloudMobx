@@ -1,0 +1,17 @@
+@import '../../styles/variable.scss';
+@mixin permalink {
+  font-size: $smallIcon;
+  &:hover{
+    cursor:pointer;
+  }
+  
+}
+
+.user{
+  @include permalink;
+  color: #333;
+  font-size: $mediumIcon;
+  &:visited{
+    color:#333; 
+  }
+}

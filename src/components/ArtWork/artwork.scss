@@ -1,0 +1,14 @@
+@import '../../styles/variable.scss';
+@mixin base {
+
+  display: block;
+}
+
+.user {
+  @include base;
+  border-radius: $circleRadius;
+  padding: 2px;
+  border: 1px solid $borderGray;
+}
+
+.track {}
