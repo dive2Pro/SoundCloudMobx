@@ -1,0 +1,19 @@
+@import "../../styles/variable.scss";
+.container {
+  display: flex;
+  margin: $padding 0;
+}
+
+.content {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: $padding/2;
+  
+}
+
+.actions {
+  visibility: visible;
+  &:hover {}
+}
