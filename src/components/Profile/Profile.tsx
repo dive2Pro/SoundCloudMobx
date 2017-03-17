@@ -1,24 +1,15 @@
 import * as React from 'react'
 import { IUser } from '../..//interfaces/interface'
 import { observer } from 'mobx-react'
-
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 import * as  CSSModules from 'react-css-modules'
+import ArtWork from '../ArtWork/ArtWork';
 const styles = require('./profile.scss');
 export interface IProfileProps {
   user: IUser
 }
-export interface IArtpicProps {
-  size: number
-  alt?: string
-  src: string
-  optionalImg?: string
-}
-const Artpic = (prop: IArtpicProps) => {
-  const { size, src, optionalImg, alt } = prop
-  return (
-    <img src={src || optionalImg} width={size} height={size} alt={alt} />
-  )
-}
+
+
 
 interface IMiniCountPanelProp {
   playlist_count: number
@@ -61,7 +52,7 @@ class Profile extends React.Component<IProfileProps, any> {
 
   render() {
     const user = this.props.user;
-    if (!user) return <div>....</div>
+    if (!user) return <LoadingSpinner isLoading={true} />
     const {
       avatar_url,
       description,
@@ -71,11 +62,11 @@ class Profile extends React.Component<IProfileProps, any> {
       followings_count,
     } = user;
     const miniProp = { playlist_count, followers_count, followings_count }
-    const artInfo: IArtpicProps = { size: 62, alt: "Me", src: avatar_url }
+    const artInfo = { size: 62, alt: "Me", src: avatar_url }
     return (
       <section styleName="container">
         <figure>
-          <Artpic   {...artInfo} />
+          <ArtWork   {...artInfo} />
           <div styleName='info'>
             <h5 styleName="fullname">
               {full_name}
