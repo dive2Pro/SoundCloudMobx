@@ -35,3 +35,8 @@
         private_playlists_count:number
         primary_email_confirmed:number
     }
+
+    export interface IMePeopels{
+        collection: IUser[]
+        next_href: string;
+    }

@@ -2,8 +2,10 @@ import * as React from "react";
 // import {observable,action} from 'mobx'
 import { observer, inject } from "mobx-react";
 import { IUserStore } from "./store/UserStore";
-import { IUser } from "./interfaces/interface";
+// import { IUser } from "./interfaces/interface";
 import FollowersView from './components/Followers'
+import { FETCH_FOLLOWERS } from './constants/fetchTypes'
+import DevTool from 'mobx-react-devtools'
 interface IMainProps {
   UserStore: IUserStore
   s: string
@@ -21,20 +23,22 @@ class Main extends React.Component<IMainProps, undefined> {
   componentDidMount() {
     this.props.UserStore.loadDataFromCookie();
   }
-  renderFollowers = (followers: IUser[]) => {
+  renderFollowers = () => {
+    const { followers, isLoadings } = this.props.UserStore;
+    const fetchFollowersing = isLoadings[FETCH_FOLLOWERS];
 
-    return <FollowersView followers={followers}/>;
+    return <FollowersView followers={followers} isLoading={fetchFollowersing} />;
 
   }
   render() {
-    const { user,followers } = this.props.UserStore;
-
-    return (
+    const { user } = this.props.UserStore;
+     return (
       <div>
         {
-          user ? this.renderFollowers(followers) :
+          user ? this.renderFollowers() :
             <button onClick={this.loginIn}>Login</button>
-        }
+         }
+        <DevTool /> 
       </div>
     );
   }

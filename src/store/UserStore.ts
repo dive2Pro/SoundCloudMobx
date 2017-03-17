@@ -6,7 +6,7 @@ import {
   REDIRECT_URI,
   OAUTH_TOKEN
 } from "../constants/authentification";
-import { ISession, IUser } from "../interfaces/interface";
+import { ISession, IUser, IMePeopels } from "../interfaces/interface";
 const SC = require("soundcloud");
 // const Remotedev = require("mobx-remotedev");
 // @Remotedev({ name: "UserStore" })
@@ -16,16 +16,21 @@ export interface IUserStore {
   login: () => void;
   loadDataFromCookie: () => void;
   followers: IUser[];
+  isLoadings: {};
 }
-
+interface ICatchErr {
+  err: any
+  fetchType?: string;
+}
 const limitPageSize = 20;
 class UserStore implements IUserStore {
   @observable session: any;
   @observable user: IUser;
-  @observable followers: IUser[]
+  @observable followers: IUser[] = [];
   @observable isFetchFollowersLoading: boolean = false;
   @observable isLogining: boolean = false;
-  @observable isLoading: {} = {};
+  @observable isLoadings: {} = {};
+  @observable nextHrefs: {} = {};
   oauth_token: string;
   loadDataFromCookie() {
     const oauth_token = Cookies.get(OAUTH_TOKEN)
@@ -35,7 +40,9 @@ class UserStore implements IUserStore {
     }
   }
   //TODO : type
-  @action catchError(err: any) {
+  @action catchError({ err, fetchType }: ICatchErr) {
+    console.error(err);
+    if (fetchType) this.resetLoadingState(fetchType);
 
   }
   @action login() {
@@ -58,6 +65,8 @@ class UserStore implements IUserStore {
       .then((rawuser: any) => {
         this.setUser(rawuser)
         this.fetchFollowers(rawuser.id, rawuser.nextHref);
+      }).catch(err => {
+        this.catchError(err);
       })
   }
 
@@ -65,19 +74,31 @@ class UserStore implements IUserStore {
     this.user = user;
   }
 
+  @action changeLoadingState(type: string) {
+    this.isLoadings[type] = !this.isLoadings[type];
+  }
+
+  @action resetLoadingState(type: string) {
+    this.isLoadings[type] = false;
+  }
+  @action addFollowers(fs:IUser[]) {
+    fs.forEach(follower => {
+          this.followers.push(follower);
+        })
+  }
   @action
   fetchFollowers(id: string, nextHref: string) {
-
-    this.isLoading[FETCH_FOLLOWERS] = true;
+    const fetchType = FETCH_FOLLOWERS;
+    this.changeLoadingState(fetchType);
+    this.isLoadings[FETCH_FOLLOWERS] = true;
     SC.get(`/users/${id}/followers`, { limit: limitPageSize, oauth_token: this.oauth_token })
-      .then((followers: IUser[]) => {
-        this.followers = followers;
-        this.isLoading[FETCH_FOLLOWERS] = false
+      .then((data: IMePeopels) => {
+        this.addFollowers(data.collection);
+        this.nextHrefs[FETCH_FOLLOWERS] = data.next_href;
+        this.changeLoadingState(fetchType);
       }).catch((err: any) => {
-        this.isLoading = false
-        this.isLoading[FETCH_FOLLOWERS] = false
+        this.catchError({ err, fetchType })
       })
-
   }
 }
 

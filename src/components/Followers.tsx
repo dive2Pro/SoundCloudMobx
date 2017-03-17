@@ -3,9 +3,18 @@ import { observer } from 'mobx-react'
 import { IUser } from '../interfaces/interface'
 export interface IFollowersProps {
   followers: IUser[];
-
+  isLoading: boolean;
 }
 
+interface ILoadingSpinner{
+  isLoading: boolean;
+}
+
+const LoadingSpinner = ({ isLoading }:ILoadingSpinner) => {
+  return <div>
+    {isLoading?"Loading...":""}
+  </div>
+}
 const TrackItem = (user: IUser) => {
   return (
     <div>
@@ -19,14 +28,14 @@ const TrackItem = (user: IUser) => {
 class Followers extends React.Component<IFollowersProps, any> {
 
   render() {
-    const { followers } = this.props
+    const { followers,isLoading } = this.props
     return followers ? 
       <div>
         {followers.map((follower: IUser) => {
-          return <TrackItem {...follower} />
+          return <TrackItem key={follower.id} {...follower} />
         })}
       </div>
-    :   <div>Loading...</div>
+      : <LoadingSpinner isLoading={isLoading}/>
   }
 }
 
