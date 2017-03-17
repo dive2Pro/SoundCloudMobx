@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { IUser } from '../..//interfaces/interface'
-// import { observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 
-import CSSModules from 'react-css-modules'
-import styles from './profile.scss';
+import * as  CSSModules from 'react-css-modules'
+const styles = require('./profile.scss');
 export interface IProfileProps {
   user: IUser
 }
@@ -25,26 +25,37 @@ interface IMiniCountPanelProp {
   followers_count: number
   followings_count: number
 }
-
-const MiniCountPanel = (data: IMiniCountPanelProp) => {
-
-  return (<nav>
-    <div>
-      <span>PlayList</span>
-      {data.playlist_count}
-    </div>
-
-    <div>
-      <span>Followings</span>
-      {data.followings_count}
-    </div>
-    <div>
-      <span>Followers</span>
-      {data.followers_count}
-    </div>
-  </nav>)
+@CSSModules(styles)
+class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
+  render() {
+    const { playlist_count, followers_count, followings_count } = this.props
+    return (<ul styleName='miniPanel'>
+      <li>
+        <a href="#">
+          <i>PlayList</i>
+          <em>
+            {playlist_count}</em>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i>Followings</i>
+          <em>
+            {followings_count}</em>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i>Followers</i>
+          <em>{followers_count}</em>
+        </a>
+      </li>
+    </ul>)
+  }
 }
 
+
+@observer
 @CSSModules(styles)
 class Profile extends React.Component<IProfileProps, any> {
 
@@ -60,13 +71,19 @@ class Profile extends React.Component<IProfileProps, any> {
       followings_count,
     } = user;
     const miniProp = { playlist_count, followers_count, followings_count }
-    const artInfo: IArtpicProps = { size: 40, alt: "Me", src: avatar_url }
+    const artInfo: IArtpicProps = { size: 62, alt: "Me", src: avatar_url }
     return (
-      <section>
+      <section styleName="container">
         <figure>
-          <Artpic {...artInfo} />
-          {full_name}
-          |{description}
+          <Artpic   {...artInfo} />
+          <div styleName='info'>
+            <h5 styleName="fullname">
+              {full_name}
+            </h5>
+            <span styleName="desc">
+              {description}
+            </span>
+          </div>
         </figure>
         <MiniCountPanel {...miniProp} />
       </section>

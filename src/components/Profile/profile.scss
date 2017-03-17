@@ -1,4 +1,69 @@
+@import "../../styles/variable.scss";
+figure { 
+  display: inline-flex;
+  &>img {
+    border: $borderGray;
+    padding: 2px;
+    background: $white;
+    flex: 1; 
+    width: 62px;
+  }
+}
 
-figure{
-  background: #123789;
+.fullname {
+  font-size: $menuSize;
+  color: #333;
+  width: $_180pxEm;
+}
+
+.desc {
+  font-size: $menuSize*0.85;
+  color: $subFontColor; 
+  top: $padding;
+  line-height: 1.2em;
+  overflow: hidden;
+  height: 1.92em;
+}
+
+.miniPanel { 
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 2px;
+  text-align: center;
+  &>li {
+    flex: 1;
+    margin: 0 2px 0 -2px;
+    border-left: 1px solid #c2c2c2;
+    &::last-child {
+      border-left: none;
+    }
+    &>a {
+      display: block;
+      padding: 0 $padding/2;
+      color: #666;
+      &>i {
+        display: block;
+        padding: 0 0 0 2px;
+      }
+      &>em {
+        display: block;
+        padding: 0 0 9px;
+        font-size: 20px;
+        line-height: 20px;
+        font-family: Arial;
+      }
+    }
+  }
+}
+
+.container {
+  padding: 2.14em  2.14em 2.14em 0;
+  position: relative;
+  background: url('http://s2.music.126.net/style/web2/img/frduser.png?94f53db0496b779d499aa4499946eeed')
+  repeat-x 0 0;
+}
+
+.info { 
+  position: relative; 
+  margin-left: $padding;
 }

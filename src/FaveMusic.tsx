@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom'; 
+import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Callback from './components/Callback'
@@ -8,7 +8,6 @@ import Header from './components/Header/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
 import UserStore from './store/UserStore';
-
 useStrict(true);
 const render = () => (
     <Router>

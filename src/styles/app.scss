@@ -4,7 +4,7 @@
 
 body {
   background: $background;
-  font: 400 13px "CoreSans", Arial,sans-serif;
+  font: 400 14px "CoreSans", Arial,sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
@@ -34,4 +34,8 @@ a {
   &:visited {
     color: $hyperlinkVisited;
   }
+}
+h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
 }
