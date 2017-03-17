@@ -6,10 +6,10 @@ import { observer, inject } from 'mobx-react'
 import { IUserStore } from '../../store/UserStore'
 import FollowersView from '../../components/Followers'
 import { FETCH_FOLLOWERS } from '../../constants/fetchTypes'
+import FollowersContainer from '../Followers'
 interface IDashBorardProps {
   UserStore: IUserStore
-}
-console.log(styles)
+} 
 @inject("UserStore")
 @observer
 @RModule(styles)
@@ -20,11 +20,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     return <FollowersView followers={followers} isLoading={fetchFollowersing} />;
   }
   render() {
-    const { user } = this.props.UserStore
+    const { user, followers, isLoadings } = this.props.UserStore
+    const followerIsLoading = isLoadings[FETCH_FOLLOWERS];
     return (
       <div styleName={'container'}>
         <aside styleName={'aside'}>
           <Profile user={user} />
+          <FollowersContainer followers={followers} isLoading={followerIsLoading}/>
         </aside>
       </div>
     );
