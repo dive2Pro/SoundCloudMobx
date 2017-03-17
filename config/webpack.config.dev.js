@@ -153,7 +153,7 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: path.resolve(__dirname, 'src/styles'),
-        loader: 'style!css?modules&localIdentName=[name]__[local]!sass?sourceMap=true'
+        loader: 'style!css?modules&localIdentName=[name]__[local]!postcss!sass?sourceMap=true'
       }
     ]
   },

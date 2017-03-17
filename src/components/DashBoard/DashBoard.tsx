@@ -1,17 +1,18 @@
 import * as React from 'react'
-// import RModule from 'react-css-modules'
-// import styles from './dashboard.scss';
-import Profile from '../Profile/Profile'
-import {  observer,inject } from 'mobx-react'
+import * as RModule from 'react-css-modules'
+const styles = require('./dashboard.scss')
+import Profile from '../Profile/Profile';
+import { observer, inject } from 'mobx-react'
 import { IUserStore } from '../../store/UserStore'
 import FollowersView from '../../components/Followers'
-import { FETCH_FOLLOWERS } from '../../constants/fetchTypes' 
+import { FETCH_FOLLOWERS } from '../../constants/fetchTypes'
 interface IDashBorardProps {
   UserStore: IUserStore
 }
-// @RModule(styles)
+console.log(styles)
 @inject("UserStore")
 @observer
+@RModule(styles)
 class DashBorard extends React.Component<IDashBorardProps, any> {
   renderFollowers = () => {
     const { followers, isLoadings } = this.props.UserStore;
@@ -21,8 +22,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   render() {
     const { user } = this.props.UserStore
     return (
-      <div>
-        <aside data-styleName="aside">
+      <div styleName={'container'}>
+        <aside styleName={'aside'}>
           <Profile user={user} />
         </aside>
       </div>
@@ -30,4 +31,5 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 }
 
-export default DashBorard ;
+
+export default (DashBorard);

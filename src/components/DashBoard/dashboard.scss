@@ -1,0 +1,10 @@
+@import "../../styles/variable.scss";
+
+.container{ 
+  background: #666666;
+}
+
+.aside{
+   float: right;
+   width: ($_100pxEm*3);
+}

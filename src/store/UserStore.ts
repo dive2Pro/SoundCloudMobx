@@ -43,6 +43,7 @@ class UserStore implements IUserStore {
   @action catchError({ err, fetchType }: ICatchErr) {
     console.error(err);
     if (fetchType) this.resetLoadingState(fetchType);
+    throw err;
 
   }
   @action login() {
