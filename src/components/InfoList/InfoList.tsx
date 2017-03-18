@@ -26,7 +26,8 @@ const InfoList = ({ data }: IInfoListProp) => {
     const styleName = clickable ? "active" : "infoitem"
     return <div
       styleName={styleName}
-      key={i + clazz + count} onClick={(onClickHandle)}>
+      key={i + clazz + count}
+      onClick={(onClickHandle)}>
       <i className={clazz}>{count}</i>
     </div>
   })

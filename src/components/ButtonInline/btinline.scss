@@ -1,0 +1,15 @@
+button{
+  margin: 0;
+  padding: 0;
+  border-width: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  font-size: inherit;
+
+  cursor:pointer;
+  &:focus{
+    background: transparent;
+    outline: none;
+  }
+}

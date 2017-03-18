@@ -3,7 +3,7 @@ import * as CSSModule from 'react-css-modules'
 import LoadingSpinner from '../LoadingSpinner';
 import ButtonGhost, { IButtonGhostProps } from '../ButtonGhost';
 // import { observer } from 'mobx-react'
-const styles = require('./style.scss')
+const styles = require('./btmore.scss')
 
 export interface IButtonMoreProp extends IButtonGhostProps {
   isLoading: boolean
