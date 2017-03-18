@@ -1,6 +1,5 @@
 import { observable, action, extendObservable } from "mobx";
 import { FETCH_FOLLOWERS } from '../constants/fetchTypes'
-const Cookies = require("js-cookie")
 import {
   CLIENT_ID,
   REDIRECT_URI,
@@ -8,6 +7,7 @@ import {
 } from "../constants/authentification";
 import { ISession, IUser, IMePeopels } from "../interfaces/interface";
 const SC = require("soundcloud");
+const Cookies = require("js-cookie")
 // const Remotedev = require("mobx-remotedev");
 // @Remotedev({ name: "UserStore" })
 export interface IUserStore {
