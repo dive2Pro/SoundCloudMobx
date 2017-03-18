@@ -1,0 +1,34 @@
+
+@import '../../styles/variable.scss';
+@mixin base{
+ background: transparent;
+ display: inline-flex;
+ border: 1px solid $mainColor;
+ border-radius: 5px;
+ padding: 0.45em 1.35em;
+ transition: all 0.2s ease;
+ cursor:pointer;
+ font-weight: bold;
+ box-sizing:content-box;
+ 
+ &:hover{
+   background-color: $mainColor;
+   color:$white;
+ }
+ &:focus{
+   outline: none;
+ }
+ height: $padding;
+ line-height: $padding;
+}
+
+
+.normal{
+  @include base;
+}
+
+.small{
+  @include base;
+  height: $padding/2;
+  line-height: $padding/2;
+}

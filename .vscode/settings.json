@@ -1,0 +1,5 @@
+{
+  "vsicons.presets.angular": false,
+  "typescript.format.enable": true,
+  "editor.lineNumbers": "on"
+}
