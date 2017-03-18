@@ -12,6 +12,21 @@ interface IActivitiesProps {
 }
 
 
+interface IndexAndPlayViewProp {
+  index: number
+  id: number
+}
+
+const IndexAndPlayView = ({ id, index }: IndexAndPlayViewProp) => {
+  return (
+    <div styleName="indexPlay">
+      <span>{index}</span>
+      <i className='fa fa-play'></i>
+    </div>
+  )
+}
+const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
+
 @inject('TrackStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
@@ -22,8 +37,11 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 
   renderActivities = (arr: ITrack[]) => {
-
+    const { TrackStore } = this.props;
+    if (!TrackStore) { return (<noscript />) }
+    // TODO
     const thead = [
+      { title: "", width: 8 },
       { title: '歌曲标题', width: 30 }, {
         title: '时长', width: 10
       }, {
@@ -33,12 +51,21 @@ class Activities extends React.Component<IActivitiesProps, any> {
       }
     ]
     const tbodys: ITableBody[] = [];
-    arr.forEach(item => {
+    arr.forEach((item, i) => {
       const { id, title, duration, user } = item.origin
       const { id: userId, username } = user
-      const bodyItems: ITableBodyItem[] = [{
-        title
-      }, { title: seconds2time(duration), tag: 'anchor' }, { title: username }];
+      const bodyItems: ITableBodyItem[] = [
+        {
+          title: '', render: () => {
+            return (
+              <StyledIndexAndPlayView index={i} id={id} />
+            )
+          }
+        },
+        { title },
+        { title: seconds2time(duration), tag: 'anchor' },
+        { title: username }
+      ];
 
       tbodys.push({ trackId: id, singerId: userId, bodyData: bodyItems })
     })

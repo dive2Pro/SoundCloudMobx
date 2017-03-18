@@ -11,7 +11,7 @@ interface ITableHead {
 export interface ITableBodyItem {
   tag?: string   // 注明跳转的url
   title: string // 展示的
-  render?: () => React.StatelessComponent<any>// 自己渲染
+  render?: () => React.ReactElement<any>// 自己渲染
   url?: string
 }
 export class TableBodyItem implements ITableBodyItem {
@@ -101,21 +101,26 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
           const { trackId: id, bodyData } = item
           const tds = bodyData.map((bitem, i) => {
             const { title, tag } = bitem;
-            if (bitem.render) {
-              return bitem.render();
-            }
 
+            const renderNormalDom = (
+              <div className={styles.duration}>
+                <Permalink fullname={title} id={id} />
+              </div>
+            )
             return (
               <td
                 key={i + title}
                 className={tag && styles.anchor}>
-                <div className={styles.duration}>
-                  <Permalink fullname={title} id={id} />
+                {
+                  (bitem.render) ?
+                    bitem.render() : renderNormalDom
+                }
+                {tag && <div className={styles.actions}>
+                  <HoverActions
+                    configurations={configurations}
+                    isVisible={true} />
                 </div>
-                <div className={styles.actions}>
-
-                  {tag && <HoverActions configurations={configurations} isVisible={true} />}
-                </div>
+                }
               </td>)
 
           })
