@@ -8,19 +8,21 @@ import Header from './components/Header/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
 import UserStore from './store/UserStore';
+import TrackStore from './store/TrackStore';
 require('font-awesome/css/font-awesome.css')
 
 useStrict(true)
 const render = () => (
     <Router>
-        <Provider UserStore={UserStore}>
+        <Provider
+            TrackStore={TrackStore}
+            UserStore={UserStore}>
             <div>
                 <Header /><Route exact path="/" component={DashBoard} />
                 <Route path="/main" component={DashBoard} /><Route path="/callback(:*)" component={Callback} />
             </div>
         </Provider>
     </Router>
-
 )
 ReactDOM.render(
     render(),

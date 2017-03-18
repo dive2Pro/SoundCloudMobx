@@ -1,0 +1,21 @@
+@import '../../styles/variable.scss';
+
+table{
+  border: $borderGray;
+  border-top: 2px solid $mainColor;
+}
+
+td:hover[data-tag='anchor']{
+  &>div{
+    visibility: none;
+  }
+}
+
+// td:hover[data-tag='anchor']{
+//   &>div{
+//     visibility: block;
+//   }
+// }
+.active{
+  
+}
