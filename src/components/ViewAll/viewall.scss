@@ -1,0 +1,16 @@
+@import '../../styles/variable.scss';
+
+.base{
+  font-size: $mediumIcon;
+  display: flex;
+  cursor:pointer;
+  position: relative;
+}
+
+.view{
+  position: absolute;
+  right: 0.25em;
+  &:hover{
+    color:#222;
+  }
+}

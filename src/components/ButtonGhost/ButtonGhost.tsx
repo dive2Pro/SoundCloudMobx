@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as CSSModule from 'react-css-modules'
-const styles = require('./style.scss')
+const styles = require('./btghost.scss')
 export interface IButtonGhostProps {
   onClick: ((...args: any[]) => void);
   isSmall?: boolean,
