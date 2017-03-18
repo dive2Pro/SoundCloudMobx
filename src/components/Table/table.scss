@@ -2,20 +2,51 @@
 
 table{
   border: $borderGray;
-  border-top: 2px solid $mainColor;
+  border-top: 2px solid $mainColor; 
 }
-
-td:hover[data-tag='anchor']{
-  &>div{
-    visibility: none;
+td{
+  line-height: 1.286em;
+  padding: 0.429em 0.714em;
+  a{
+    color: #333!important;
+    &::visited{
+      color: #333;
+    }
   }
+  max-width: $_100pxEm*3;
 }
+.ttr{
+  td:first-child{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  &:nth-child(2n){
+    background: $backgroundSecondary;
+  }
+  &:hover{
+    .anchor{ 
+        div.duration{
+          display: none
+        }
+        div.actions{
+          display: block;
+      }
+    }
+  }
+} 
+.duration{
+    display: block;
+ }
+.actions{
+    display: none;
+  }
+
+
 
 // td:hover[data-tag='anchor']{
 //   &>div{
 //     visibility: block;
 //   }
 // }
-.active{
-  
-}
+.active{}

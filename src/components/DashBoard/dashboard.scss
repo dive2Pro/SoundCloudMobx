@@ -1,7 +1,8 @@
 @import "../../styles/variable.scss";
 
 .container{ 
-  background: #666666;
+  background: $background;
+  display: flex;
 }
 
 .aside{
