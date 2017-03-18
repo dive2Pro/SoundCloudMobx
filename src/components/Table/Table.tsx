@@ -108,14 +108,19 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
             return (
               <td
                 key={i + title}
-                data-tag={tag}>
-                <Permalink fullname={title} id={id} />
-                {tag && <HoverActions configurations={configurations} isVisible={true} />}
+                className={tag && styles.anchor}>
+                <div className={styles.duration}>
+                  <Permalink fullname={title} id={id} />
+                </div>
+                <div className={styles.actions}>
+
+                  {tag && <HoverActions configurations={configurations} isVisible={true} />}
+                </div>
               </td>)
 
           })
 
-          return (<tr
+          return (<tr className={styles.ttr}
             key={id}
             onMouseLeave={() => this.handleHoverLeave(id)}
             onMouseEnter={() => this.handleHover(id)}

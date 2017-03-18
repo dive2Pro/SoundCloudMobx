@@ -4,12 +4,14 @@
   &:hover{
     cursor:pointer;
   }
-  
-}
 
+}
+a{
+  color: inherit;
+  color: #333;
+}
 .user{
   @include permalink;
-  color: #333;
   font-size: $mediumIcon;
   &:visited{
     color:#333; 
