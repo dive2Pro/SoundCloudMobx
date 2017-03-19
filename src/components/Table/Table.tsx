@@ -101,7 +101,6 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
           const { trackId: id, bodyData } = item
           const tds = bodyData.map((bitem, i) => {
             const { title, tag } = bitem;
-
             const renderNormalDom = (
               <div className={styles.duration}>
                 <Permalink fullname={title} id={id} />
@@ -119,10 +118,8 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
                   <HoverActions
                     configurations={configurations}
                     isVisible={true} />
-                </div>
-                }
+                </div>}
               </td>)
-
           })
 
           return (<tr className={styles.ttr}

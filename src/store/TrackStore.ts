@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { apiUrl, addAccessToken } from '../services/soundcloundApi'
 import { ITrack } from '../interfaces/interface';
-
+export { ITrack }
 export class Track {
 
   constructor() {

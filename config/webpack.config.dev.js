@@ -128,7 +128,7 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style!css?importLoaders=1!postcss',
-        exclude:[path.resolve(__dirname,'src/styles/font-awesome.min.css')]
+        exclude: [path.resolve(__dirname, 'src/styles/font-awesome.min.css')]
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.

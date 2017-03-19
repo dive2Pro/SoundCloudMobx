@@ -7,8 +7,7 @@ import DashBoard from './components/DashBoard/DashBoard'
 import Header from './components/Header/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import UserStore from './store/UserStore';
-import TrackStore from './store/TrackStore';
+import { UserStore, TrackStore, PlayerStore } from './store';
 require('font-awesome/css/font-awesome.css')
 
 useStrict(true)
@@ -16,7 +15,8 @@ const render = () => (
     <Router>
         <Provider
             TrackStore={TrackStore}
-            UserStore={UserStore}>
+            UserStore={UserStore}
+            PlayerStore={PlayerStore}>
             <div>
                 <Header /><Route exact path="/" component={DashBoard} />
                 <Route path="/main" component={DashBoard} /><Route path="/callback(:*)" component={Callback} />
