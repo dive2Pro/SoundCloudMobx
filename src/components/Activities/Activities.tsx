@@ -3,31 +3,38 @@ import * as CSSModule from 'react-css-modules'
 const styles = require('./activities.scss')
 import { observer, inject } from 'mobx-react';
 import { ITrackStore } from '../../store/TrackStore'
+import { IPlayerStore } from '../../store/PlayerStore'
 import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
+import ButtonInline from '../ButtonInline'
 interface IActivitiesProps {
   TrackStore?: ITrackStore
+  PlayerStore?: IPlayerStore
 }
 
 
 interface IndexAndPlayViewProp {
   index: number
-  id: number
+  track: ITrack
+  onClick: (track: ITrack) => void
 }
 
-const IndexAndPlayView = ({ id, index }: IndexAndPlayViewProp) => {
+const IndexAndPlayView = ({ track, onClick, index }: IndexAndPlayViewProp) => {
   return (
     <div styleName="indexPlay">
       <span>{index}</span>
-      <i className='fa fa-play'></i>
+      <ButtonInline onClick={() => onClick(track)}>
+        <i className='fa fa-play'></i>
+      </ButtonInline>
     </div>
   )
 }
 const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
 
-@inject('TrackStore')
+@CSSModule(styles)
+@inject('PlayerStore', 'TrackStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
   componentDidMount() {
@@ -35,7 +42,12 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (TrackStore)
       TrackStore.fetchActivities();
   }
-
+  playTrack = (track: ITrack) => {
+    const { PlayerStore } = this.props
+    if (PlayerStore) {
+      PlayerStore.setPlayingTrack(track);
+    }
+  }
   renderActivities = (arr: ITrack[]) => {
     const { TrackStore } = this.props;
     if (!TrackStore) { return (<noscript />) }
@@ -46,9 +58,10 @@ class Activities extends React.Component<IActivitiesProps, any> {
         title: '时长', width: 10
       }, {
         title: '歌手', width: 10
-      }, {
-        title: '专辑', width: 15
       }
+      // , {
+      // titlse: '专辑', width: 15
+      // }
     ]
     const tbodys: ITableBody[] = [];
     arr.forEach((item, i) => {
@@ -58,7 +71,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         {
           title: '', render: () => {
             return (
-              <StyledIndexAndPlayView index={i} id={id} />
+              <StyledIndexAndPlayView index={i} track={item} onClick={this.playTrack} />
             )
           }
         },
@@ -82,7 +95,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
     const { isLoadingActivities, activities } = TrackStore;
     const isLoading = isLoadingActivities || !activities
     return (
-      <div className="main">
+      <div className={styles.main}>
         {isLoading ?
           <LoadingSpinner isLoading={isLoading} /> :
           this.renderActivities(activities)}}
@@ -91,4 +104,4 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 }
 
-export default CSSModule(Activities, styles);
+export default Activities 

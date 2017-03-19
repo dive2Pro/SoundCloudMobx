@@ -1,0 +1,50 @@
+@import '../../styles/variable.scss';
+.base {
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100vw;
+  left:0;
+  z-index: 2;
+  /*top: 100%;*/
+  transition: 0.2s transform ;
+  transform: translateY(90%) ;
+  overflow: hidden;
+  display: flex;
+  
+}
+
+.visible{
+    composes:base;
+    transform: translateY(0);
+  }
+
+.content {
+  padding: 5px 50px;
+  width: 100%;
+  height: 100%;
+  background: #222222;
+  display: flex;
+}
+.content_plays {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.content_plays>div{
+  margin: 0 7px;
+}
+.content_name {
+  flex:2;
+}
+.content_options {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.content_action{
+  
+}
+.content_options>div{
+  margin: 0 6px;
+}

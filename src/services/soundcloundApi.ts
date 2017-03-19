@@ -13,7 +13,7 @@ export const apiUrl = (url: string, symbol: string) => {
   return `//api.soundcloud.com/${url}${symbol}oauth_token=${accessToken}`;
 }
 
-export const addAccessToken = (url: string, symbol: string) => {
+export const addAccessToken = (url: string, symbol: string): string => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
   if (accessToken) {
     return `${url}${symbol}oauth_token=${accessToken}`
