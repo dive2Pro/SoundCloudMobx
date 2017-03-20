@@ -2,6 +2,30 @@
 
 .main{
   width: 52.857em;
+
+  table{
+    tr{
+    text-align: left;
+    td:first-child{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    &:nth-child(2n){
+      background: $backgroundSecondary;
+    }
+    &:hover{
+      .anchor{ 
+          div.duration{
+            display: none
+          }
+          div.actions{
+            display: block;
+        }
+      }
+    }
+  } 
+}
 }
 
 .indexPlay{

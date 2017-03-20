@@ -5,7 +5,7 @@ export interface IPlayerStore {
   isPlaying: boolean
   playingTrack: ITrack
   playList: ITrack[]
-  setPlayingTrack: (track: ITrack) => void;
+  setPlayingTrack: (track: ITrack | number) => void;
   togglePlaying: () => void;
   addToPlaylist: (track: ITrack) => void;
   playingUrl: string
@@ -21,7 +21,10 @@ class PlayerStore implements IPlayerStore {
 
   }
 
-  @action setPlayingTrack(track: ITrack) {
+  @action setPlayingTrack(track: ITrack | number) {
+    if (typeof track === 'number') {
+      track = this.playList[track];
+    }
     this.playingTrack = track;
     this.addToPlaylist(track);
     this.isPlaying = true;

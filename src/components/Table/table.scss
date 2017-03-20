@@ -4,7 +4,7 @@ table{
   border: $borderGray;
   border-top: 2px solid $mainColor; 
   border-collapse: collapse;
-
+  width: 100%;
 }
 td{
   line-height: 1.286em;
@@ -14,30 +14,9 @@ td{
     &::visited{
       color: #333;
     }
-  }
-  max-width: $_100pxEm*3;
+  } 
 }
-.ttr{
-  text-align: left;
-  td:first-child{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  &:nth-child(2n){
-    background: $backgroundSecondary;
-  }
-  &:hover{
-    .anchor{ 
-        div.duration{
-          display: none
-        }
-        div.actions{
-          display: block;
-      }
-    }
-  }
-} 
+
 .duration{
     display: block;
  }
