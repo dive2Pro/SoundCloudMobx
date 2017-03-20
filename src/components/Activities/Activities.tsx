@@ -4,7 +4,7 @@ const styles = require('./activities.scss')
 import { observer, inject } from 'mobx-react';
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
-import { ITrack } from '../../interfaces/interface';
+import { IActivitiesItem, ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
@@ -48,7 +48,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.setPlayingTrack(track);
     }
   }
-  renderActivities = (arr: ITrack[]) => {
+  renderActivities = (arr: IActivitiesItem[]) => {
     const { TrackStore } = this.props;
     if (!TrackStore) { return (<noscript />) }
     // TODO
@@ -71,7 +71,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         {
           title: '', render: () => {
             return (
-              <StyledIndexAndPlayView index={i} track={item} onClick={this.playTrack} />
+              <StyledIndexAndPlayView index={i} track={item.origin} onClick={this.playTrack} />
             )
           }
         },
@@ -79,7 +79,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
         { title: seconds2time(duration), tag: 'anchor' },
         { title: username }
       ];
-
       tbodys.push({ trackId: id, singerId: userId, bodyData: bodyItems })
     })
     return (

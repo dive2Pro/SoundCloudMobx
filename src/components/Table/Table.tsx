@@ -65,6 +65,61 @@ const Thead = ({ data }: ItableHeadProp) => {
   )
 }
 
+interface ITBodyTrProp {
+  data: ITableBody
+  handleHoverLeave: (id: number) => void
+  handleHover: (id: number) => void
+}
+
+const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
+  const { trackId: id, bodyData } = data
+  const tds = bodyData.map((bitem, i) => {
+    const { title, tag } = bitem;
+    const renderNormalDom = (
+      <div className={styles.duration}>
+        <Permalink fullname={title} id={id} />
+      </div>
+    )
+    const configurations = [
+      {
+        fn: () => { }
+        ,
+        className: `fa fa-plus`
+      }
+      , {
+        fn: () => { }
+        , className: "fa fa-share-square-o"
+      }, {
+        fn: () => { }
+        , className: 'fa fa-folder-o'
+      }
+    ]
+
+    return (
+      <td
+        key={i + title}
+        className={tag && styles.anchor}>
+        {
+          (bitem.render) ?
+            bitem.render() : renderNormalDom
+        }
+        {tag && <div className={styles.actions}>
+          <HoverActions
+            configurations={configurations}
+            isVisible={true} />
+        </div>}
+      </td>)
+  })
+
+  return (<tr className={styles.ttr}
+    key={id}
+    onMouseLeave={() => handleHoverLeave(id)}
+    onMouseEnter={() => handleHover(id)}
+  >
+    {tds}
+  </tr>)
+}
+
 class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
   state = {}
   handleHover = (id: number) => {
@@ -81,54 +136,17 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
 
   render() {
     const { arr } = this.props;
-    const configurations = [
-      {
-        fn: () => { }
-        ,
-        className: `fa fa-plus`
-      }
-      , {
-        fn: () => { }
-        , className: "fa fa-share-square-o"
-      }, {
-        fn: () => { }
-        , className: 'fa fa-folder-o'
-      }
-    ]
     return (
       <tbody>
         {arr.map(item => {
-          const { trackId: id, bodyData } = item
-          const tds = bodyData.map((bitem, i) => {
-            const { title, tag } = bitem;
-            const renderNormalDom = (
-              <div className={styles.duration}>
-                <Permalink fullname={title} id={id} />
-              </div>
-            )
-            return (
-              <td
-                key={i + title}
-                className={tag && styles.anchor}>
-                {
-                  (bitem.render) ?
-                    bitem.render() : renderNormalDom
-                }
-                {tag && <div className={styles.actions}>
-                  <HoverActions
-                    configurations={configurations}
-                    isVisible={true} />
-                </div>}
-              </td>)
-          })
-
-          return (<tr className={styles.ttr}
-            key={id}
-            onMouseLeave={() => this.handleHoverLeave(id)}
-            onMouseEnter={() => this.handleHover(id)}
-          >
-            {tds}
-          </tr>)
+          return (
+            <TBodyTr
+              key={item.trackId}
+              data={item}
+              handleHoverLeave={this.handleHoverLeave}
+              handleHover={this.handleHover}
+            />
+          )
         })}
       </tbody>
     )

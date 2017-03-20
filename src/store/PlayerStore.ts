@@ -3,25 +3,28 @@ import { ITrack } from './TrackStore'
 import { addAccessToken } from '../services/soundcloundApi'
 export interface IPlayerStore {
   isPlaying: boolean
-  playingTrack?: ITrack
+  playingTrack: ITrack
   playList: ITrack[]
   setPlayingTrack: (track: ITrack) => void;
   togglePlaying: () => void;
   addToPlaylist: (track: ITrack) => void;
   playingUrl: string
+  playNextTrack: (diff: number) => boolean
 }
 
 
 class PlayerStore implements IPlayerStore {
   @observable playingTrack: ITrack
   @observable isPlaying: boolean = false;
-  @observable playList: ITrack[];
+  @observable playList: ITrack[] = [];
   constructor() {
 
   }
 
   @action setPlayingTrack(track: ITrack) {
     this.playingTrack = track;
+    this.addToPlaylist(track);
+    this.isPlaying = true;
   }
 
   @action togglePlaying() {
@@ -39,13 +42,23 @@ class PlayerStore implements IPlayerStore {
   }
   @computed get playingUrl() {
     if (this.playingTrack) {
-      let url = this.playingTrack.origin.stream_url;
+      let url = this.playingTrack.stream_url;
       url = addAccessToken(url, '?');
       console.log(url)
       return url
     }
     return ""
-
+  }
+  @action playNextTrack(diff: number): boolean {
+    if (this.getPlaylistCount < 1) {
+      return false;
+    }
+    let changedIndex = 0;
+    if (this.playingTrack) {
+      changedIndex = this.playList.indexOf(this.playingTrack) + diff;
+    }
+    this.setPlayingTrack(this.playList[changedIndex]);
+    return true;
   }
 }
 

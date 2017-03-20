@@ -3,6 +3,7 @@ import * as CSSModule from 'react-css-modules'
 import { observer, inject } from 'mobx-react'
 import ButtonInline from '../ButtonInline';
 import { IPlayerStore } from '../../store/PlayerStore'
+import ArtWork from '../ArtWork'
 const styles = require('./player.scss')
 
 interface IPlayerProps {
@@ -16,7 +17,7 @@ interface IPlayerState {
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
   timer: any;
-  player: any;
+  main: any;
   audio: HTMLAudioElement;
   state = { visible: false }
   mouseEnter = () => {
@@ -24,7 +25,10 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       visible: true
     });
   };
-  mouseOut = () => {
+  mouseOut = (event: any) => {
+    if (event.target.className !== 'player__content') {
+      return
+    }
     if (this.timer) {
       clearTimeout(this.timer);
     }
@@ -41,12 +45,19 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       return
     }
     const { playingUrl, isPlaying } = this.props.PlayerStore
-    const audio = this.audio
+    // const audio = this.audio
     if (playingUrl && isPlaying) {
-      console.log(playingUrl)
-      audio.src = playingUrl;
-      audio.play()
+      // console.log(playingUrl)
+      // audio.src = playingUrl;
+      // audio.play()
     }
+  }
+
+  handlePlayNext = (diff: number) => {
+    const playStore = this.props.PlayerStore
+    if (playStore)
+      playStore.playNextTrack(diff);
+
   }
 
   render() {
@@ -60,54 +71,63 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />
     }
-    const { isPlaying } = PlayerStore
-
+    const { isPlaying, playingTrack } = PlayerStore
+    if (isPlaying) {
+      clazzName = styles.visible;
+    }
+    let artworkUrl = "", trackName
+    if (playingTrack) {
+      //todo es6的对象扩展
+      const { artwork_url, title } = playingTrack
+      artworkUrl = artwork_url;
+      trackName = title
+    }
     return (
       <div
         className={clazzName}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseOut}
-        ref={r => this.player = r}>
+        ref={r => this.main = r}>
         <div className={styles.content}>
           <div className={styles.content_plays}>
             <div className={styles.content_action}>
-              <ButtonInline>
+              <ButtonInline onClick={() => this.handlePlayNext(-1)}>
                 <i className="fa fa-step-backward">&nbsp;</i>
-                {'|<'}
               </ButtonInline>
             </div>
             <div className={styles.content_action}>
               <ButtonInline onClick={() => PlayerStore.togglePlaying()}>
                 <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'}`} />
-                &gt;
+                &nbsp;
                 </ButtonInline>
             </div>
             <div className={styles.content_action}>
-              <ButtonInline >
+              <ButtonInline onClick={() => this.handlePlayNext(1)} >
                 <i className="fa fa-step-forward">&nbsp;</i>
-                &gt;|{' '}
+                &nbsp;
               </ButtonInline>
             </div>
           </div>
           <div className={styles.content_name}>
-
+            <ArtWork size={50} src={artworkUrl} />
+            <span>{trackName}</span>
           </div>
           <div className={styles.content_options}>
             <div className={styles.content_action}>
               <ButtonInline>
-                <i className="fa fa-step-backward">&nbsp;</i>
-                {'|<>'}
+                <i className="fa fa-volume-up">&nbsp;</i>
+
+              </ButtonInline>
+            </div>
+            <div className={styles.content_action}>
+              <ButtonInline>
+                <i className="fa fa-random">&nbsp;</i>
+
               </ButtonInline>
             </div>
             <div className={styles.content_action}>
               <ButtonInline  >
-                {'<>'}
-              </ButtonInline>
-            </div>
-            <div className={styles.content_action}>
-              <ButtonInline  >
-                <i className="fa fa-step-forward">&nbsp;</i>
-                &gt;|{'== '}
+                <i className="fa fa-bars">&nbsp;</i>
               </ButtonInline>
             </div>
           </div>
