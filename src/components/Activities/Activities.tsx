@@ -64,7 +64,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       // }
     ]
     const tbodys: ITableBody[] = [];
-    arr.forEach((item, i) => {
+    arr.filter(item => item.origin).forEach((item, i) => {
       const { id, title, duration, user } = item.origin
       const { id: userId, username } = user
       const bodyItems: ITableBodyItem[] = [
@@ -92,10 +92,18 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (!TrackStore) {
       return (<noscript />)
     }
-    const { isLoadingActivities, activities } = TrackStore;
+    const { isLoadingActivities, activities, activitiesCount } = TrackStore;
+
     const isLoading = isLoadingActivities || !activities
     return (
       <div className={styles.main}>
+        <div className={styles.top}>
+          <div>
+            <h3>歌曲列表</h3>
+            <span>{activitiesCount}首歌</span>
+          </div>
+          <span>播放<span>{}</span>次</span>
+        </div>
         {isLoading ?
           <LoadingSpinner isLoading={isLoading} /> :
           this.renderActivities(activities)}}
