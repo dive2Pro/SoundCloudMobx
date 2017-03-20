@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Permalink from '../Permalink';
+// import Permalink from '../Permalink';
 import HoverActions from '../HoverActions'
 const styles = require('./table.scss')
 console.log(styles);
@@ -13,6 +13,7 @@ export interface ITableBodyItem {
   title: string // 展示的
   render?: () => React.ReactElement<any>// 自己渲染
   url?: string
+  onClick?: (id: number) => void;
 }
 export class TableBodyItem implements ITableBodyItem {
   title: string
@@ -28,9 +29,10 @@ export interface ITableBody {
   trackId: number
   singerId: number
   bodyData: ITableBodyItem[]
+  configurations: any[]
 }
 
-export class TableBody implements ITableBody {
+export class TableBody {
   trackId: number
   singerId: number
   bodyData: ITableBodyItem[] = [];
@@ -72,32 +74,23 @@ interface ITBodyTrProp {
 }
 
 const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
-  const { trackId: id, bodyData } = data
+  const { trackId: id, bodyData, configurations } = data
   const tds = bodyData.map((bitem, i) => {
-    const { title, tag } = bitem;
+    const { title, tag, onClick } = bitem;
     const renderNormalDom = (
       <div className={styles.duration}>
-        <Permalink fullname={title} id={id} />
+        {title}
       </div>
     )
-    const configurations = [
-      {
-        fn: () => { }
-        ,
-        className: `fa fa-plus`
-      }
-      , {
-        fn: () => { }
-        , className: "fa fa-share-square-o"
-      }, {
-        fn: () => { }
-        , className: 'fa fa-folder-o'
-      }
-    ]
+
 
     return (
       <td
         key={i + title}
+        onClick={() => {
+          console.log(onClick);
+          onClick && onClick(id)
+        }}
         className={tag && styles.anchor}>
         {
           (bitem.render) ?

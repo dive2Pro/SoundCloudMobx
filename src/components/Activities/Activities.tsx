@@ -67,6 +67,17 @@ class Activities extends React.Component<IActivitiesProps, any> {
     arr.filter(item => item.origin).forEach((item, i) => {
       const { id, title, duration, user } = item.origin
       const { id: userId, username } = user
+      const configurations = [
+        {
+          fn: () => { },
+          className: `fa fa-plus`
+        }
+        , {
+          fn: () => { }, className: "fa fa-share-square-o"
+        }, {
+          fn: () => { }, className: 'fa fa-folder-o'
+        }
+      ]
       const bodyItems: ITableBodyItem[] = [
         {
           title: '', render: () => {
@@ -81,7 +92,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       ];
       tbodys.push({
         trackId: id, singerId: userId,
-        bodyData: bodyItems
+        bodyData: bodyItems, configurations
       })
     })
     return (

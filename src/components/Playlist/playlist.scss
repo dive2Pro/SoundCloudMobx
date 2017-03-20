@@ -1,9 +1,22 @@
 @import '../../styles/variable.scss';
 
 .main{
-  position: absolute;
+  position: fixed;
   bottom: $playerHeight;
   height: $playerHeight*5;
   right:  $_100pxEm;
   background: $nav;
+  width: 36.429em;
+  tr{
+    &:hover{
+      background: #000;
+      opacity: 0.7;
+    }
+    td{
+     white-space: nowrap;
+     text-overflow: ellipsis;
+     overflow: hidden;
+     max-width: 0px;
+    }
+  }
 }
