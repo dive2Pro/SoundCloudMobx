@@ -7,6 +7,7 @@ import { IUserStore } from '../../store/UserStore'
 import FollowersContainer from '../Followers'
 import Tracklist from '../Tracklist'
 import Player from '../Player'
+import Playlist from '../Playlist'
 interface IDashBorardProps {
   UserStore: IUserStore
 }
@@ -26,6 +27,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <FollowersContainer UserStore={userStore} />
         </aside>
         <Player />
+        <Playlist />
       </div>
     );
   }

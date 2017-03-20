@@ -1,10 +1,10 @@
 
 import UserStore from './UserStore';
 import TrackStore from './TrackStore';
-import PlayerStore from './PlayerStore';
+import PlayerStore, { IPlayerStore } from './PlayerStore';
 
 export {
   UserStore,
   TrackStore
-  , PlayerStore
+  , PlayerStore, IPlayerStore
 }

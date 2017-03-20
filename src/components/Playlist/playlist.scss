@@ -1,0 +1,9 @@
+@import '../../styles/variable.scss';
+
+.main{
+  position: absolute;
+  bottom: $playerHeight;
+  height: $playerHeight*5;
+  right:  $_100pxEm;
+  background: $nav;
+}
