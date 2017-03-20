@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { IPlayerStore, ITrack } from '../../store'
 import { seconds2time } from '../../services/utils'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
+import ButtonInline from '../ButtonInline'
 const styles = require('./playlist.scss')
 interface IPlaylistProp {
   PlayerStore?: IPlayerStore
@@ -13,16 +14,27 @@ class Playlist extends React.Component<IPlaylistProp, any> {
 
   handlePlay = (track: ITrack | number) => {
     const PlayerStore = this.props.PlayerStore;
-    console.log('-' + track)
     if (!PlayerStore) return;
     PlayerStore.setPlayingTrack(track);
   }
+  handleClosePlaylist = () => {
+    const PlayerStore = this.props.PlayerStore;
+    if (!PlayerStore) return;
+    PlayerStore.togglePlaylistOpen(false);
 
+  }
+  handleClearlist = () => {
+    const PlayerStore = this.props.PlayerStore;
+    if (!PlayerStore) return;
+    PlayerStore.clearPlaylist();
+
+  }
   render() {
     const PlayerStore = this.props.PlayerStore
     if (!PlayerStore) return <noscript />
 
-    const { playList, playingTrack } = PlayerStore;
+    const { playList, playingTrack, isPlaylistOpen } = PlayerStore;
+    const mainClass = isPlaylistOpen ? styles.main : styles.none;
     // todo
     const thead = [
       { width: 12 }, { width: 50 }, { width: 24 }, { width: 24 }
@@ -62,9 +74,17 @@ class Playlist extends React.Component<IPlaylistProp, any> {
       })
     })
     return (
-      <div className={styles.main}>
+      <div className={mainClass}>
+        <div className={styles.top} >
+          <h3>播放列表{}</h3>
+          <ButtonInline onClick={this.handleClearlist}>
+            <i className='fa fa-delete'>清除</i>
+          </ButtonInline>
+          <ButtonInline onClick={this.handleClosePlaylist}>
+            <i className='fa fa-close'></i>
+          </ButtonInline>
+        </div>
         <Table
-
           thead={thead}
           tbody={tbody}
         />

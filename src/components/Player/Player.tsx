@@ -54,7 +54,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       // audio.play()
     }
   }
+  handleOpenPlaylist = () => {
+    const playStore = this.props.PlayerStore
+    if (playStore)
+      playStore.togglePlaylistOpen();
 
+  }
   handlePlayNext = (diff: number) => {
     const playStore = this.props.PlayerStore
     if (playStore)
@@ -128,7 +133,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
               </ButtonInline>
             </div>
             <div className={styles.content_action}>
-              <ButtonInline  >
+              <ButtonInline onClick={this.handleOpenPlaylist} >
                 <i className="fa fa-bars">&nbsp;</i>
               </ButtonInline>
             </div>

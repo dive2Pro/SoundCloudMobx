@@ -7,6 +7,7 @@
   right:  $_100pxEm;
   background: $nav;
   width: 36.429em;
+  overflow-y: auto;
   tr{
     &:hover{
       background: #000;
