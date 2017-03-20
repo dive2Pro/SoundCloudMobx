@@ -5,7 +5,7 @@ import Profile from '../Profile/Profile';
 import { observer, inject } from 'mobx-react'
 import { IUserStore } from '../../store/UserStore'
 import FollowersContainer from '../Followers'
-import Activities from '../Activities'
+import Tracklist from '../Tracklist'
 import Player from '../Player'
 interface IDashBorardProps {
   UserStore: IUserStore
@@ -20,7 +20,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
     return (
       <div styleName={'container'}>
-        <Activities />
+        <Tracklist />
         <aside styleName={'aside'}>
           <Profile user={user} />
           <FollowersContainer UserStore={userStore} />

@@ -3,6 +3,8 @@
 table{
   border: $borderGray;
   border-top: 2px solid $mainColor; 
+  border-collapse: collapse;
+
 }
 td{
   line-height: 1.286em;
@@ -16,6 +18,7 @@ td{
   max-width: $_100pxEm*3;
 }
 .ttr{
+  text-align: left;
   td:first-child{
     text-overflow: ellipsis;
     white-space: nowrap;

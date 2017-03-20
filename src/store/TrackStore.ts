@@ -17,6 +17,8 @@ export interface ITrackStore {
   fetchActivities: (nexthref?: string) => void;
   activities: ITrack[];
   isLoadingActivities: boolean;
+  activitiesCount: number
+
 }
 
 

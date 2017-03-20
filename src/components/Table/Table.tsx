@@ -1,8 +1,8 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 import Permalink from '../Permalink';
 import HoverActions from '../HoverActions'
 const styles = require('./table.scss')
+console.log(styles);
 interface ITableHead {
   title?: string
   width: number
@@ -148,4 +148,4 @@ const Table = (prop: ITableProp) => {
 
 }
 
-export default CSSModule(Table, styles);
+export default Table 

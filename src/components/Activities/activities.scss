@@ -10,3 +10,13 @@
   align-items: center;
   align-content: space-around; 
 }
+.top{
+  display: flex;
+  &>div{
+    display: flex;
+    flex: 1;
+    &>h3{
+      margin-right: $padding;
+    }
+  }
+}
