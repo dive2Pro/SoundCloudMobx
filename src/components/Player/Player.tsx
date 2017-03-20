@@ -21,6 +21,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   audio: HTMLAudioElement;
   state = { visible: false }
   mouseEnter = () => {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
     this.setState({
       visible: true
     });
@@ -36,8 +39,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.setState({
         visible: false
       });
-    }, 1500
-    );
+    }, 1500);
   };
 
   componentDidUpdate() {

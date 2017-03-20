@@ -79,7 +79,10 @@ class Activities extends React.Component<IActivitiesProps, any> {
         { title: seconds2time(duration), tag: 'anchor' },
         { title: username }
       ];
-      tbodys.push({ trackId: id, singerId: userId, bodyData: bodyItems })
+      tbodys.push({
+        trackId: id, singerId: userId,
+        bodyData: bodyItems
+      })
     })
     return (
       <Table thead={thead} tbody={tbodys} />
