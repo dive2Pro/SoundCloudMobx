@@ -1,7 +1,18 @@
 import { observable, action, computed } from 'mobx';
 import { apiUrl, addAccessToken } from '../services/soundcloundApi'
-import { ITrack } from '../interfaces/interface';
+import { ITrack, IActivitiesItem } from '../interfaces/interface';
 export { ITrack }
+export class ActivitiesItem {
+
+  constructor() {
+
+  }
+
+  @action updateFromJson(data: any) {
+    Object.assign(this, data);
+  }
+}
+
 export class Track {
 
   constructor() {
@@ -15,16 +26,15 @@ export class Track {
 
 export interface ITrackStore {
   fetchActivities: (nexthref?: string) => void;
-  activities: ITrack[];
+  activities: IActivitiesItem[];
   isLoadingActivities: boolean;
   activitiesCount: number
-
 }
 
 
 
 class TrackList {
-  @observable activities: Track[] = [];
+  @observable activities: ActivitiesItem[] = [];
   @observable activities_nextHref$: string;
   @observable isLoadingActivities: boolean = false;
   constructor() {
@@ -40,9 +50,9 @@ class TrackList {
     this.activities_nextHref$ = nextHref;
   }
 
-  @action addActivities(arr: ITrack[]) {
+  @action addActivities(arr: ActivitiesItem[]) {
     arr.forEach(track => {
-      const t = new Track()
+      const t = new ActivitiesItem()
       t.updateFromJson(track);
       this.activities.push(t);
     })
@@ -67,6 +77,13 @@ class TrackList {
         this.setNextActivitiesHref(data.next_href)
         this.addActivities(data.collection);
         this.setLoadingActivities(false)
+      })
+  }
+  @action fetchPlaylists(id: number) {
+    const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
+    fetch(playlistUrl)
+      .then(response => response.json())
+      .then((data: any) => {
 
       })
   }
