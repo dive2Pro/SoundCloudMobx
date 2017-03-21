@@ -95,6 +95,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         bodyData: bodyItems, configurations
       })
     })
+    console.log('-------------------------' + tbodys.length)
     return (
       <Table thead={thead} tbody={tbodys} />
     )

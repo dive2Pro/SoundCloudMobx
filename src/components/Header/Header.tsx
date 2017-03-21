@@ -4,7 +4,8 @@ import { observer, inject } from "mobx-react";
 // import { IUserStore } from "../../store/UserStore";
 // import { IUser } from "./interfaces/interface";
 import DevTool from 'mobx-react-devtools'
-
+import { NavLink as Link } from 'react-router-dom'
+const styles = require('./header.scss');
 
 @inject("UserStore")
 @observer
@@ -20,13 +21,27 @@ class Main extends React.Component<any, undefined> {
 
   render() {
     const { user } = this.props.UserStore;
+    const selected = styles.selected
     return (
-      <div>
+      <section className={styles.main}>
+        <div className={styles.title}>
+          <h1><Link
+            to="/" >MUSIC</Link></h1>
+        </div>
+        <nav>
+          <Link
+            activeClassName={selected}
+            to="/home">主页</Link>
+          <Link
+            activeClassName={selected}
+            to='/my'>我的音乐</Link>
+        </nav>
+
         {
           <button onClick={this.loginIn}>{user ? "Loginout" : 'Login'}</button>
         }
         <DevTool />
-      </div>
+      </section>
     );
   }
 }

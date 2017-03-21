@@ -17,7 +17,7 @@ const ViewALL = (prop: IViewALLProp) => {
       <ButtonInline
         onClick={prop.onClick}>
         <i className={prop.clazz}></i>
-        <span>{prop.count}  ${prop.typeContent}</span>
+        <span>{prop.count}  {prop.typeContent}</span>
       </ButtonInline>
       <span styleName="view"> View all</span>
     </div>

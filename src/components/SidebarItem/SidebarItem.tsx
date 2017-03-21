@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Permalink from '../Permalink';
 import { observer } from 'mobx-react'
+import { observable } from "mobx/lib/mobx";
 interface IPlaylistitemProp {
   title: string
   id: number
@@ -22,19 +23,20 @@ export const PlaylistItem = observer((data: IPlaylistitemProp) => {
 interface ISidebarItemProp {
   items: any[];
   title: string
-  type: string
 }
 
 @observer
 class SidebarItem extends React.Component<ISidebarItemProp, any> {
 
   state = { opened: false };
+  @observable opened = false;
   handleOpened = () => {
     this.setState(preState => {
       return {
         opened: !preState.opened
       };
     });
+    this.opened = !this.opened;
   };
 
   render() {
@@ -49,7 +51,8 @@ class SidebarItem extends React.Component<ISidebarItemProp, any> {
             <i>{opened ? 'V' : '>'}</i>
             <span>{title}</span>
           </div>
-          <span><Permalink fullname={'View All'} id={123} />
+          <span>
+            <Permalink fullname={'View All'} id={123} />
           </span>
         </div>
         <div className={clazz}>

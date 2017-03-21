@@ -3,10 +3,10 @@ import { observer } from 'mobx-react'
 import { IUser } from '../../interfaces/interface'
 import UserItemContainer from '../User'
 import { IUserStore } from '../../store/UserStore'
-import { FETCH_FOLLOWERS } from '../../constants/fetchTypes'
+import { FETCH_FOLLOWINGS } from '../../constants/fetchTypes'
 import ButtonMore from '../ButtonMore';
 import ViewAll from '../ViewAll';
-const styles = require('./followers.scss')
+const styles = require('./followings.scss')
 import * as CSSModule from 'react-css-modules'
 export interface IFollowersProps {
   UserStore: IUserStore
@@ -18,27 +18,27 @@ class Followers extends React.Component<IFollowersProps, any> {
   handleMoreClick = () => {
     // const userStore = this.props.UserStore
     // const { nextHrefs } = userStore;
-    // const nextHref$ = nextHrefs[FETCH_FOLLOWERS];
+    // const nextHref$ = nextHrefs[FETCH_FOLLOWINGS];
     // userStore.fetchFollowers(nextHref$);
   }
   handleViewAll = () => {
     console.log('HANDLE view all click')
   }
   render() {
-    const { followers, isLoadings, user } = this.props.UserStore
-    const isLoading = isLoadings[FETCH_FOLLOWERS] || false;
+    const { followings, isLoadings, user } = this.props.UserStore
+    const isLoading = isLoadings[FETCH_FOLLOWINGS] || false;
     const obj = {
-      count: user && user.followers_count,
+      count: user && user.followings_count,
       clazz: "fa fa-users",
       onClick: this.handleViewAll,
-      typeContent: 'follwers'
+      typeContent: 'followings'
     }
     return <section styleName='base'>
       <div styleName="top">
         <ViewAll {...obj} />
       </div>
-      <div>
-        {followers.map((follower: IUser) => {
+      <div styleName='main'>
+        {followings.map((follower: IUser) => {
           return <UserItemContainer key={follower.id} user={follower} />
         })}
         <ButtonMore isLoading={isLoading} onClick={this.handleMoreClick} />
