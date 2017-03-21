@@ -32,11 +32,26 @@
   align-items: center;
   justify-content: flex-end;
 }
+.content_img{
+  padding: 2px;
+  border-radius: 5px;
+  border: $border;
+  text-align: center;
+}
+
+.content_dur{
+  color:$white;
+  margin-left: $padding;  
+}
+
 .content_plays>div{
   margin: 0 7px;
 }
 .content_name {
   flex:1;
+  display: flex;
+  align-items: center;
+  margin-left: $padding;    
 }
 .content_options {
   flex: 1;
