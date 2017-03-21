@@ -17,6 +17,8 @@ export interface IPlayerStore {
   togglePlaylistOpen: (open?: boolean) => void;
   removeFromPlaylist: (...args: ITrack[]) => void;
   clearPlaylist: Lambda;
+  toggleShuffleMode: Lambda;
+  isShuffleMode: boolean
 }
 
 
@@ -25,6 +27,8 @@ class PlayerStore implements IPlayerStore {
   @observable isPlaying: boolean = false;
   @observable playList: ITrack[] = [];
   @observable isPlaylistOpen: boolean = false;
+  @observable isShuffleMode: boolean = false;
+
   constructor() {
   }
 
@@ -39,6 +43,10 @@ class PlayerStore implements IPlayerStore {
 
   @action togglePlaying() {
     this.isPlaying = !this.isPlaying;
+  }
+
+  @action toggleShuffleMode() {
+    this.isShuffleMode = !this.isShuffleMode
   }
 
   @action addToPlaylist(track: ITrack) {
@@ -79,11 +87,24 @@ class PlayerStore implements IPlayerStore {
     if (this.getPlaylistCount < 1) {
       return false;
     }
-    let changedIndex = 0;
-    if (this.playingTrack) {
-      changedIndex = this.playList.indexOf(this.playingTrack) + diff;
+    let nextTrack = null;
+    if (this.isShuffleMode) {
+      const newList = this.playList.slice();
+      const deleIndex = newList.indexOf(this.playingTrack)
+      newList.splice(deleIndex, 1);
+      nextTrack = newList[parseInt(Math.random() * 10 + "") % newList.length];
+    } else {
+      let changedIndex = 0;
+      if (this.playingTrack) {
+        changedIndex = this.playList.indexOf(this.playingTrack) + diff;
+      }
+      nextTrack = this.playList[changedIndex];
     }
-    this.setPlayingTrack(this.playList[changedIndex]);
+    if (nextTrack == undefined) {
+      debugger;
+    }
+    this.setPlayingTrack(nextTrack);
+
     return true;
   }
 }

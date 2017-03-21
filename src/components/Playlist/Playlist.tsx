@@ -40,20 +40,19 @@ class Playlist extends React.Component<IPlaylistProp, any> {
       const { id, username } = user;
       const configurations = [
         {
-          fn: () => {},
+          fn: () => { },
           className: `fa fa-plus`
         },
         {
-          fn: () => {},
+          fn: () => { },
           className: "fa fa-delete"
         },
         {
-          fn: () => {},
+          fn: () => { },
           className: "fa fa-folder-o"
         }
       ];
       const isPlaying = playingTrack.id == item.id;
-
       const bodyData: ITableBodyItem[] = [
         {
           title: "",

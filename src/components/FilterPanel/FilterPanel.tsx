@@ -10,7 +10,6 @@ interface IFilterPanelProp {
 const FilterPanel = observer(({ store }: IFilterPanelProp) => {
 
   const { filterType } = store
-  console.log(filterType === 'track')
   return (
     <div className={styles.main}>
       <nav className={styles.nav}>

@@ -67,7 +67,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     const playStore = this.props.PlayerStore;
     if (playStore) playStore.playNextTrack(diff);
   };
-
+  handleShuffleMode = () => {
+    if (this.props.PlayerStore) {
+      this.props.PlayerStore.toggleShuffleMode();
+    }
+  }
   render() {
     const { PlayerStore } = this.props;
     let clazzName = styles.base;
@@ -77,17 +81,19 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />;
     }
-    const { isPlaying, playingTrack } = PlayerStore;
+    const { isPlaying, playingTrack, isShuffleMode } = PlayerStore;
     if (isPlaying) {
       clazzName = styles.visible;
     }
-    let artworkUrl = "", trackName;
+    let artworkUrl = "", trackName, username = "";
     if (playingTrack) {
       //todo es6的对象扩展
-      const { artwork_url, title } = playingTrack;
+      const { artwork_url, title, user: { username: uname } } = playingTrack;
       artworkUrl = artwork_url;
       trackName = title;
+      username = uname
     }
+    const shuffleClazz = isShuffleMode && styles.active;
     return (
       <div
         className={clazzName}
@@ -116,8 +122,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             </div>
           </div>
           <div className={styles.content_name}>
-            <ArtWork size={50} src={artworkUrl} />
-            <span>{trackName}</span>
+            <div className={styles.content_img}>
+              <ArtWork size={35} src={artworkUrl} />
+            </div>
+            <div className={styles.content_dur}>
+              <span>{trackName} - {username}</span>
+            </div>
           </div>
           <div className={styles.content_options}>
             <div className={styles.content_action}>
@@ -126,10 +136,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
               </ButtonInline>
             </div>
-            <div className={styles.content_action}>
-              <ButtonInline>
+            <div className={shuffleClazz}>
+              <ButtonInline onClick={this.handleShuffleMode}>
                 <i className="fa fa-random">&nbsp;</i>
-
               </ButtonInline>
             </div>
             <div className={styles.content_action}>

@@ -35,7 +35,6 @@ export interface ITrackStore {
 }
 
 
-
 class TrackList {
   @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
