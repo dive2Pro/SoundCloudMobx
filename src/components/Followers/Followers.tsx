@@ -37,7 +37,7 @@ class Followers extends React.Component<IFollowersProps, any> {
       <div styleName="top">
         <ViewAll {...obj} />
       </div>
-      <div>
+      <div styleName="main">
         {followers.map((follower: IUser) => {
           return <UserItemContainer key={follower.id} user={follower} />
         })}

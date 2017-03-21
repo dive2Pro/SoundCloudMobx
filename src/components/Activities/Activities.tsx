@@ -9,9 +9,10 @@ import LoadingSpinner from '../LoadingSpinner'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
+import HocLoading from '../HocLoadingMore'
 interface IActivitiesProps {
-  TrackStore?: ITrackStore
-  PlayerStore?: IPlayerStore
+  TrackStore: ITrackStore
+  PlayerStore: IPlayerStore
 }
 
 
@@ -118,12 +119,11 @@ class Activities extends React.Component<IActivitiesProps, any> {
           </div>
           <span>播放<span>{}</span>次</span>
         </div>
-        {isLoading ?
-          <LoadingSpinner isLoading={isLoading} /> :
-          this.renderActivities(activities)}}
+        {this.renderActivities(activities)}
+        <LoadingSpinner isLoading={isLoading} />
       </div>
     );
   }
 }
 
-export default Activities 
+export default HocLoading(Activities)

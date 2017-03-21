@@ -43,7 +43,7 @@ export interface IMePeopels {
 
 export interface IActivitiesItem {
     type: string,
-    created_at: "2011/07/21 09:55:19 +0000",
+    created_at: string,
     tags: "own, affiliated",
     origin: ITrack;
 }
