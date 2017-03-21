@@ -26,6 +26,7 @@ export class Track {
 
 export interface ITrackStore {
   fetchActivities: (nexthref?: string) => void;
+  fetchNextActivities: () => void;
   activities: IActivitiesItem[];
   isLoadingActivities: boolean;
   activitiesCount: number
@@ -51,21 +52,31 @@ class TrackList {
   }
 
   @action addActivities(arr: IActivitiesItem[]) {
-    arr.filter(item => {
-      return !this.activities.some(active => active.origin.id === item.origin.id)
-    }).forEach(track => {
-      // const t = new ActivitiesItem()
-      // t.updateFromJson(track);
-      this.activities.push(track);
-    })
+    this.activities.push(...arr);
+  }
+
+  filterActivities(arr: IActivitiesItem[]) {
+    Promise.resolve(arr)
+      .then(data => {
+        const filterArr = data.filter(item => {
+          const b = this.activities.some(active => active.created_at === item.created_at)
+          console.log(b)
+          return !b;
+        })
+        this.addActivities(filterArr);
+      })
   }
   @action changeLoadings(type: any) {
     this[type] = !this[type];
   }
   @action setLoadingActivities(b: boolean) {
-    this.isLoadingActivities
+    this.isLoadingActivities = b;
   }
-  @action fetchActivities(nextHref?: string) {
+  @action fetchNextActivities() {
+    if (!this.isLoadingActivities)
+      this.fetchActivities(this.activities_nextHref$);
+  }
+  @action async fetchActivities(nextHref?: string) {
     let activitiesUrl;
     if (nextHref) {
       activitiesUrl = addAccessToken(nextHref, '&');
@@ -77,7 +88,7 @@ class TrackList {
       .then(response => response.json())
       .then((data: any) => {
         this.setNextActivitiesHref(data.next_href)
-        this.addActivities(data.collection);
+        this.filterActivities(data.collection);
         this.setLoadingActivities(false)
       })
   }

@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="88900e52-29d4-4f56-9792-cdc661b96e59" name="Default" comment="auth pass">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Header/Header.tsx" afterPath="$PROJECT_DIR$/src/components/Header/Header.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Player/Player.tsx" afterPath="$PROJECT_DIR$/src/components/Player/Player.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Playlist/Playlist.tsx" afterPath="$PROJECT_DIR$/src/components/Playlist/Playlist.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Playlist/playlist.scss" afterPath="$PROJECT_DIR$/src/components/Playlist/playlist.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/PlayerStore.ts" afterPath="$PROJECT_DIR$/src/store/PlayerStore.ts" />
-    </list>
+    <list default="true" id="88900e52-29d4-4f56-9792-cdc661b96e59" name="Default" comment="auth pass" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -27,8 +21,8 @@
       <file leaf-file-name="UserStore.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/store/UserStore.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="26" column="25" lean-forward="true" selection-start-line="26" selection-start-column="25" selection-end-line="26" selection-end-column="25" />
+            <state relative-caret-position="619">
+              <caret line="27" column="25" lean-forward="false" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -48,7 +42,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/Playlist/Playlist.tsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="454">
-              <caret line="45" column="9" lean-forward="true" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+              <caret line="45" column="9" lean-forward="false" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
                 <element signature="e#1820#2189#0" expanded="false" />
@@ -60,8 +54,8 @@
       <file leaf-file-name="Header.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Header/Header.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+            <state relative-caret-position="248">
+              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -81,7 +75,7 @@
         <entry file="file://$PROJECT_DIR$/src/store/PlayerStore.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="465">
-              <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+              <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
               </folding>
@@ -93,7 +87,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/Player/Player.tsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="470">
-              <caret line="82" column="5" lean-forward="true" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
+              <caret line="82" column="5" lean-forward="false" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -145,8 +139,8 @@
         <option value="$PROJECT_DIR$/src/components/Player/Player.tsx" />
         <option value="$PROJECT_DIR$/src/components/Playlist/Playlist.tsx" />
         <option value="$PROJECT_DIR$/src/components/Playlist/playlist.scss" />
-        <option value="$PROJECT_DIR$/src/components/Header/Header.tsx" />
         <option value="$PROJECT_DIR$/src/components/Header/header.scss" />
+        <option value="$PROJECT_DIR$/src/components/Header/Header.tsx" />
       </list>
     </option>
   </component>
@@ -355,7 +349,7 @@
       <option name="presentableId" value="Default" />
       <updated>1489670290319</updated>
       <workItem from="1489670291772" duration="13162000" />
-      <workItem from="1490074356122" duration="1491000" />
+      <workItem from="1490074356122" duration="2381000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1489670783394</created>
@@ -375,10 +369,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14653000" />
+    <option name="totallyTimeSpent" value="15543000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="690" y="24" width="1230" height="1011" extended-state="5" />
+    <frame x="690" y="24" width="1230" height="1011" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -558,8 +552,8 @@
     <entry file="file://$PROJECT_DIR$/src/index.tsx" />
     <entry file="file://$PROJECT_DIR$/src/store/UserStore.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="26" column="25" lean-forward="true" selection-start-line="26" selection-start-column="25" selection-end-line="26" selection-end-column="25" />
+        <state relative-caret-position="619">
+          <caret line="27" column="25" lean-forward="false" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="25" />
           <folding />
         </state>
       </provider>
@@ -568,7 +562,7 @@
     <entry file="file://$PROJECT_DIR$/src/components/Player/Player.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="470">
-          <caret line="82" column="5" lean-forward="true" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
+          <caret line="82" column="5" lean-forward="false" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -578,7 +572,7 @@
     <entry file="file://$PROJECT_DIR$/src/store/PlayerStore.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding>
             <element signature="e#0#52#0" expanded="true" />
           </folding>
@@ -596,7 +590,7 @@
     <entry file="file://$PROJECT_DIR$/src/components/Playlist/Playlist.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="454">
-          <caret line="45" column="9" lean-forward="true" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+          <caret line="45" column="9" lean-forward="false" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
             <element signature="e#1820#2189#0" expanded="false" />
@@ -614,8 +608,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Header/Header.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        <state relative-caret-position="248">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
         </state>
       </provider>
