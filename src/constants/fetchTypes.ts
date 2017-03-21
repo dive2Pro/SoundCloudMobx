@@ -1,1 +1,2 @@
-export const FETCH_FOLLOWERS = 'FETCH_FOLLOWERS';
+export const FETCH_FOLLOWERS = 'followers';
+export const FETCH_FOLLOWINGS = 'followings';

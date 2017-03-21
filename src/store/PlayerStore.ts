@@ -26,7 +26,6 @@ class PlayerStore implements IPlayerStore {
   @observable playList: ITrack[] = [];
   @observable isPlaylistOpen: boolean = false;
   constructor() {
-
   }
 
   @action setPlayingTrack(track: ITrack | number) {
@@ -36,7 +35,6 @@ class PlayerStore implements IPlayerStore {
     this.playingTrack = track;
     this.addToPlaylist(track);
     this.isPlaying = true;
-
   }
 
   @action togglePlaying() {

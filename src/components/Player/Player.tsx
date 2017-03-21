@@ -1,10 +1,11 @@
-import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
-import { observer, inject } from 'mobx-react'
-import ButtonInline from '../ButtonInline';
-import { IPlayerStore } from '../../store/PlayerStore'
-import ArtWork from '../ArtWork'
-const styles = require('./player.scss')
+import * as React from "react";
+import * as CSSModule from "react-css-modules";
+import { observer, inject } from "mobx-react";
+import ButtonInline from "../ButtonInline";
+import { IPlayerStore } from "../../store/PlayerStore";
+import ArtWork from "../ArtWork";
+import { action, observable } from "mobx";
+const styles = require("./player.scss");
 
 interface IPlayerProps {
   PlayerStore?: IPlayerStore
@@ -19,34 +20,38 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   timer: any;
   main: any;
   audio: HTMLAudioElement;
-  state = { visible: false }
+  state = { visible: false };
+  @observable isVisible = false;
+  @action setPlayerVisibleFromComponent(visible: boolean) {
+    this.isVisible = visible;
+  }
+
   mouseEnter = () => {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.setState({
-      visible: true
-    });
+    this.setPlayerVisibleFromComponent(true);
   };
   mouseOut = (event: any) => {
-    if (event.target.className !== 'player__content') {
-      return
+    if (event.target.className !== "player__content") {
+      return;
     }
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(() => {
-      this.setState({
-        visible: false
-      });
-    }, 1500);
+    this.timer = setTimeout(
+      () => {
+        this.setPlayerVisibleFromComponent(false);
+      },
+      1500
+    );
   };
 
   componentDidUpdate() {
     if (!this.props.PlayerStore) {
-      return
+      return;
     }
-    const { playingUrl, isPlaying } = this.props.PlayerStore
+    const { playingUrl, isPlaying } = this.props.PlayerStore;
     // const audio = this.audio
     if (playingUrl && isPlaying) {
       // console.log(playingUrl)
@@ -55,46 +60,41 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
   }
   handleOpenPlaylist = () => {
-    const playStore = this.props.PlayerStore
-    if (playStore)
-      playStore.togglePlaylistOpen();
-
-  }
+    const playStore = this.props.PlayerStore;
+    if (playStore) playStore.togglePlaylistOpen();
+  };
   handlePlayNext = (diff: number) => {
-    const playStore = this.props.PlayerStore
-    if (playStore)
-      playStore.playNextTrack(diff);
-
-  }
+    const playStore = this.props.PlayerStore;
+    if (playStore) playStore.playNextTrack(diff);
+  };
 
   render() {
-
-    const { visible } = this.state;
     const { PlayerStore } = this.props;
     let clazzName = styles.base;
-    if (visible) {
+    if (this.isVisible) {
       clazzName = styles.visible;
     }
     if (!PlayerStore) {
-      return <noscript />
+      return <noscript />;
     }
-    const { isPlaying, playingTrack } = PlayerStore
+    const { isPlaying, playingTrack } = PlayerStore;
     if (isPlaying) {
       clazzName = styles.visible;
     }
-    let artworkUrl = "", trackName
+    let artworkUrl = "", trackName;
     if (playingTrack) {
       //todo es6的对象扩展
-      const { artwork_url, title } = playingTrack
+      const { artwork_url, title } = playingTrack;
       artworkUrl = artwork_url;
-      trackName = title
+      trackName = title;
     }
     return (
       <div
         className={clazzName}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseOut}
-        ref={r => this.main = r}>
+        ref={r => this.main = r}
+      >
         <div className={styles.content}>
           <div className={styles.content_plays}>
             <div className={styles.content_action}>
@@ -104,12 +104,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             </div>
             <div className={styles.content_action}>
               <ButtonInline onClick={() => PlayerStore.togglePlaying()}>
-                <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'}`} />
+                <i className={`fa ${isPlaying ? "fa-pause" : "fa-play"}`} />
                 &nbsp;
-                </ButtonInline>
+              </ButtonInline>
             </div>
             <div className={styles.content_action}>
-              <ButtonInline onClick={() => this.handlePlayNext(1)} >
+              <ButtonInline onClick={() => this.handlePlayNext(1)}>
                 <i className="fa fa-step-forward">&nbsp;</i>
                 &nbsp;
               </ButtonInline>
@@ -133,7 +133,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
               </ButtonInline>
             </div>
             <div className={styles.content_action}>
-              <ButtonInline onClick={this.handleOpenPlaylist} >
+              <ButtonInline onClick={this.handleOpenPlaylist}>
                 <i className="fa fa-bars">&nbsp;</i>
               </ButtonInline>
             </div>

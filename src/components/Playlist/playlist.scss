@@ -21,3 +21,18 @@
     }
   }
 }
+.top{
+  display: flex;
+  align-items: center;
+  &>*{
+    &:first-child{
+      flex:1;
+    }
+  }
+}
+.top_right{
+
+}
+.none{
+  display: none;
+}

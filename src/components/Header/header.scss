@@ -1,0 +1,19 @@
+@import '../../styles/variable.scss';
+.main{
+  position: fixed;
+  height: $headerHight;
+  background: $nav;
+  color:white;
+  display: flex;
+  justify-content: center;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  &>*{
+    padding: $_30pxEm/2 $_30pxEm/3;
+  }
+}
+
+.selected{
+  background: #333;
+}

@@ -53,6 +53,7 @@ interface ItableHeadProp {
   data: ITableHead[]
 }
 const Thead = ({ data }: ItableHeadProp) => {
+
   return (
     <tr>
       {data.map((item, i) => {
@@ -103,15 +104,17 @@ const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
         </div>}
       </td>)
   })
-
+  const preKey = UniqueKey[UniqueKey.length - 1].length++;
   return (<tr className={styles.ttr}
-    key={id}
-    onMouseLeave={() => handleHoverLeave(id)}
-    onMouseEnter={() => handleHover(id)}
+    key={id + "-!-" + preKey}
   >
+    {/*//TODO 事件太卡  */}
+    {/*onMouseEnter={() => handleHover(id)}*/}
+    {/*onMouseLeave={() => handleHoverLeave(id)}*/}
     {tds}
   </tr>)
 }
+const UniqueKey: any[] = [];
 
 class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
   state = {}
@@ -129,12 +132,14 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
 
   render() {
     const { arr } = this.props;
+    UniqueKey[UniqueKey.length++] = [];
+    // const key = UniqueKey.length; 
     return (
       <tbody>
-        {arr.map(item => {
+        {arr.map((item, i) => {
           return (
             <TBodyTr
-              key={item.trackId}
+              key={item.trackId + "--" + i}
               data={item}
               handleHoverLeave={this.handleHoverLeave}
               handleHover={this.handleHover}
@@ -145,6 +150,7 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
     )
   }
 }
+
 const Table = (prop: ITableProp) => {
   const { thead, tbody } = prop
 

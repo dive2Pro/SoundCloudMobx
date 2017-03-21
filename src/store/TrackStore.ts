@@ -34,7 +34,7 @@ export interface ITrackStore {
 
 
 class TrackList {
-  @observable activities: ActivitiesItem[] = [];
+  @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
   @observable isLoadingActivities: boolean = false;
   constructor() {
@@ -50,11 +50,13 @@ class TrackList {
     this.activities_nextHref$ = nextHref;
   }
 
-  @action addActivities(arr: ActivitiesItem[]) {
-    arr.forEach(track => {
-      const t = new ActivitiesItem()
-      t.updateFromJson(track);
-      this.activities.push(t);
+  @action addActivities(arr: IActivitiesItem[]) {
+    arr.filter(item => {
+      return !this.activities.some(active => active.origin.id === item.origin.id)
+    }).forEach(track => {
+      // const t = new ActivitiesItem()
+      // t.updateFromJson(track);
+      this.activities.push(track);
     })
   }
   @action changeLoadings(type: any) {

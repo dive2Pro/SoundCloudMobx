@@ -1,5 +1,5 @@
 import { observable, action, extendObservable } from "mobx";
-import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
+import { FETCH_FOLLOWERS } from '../constants/fetchTypes'
 import {
   CLIENT_ID,
   REDIRECT_URI,
@@ -9,28 +9,29 @@ import { ISession, IUser, IMePeopels } from "../interfaces/interface";
 const SC = require("soundcloud");
 const Cookies = require("js-cookie")
 // const Remotedev = require("mobx-remotedev");
-// @Remotedev({ name: "UserStore" })
-export interface IUserStore {
+// @Remotedev({ name: "SessionStore" })
+export interface ISessionStore {
   session: string
   user: IUser;
   login: () => void;
   loadDataFromCookie: () => void;
   followers: IUser[];
-  followings: IUser[];
   isLoadings: {}
   nextHrefs: {}
-  // fetchFollowers: (nextHref: string, id?: number, ) => void;
+  fetchFollowers: (nextHref: string, id?: number, ) => void;
 }
+
 interface ICatchErr {
   err: any
   fetchType?: string;
 }
+
 const limitPageSize = 20;
-class UserStore implements IUserStore {
+
+class SessionStore implements ISessionStore {
   @observable session: any;
   @observable user: IUser;
   @observable followers: IUser[] = [];
-  @observable followings: IUser[] = [];
   @observable isFetchFollowersLoading: boolean = false;
   @observable isLoadings: {} = {};
   @observable nextHrefs: {} = {};
@@ -66,8 +67,7 @@ class UserStore implements IUserStore {
       .then(data => data.json())
       .then((rawuser: any) => {
         this.setUser(rawuser)
-        this.fetchWithType(FETCH_FOLLOWERS, rawuser.nextHref);
-        this.fetchWithType(FETCH_FOLLOWINGS, rawuser.nextHref);
+        this.fetchFollowers(rawuser.id, rawuser.nextHref);
       }).catch(err => {
         this.catchError(err);
       })
@@ -97,35 +97,16 @@ class UserStore implements IUserStore {
       this.followers.push(follower);
     })
   }
-
-  @action addData(type: string, fs: IUser[]) {
-    const targetArr = this[type]
-    if (!targetArr) {
-      extendObservable(this[type], []);
-    }
-    fs.forEach(follower => {
-      targetArr.push(follower);
-    })
-  }
-
-  @action fetchWithType(type: string, nextHref: string, id?: number) {
+  @action
+  fetchFollowers(nextHref: string, id?: number) {
     if (id == null) {
       id = this.user.id;
     }
-    let url = ''
-    switch (type) {
-      case FETCH_FOLLOWERS:
-        url = `/users/${id}/followers`
-        break
-      case FETCH_FOLLOWINGS:
-        url = `/users/${id}/followings`
-        break
-    }
-    const fetchType = type;
+    const fetchType = FETCH_FOLLOWERS;
     this.changeLoadingState(fetchType);
-    SC.get(url, { limit: limitPageSize, oauth_token: this.oauth_token })
+    SC.get(`/users/${id}/followers`, { limit: limitPageSize, oauth_token: this.oauth_token })
       .then((data: IMePeopels) => {
-        this.addData(type, data.collection);
+        this.addFollowers(data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
         this.changeLoadingState(fetchType);
       }).catch((err: any) => {
@@ -134,6 +115,4 @@ class UserStore implements IUserStore {
   }
 }
 
-
-
-export default new UserStore();
+export default new SessionStore();

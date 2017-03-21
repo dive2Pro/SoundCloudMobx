@@ -5,9 +5,10 @@
   display: flex;
   width: 91.429em;
   margin: 0 auto;
+  margin-top: $headerHight;
 }
 
 .aside{
-   float: right;
+   float: left;
    width: ($_100pxEm*3);
 }
