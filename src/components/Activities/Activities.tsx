@@ -10,6 +10,8 @@ import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
 import HocLoading from '../HocLoadingMore'
+import { Action } from '../HoverActions'
+import * as sortTypes from '../../constants/sortTypes'
 interface IActivitiesProps {
   TrackStore: ITrackStore
   PlayerStore: IPlayerStore
@@ -25,14 +27,57 @@ interface IndexAndPlayViewProp {
 const IndexAndPlayView = ({ track, onClick, index }: IndexAndPlayViewProp) => {
   return (
     <div styleName="indexPlay">
-      <span>{index}</span>
+      {/*<span>{index}</span>*/}
+
       <ButtonInline onClick={() => onClick(track)}>
         <i className='fa fa-play'></i>
       </ButtonInline>
+
     </div>
   )
 }
+
 const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
+
+
+interface TdTrackTitleViewProp {
+  track: ITrack
+  trackStore: ITrackStore
+}
+
+const TdTrackTitleView = observer(({ track, trackStore }: TdTrackTitleViewProp) => {
+  const { user, title, playback_count, favoritings_count, comment_count, download_count } = track;
+  const { username } = user
+  const { sortType } = trackStore;
+  const activeStyle = { color: '#14ff00' }
+
+  return (
+    <div>
+      <h5><span>{title}</span> - <span>{username}</span></h5>
+      <div>
+        <Action
+          activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}
+          className='fa fa-play'
+          children={playback_count}
+        />
+        <Action
+          activeStyle={sortType == sortTypes.SORT_FAVORITINGS_COUNT ? activeStyle : {}}
+          className='fa fa-favorite'
+          children={favoritings_count} />
+        <Action
+          activeStyle={sortType == sortTypes.SORT_COMMENT_COUNT ? activeStyle : {}}
+          className='fa fa-comment'
+          children={comment_count} />
+
+        <Action
+          activeStyle={sortType == sortTypes.SORT_DOWNLOAD_COUNT ? activeStyle : {}}
+          className='fa fa-download'
+          children={download_count} />
+      </div>
+    </div>
+  )
+})
+
 
 @CSSModule(styles)
 @inject('PlayerStore', 'TrackStore')
@@ -49,10 +94,12 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.setPlayingTrack(track);
     }
   }
+
   renderActivities = (arr: IActivitiesItem[]) => {
     const { TrackStore } = this.props;
     if (!TrackStore) { return (<noscript />) }
     // TODO
+
     const thead = [
       { title: "", width: 8 },
       { title: '歌曲标题', width: 30 }, {
@@ -60,9 +107,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
       }, {
         title: '歌手', width: 10
       }
-      // , {
-      // titlse: '专辑', width: 15
-      // }
     ]
     const tbodys: ITableBody[] = [];
     arr.filter(item => item.origin).forEach((item, i) => {
@@ -87,7 +131,11 @@ class Activities extends React.Component<IActivitiesProps, any> {
             )
           }
         },
-        { title },
+        {
+          title, render: () => {
+            return (<TdTrackTitleView trackStore={TrackStore} track={item.origin} />)
+          }
+        },
         { title: seconds2time(duration), tag: 'anchor' },
         { title: username }
       ];

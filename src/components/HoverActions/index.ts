@@ -1,2 +1,2 @@
-import HA from './HoverActions'
-export { HA as default }
+import HA, { Action } from './HoverActions'
+export { HA as default, Action }

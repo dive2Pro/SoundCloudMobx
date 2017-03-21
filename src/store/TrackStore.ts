@@ -31,7 +31,9 @@ export interface ITrackStore {
   isLoadingActivities: boolean;
   activitiesCount: number
   setFilterType: (type: string) => void;
+  setSortType: (type: string) => void;
   filterType: string
+  sortType: string
 }
 
 
@@ -40,12 +42,20 @@ class TrackList {
   @observable activities_nextHref$: string;
   @observable isLoadingActivities: boolean = false;
   @observable filterType: string
+  @observable sortType: string
   constructor() {
 
   }
+
+
   @computed get activitiesCount() {
     return this.activities.length;
   }
+
+  @action setSortType(type: string) {
+    this.sortType = type;
+  }
+
   @action updateFromServer(nextHref: string) {
 
   }
@@ -100,12 +110,27 @@ class TrackList {
   }
 
   @computed get filteredActivities(): IActivitiesItem[] {
+    let fs = this.activities;
     if (!!this.filterType) {
-      return this.activities.filter(item => {
+      fs = fs.filter(item => {
         return item.type === this.filterType
       })
     }
-    return this.activities;
+
+    if (!!this.sortType) {
+      fs = fs.sort((p, n) => {
+        console.log(this.sortType)
+        let pCount = p.origin[this.sortType]
+        let nCount = n.origin[this.sortType]
+        pCount = !Number.isNaN(pCount) ? pCount : 0;
+        nCount = !Number.isNaN(nCount) ? nCount : 0;
+        debugger
+        console.log(pCount + "- " + nCount)
+        return nCount - pCount;
+      })
+    }
+
+    return fs;
   }
   // todo
   @action fetchPlaylists(id: number) {
