@@ -96,7 +96,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
         bodyData: bodyItems, configurations
       })
     })
-    console.log('-------------------------' + tbodys.length)
     return (
       <Table thead={thead} tbody={tbodys} />
     )
@@ -107,7 +106,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (!TrackStore) {
       return (<noscript />)
     }
-    const { isLoadingActivities, activities, activitiesCount } = TrackStore;
+    const { isLoadingActivities, filteredActivities: activities, activitiesCount } = TrackStore;
 
     const isLoading = isLoadingActivities || !activities
     return (

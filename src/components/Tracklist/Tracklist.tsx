@@ -3,12 +3,15 @@ import Tracklistinfo from '../TracklistInfo'
 import Activities from '../Activities'
 import { inject, observer } from "mobx-react";
 import { ITrackStore } from "../../store/TrackStore";
+import FilterPanel from '../FilterPanel'
 const styles = require('./tracklist.scss')
 
 interface ITracklistProp {
   prop: ITracklistProp
 
 }
+
+
 
 @inject("TrackStore")
 @observer
@@ -24,6 +27,7 @@ class Tracklist extends React.Component<any, any>  {
   render() {
     return (
       <div className={styles.main}>
+        <FilterPanel store={this.props.TrackStore} />
         <Tracklistinfo />
         <Activities scrollFunc={this.handleScroll} />
       </div>

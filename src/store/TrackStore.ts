@@ -27,9 +27,11 @@ export class Track {
 export interface ITrackStore {
   fetchActivities: (nexthref?: string) => void;
   fetchNextActivities: () => void;
-  activities: IActivitiesItem[];
+  filteredActivities: IActivitiesItem[];
   isLoadingActivities: boolean;
   activitiesCount: number
+  setFilterType: (type: string) => void;
+  filterType: string
 }
 
 
@@ -38,6 +40,7 @@ class TrackList {
   @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
   @observable isLoadingActivities: boolean = false;
+  @observable filterType: string
   constructor() {
 
   }
@@ -92,6 +95,20 @@ class TrackList {
         this.setLoadingActivities(false)
       })
   }
+
+  @action setFilterType(filterType: string = "") {
+    this.filterType = filterType;
+  }
+
+  @computed get filteredActivities(): IActivitiesItem[] {
+    if (!!this.filterType) {
+      return this.activities.filter(item => {
+        return item.type === this.filterType
+      })
+    }
+    return this.activities;
+  }
+  // todo
   @action fetchPlaylists(id: number) {
     const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
     fetch(playlistUrl)
