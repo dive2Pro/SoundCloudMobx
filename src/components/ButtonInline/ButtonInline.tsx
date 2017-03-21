@@ -10,7 +10,9 @@ interface IButtonInlineProp {
 const ButtonInline = ({ onClick, children }: IButtonInlineProp) => {
 
   return (
-    <button onClick={onClick} type="button">
+    <button
+      onClick={onClick}
+      type="button">
       {children}
     </button>
   );
