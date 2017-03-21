@@ -4,6 +4,7 @@ import Activities from '../Activities'
 import { inject, observer } from "mobx-react";
 import { ITrackStore } from "../../store/TrackStore";
 import FilterPanel from '../FilterPanel'
+import * as sortTypes from '../../constants/sortTypes'
 const styles = require('./tracklist.scss')
 
 interface ITracklistProp {
@@ -16,6 +17,9 @@ interface ITracklistProp {
 @inject("TrackStore")
 @observer
 class Tracklist extends React.Component<any, any>  {
+  handleSortType = (type: string) => {
+    this.props.TrackStore.setSortType(type)
+  };
 
   handleScroll = () => {
     const trackStore: ITrackStore = this.props.TrackStore
@@ -23,11 +27,50 @@ class Tracklist extends React.Component<any, any>  {
     if (!isLoadingActivities)
       trackStore.fetchNextActivities();
   }
+  handleFilterType = (type: string) => {
+    this.props.TrackStore.setFilterType(type)
+  }
 
   render() {
+    const filterProp = {
+      handleClick: this.handleFilterType,
+      tagClass: 'fa fa-filter',
+      items: [
+        {
+          content: 'ALL',
+          type: ""
+        }, {
+          content: "Track",
+          type: 'track'
+        }, {
+          content: "Mix",
+          type: 'mix'
+        }],
+      activeType: this.props.TrackStore.filterType
+    }
+    const sortItems = sortTypes.sortObjs.map(item => {
+      const key = Object.keys(item)[0]
+      return {
+        type: sortTypes[key],
+        content: item[key]
+      }
+    })
+    const sortProp = {
+      handleClick: this.handleSortType,
+      tagClass: 'fa fa-sort',
+      items: [{
+        content: 'NONE',
+        type: ''
+      }].concat(sortItems),
+      activeType: this.props.TrackStore.sortType
+    }
     return (
       <div className={styles.main}>
-        <FilterPanel store={this.props.TrackStore} />
+        <div className={styles.types}>
+
+          <FilterPanel {...filterProp} />
+          <FilterPanel {...sortProp} />
+        </div>
         <Tracklistinfo />
         <Activities scrollFunc={this.handleScroll} />
       </div>

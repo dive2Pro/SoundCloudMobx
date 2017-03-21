@@ -78,13 +78,7 @@ const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
   const { trackId: id, bodyData, configurations } = data
   const tds = bodyData.map((bitem, i) => {
     const { title, tag, onClick } = bitem;
-    const renderNormalDom = (
-      <div className={styles.duration}>
-        {title}
-      </div>
-    )
-
-
+    const renderNormalDom = (<div className={styles.duration}>{title}</div>)
     return (
       <td
         key={i + title}
@@ -133,7 +127,6 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
   render() {
     const { arr } = this.props;
     UniqueKey[UniqueKey.length++] = [];
-    // const key = UniqueKey.length; 
     return (
       <tbody>
         {arr.map((item, i) => {

@@ -4,20 +4,25 @@ import ButtonInline from '../ButtonInline'
 import { observer } from 'mobx-react'
 const styles = require('./hoveractions.scss')
 interface IconfiguType {
-  fn: () => void
+  fn?: () => void
   className: string
+  activeStyle?: {}
+  children?: React.ReactChild
 }
 interface IHoverActionsProp {
   configurations: IconfiguType[]
   isVisible: boolean;
 }
 
-const Action = (cfg: IconfiguType) => {
-  const { fn, className } = cfg
-  return (
-    <ButtonInline onClick={fn}>
+export const Action = (cfg: IconfiguType) => {
+  const { fn, className, activeStyle, children } = cfg
+  return (<div style={activeStyle}>
+    <ButtonInline
+      onClick={fn && fn}>
       <i className={className}></i>
+      {children}
     </ButtonInline>
+  </div>
   )
 }
 
@@ -27,7 +32,11 @@ const HoverActions = observer((prop: IHoverActionsProp) => {
   return (
     <div styleName={styleName}>
       {configurations.map((cfg, index) => {
-        return <Action {...cfg} key={index + cfg.className} />
+        return <Action
+          {...cfg}
+          key={index + cfg.className} >
+
+        </Action>
       })}
     </div>
   )

@@ -1,7 +1,7 @@
 @import '../../styles/variable.scss';
 
 .main{
-  width: 52.857em;
+  width: 100%;
 
   table{
     tr{
@@ -43,4 +43,8 @@
       margin-right: $padding;
     }
   }
+}
+
+.activeStyle{
+  color:$mainColor!important;
 }
