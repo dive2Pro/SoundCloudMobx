@@ -12,6 +12,7 @@ import ButtonInline from '../ButtonInline'
 import HocLoading from '../HocLoadingMore'
 import { Action } from '../HoverActions'
 import * as sortTypes from '../../constants/sortTypes'
+import ArtWork from '../ArtWork';
 interface IActivitiesProps {
   TrackStore: ITrackStore
   PlayerStore: IPlayerStore
@@ -22,20 +23,31 @@ interface IndexAndPlayViewProp {
   index: number
   track: ITrack
   onClick: (track: ITrack) => void
+  isPlaying: boolean
+
 }
 
-const IndexAndPlayView = ({ track, onClick, index }: IndexAndPlayViewProp) => {
+const IndexAndPlayView = observer(({ track, onClick, index, isPlaying }: IndexAndPlayViewProp): React.ReactElement<any> => {
+  const { artwork_url } = track
+  const imgSize = 80;
+  const styleSize = {
+    width: imgSize,
+    height: imgSize
+  }
+  const divClazz = isPlaying ? styles.active : styles.indexPlay;
   return (
-    <div styleName="indexPlay">
+    <div className={divClazz}>
       {/*<span>{index}</span>*/}
-
-      <ButtonInline onClick={() => onClick(track)}>
-        <i className='fa fa-play'></i>
-      </ButtonInline>
+      <ArtWork src={artwork_url} size={imgSize} />
+      <div className={styles.play} style={styleSize}>
+        <ButtonInline onClick={() => onClick(track)}>
+          <i className='fa fa-play fa-3x'></i>
+        </ButtonInline>
+      </div>
 
     </div>
   )
-}
+});
 
 const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
 
@@ -52,9 +64,9 @@ const TdTrackTitleView = observer(({ track, trackStore }: TdTrackTitleViewProp) 
   const activeStyle = { color: '#14ff00' }
 
   return (
-    <div>
+    <div className={styles.track_info}>
       <h5><span>{title}</span> - <span>{username}</span></h5>
-      <div>
+      <div className={styles.track_counts}>
         <Action
           activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}
           className='fa fa-play'
@@ -95,11 +107,13 @@ class Activities extends React.Component<IActivitiesProps, any> {
     }
   }
 
-  renderActivities = (arr: IActivitiesItem[]) => {
+  renderActivities = (arr: IActivitiesItem[], store: IPlayerStore) => {
     const { TrackStore } = this.props;
-    if (!TrackStore) { return (<noscript />) }
-    // TODO
-
+    if (!TrackStore || !store) {
+      console.log('TrackStore = ' + TrackStore + " and PlayerStore = " + store)
+      return (<noscript />)
+    }
+    const { playingTrack } = store;
     const thead = [
       { title: "", width: 8 },
       { title: '歌曲标题', width: 30 }, {
@@ -127,7 +141,9 @@ class Activities extends React.Component<IActivitiesProps, any> {
         {
           title: '', render: () => {
             return (
-              <StyledIndexAndPlayView index={i} track={item.origin} onClick={this.playTrack} />
+              <StyledIndexAndPlayView
+                isPlaying={playingTrack === item.origin}
+                index={i} track={item.origin} onClick={this.playTrack} />
             )
           }
         },
@@ -166,7 +182,9 @@ class Activities extends React.Component<IActivitiesProps, any> {
           </div>
           <span>播放<span>{}</span>次</span>
         </div>
-        {this.renderActivities(activities)}
+        <div className={styles.tracks}>
+          {this.renderActivities(activities, this.props.PlayerStore)}
+        </div>
         <LoadingSpinner isLoading={isLoading} />
       </div>
     );
