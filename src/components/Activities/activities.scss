@@ -33,6 +33,21 @@
   justify-content: center; 
   align-items: center;
   align-content: space-around; 
+  position: relative;
+  
+}
+.active{
+  composes:indexPlay;
+       div.play{
+        display: flex;
+      }
+}
+.play{
+    position: absolute; 
+    display: none; 
+    text-align: center;
+    background-color: rgba(204, 232, 207, 0.5);
+    justify-content: center;
 }
 .top{
   display: flex;
@@ -45,6 +60,25 @@
   }
 }
 
+.tracks{
+    tr{
+      &:hover{
+        div.play{
+        display: flex; 
+        }
+      }
+    }
+}
+
 .activeStyle{
   color:$mainColor!important;
+}
+
+.track_counts{
+  display: flex;
+  align-content: space-around;
+}
+
+.track_info{
+  padding: $padding/2;  
 }
