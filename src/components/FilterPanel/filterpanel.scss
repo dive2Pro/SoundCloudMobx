@@ -1,11 +1,7 @@
 @import '../../styles/variable.scss';
 
 .main{
-  background: $mainColor;
-  color:$fontColor;
-  border:$border; 
-  font-size: $mediumIcon;
-  padding: $padding/2;
+  composes:panel;
 }
 .nav{
   &>button{

@@ -32,6 +32,7 @@ export interface ITrackStore {
   activitiesCount: number
   setFilterType: (type: string) => void;
   setSortType: (type: string) => void;
+  setFilterTitle: (type: string) => void;
   filterType: string
   sortType: string
 }
@@ -42,6 +43,7 @@ class TrackList {
   @observable activities_nextHref$: string;
   @observable isLoadingActivities: boolean = false;
   @observable filterType: string
+  @observable filterTitle: string
   @observable sortType: string
   constructor() {
 
@@ -51,7 +53,9 @@ class TrackList {
   @computed get activitiesCount() {
     return this.activities.length;
   }
-
+  @action setFilterTitle(title: string) {
+    this.filterTitle = title;
+  }
   @action setSortType(type: string) {
     this.sortType = type;
   }
@@ -127,6 +131,12 @@ class TrackList {
         debugger
         console.log(pCount + "- " + nCount)
         return nCount - pCount;
+      })
+    }
+
+    if (!!this.filterTitle) {
+      fs = fs.filter(item => {
+        return item.origin.title.indexOf(this.filterTitle) > -1
       })
     }
 
