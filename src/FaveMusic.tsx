@@ -8,8 +8,7 @@ import Header from './components/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
 import { UserStore, TrackStore, PlayerStore } from './store';
-require('font-awesome/css/font-awesome.css')
-
+require('font-awesome/css/font-awesome.css');
 useStrict(true)
 const render = () => (
     <Router>

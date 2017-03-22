@@ -1,8 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 // import {observable,action} from 'mobx'
 import { observer, inject } from "mobx-react";
 // import { IUserStore } from "../../store/UserStore";
 // import { IUser } from "./interfaces/interface";
+
 import DevTool from 'mobx-react-devtools'
 import { NavLink as Link } from 'react-router-dom'
 const styles = require('./header.scss');

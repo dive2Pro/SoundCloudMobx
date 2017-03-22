@@ -22,6 +22,7 @@ class Tracklist extends React.Component<any, any>  {
   };
 
   handleScroll = () => {
+    console.log('---')
     const trackStore: ITrackStore = this.props.TrackStore
     const { isLoadingActivities } = trackStore;
     if (!isLoadingActivities)

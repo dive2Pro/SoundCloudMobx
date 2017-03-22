@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import * as _ from 'lodash'
 function HocLoadingMore(Component: any) {
 
   class InnerComponent extends React.Component<{ scrollFunc: () => void }, any> {
@@ -12,8 +12,10 @@ function HocLoadingMore(Component: any) {
         const diff = sh - oh
         const trigger = sh > window.outerHeight && sh > oh && diff < 500;
         if (trigger) {
-          this.props.scrollFunc();
-          console.log('I am trigged')
+          _.debounce(() => {
+            console.log('I am trigged')
+            this.props.scrollFunc
+          }, 500);
         }
       }
     }
