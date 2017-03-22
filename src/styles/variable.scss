@@ -33,3 +33,11 @@ $circleRadius:50%;
 $shuffleCollor:#14ff00;
 
 $playerHeight:3.571em;
+
+.panel{
+  background: $mainColor;
+  color:$fontColor;
+  border:$border; 
+  font-size: $mediumIcon;
+  padding: $padding/2;
+}

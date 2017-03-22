@@ -1,0 +1,8 @@
+@import '../../styles/variable.scss';
+
+.main{
+  composes:panel;
+  input{
+    border: none;
+  }
+}

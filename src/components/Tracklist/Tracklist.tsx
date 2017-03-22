@@ -5,6 +5,7 @@ import { inject, observer } from "mobx-react";
 import { ITrackStore } from "../../store/TrackStore";
 import FilterPanel from '../FilterPanel'
 import * as sortTypes from '../../constants/sortTypes'
+import SearchPanel from '../SearchPanel'
 const styles = require('./tracklist.scss')
 
 interface ITracklistProp {
@@ -68,9 +69,9 @@ class Tracklist extends React.Component<any, any>  {
     return (
       <div className={styles.main}>
         <div className={styles.types}>
-
           <FilterPanel {...filterProp} />
           <FilterPanel {...sortProp} />
+          <SearchPanel />
         </div>
         <Tracklistinfo />
         <Activities scrollFunc={this.handleScroll} />
