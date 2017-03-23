@@ -80,8 +80,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />;
     }
-    const { isPlaying, playingTrack, isShuffleMode } = PlayerStore;
-    if (isPlaying) {
+    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode } = PlayerStore;
+    if (isPlaying || isPlaylistOpen) {
       clazzName = styles.visible;
     }
     let artworkUrl = "", trackName, username = "";

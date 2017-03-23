@@ -30,6 +30,7 @@ export interface ITableBody {
   singerId: number
   bodyData: ITableBodyItem[]
   configurations: any[]
+  live?: boolean
 }
 
 export class TableBody {
@@ -73,12 +74,12 @@ interface ITBodyTrProp {
 }
 
 const TBodyTr = ({ data }: ITBodyTrProp) => {
-  const { trackId: id, bodyData, configurations } = data
+  const { trackId: id, bodyData, configurations, live } = data
   const tds = bodyData.map((bitem, i) => {
     const { title, tag, onClick } = bitem;
 
     const renderNormalDom = (<div className={styles.duration}>{title}</div>)
-
+    const anchorClazz = live ? styles.liveanchor : styles.anchor;
     return (
       <td
         key={i + title}
@@ -86,7 +87,7 @@ const TBodyTr = ({ data }: ITBodyTrProp) => {
           console.log(onClick);
           onClick && onClick(id)
         }}
-        className={tag && styles.anchor}>
+        className={tag && anchorClazz}>
         {
           (bitem.render) ?
             bitem.render() : renderNormalDom

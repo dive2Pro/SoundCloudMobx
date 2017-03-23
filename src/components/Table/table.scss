@@ -5,11 +5,12 @@ table{
   border-top: 2px solid $mainColor; 
   border-collapse: collapse;
   width: 100%;
+  font-size: inherit;
 }
 td{
   line-height: 1.286em;
   padding: 0.429em 0.714em;
-  font-size: $mediumIcon;
+  font-size: inherit;
   text-align: center;
   a{
     color: #333!important;
@@ -19,6 +20,7 @@ td{
   } 
 }
 tr{
+  font-size: inherit;
   &:hover{
     .anchor{
       div.actions{ 
@@ -42,14 +44,13 @@ tr{
     display: none;    
     justify-content: space-around;
     width: 100%;
-
-  }
-
-
-
-// td:hover[data-tag='anchor']{
-//   &>div{
-//     visibility: block;
-//   }
-// }
-.active{}
+}
+.liveanchor{
+  composes:anchor;
+   div.actions{ 
+        display: flex;
+       }
+       div.duration{
+         display: none;
+       }
+}
