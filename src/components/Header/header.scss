@@ -6,16 +6,26 @@
   background: $nav;
   color:white;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items:center;
   top: 0;
   width: 100%;
   z-index: 10;
   left: 0;
   &>*{
-    padding: $_30pxEm/2 $_30pxEm/3;
+    padding: 0 $_30pxEm/3;
   }
 }
-
+nav{
+  display: flex;
+  h1{
+    font-size: $_30pxEm; 
+  }
+    align-items: center;
+  a{
+      padding: $padding;
+  }
+}
 .selected{
   background: #333;
 }
