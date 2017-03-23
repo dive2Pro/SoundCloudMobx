@@ -76,7 +76,7 @@ class TrackList {
       .then(data => {
         const filterArr = data.filter(item => {
           const b = this.activities.some(active => active.created_at === item.created_at)
-          console.log(b)
+          // console.log(b)
           return !b;
         })
         this.addActivities(filterArr);
@@ -123,13 +123,13 @@ class TrackList {
 
     if (!!this.sortType) {
       fs = fs.sort((p, n) => {
-        console.log(this.sortType)
+        // console.log(this.sortType)
         let pCount = p.origin[this.sortType]
         let nCount = n.origin[this.sortType]
         pCount = !Number.isNaN(pCount) ? pCount : 0;
         nCount = !Number.isNaN(nCount) ? nCount : 0;
         debugger
-        console.log(pCount + "- " + nCount)
+        // console.log(pCount + "- " + nCount)
         return nCount - pCount;
       })
     }

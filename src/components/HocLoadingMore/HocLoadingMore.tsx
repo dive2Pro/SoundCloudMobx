@@ -4,7 +4,11 @@ function HocLoadingMore(Component: any) {
 
   class InnerComponent extends React.Component<{ scrollFunc: () => void }, any> {
     div: HTMLDivElement;
-
+    constructor() {
+      super()
+      this.debounceFun = _.debounce(this.handleScrolling, 500);
+    }
+    debounceFun: any
     handleScrolling = (e: any) => {
       if (window) {
         const oh = window.pageYOffset,
@@ -12,22 +16,20 @@ function HocLoadingMore(Component: any) {
         const diff = sh - oh
         const trigger = sh > window.outerHeight && sh > oh && diff < 500;
         if (trigger) {
-          _.debounce(() => {
-            console.log('I am trigged')
-            this.props.scrollFunc
-          }, 500);
+          this.props.scrollFunc();
         }
       }
     }
     componentDidMount() {
-      window.addEventListener('scroll', this.handleScrolling)
+      window.addEventListener('scroll', this.debounceFun)
     }
 
     componentWiiUnmount() {
-      window.removeEventListener('scroll', this.handleScrolling)
+      window.removeEventListener('scroll', this.debounceFun)
     }
 
     render() {
+
       return (
         <div ref={r => this.div = r}>
           <Component />
