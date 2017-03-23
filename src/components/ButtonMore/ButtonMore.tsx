@@ -13,7 +13,6 @@ export interface IButtonMoreProp extends IButtonGhostProps {
 
 const ButtonMore = (function ButtonMore(prop: IButtonMoreProp) {
   const { isLoading, isHidden } = prop;
-  console.log(isLoading + "---Buttonmore")
   if (isHidden) {
     return <noscript />
   }

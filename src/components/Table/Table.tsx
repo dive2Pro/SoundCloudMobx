@@ -70,15 +70,15 @@ const Thead = ({ data }: ItableHeadProp) => {
 
 interface ITBodyTrProp {
   data: ITableBody
-  handleHoverLeave: (id: number) => void
-  handleHover: (id: number) => void
 }
 
-const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
+const TBodyTr = ({ data }: ITBodyTrProp) => {
   const { trackId: id, bodyData, configurations } = data
   const tds = bodyData.map((bitem, i) => {
     const { title, tag, onClick } = bitem;
+
     const renderNormalDom = (<div className={styles.duration}>{title}</div>)
+
     return (
       <td
         key={i + title}
@@ -102,9 +102,6 @@ const TBodyTr = ({ handleHoverLeave, handleHover, data }: ITBodyTrProp) => {
   return (<tr className={styles.ttr}
     key={id + "-!-" + preKey}
   >
-    {/*//TODO 事件太卡  */}
-    {/*onMouseEnter={() => handleHover(id)}*/}
-    {/*onMouseLeave={() => handleHoverLeave(id)}*/}
     {tds}
   </tr>)
 }
@@ -134,8 +131,6 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
             <TBodyTr
               key={item.trackId + "--" + i}
               data={item}
-              handleHoverLeave={this.handleHoverLeave}
-              handleHover={this.handleHover}
             />
           )
         })}

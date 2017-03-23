@@ -3,9 +3,11 @@
 .container{ 
   background: $background;
   display: flex;
-  width: 91.429em;
+  // min-width: 81.429em;
   margin: 0 auto;
   margin-top: $headerHight;
+  margin-bottom: $playerHeight;
+  justify-content: space-around;
 }
 
 .aside{

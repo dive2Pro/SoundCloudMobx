@@ -9,6 +9,8 @@ table{
 td{
   line-height: 1.286em;
   padding: 0.429em 0.714em;
+  font-size: $mediumIcon;
+  text-align: center;
   a{
     color: #333!important;
     &::visited{
@@ -16,12 +18,31 @@ td{
     }
   } 
 }
+tr{
+  &:hover{
+    .anchor{
+      div.actions{ 
+        display: flex;
+       }
+       div.duration{
+         display: none;
+       }
+    }
+  }
+}
 
+.anchor{
+  visibility: visible;
+
+}
 .duration{
     display: block;
  }
-.actions{
-    display: none;
+.actions{ 
+    display: none;    
+    justify-content: space-around;
+    width: 100%;
+
   }
 
 

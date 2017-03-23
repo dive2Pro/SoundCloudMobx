@@ -49,8 +49,8 @@ class InputRange extends React.Component<IInputRange, any> {
     }
     this.setValue(value);
   }
-  @action toggleMoving() {
-    this.isMoving = !this.isMoving
+  @action toggleMoving(b: boolean) {
+    this.isMoving = b
   }
   @action setValue(value: string | number) {
     const [l, h] = this.valueLimit;
@@ -198,7 +198,7 @@ class InputRange extends React.Component<IInputRange, any> {
 
   handleMouseDown = (e: any) => {
     if (e.target == this.dot) {
-      this.toggleMoving()
+      this.toggleMoving(true)
     }
     const { onDragStart } = this.props;
     if (onDragStart) {
@@ -220,7 +220,7 @@ class InputRange extends React.Component<IInputRange, any> {
     return pos - this.offLength;
   }
   handleMoveend = (e: any) => {
-    this.toggleMoving()
+    this.toggleMoving(false)
     e.preventDefault();
     this.actualPosition(this.getPos(e));
     const { onDragEnd } = this.props;

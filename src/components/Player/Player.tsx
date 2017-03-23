@@ -136,7 +136,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             <div className={styles.content_action}>
               <ButtonInline>
                 <i className="fa fa-volume-up">&nbsp;</i>
-
               </ButtonInline>
             </div>
             <div className={shuffleClazz}>
