@@ -6,7 +6,7 @@ import { IPlayerStore } from "../../store/PlayerStore";
 import ArtWork from "../ArtWork";
 import { action, observable } from "mobx";
 const styles = require("./player.scss");
-
+import Range from '../InputRange'
 interface IPlayerProps {
   PlayerStore?: IPlayerStore
 }
@@ -20,7 +20,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   timer: any;
   main: any;
   audio: HTMLAudioElement;
-  state = { visible: false };
   @observable isVisible = false;
   @action setPlayerVisibleFromComponent(visible: boolean) {
     this.isVisible = visible;
@@ -94,6 +93,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       username = uname
     }
     const shuffleClazz = isShuffleMode && styles.active;
+    const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
     return (
       <div
         className={clazzName}
@@ -101,6 +101,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         onMouseLeave={this.mouseOut}
         ref={r => this.main = r}
       >
+        <div className={rangeClazz}>
+          <Range data={1234} value={244} />
+        </div>
         <div className={styles.content}>
           <div className={styles.content_plays}>
             <div className={styles.content_action}>
@@ -148,7 +151,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             </div>
           </div>
         </div>
-        <div className="hand" />
         <audio
           ref={(audio: HTMLAudioElement) => {
             this.audio = audio;

@@ -8,8 +8,7 @@
   z-index: 2;
   /*top: 100%;*/
   transition: 0.2s transform ;
-  transform: translateY(90%) ;
-  overflow: hidden;
+  transform: translateY(90%) ; 
   display: flex;
   
 }
@@ -63,4 +62,16 @@
 }
 .content_options>div{
   margin: 0 6px;
+}
+.range{
+  background: green;
+  width: 100%;
+  bottom: $playerHeight;
+  margin: 0 8px;
+  position: absolute;
+  visibility: hidden;
+}
+.range_visible{
+  composes:range;
+  visibility: visible;
 }

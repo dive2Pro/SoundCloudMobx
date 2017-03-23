@@ -1,0 +1,38 @@
+.main{ 
+}
+.input_container{
+    position: relative;    
+    text-align: center;
+    height: 10px;
+    border-radius: 5px;
+}
+.input_dot{
+    z-index: 2;
+    position: absolute;
+    border-radius: 50%;
+    width:25px;
+    height: 25px;
+    background: gold;
+    left: -8.5px;
+    top:-8.5px;
+    &:hover {
+        .input_tooltip {
+            visibility: visible !important;
+            transition: opacity 2s ease;
+            opacity: 1;
+        }
+    }
+}
+.input_tooltip{
+    position: relative;
+    background: lightblue;
+    pointer-events: none;
+    color: white;
+    top: -25px;
+    padding: 5px;
+    transition: all 0.2s ease-in;    
+}
+.process{ 
+    z-index: 0;
+    border-radius: 5px; 
+} 
