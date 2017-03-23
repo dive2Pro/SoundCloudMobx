@@ -52,7 +52,7 @@ class Playlist extends React.Component<IPlaylistProp, any> {
           className: "fa fa-folder-o"
         }
       ];
-      const isPlaying = playingTrack.id == item.id;
+      const isPlaying = playingTrack ? playingTrack.id == item.id : false;
       const bodyData: ITableBodyItem[] = [
         {
           title: "",

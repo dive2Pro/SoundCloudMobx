@@ -40,8 +40,8 @@ const IndexAndPlayView = observer(({ track, onClick, index, isPlaying }: IndexAn
       {/*<span>{index}</span>*/}
       <ArtWork src={artwork_url} size={imgSize} />
       <div className={styles.play} style={styleSize}>
-        <ButtonInline onClick={() => onClick(track)}>
-          <i className='fa fa-play fa-3x'></i>
+        <ButtonInline onClick={onClick}>
+          <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}></i>
         </ButtonInline>
       </div>
 
@@ -106,14 +106,19 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.setPlayingTrack(track);
     }
   }
-
+  addToTrackList = (track: ITrack) => {
+    const { PlayerStore } = this.props
+    if (PlayerStore) {
+      PlayerStore.addToPlaylist(track);
+    }
+  }
   renderActivities = (arr: IActivitiesItem[], store: IPlayerStore) => {
     const { TrackStore } = this.props;
     if (!TrackStore || !store) {
       console.log('TrackStore = ' + TrackStore + " and PlayerStore = " + store)
       return (<noscript />)
     }
-    const { playingTrack } = store;
+    const { playingTrack, isPlaying } = store;
     const thead = [
       { title: "", width: 8 },
       { title: '歌曲标题', width: 30 }, {
@@ -128,7 +133,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       const { id: userId, username } = user
       const configurations = [
         {
-          fn: () => { },
+          fn: () => { this.addToTrackList(item.origin) },
           className: `fa fa-plus`
         }
         , {
@@ -142,8 +147,8 @@ class Activities extends React.Component<IActivitiesProps, any> {
           title: '', render: () => {
             return (
               <StyledIndexAndPlayView
-                isPlaying={playingTrack === item.origin}
-                index={i} track={item.origin} onClick={this.playTrack} />
+                isPlaying={isPlaying && playingTrack === item.origin}
+                index={i} track={item.origin} onClick={() => this.playTrack(item.origin)} />
             )
           }
         },

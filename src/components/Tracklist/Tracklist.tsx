@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Tracklistinfo from '../TracklistInfo'
+// import Tracklistinfo from '../TracklistInfo'
 import Activities from '../Activities'
 import { inject, observer } from "mobx-react";
 import { ITrackStore } from "../../store/TrackStore";
@@ -73,7 +73,7 @@ class Tracklist extends React.Component<any, any>  {
           <FilterPanel {...sortProp} />
           <SearchPanel />
         </div>
-        <Tracklistinfo />
+        {/*<Tracklistinfo />*/}
         <Activities scrollFunc={this.handleScroll} />
       </div>
     )

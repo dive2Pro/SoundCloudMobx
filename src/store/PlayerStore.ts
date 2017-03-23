@@ -36,9 +36,13 @@ class PlayerStore implements IPlayerStore {
     if (typeof track === 'number') {
       track = this.playList[track];
     }
-    this.playingTrack = track;
+    if (this.playingTrack === track && this.isPlaying) {
+      this.isPlaying = false;
+    } else {
+      this.playingTrack = track;
+      this.isPlaying = true;
+    }
     this.addToPlaylist(track);
-    this.isPlaying = true;
   }
 
   @action togglePlaying() {
