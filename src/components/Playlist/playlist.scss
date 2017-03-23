@@ -2,12 +2,17 @@
 
 .main{
   position: fixed;
-  bottom: $playerHeight;
+  bottom: $playerHeight+$playerDurationHeight;
   height: $playerHeight*5;
   right:  $_100pxEm;
   background: $nav;
   width: 36.429em;
   overflow-y: auto;
+  font-size: $smallIcon;
+  padding: $padding/4;
+  table{
+    border: none;
+
   tr{
     &:hover{
       background: #000;
@@ -20,7 +25,9 @@
      max-width: 0px;
     }
   }
+  }
 }
+
 .top{
   display: flex;
   align-items: center;
