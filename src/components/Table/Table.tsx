@@ -82,7 +82,7 @@ const TBodyTr = ({ data }: ITBodyTrProp) => {
     const anchorClazz = live ? styles.liveanchor : styles.anchor;
     return (
       <td
-        key={i + title}
+        key={i + title + '-' + id}
         onClick={() => {
           console.log(onClick);
           onClick && onClick(id)

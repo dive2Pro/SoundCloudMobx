@@ -32,7 +32,7 @@ class Main extends React.Component<any, undefined> {
         <nav>
           <Link
             activeClassName={selected}
-            to="/home">主页</Link>
+            to="/main">主页</Link>
           <Link
             activeClassName={selected}
             to='/my'>我的音乐</Link>

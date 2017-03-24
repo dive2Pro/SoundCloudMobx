@@ -1,11 +1,13 @@
-import { observable, action, extendObservable } from "mobx";
+import { observable, action, extendObservable, computed } from "mobx";
 import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
 import {
   CLIENT_ID,
   REDIRECT_URI,
   OAUTH_TOKEN
 } from "../constants/authentification";
-import { ISession, IUser, IMePeopels } from "../interfaces/interface";
+import { ISession, IUser, IMePeopels, IActivitiesItem } from "../interfaces/interface";
+import { addAccessToken, apiUrl } from "../services/soundcloundApi";
+import { ITrack } from "./index";
 const SC = require("soundcloud");
 const Cookies = require("js-cookie")
 // const Remotedev = require("mobx-remotedev");
@@ -26,6 +28,121 @@ interface ICatchErr {
   fetchType?: string;
 }
 const limitPageSize = 20;
+
+
+export interface IActivitiesStore {
+  fetchNextActivities: () => void;
+  filteredActivities: IActivitiesItem[];
+  isLoading: boolean;
+  activitiesCount: number
+  setFilterType: (type: string) => void;
+  setSortType: (type: string) => void;
+  setFilterTitle: (type: string) => void;
+  filterType: string
+  sortType: string,
+  filteredTracks: ITrack[];
+}
+
+class ActivitiesModel implements IActivitiesStore {
+  @observable isLoading: boolean
+  @observable filterType: string
+  @observable filterTitle: string
+  @observable sortType: string
+  @observable activities: IActivitiesItem[] = [];
+  @observable activities_nextHref$: string;
+  @observable tracks: ITrack[]
+
+  @action setNextActivitiesHref(nextHref: string) {
+    this.activities_nextHref$ = nextHref;
+  }
+
+  @action addActivities(arr: IActivitiesItem[]) {
+    this.activities.push(...arr);
+  }
+
+  @action setFilterTitle(title: string) {
+    this.filterTitle = title;
+  }
+  @action setSortType(type: string) {
+    this.sortType = type;
+  }
+
+  @computed get filteredTracks() {
+    return this.filteredActivities ? this.filteredActivities.map((item) => item.origin) : []
+  }
+
+  filterActivities(arr: IActivitiesItem[]) {
+    Promise.resolve(arr)
+      .then(data => {
+        const filterArr = data.filter(item => {
+          const b = this.activities.some(active => active.created_at === item.created_at)
+          // console.log(b)
+          return !b;
+        })
+        this.addActivities(filterArr);
+      })
+  }
+  @action setLoadingActivities(b: boolean) {
+    this.isLoading = b;
+  }
+  @action fetchNextActivities() {
+    if (!this.isLoading)
+      this.fetchActivities(this.activities_nextHref$);
+  }
+  @action async fetchActivities(nextHref?: string) {
+    let activitiesUrl;
+    if (nextHref) {
+      activitiesUrl = addAccessToken(nextHref, '&');
+    } else {
+      activitiesUrl = apiUrl(`me/activities?limit=50`, '&')
+    }
+    this.setLoadingActivities(true);
+    fetch(activitiesUrl)
+      .then(response => response.json())
+      .then((data: any) => {
+        this.setNextActivitiesHref(data.next_href)
+        this.filterActivities(data.collection);
+        this.setLoadingActivities(false)
+      })
+  }
+
+  @action setFilterType(filterType: string = "") {
+    this.filterType = filterType;
+
+  }
+
+  @computed get filteredActivities(): IActivitiesItem[] {
+    let fs = this.activities;
+    if (!!this.filterType) {
+      fs = fs.filter(item => {
+        return item.type === this.filterType
+      })
+    }
+
+    if (!!this.sortType) {
+      fs = fs.sort((p, n) => {
+        let pCount = p.origin[this.sortType];
+        let nCount = n.origin[this.sortType];
+        pCount = !Number.isNaN(pCount) ? pCount : 0;
+        nCount = !Number.isNaN(nCount) ? nCount : 0;
+        return nCount - pCount;
+      })
+    }
+
+    if (!!this.filterTitle) {
+      fs = fs.filter(item => {
+        return item.origin.title.indexOf(this.filterTitle) > -1
+      })
+    }
+
+    return fs;
+  }
+
+  @computed get activitiesCount() {
+    return this.activities.length;
+  }
+}
+
 class UserStore implements IUserStore {
   @observable session: any;
   @observable user: IUser;
@@ -35,7 +152,11 @@ class UserStore implements IUserStore {
   @observable isLoadings: {} = {};
   @observable nextHrefs: {} = {};
   oauth_token: string;
+  constructor(private actsStore: ActivitiesModel) {
+
+  }
   loadDataFromCookie() {
+
     const oauth_token = Cookies.get(OAUTH_TOKEN)
     if (oauth_token) {
       this.fetchUser(oauth_token);
@@ -68,6 +189,7 @@ class UserStore implements IUserStore {
         this.setUser(rawuser)
         this.fetchWithType(FETCH_FOLLOWERS, rawuser.nextHref);
         this.fetchWithType(FETCH_FOLLOWINGS, rawuser.nextHref);
+        this.actsStore.fetchActivities();
       }).catch(err => {
         this.catchError(err);
       })
@@ -135,5 +257,6 @@ class UserStore implements IUserStore {
 }
 
 
-
-export default new UserStore();
+const ActivitiesStore = new ActivitiesModel()
+export { ActivitiesStore };
+export default new UserStore(ActivitiesStore);

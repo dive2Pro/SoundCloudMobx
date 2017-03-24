@@ -1,18 +1,20 @@
-import { observable, action, computed } from 'mobx';
-import { apiUrl, addAccessToken } from '../services/soundcloundApi'
-import { ITrack, IActivitiesItem } from '../interfaces/interface';
+import {
+  action, observable, runInAction
+  , extendObservable
+  , computed
+} from 'mobx';
+
+import { addAccessToken } from '../services/soundcloundApi'
+import { ITrack } from '../interfaces/interface';
 export { ITrack }
-export class ActivitiesItem {
+// import { OAUTH_TOKEN, } from '../constants/authentification'
+import {
+  unauthApiUrl
+  // , addAccessToken
+  // , apiUrl
+} from '../services/soundcloundApi'
 
-  constructor() {
-
-  }
-
-  @action updateFromJson(data: any) {
-    Object.assign(this, data);
-  }
-}
-
+// const Cookie = require('js-cookie');
 export class Track {
 
   constructor() {
@@ -22,130 +24,103 @@ export class Track {
   @action updateFromJson(data: any) {
     Object.assign(this, data);
   }
+
 }
 
 export interface ITrackStore {
-  fetchActivities: (nexthref?: string) => void;
-  fetchNextActivities: () => void;
-  filteredActivities: IActivitiesItem[];
-  isLoadingActivities: boolean;
-  activitiesCount: number
-  setFilterType: (type: string) => void;
-  setSortType: (type: string) => void;
-  setFilterTitle: (type: string) => void;
-  filterType: string
-  sortType: string
+  fetchTracks: (nextHref: string, genre?: string) => void;
+  isLoading: boolean;
+  tracks: ITrack[]
+  currentTracks: ITrack[]
+  setGenre: (genre: string) => void;
 }
 
+class TrackList implements ITrackStore {
+  token: string = ""
+  @observable tracksByGenre = {}
+  @observable currentGenre: string
+  @observable nextHrefsByGenre = {}
+  @observable isLoadingByGenre = {}
+  @observable currentTracks: ITrack[] = [];
 
-class TrackList {
-  @observable activities: IActivitiesItem[] = [];
-  @observable activities_nextHref$: string;
-  @observable isLoadingActivities: boolean = false;
-  @observable filterType: string
-  @observable filterTitle: string
-  @observable sortType: string
   constructor() {
 
   }
 
+  @computed get isLoading() {
+    return this.isLoadingByGenre[this.currentGenre]
+  }
+  @action setLoadingByGenre(loading: boolean) {
+    if (!this.isLoadingByGenre[this.currentGenre]) {
+      extendObservable(this.isLoadingByGenre, { [this.currentGenre]: false })
+    }
+    this.isLoadingByGenre[this.currentGenre] = loading;
+  }
+  @action setGenre(genre: string) {
+    this.currentGenre = genre.toLocaleLowerCase()
+    if (!this.tracksByGenre[genre]) {
+      this.fetchTracks();
+    }
+    this.currentTracks = this.tracksByGenre[genre] || [];
+  }
+  @action setNextHrefByGenre(genre: string, nextHref: string) {
+    console.log(genre, nextHref)
+    if (!this.nextHrefsByGenre[genre]) {
+      extendObservable(this.nextHrefsByGenre, { [genre]: nextHref })
+    }
+    this.nextHrefsByGenre[genre] = nextHref;
+  }
+  @computed get nextHref() {
+    return this.nextHrefsByGenre[this.currentGenre]
+  }
 
-  @computed get activitiesCount() {
-    return this.activities.length;
-  }
-  @action setFilterTitle(title: string) {
-    this.filterTitle = title;
-  }
-  @action setSortType(type: string) {
-    this.sortType = type;
+  @computed get tracks() {
+    if (this.currentGenre) {
+      return this.tracksByGenre[this.currentGenre] || [];
+    }
+
+    return [];
   }
 
-  @action updateFromServer(nextHref: string) {
-
-  }
-  @action setNextActivitiesHref(nextHref: string) {
-    this.activities_nextHref$ = nextHref;
-  }
-
-  @action addActivities(arr: IActivitiesItem[]) {
-    this.activities.push(...arr);
-  }
-
-  filterActivities(arr: IActivitiesItem[]) {
-    Promise.resolve(arr)
-      .then(data => {
-        const filterArr = data.filter(item => {
-          const b = this.activities.some(active => active.created_at === item.created_at)
-          // console.log(b)
-          return !b;
-        })
-        this.addActivities(filterArr);
+  @computed get allTracks() {
+    return Object.keys(this.tracksByGenre)
+      .map(key => {
+        return this.tracksByGenre[key]
       })
   }
-  @action changeLoadings(type: any) {
-    this[type] = !this[type];
-  }
-  @action setLoadingActivities(b: boolean) {
-    this.isLoadingActivities = b;
-  }
-  @action fetchNextActivities() {
-    if (!this.isLoadingActivities)
-      this.fetchActivities(this.activities_nextHref$);
-  }
-  @action async fetchActivities(nextHref?: string) {
-    let activitiesUrl;
+
+  @action async fetchTracks() {
+    let url = "", genre = this.currentGenre || "country";
+    const nextHref = this.nextHref;
     if (nextHref) {
-      activitiesUrl = addAccessToken(nextHref, '&');
+      url = nextHref
     } else {
-      activitiesUrl = apiUrl(`me/activities?limit=50`, '&')
+      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=50&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
-    this.setLoadingActivities(true)
-    fetch(activitiesUrl)
-      .then(response => response.json())
-      .then((data: any) => {
-        this.setNextActivitiesHref(data.next_href)
-        this.filterActivities(data.collection);
-        this.setLoadingActivities(false)
-      })
+    this.setLoadingByGenre(true)
+    const data: any = await fetch(url).then(response => response.json())
+    //todo catch error
+    console.log(data)
+    runInAction('loadtracks', () => {
+      if (!this.tracksByGenre[genre]) {
+        extendObservable(this.tracksByGenre, { [genre]: [] });
+
+        this.tracksByGenre[genre].observe((data: any) => {
+
+          (this.currentGenre === genre) && (this.currentTracks = this.tracksByGenre[genre]);
+        })
+      }
+      this.setNextHrefByGenre(genre, data.next_href);
+      this.tracksByGenre[genre].push(...data.collection);
+      this.setLoadingByGenre(false)
+    })
+
   }
 
-  @action setFilterType(filterType: string = "") {
-    this.filterType = filterType;
-  }
-
-  @computed get filteredActivities(): IActivitiesItem[] {
-    let fs = this.activities;
-    if (!!this.filterType) {
-      fs = fs.filter(item => {
-        return item.type === this.filterType
-      })
-    }
-
-    if (!!this.sortType) {
-      fs = fs.sort((p, n) => {
-        // console.log(this.sortType)
-        let pCount = p.origin[this.sortType]
-        let nCount = n.origin[this.sortType]
-        pCount = !Number.isNaN(pCount) ? pCount : 0;
-        nCount = !Number.isNaN(nCount) ? nCount : 0;
-        debugger
-        // console.log(pCount + "- " + nCount)
-        return nCount - pCount;
-      })
-    }
-
-    if (!!this.filterTitle) {
-      fs = fs.filter(item => {
-        return item.origin.title.indexOf(this.filterTitle) > -1
-      })
-    }
-
-    return fs;
-  }
   // todo
-  @action fetchPlaylists(id: number) {
+  @action  async fetchPlaylists(id: number) {
     const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
-    fetch(playlistUrl)
+    await fetch(playlistUrl)
       .then(response => response.json())
       .then((data: any) => {
 
