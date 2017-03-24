@@ -1,26 +1,34 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Callback from './components/Callback'
-import DashBoard from './components/DashBoard/DashBoard'
+import DashBoard from './components/DashBoard'
+import Browser from './components/Browse'
 import Header from './components/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import { UserStore, TrackStore, PlayerStore } from './store';
+import { UserStore, TrackStore, PlayerStore, ActivitiesStore } from './store';
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
+// const stores = [ActivitiesStore, UserStore, TrackStore, PlayerStore]
 const render = () => (
     <Router>
         <Provider
-            TrackStore={TrackStore}
+            ActivitiesStore={ActivitiesStore}
             UserStore={UserStore}
-            PlayerStore={PlayerStore}>
+            TrackStore={TrackStore}
+            PlayerStore={PlayerStore}
+        >
             <div>
                 <Header />
-                <Route exact path="/" component={DashBoard} />
-                <Route path="/my" component={DashBoard} />
-                <Route path="/callback(:*)" component={Callback} />
+                <Switch>
+                    <Route exact path="/" component={Browser} />
+                    <Route path="/my" component={DashBoard} />
+                    <Route path="/main" component={Browser} />
+                    <Redirect from="/main(:*)" to='/main?genre=country' />
+                    <Route path="/callback(:*)" component={Callback} />
+                </Switch>
             </div>
         </Provider>
     </Router>

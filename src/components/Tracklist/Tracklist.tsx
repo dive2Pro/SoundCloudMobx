@@ -1,84 +1,73 @@
-import * as React from 'react'
-// import Tracklistinfo from '../TracklistInfo'
+import * as React from "react";
 import Activities from '../Activities'
-import { inject, observer } from "mobx-react";
-import { ITrackStore } from "../../store/TrackStore";
-import FilterPanel from '../FilterPanel'
-import * as sortTypes from '../../constants/sortTypes'
-import SearchPanel from '../SearchPanel'
-const styles = require('./tracklist.scss')
+import { observable } from 'mobx'
+import { observer, inject } from 'mobx-react'
+import { action } from ".3.1.7@mobx/lib/mobx";
 
-interface ITracklistProp {
-  prop: ITracklistProp
 
+function getGenreFromPathname(pathname: string) {
+  const reg = /=\w{2,8}/g;
+  let reged = reg.exec(pathname) || []
+  let genre = reged[0].substr(1);
+  return genre;
 }
 
 
-
-@inject("TrackStore")
+@inject('TrackStore')
 @observer
-class Tracklist extends React.Component<any, any>  {
-  handleSortType = (type: string) => {
-    this.props.TrackStore.setSortType(type)
-  };
-
-  handleScroll = () => {
-    console.log('---')
-    const trackStore: ITrackStore = this.props.TrackStore
-    const { isLoadingActivities } = trackStore;
-    if (!isLoadingActivities)
-      trackStore.fetchNextActivities();
-  }
-  handleFilterType = (type: string) => {
-    this.props.TrackStore.setFilterType(type)
-  }
-
-  render() {
-    const filterProp = {
-      handleClick: this.handleFilterType,
-      tagClass: 'fa fa-filter',
-      items: [
-        {
-          content: 'ALL',
-          type: ""
-        }, {
-          content: "Track",
-          type: 'track'
-        }, {
-          content: "Mix",
-          type: 'mix'
-        }],
-      activeType: this.props.TrackStore.filterType
-    }
-    const sortItems = sortTypes.sortObjs.map(item => {
-      const key = Object.keys(item)[0]
-      return {
-        type: sortTypes[key],
-        content: item[key]
+class Tracklist extends React.Component<any, any> {
+  @observable count: any = 0;
+  currentGenre = ''
+  componentDidMount() {
+    const { TrackStore, match } = this.props
+    const { location: { pathname } } = this.props;
+    if (pathname) {
+      let genre = match.params.genre || getGenreFromPathname(pathname)
+      if (!genre) {
+        genre = 'country'
       }
-    })
-    const sortProp = {
-      handleClick: this.handleSortType,
-      tagClass: 'fa fa-sort',
-      items: [{
-        content: 'NONE',
-        type: ''
-      }].concat(sortItems),
-      activeType: this.props.TrackStore.sortType
+      this.currentGenre = genre
+      TrackStore.setGenre(genre);
     }
-    return (
-      <div className={styles.main}>
-        <div className={styles.types}>
-          <FilterPanel {...filterProp} />
-          <FilterPanel {...sortProp} />
-          <SearchPanel />
-        </div>
-        {/*<Tracklistinfo />*/}
-        <Activities scrollFunc={this.handleScroll} />
-      </div>
-    )
   }
 
+  componentWillReceiveProps(nextProp: any) {
+    const { TrackStore } = this.props
+    const { location: { pathname } } = nextProp;
+
+    if (pathname != this.currentGenre) {
+      let genre = getGenreFromPathname(pathname)
+      if (!genre) {
+        genre = 'country'
+      }
+      TrackStore.setGenre(genre);
+    }
+  }
+  componentDidUpdate() {
+  }
+  componentWillUnMount() {
+    console.log('componentWillUnMount')
+  }
+  handleScroll = () => {
+    const trackStore = this.props.TrackStore;
+    const { isLoading } = trackStore;
+    if (!isLoading) trackStore.fetchTracks();
+  };
+  @action
+  increateCount = () => {
+    this.count++
+  }
+  render() {
+
+    const { TrackStore: { currentTracks, isLoading } } = this.props
+    return <div>
+      <Activities
+        isLoading={isLoading}
+        tracks={currentTracks} sortType={''}
+        scrollFunc={this.handleScroll}
+      />
+    </div>
+  }
 }
 
-export default Tracklist
+export default Tracklist;

@@ -2,9 +2,8 @@ import * as React from 'react'
 import * as CSSModule from 'react-css-modules'
 const styles = require('./activities.scss')
 import { observer, inject } from 'mobx-react';
-import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
-import { IActivitiesItem, ITrack } from '../../interfaces/interface';
+import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
@@ -14,8 +13,10 @@ import { Action } from '../HoverActions'
 import * as sortTypes from '../../constants/sortTypes'
 import ArtWork from '../ArtWork';
 interface IActivitiesProps {
-  TrackStore: ITrackStore
-  PlayerStore: IPlayerStore
+  PlayerStore?: IPlayerStore
+  isLoading: boolean,
+  tracks: ITrack[],
+  sortType: string
 }
 
 
@@ -24,7 +25,6 @@ interface IndexAndPlayViewProp {
   track: ITrack
   onClick: (track: ITrack) => void
   isPlaying: boolean
-
 }
 
 const IndexAndPlayView = observer(({ track, onClick, index, isPlaying }: IndexAndPlayViewProp): React.ReactElement<any> => {
@@ -54,13 +54,12 @@ const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
 
 interface TdTrackTitleViewProp {
   track: ITrack
-  trackStore: ITrackStore
+  sortType: string
 }
 
-const TdTrackTitleView = observer(({ track, trackStore }: TdTrackTitleViewProp) => {
+const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) => {
   const { user, title, playback_count, favoritings_count, comment_count, download_count } = track;
   const { username } = user
-  const { sortType } = trackStore;
   const activeStyle = { color: '#14ff00' }
 
   return (
@@ -92,14 +91,10 @@ const TdTrackTitleView = observer(({ track, trackStore }: TdTrackTitleViewProp) 
 
 
 @CSSModule(styles)
-@inject('PlayerStore', 'TrackStore')
+@inject('PlayerStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
-  componentDidMount() {
-    const { TrackStore } = this.props
-    if (TrackStore)
-      TrackStore.fetchActivities();
-  }
+
   playTrack = (track: ITrack) => {
     const { PlayerStore } = this.props
     if (PlayerStore) {
@@ -112,10 +107,9 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.addToPlaylist(track);
     }
   }
-  renderActivities = (arr: IActivitiesItem[], store: IPlayerStore) => {
-    const { TrackStore } = this.props;
-    if (!TrackStore || !store) {
-      console.log('TrackStore = ' + TrackStore + " and PlayerStore = " + store)
+  renderActivities = (arr: ITrack[], store: IPlayerStore, sortType: string) => {
+    if (!store) {
+      console.error("PlayerStore = " + store)
       return (<noscript />)
     }
     const { playingTrack, isPlaying } = store;
@@ -128,12 +122,12 @@ class Activities extends React.Component<IActivitiesProps, any> {
       }
     ]
     const tbodys: ITableBody[] = [];
-    arr.filter(item => item.origin).forEach((item, i) => {
-      const { id, title, duration, user } = item.origin
+    arr.forEach((item, i) => {
+      const { id, title, duration, user } = item
       const { id: userId, username } = user
       const configurations = [
         {
-          fn: () => { this.addToTrackList(item.origin) },
+          fn: () => { this.addToTrackList(item) },
           className: `fa fa-plus`
         }
         , {
@@ -147,14 +141,14 @@ class Activities extends React.Component<IActivitiesProps, any> {
           title: '', render: () => {
             return (
               <StyledIndexAndPlayView
-                isPlaying={isPlaying && playingTrack === item.origin}
-                index={i} track={item.origin} onClick={() => this.playTrack(item.origin)} />
+                isPlaying={isPlaying && playingTrack === item}
+                index={i} track={item} onClick={() => this.playTrack(item)} />
             )
           }
         },
         {
           title, render: () => {
-            return (<TdTrackTitleView trackStore={TrackStore} track={item.origin} />)
+            return (<TdTrackTitleView sortType={sortType} track={item} />)
           }
         },
         { title: seconds2time(duration), tag: 'anchor' },
@@ -171,24 +165,23 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 
   render() {
-    const TrackStore = this.props.TrackStore;
-    if (!TrackStore) {
-      return (<noscript />)
-    }
-    const { isLoadingActivities, filteredActivities: activities, activitiesCount } = TrackStore;
 
-    const isLoading = isLoadingActivities || !activities
+    const { isLoading, tracks, sortType } = this.props;
+    const tracksCount = tracks.length;
+    const store = this.props.PlayerStore
+    if (!store) {
+      return <noscript />
+    }
     return (
       <div className={styles.main}>
         <div className={styles.top}>
           <div>
             <h3>歌曲列表</h3>
-            <span>{activitiesCount}首歌</span>
+            <span>{tracksCount}首歌</span>
           </div>
-          <span>播放<span>{}</span>次</span>
         </div>
         <div className={styles.tracks}>
-          {this.renderActivities(activities, this.props.PlayerStore)}
+          {this.renderActivities(tracks, store, sortType)}
         </div>
         <LoadingSpinner isLoading={isLoading} />
       </div>

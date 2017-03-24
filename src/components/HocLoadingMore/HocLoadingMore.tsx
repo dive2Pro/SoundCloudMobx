@@ -1,8 +1,14 @@
 import * as React from 'react';
+import { ComponentClass } from 'react'
 import * as _ from 'lodash'
-function HocLoadingMore(Component: any) {
 
-  class InnerComponent extends React.Component<{ scrollFunc: () => void }, any> {
+interface ET {
+  scrollFunc: () => void;
+}
+
+function HocLoadingMore<T>(Component: ComponentClass<T>) {
+
+  class InnerComponent extends React.Component<T & ET, any> {
     div: HTMLDivElement;
     constructor() {
       super()
@@ -10,7 +16,7 @@ function HocLoadingMore(Component: any) {
     }
     debounceFun: any
     handleScrolling = (e: any) => {
-      if (window) {
+      if (window && window.pageYOffset) {
         const oh = window.pageYOffset,
           sh = this.div.scrollHeight
         const diff = sh - oh
@@ -32,7 +38,7 @@ function HocLoadingMore(Component: any) {
 
       return (
         <div ref={r => this.div = r}>
-          <Component />
+          <Component {...this.props} />
         </div>
       );
     }

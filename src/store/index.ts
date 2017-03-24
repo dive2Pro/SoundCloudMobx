@@ -1,11 +1,16 @@
 
-import UserStore from './UserStore';
-import TrackStore, { ITrack } from './TrackStore';
+import UserStore, { IUserStore, IActivitiesStore, ActivitiesStore } from './UserStore';
+import TrackStore, { ITrack, ITrackStore } from './TrackStore';
 import PlayerStore, { IPlayerStore } from './PlayerStore';
 
 export {
   UserStore,
-  TrackStore
-  , PlayerStore, IPlayerStore,
+  IUserStore,
+  TrackStore,
+  ITrackStore,
+  IActivitiesStore,
+  ActivitiesStore
+  , PlayerStore
+  , IPlayerStore,
   ITrack
 }
