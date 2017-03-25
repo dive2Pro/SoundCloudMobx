@@ -99,14 +99,11 @@ class TrackList implements ITrackStore {
     }
     this.setLoadingByGenre(true)
     const data: any = await fetch(url).then(response => response.json())
-    //todo catch error
-    console.log(data)
+    //todo catch error 
     runInAction('loadtracks', () => {
       if (!this.tracksByGenre[genre]) {
         extendObservable(this.tracksByGenre, { [genre]: [] });
-
         this.tracksByGenre[genre].observe((data: any) => {
-
           (this.currentGenre === genre) && (this.currentTracks = this.tracksByGenre[genre]);
         })
       }
