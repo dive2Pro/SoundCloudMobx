@@ -56,15 +56,16 @@ class TrackList implements ITrackStore {
     }
     this.isLoadingByGenre[this.currentGenre] = loading;
   }
-  @action setGenre(genre: string) {
-    this.currentGenre = genre.toLocaleLowerCase()
-    if (!this.tracksByGenre[genre]) {
+  @action setGenre( genre :string ) {
+    genre = genre.toLocaleLowerCase()
+    this.currentGenre = genre;
+    if (!this.tracksByGenre[genre]) { 
       this.fetchTracks();
-    }
-    this.currentTracks = this.tracksByGenre[genre] || [];
+    } else
+      this.currentTracks = this.tracksByGenre[genre] || [];
   }
   @action setNextHrefByGenre(genre: string, nextHref: string) {
-    console.log(genre, nextHref)
+    // console.log(genre, nextHref)
     if (!this.nextHrefsByGenre[genre]) {
       extendObservable(this.nextHrefsByGenre, { [genre]: nextHref })
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Callback from './components/Callback'
 import DashBoard from './components/DashBoard'
 import Browser from './components/Browse'
@@ -26,7 +26,6 @@ const render = () => (
                     <Route exact path="/" component={Browser} />
                     <Route path="/my" component={DashBoard} />
                     <Route path="/main" component={Browser} />
-                    <Redirect from="/main(:*)" to='/main?genre=country' />
                     <Route path="/callback(:*)" component={Callback} />
                 </Switch>
             </div>

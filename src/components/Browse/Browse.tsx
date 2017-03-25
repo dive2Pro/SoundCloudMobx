@@ -9,10 +9,22 @@ import TrackList from '../Tracklist'
 import Player from '../Player'
 import Playlist from '../Playlist'
 import { ITrackStore } from "../../store";
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, Redirect } from 'react-router-dom'
+import { GENRES } from '../../constants/trackTypes'
 interface IDashBorardProps {
   TrackStore: ITrackStore
   location?: any
+}
+
+
+const FlagLink = ({ to, label }: any) => {
+  return <Route path={to} exact={true} children={({ match }: any) => {
+    return (<div className={match ? "active" : ""}>
+      {match ? <i className='fa fa-flag'></i> : ""}
+      <Link to={to} >{label}</Link>
+    </div>)
+  }}
+  />
 }
 
 @observer
@@ -23,12 +35,21 @@ class Browse extends React.Component<IDashBorardProps, any> {
 
 
   render() {
+    const { } = this.props.location
+    console.log(GENRES)
     return (
       <div className={styles.container}>
-        <Link to={'/main/genre=country'}>Country</Link>
-        <Link to={'/main/genre=hip-hop'}>Hip&Hop</Link>
-        <Link to={'/main/genre=rap'}>Rap</Link>
+        <nav className={styles.nav}>
+          {GENRES.map((item, i) => {
+            return <FlagLink
+              key={i + "-" + item}
+              to={`/main/genre=${item}`}
+              label={item} />
+          })}
+        </nav>
+
         <Route path={`/main/genre=:genre`} component={TrackList} />
+        <Redirect to={'/main/genre=country'} />
         <Player />
         <Playlist />
       </div>

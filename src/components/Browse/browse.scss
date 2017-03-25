@@ -1,5 +1,24 @@
 @import '../../styles/variable.scss';
 
 .container{
-  margin-top: 200px;
+  margin-top: $headerHight;
+  min-width: $contentMinWidth;
+}
+.nav{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: $secondMainColor;
+    div{
+      color: $white;
+      padding: $padding;
+      font-size: $mediumIcon;
+      &.active{
+        background-color: $thirdMainColor;
+        color: $white;
+      }
+      a{
+        color: inherit;
+      }
+    }
 }
