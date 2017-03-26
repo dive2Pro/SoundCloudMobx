@@ -11,7 +11,8 @@ interface TdTrackTitleViewProp {
 }
 
 const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) => {
-  const { user, title, playback_count, favoritings_count, comment_count, download_count } = track;
+  const { user, title, playback_count,
+    favoritings_count, comment_count, download_count } = track;
   const { username } = user
   const activeStyle = { color: '#14ff00' }
 
