@@ -7,16 +7,18 @@ import FollowersContainer from '../Followers'
 import FollowingsContainer from '../Followings'
 import Player from '../Player'
 import Playlist from '../Playlist'
-import { IActivitiesStore } from "../../store";
+import { IActivitiesStore, IPlayerStore } from "../../store";
 import Activities from "../Activities";
+import Favorites from "../Favorites";
 import FilterPanel from "../FilterPanel";
 import * as sortTypes from "../../constants/sortTypes";
 import SearchPanel from "../SearchPanel";
 interface IDashBorardProps {
   UserStore: IUserStore
   ActivitiesStore: IActivitiesStore
+  PlayerStore: IPlayerStore
 }
-@inject("UserStore", "ActivitiesStore")
+@inject("UserStore", "ActivitiesStore", 'PlayerStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
   componentDidMount() {
@@ -102,6 +104,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
         </div>
         <aside className={styles.aside}>
           <Profile user={user} />
+          <Favorites
+            PlayerStore={this.props.PlayerStore}
+            UserStore={userStore} />
           <FollowersContainer UserStore={userStore} />
           <FollowingsContainer UserStore={userStore} />
         </aside>

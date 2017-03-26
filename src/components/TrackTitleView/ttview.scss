@@ -1,0 +1,13 @@
+@import '../../styles/variable.scss';
+.track_counts{
+  display: flex;
+  justify-content: space-between;
+}
+
+.track_info{
+  padding: $padding/2;  
+  text-align: initial;
+  h4{
+    padding: $padding 0;
+  }
+}

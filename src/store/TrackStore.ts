@@ -24,7 +24,9 @@ export class Track {
   @action updateFromJson(data: any) {
     Object.assign(this, data);
   }
+  play() {
 
+  }
 }
 
 export interface ITrackStore {

@@ -16,7 +16,7 @@ function HocLoadingMore<T>(Component: ComponentClass<T>) {
     }
     debounceFun: any
     handleScrolling = (e: any) => {
-      if (window && window.pageYOffset) {
+      if (window && window.pageYOffset && this.div) {
         const oh = window.pageYOffset,
           sh = this.div.scrollHeight
         const diff = sh - oh
@@ -35,7 +35,6 @@ function HocLoadingMore<T>(Component: ComponentClass<T>) {
     }
 
     render() {
-
       return (
         <div ref={r => this.div = r}>
           <Component {...this.props} />
