@@ -9,9 +9,8 @@ import Table, { ITableBody, ITableBodyItem } from '../Table'
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
 import HocLoading from '../HocLoadingMore'
-import { Action } from '../HoverActions'
-import * as sortTypes from '../../constants/sortTypes'
 import ArtWork from '../ArtWork';
+import TdTrackTitleView from '../TrackTitleView'
 interface IActivitiesProps {
   PlayerStore?: IPlayerStore
   isLoading: boolean,
@@ -51,43 +50,6 @@ const IndexAndPlayView = observer(({ track, onClick, index, isPlaying }: IndexAn
 
 const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
 
-
-interface TdTrackTitleViewProp {
-  track: ITrack
-  sortType: string
-}
-
-const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) => {
-  const { user, title, playback_count, favoritings_count, comment_count, download_count } = track;
-  const { username } = user
-  const activeStyle = { color: '#14ff00' }
-
-  return (
-    <div className={styles.track_info}>
-      <h5><span>{title}</span> - <span>{username}</span></h5>
-      <div className={styles.track_counts}>
-        <Action
-          activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}
-          className='fa fa-play'
-          children={playback_count}
-        />
-        <Action
-          activeStyle={sortType == sortTypes.SORT_FAVORITINGS_COUNT ? activeStyle : {}}
-          className='fa fa-favorite'
-          children={favoritings_count} />
-        <Action
-          activeStyle={sortType == sortTypes.SORT_COMMENT_COUNT ? activeStyle : {}}
-          className='fa fa-comment'
-          children={comment_count} />
-
-        <Action
-          activeStyle={sortType == sortTypes.SORT_DOWNLOAD_COUNT ? activeStyle : {}}
-          className='fa fa-download'
-          children={download_count} />
-      </div>
-    </div>
-  )
-})
 
 
 @CSSModule(styles)

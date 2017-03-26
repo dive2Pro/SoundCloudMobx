@@ -1,5 +1,5 @@
 import { observable, action, extendObservable, computed } from "mobx";
-import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
+import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
 import {
   CLIENT_ID,
   REDIRECT_URI,
@@ -19,6 +19,7 @@ export interface IUserStore {
   loadDataFromCookie: () => void;
   followers: IUser[];
   followings: IUser[];
+  favorites: ITrack[];
   isLoadings: {}
   nextHrefs: {}
   // fetchFollowers: (nextHref: string, id?: number, ) => void;
@@ -148,6 +149,7 @@ class UserStore implements IUserStore {
   @observable user: IUser;
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
+  @observable favorites: ITrack[] = [];
   @observable isFetchFollowersLoading: boolean = false;
   @observable isLoadings: {} = {};
   @observable nextHrefs: {} = {};
@@ -189,6 +191,7 @@ class UserStore implements IUserStore {
         this.setUser(rawuser)
         this.fetchWithType(FETCH_FOLLOWERS, rawuser.nextHref);
         this.fetchWithType(FETCH_FOLLOWINGS, rawuser.nextHref);
+        this.fetchWithType(FETCH_FAVORITES, rawuser.nextHref);
         this.actsStore.fetchActivities();
       }).catch(err => {
         this.catchError(err);
@@ -241,6 +244,9 @@ class UserStore implements IUserStore {
         break
       case FETCH_FOLLOWINGS:
         url = `/users/${id}/followings`
+        break
+      case FETCH_FAVORITES:
+        url = `/users/${id}/favorites`
         break
     }
     const fetchType = type;

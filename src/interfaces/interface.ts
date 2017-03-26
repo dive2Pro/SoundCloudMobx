@@ -48,10 +48,10 @@ export interface IActivitiesItem {
     origin: ITrack;
 }
 export interface ITrack {
-    id: 13158665,
+    id: number,
     created_at: "2011/04/06 15:37:43 +0000",
-    user_id: 3699101,
-    duration: 18109,
+    user_id: number,
+    duration: number,
     commentable: true,
     state: "finished",
     sharing: "public",

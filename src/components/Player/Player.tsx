@@ -51,11 +51,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       return;
     }
     const { playingUrl, isPlaying } = this.props.PlayerStore;
-    // const audio = this.audio
+    const audio = this.audio
     if (playingUrl && isPlaying) {
-      // console.log(playingUrl)
-      // audio.src = playingUrl;
-      // audio.play()
+      console.log(playingUrl)
+      audio.src = playingUrl;
+      audio.play()
+    } else {
+      audio.pause();
     }
   }
   handleOpenPlaylist = () => {
@@ -80,7 +82,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />;
     }
-    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode } = PlayerStore;
+    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode, playingUrl } = PlayerStore;
     if (isPlaying || isPlaylistOpen) {
       clazzName = styles.visible;
     }
@@ -154,6 +156,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
           ref={(audio: HTMLAudioElement) => {
             this.audio = audio;
           }}
+          src={playingUrl}
           id="audio"
         />
       </div>
