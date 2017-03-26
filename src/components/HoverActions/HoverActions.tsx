@@ -16,7 +16,9 @@ interface IHoverActionsProp {
 
 export const Action = (cfg: IconfiguType) => {
   const { fn, className, activeStyle, children } = cfg
-  return (<div style={activeStyle}>
+  return (<div
+    className={styles.btnContainer}
+    style={activeStyle}>
     <ButtonInline
       onClick={fn && fn}>
       <i className={className}></i>

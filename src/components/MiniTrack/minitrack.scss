@@ -1,8 +1,37 @@
 @import '../../styles/variable.scss';
 .mini{
-
+  display: flex;
+  align-content: center;
+  width: inherit;
+  margin: 1.429em 0;
+  &:hover{
+    .actions{
+      transform: translateX(0)
+    }
+  }
 }
 
 .track{
-  
+  display: flex;
+  align-content: center;
+  text-overflow: inherit;
+  white-space: inherit;
+  overflow: inherit;
+  width: inherit;
+}
+.actions{
+  // position: absolute;
+  transition: transform 0.2s ease;
+  transform: translateX(1010%);
+  position: absolute;
+  right: 0;
+  padding: $padding;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  background: $white;
+}
+.visibleActions{
+  composes:actions;
+  transform: translateX(0);
 }

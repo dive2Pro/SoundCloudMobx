@@ -77,10 +77,10 @@ class Activities extends React.Component<IActivitiesProps, any> {
     const { playingTrack, isPlaying } = store;
     const thead = [
       { title: "", width: 8 },
-      { title: '歌曲标题', width: 30 }, {
-        title: '时长', width: 10
+      { title: '歌曲标题', width: 25 }, {
+        title: '时长', width: 12
       }, {
-        title: '歌手', width: 10
+        title: '歌手', width: 13
       }
     ]
     const tbodys: ITableBody[] = [];

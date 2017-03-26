@@ -1,11 +1,20 @@
-import { observable, action, extendObservable, computed } from "mobx";
+import {
+  observable, action
+  , ObservableMap
+  // , runInAction
+  , extendObservable, computed
+} from "mobx";
 import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
 import {
   CLIENT_ID,
   REDIRECT_URI,
   OAUTH_TOKEN
 } from "../constants/authentification";
-import { ISession, IUser, IMePeopels, IActivitiesItem } from "../interfaces/interface";
+import {
+  ISession, IUser
+  // , IMePeopels
+  , IActivitiesItem
+} from "../interfaces/interface";
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 const SC = require("soundcloud");
@@ -151,7 +160,7 @@ class UserStore implements IUserStore {
   @observable followings: IUser[] = [];
   @observable favorites: ITrack[] = [];
   @observable isFetchFollowersLoading: boolean = false;
-  @observable isLoadings: {} = {};
+  isLoadings = new ObservableMap<boolean>();
   @observable nextHrefs: {} = {};
   oauth_token: string;
   constructor(private actsStore: ActivitiesModel) {
@@ -202,20 +211,14 @@ class UserStore implements IUserStore {
     this.user = user;
   }
 
-  @action changeLoadingState(type: string) {
-    const specifyType = this.isLoadings[type];
-    if (specifyType == null) {
-      extendObservable(this.isLoadings, { [type]: true });
-    } else {
-      this.isLoadings[type] = !this.isLoadings[type];
-    }
-
+  @action changeLoadingState(type: string, loading: boolean) {
+    this.isLoadings.set(type, loading)
   }
   @action changeNextHrefs(type: string, nextHref: string) {
     this.nextHrefs[type] = nextHref
   }
   @action resetLoadingState(type: string) {
-    this.isLoadings[type] = false;
+    this.isLoadings.set(type, false);
   }
   @action addFollowers(fs: IUser[]) {
     fs.forEach(follower => {
@@ -233,7 +236,7 @@ class UserStore implements IUserStore {
     })
   }
 
-  @action fetchWithType(type: string, nextHref: string, id?: number) {
+  @action async fetchWithType(type: string, nextHref: string, id?: number) {
     if (id == null) {
       id = this.user.id;
     }
@@ -250,15 +253,21 @@ class UserStore implements IUserStore {
         break
     }
     const fetchType = type;
-    this.changeLoadingState(fetchType);
-    SC.get(url, { limit: limitPageSize, oauth_token: this.oauth_token })
-      .then((data: IMePeopels) => {
+    this.changeLoadingState(fetchType, true);
+    try {
+      const data = await SC.get(url,
+        { limit: limitPageSize, oauth_token: this.oauth_token });
+      if (Array.isArray(data)) {
+        this.addData(type, data);
+      } else {
         this.addData(type, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
-        this.changeLoadingState(fetchType);
-      }).catch((err: any) => {
-        this.catchError({ err, fetchType })
-      })
+        this.changeLoadingState(fetchType, false);
+      }
+    }
+    catch (err) {
+      this.catchError({ err, fetchType })
+    }
   }
 }
 

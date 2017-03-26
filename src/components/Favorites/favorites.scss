@@ -1,0 +1,13 @@
+@import '../../styles/variable.scss';
+.base{
+  overflow: hidden;
+  height: 20.429em;
+}
+
+.top{
+  border-bottom: $borderGray;
+}
+.main{
+  padding-left:$padding; 
+  width: $_100pxEm*3;
+}

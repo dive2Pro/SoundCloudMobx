@@ -23,6 +23,7 @@ const Favorites = (prop: IFavoritesProp) => {
     typeContent: 'Favorites',
     onClick: () => { }
   }
+
   return (<section className={styles.base}>
     <div className={styles.top}>
       <ViewAll {...obj} />
