@@ -21,26 +21,26 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
     } = track
     const isPlayingTrack = playingTrack === track
     const isTrackPlaying = isPlayingTrack && isPlaying
-    const playClazz = isTrackPlaying ? 'fa-pause' : "fa-play"
+    const playClazz = isTrackPlaying ? 'fa fa-pause' : "fa fa-play"
 
     const configurations = [
       {
         fn: () => { PlayerStore.setPlayingTrack(track) },
-        className: playClazz
+        className: playClazz + " fa-2x"
       },
       {
         fn: () => { PlayerStore.addToPlaylist(track) },
-        className: 'fa fa-folder-o'
+        className: 'fa fa-folder-o fa-2x'
       }
     ]
 
     return (
       <div className={styles.mini}>
         <div className={styles.track}>
-          <ArtWork src={artwork_url} size={35} />
+          <ArtWork src={artwork_url} size={62} />
           <TrackTitleView track={track} />
         </div>
-        <div>
+        <div className={isPlayingTrack ? styles.visibleActions : styles.actions}>
           <HoverActions
             isVisible={isPlayingTrack}
             configurations={configurations} />

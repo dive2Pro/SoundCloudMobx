@@ -17,7 +17,7 @@ const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) =>
 
   return (
     <div className={styles.track_info}>
-      <h4><span>{title}</span> - <span>{username}</span></h4>
+      <h5><span>{title}</span> - <span>{username}</span></h5>
       <div className={styles.track_counts}>
         <Action
           activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}
@@ -26,7 +26,7 @@ const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) =>
         />
         <Action
           activeStyle={sortType == sortTypes.SORT_FAVORITINGS_COUNT ? activeStyle : {}}
-          className='fa fa-favorite'
+          className='fa fa-likes'
           children={favoritings_count} />
         <Action
           activeStyle={sortType == sortTypes.SORT_COMMENT_COUNT ? activeStyle : {}}
