@@ -49,7 +49,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
         </nav>
 
         <Route path={`/main/genre=:genre`} component={TrackList} />
-        <Redirect to={'/main/genre=country'} />
+        <Redirect to={`/main/genre=${GENRES[0]}`} />
         <Player />
         <Playlist />
       </div>
