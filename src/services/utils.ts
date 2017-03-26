@@ -26,3 +26,16 @@ export function seconds2time(seconds: number): string {
   }
   return time;
 }
+
+export function transBigMath(value: number) {
+  if (value < 1000) {
+    return value;
+  }
+  let v = +(value / 1000000).toFixed(2)
+  if (v >= 1) {
+    return v + 'm'
+  }
+  v = value - v * 1000000;
+  v = +(v / 1000).toFixed(2);
+  return (v + 'k')
+}

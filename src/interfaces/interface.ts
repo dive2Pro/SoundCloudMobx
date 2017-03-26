@@ -91,10 +91,10 @@ export interface ITrack {
     }
     stream_url: string
     download_url: "http://api.soundcloud.com/tracks/13158665/download",
-    playback_count: 0,
-    download_count: 0,
-    favoritings_count: 0,
-    comment_count: 0,
+    playback_count: number | string,
+    download_count: number | string,
+    favoritings_count: number | string,
+    comment_count: number | string,
     attachments_uri: "http://api.soundcloud.com/tracks/13158665/attachments"
 }
 
