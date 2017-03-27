@@ -5,72 +5,120 @@ import Permalink from '../Permalink';
 import { observer, inject } from 'mobx-react'
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
+import { ITrack, ICommentStore } from "../../store/index";
+import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
+import CommentsContainer from '../Comments'
+const qs = require('qs')
 const styles = require('./tracklistinfo.scss')
 
 
 interface ITracklistinfoViewProps {
-  trackStore?: ITrackStore
-  playerStore?: IPlayerStore
+  TrackStore: ITrackStore
+  PlayerStore: IPlayerStore
+  CommentStore: ICommentStore
+  match: any
+  location: any
 }
 
 
-@inject("TrackStore", 'PlayerStore')
+@inject("TrackStore", 'PlayerStore', "CommentStore")
 @observer
 class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
+  @observable track: ITrack
+
+  componentDidMount() {
+    const { location: { search }, TrackStore } = this.props
+    if (search) {
+      const id = qs.parse(search.substr(1)).id
+      runInAction(() => {
+        this.track = TrackStore.getTrackFromId(id)
+      })
+    } else {
+    }
+    console.log(search);
+
+  }
 
   handlePlaylist = () => {
-    const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
+    const { PlayerStore, TrackStore } = this.props
+    if (!PlayerStore || !TrackStore) {
       return;
     }
     //TODO playintlist
   }
 
   handleAddToPlaylist = () => {
-    const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
+    const { PlayerStore, TrackStore } = this.props
+    if (!PlayerStore || !TrackStore) {
       return;
     }
     //TODO add to playinglist
 
   }
+  handleFetchMoreComments = () => {
+
+  }
   render() {
+    if (!this.track) {
+      //Todo 
+      return <noscript />
+    }
     // const { activitiesCount, activities } = this.props.trackStore
-
+    const { label_name, release_day, user, artwork_url } = this.track
+    const { username, id, avatar_url } = user;
     return (
-      <div className={styles.view}>
-        <div className={styles.fhmm}>
-          <ArtWork size={250} src={'#'} />
-        </div>
-        <div className={styles.infos}>
-          <div className={styles.infos_title}>
-            歌单
+      <div className={styles.main}>
+        <div className={styles.view}>
+          <div className={styles.fhmm}>
+            <ArtWork size={250} src={artwork_url} />
+          </div>
+          <div className={styles.infos}>
+            <div className={styles.infos_title}>
+              Song
             <h2>
-              圣水寺{' '}
-            </h2>
-          </div>
-          <div className={styles.infos_user}>
-            <ArtWork src="#" size={50} />
-            <span>
-              <Permalink id={123123} fullname={'KKLEBO'} /></span>
-            <span>2015-5-3创建</span>
-          </div>
-          <div className={styles.infos_actions}>
-            <div className={styles.infos_actions_plays}>
-              <ButtonInline onClick={this.handlePlaylist}>播放</ButtonInline>
-              <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
+                {label_name}
+              </h2>
             </div>
-            <ButtonInline>收藏</ButtonInline>
-            <ButtonInline>分享</ButtonInline>
-            <ButtonInline>评论</ButtonInline>
+            <div className={styles.infos_user}>
+              <ArtWork src={avatar_url} size={50} />
+              <span>
+                <Permalink id={id} fullname={username} /></span>
+              <span>{release_day}创建</span>
+            </div>
+            <div className={styles.infos_actions}>
+              <div className={styles.infos_actions_plays}>
+                <ButtonInline onClick={this.handlePlaylist}>播放</ButtonInline>
+                <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
+              </div>
+              <ButtonInline>
+                <i className='fa fa-save'></i>
+                收藏
+              </ButtonInline>
+              <ButtonInline>
+                <i className='fa fa-share-square-o'></i>
+                分享</ButtonInline>
+              <ButtonInline>
+                <i className='fa fa-comments'></i>
+                评论</ButtonInline>
+            </div>
+          </div>
+
+          comments....
+        <div className={styles.edit}>
+            <i />
+            <a href="#">编辑</a>
           </div>
         </div>
 
-        <div className={styles.edit}>
-          <i />
-          <a href="#">编辑</a>
+        <div className={styles.comments}>
+          <CommentsContainer
+            CommentStore={this.props.CommentStore}
+            track={this.track}
+            scrollFunc={this.handleFetchMoreComments}
+          />
         </div>
       </div>
+
     );
   }
 }

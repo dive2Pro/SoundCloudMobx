@@ -1,11 +1,18 @@
 @import '../../styles/variable.scss';
-
-.view{
+.main{
+  width: $contentMinWidth;  
   padding: 30px;
+  background: $backgroundSecondary;
+  margin: auto;
+  margin-top: $headerHight;
+}
+.view{
   height: 325px;
-  background: $background;
   display: flex;
   position: relative;
+}
+.comments{
+  background: forestgreen;
 }
 .fhmm{
   
@@ -46,7 +53,7 @@
   button{
       background-color: white;
       border: 1px solid lightgray;
-      padding: 5px 10px;
+      padding: ($padding/4) $padding;
       border-radius: 5px;
       cursor: pointer;
       color: #333;
@@ -75,4 +82,5 @@
   position: absolute;
   right: 20px;
   top: 20px;
+  display: none;
 }

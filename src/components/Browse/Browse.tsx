@@ -30,13 +30,9 @@ const FlagLink = ({ to, label }: any) => {
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
-
   }
-
-
   render() {
-    const { } = this.props.location
-    console.log(GENRES)
+    // const { } = this.props.location
     return (
       <div className={styles.container}>
         <nav className={styles.nav}>
@@ -49,6 +45,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
         </nav>
 
         <Route path={`/main/genre=:genre`} component={TrackList} />
+
         <Redirect to={`/main/genre=${GENRES[0]}`} />
         <Player />
         <Playlist />

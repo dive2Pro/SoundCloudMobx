@@ -8,7 +8,8 @@ import Browser from './components/Browse'
 import Header from './components/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import { UserStore, TrackStore, PlayerStore, ActivitiesStore } from './store';
+import { UserStore, TrackStore, PlayerStore, ActivitiesStore, CommentStore } from './store';
+import TrackInfo from './components/TracklistInfo'
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
 // const stores = [ActivitiesStore, UserStore, TrackStore, PlayerStore]
@@ -19,6 +20,7 @@ const render = () => (
             UserStore={UserStore}
             TrackStore={TrackStore}
             PlayerStore={PlayerStore}
+            CommentStore={CommentStore}
         >
             <div>
                 <Header />
@@ -26,6 +28,7 @@ const render = () => (
                     <Route exact path="/" component={Browser} />
                     <Route path="/my" component={DashBoard} />
                     <Route path="/main" component={Browser} />
+                    <Route path="/song" component={TrackInfo} />
                     <Route path="/callback(:*)" component={Callback} />
                 </Switch>
             </div>
