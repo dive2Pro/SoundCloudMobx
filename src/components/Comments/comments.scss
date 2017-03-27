@@ -1,0 +1,19 @@
+@import '../../styles/variable.scss';
+
+.comment{
+display: flex;
+margin: $padding/4;
+}
+.info{
+  display: flex;
+  flex-direction: column;
+}
+.content{
+  padding: 0 $padding;
+  a{
+    font-size: $mediumIcon;
+  }
+}
+.time{
+  text-align: right;
+}

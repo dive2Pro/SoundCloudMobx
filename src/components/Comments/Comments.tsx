@@ -3,7 +3,8 @@ import Hoc from '../HocLoadingMore'
 import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
 import { ICommentStore, IComment, ITrack } from "../../store/index";
-// const styles = require('./.scss')
+import ArtWork from '../ArtWork'
+const styles = require('./comments.scss')
 
 
 interface ICommentsProps {
@@ -13,9 +14,21 @@ interface ICommentsProps {
 
 
 const CommentView = ({ comment }: { comment: IComment }) => {
+  const { user: { avatar_url, username }, body, created_at } = comment;
+
   return (
-    <div>
-      {comment.body}
+    <div className={styles.comment}>
+      <ArtWork
+        size={50} src={avatar_url}
+      />
+      <div className={styles.info}>
+        <div className={styles.content}>
+          <a href="#">{username}</a>:\t {body}
+        </div>
+        <div className={styles.time}>
+          {created_at}
+        </div>
+      </div>
     </div>
   )
 }

@@ -12,7 +12,12 @@
   position: relative;
 }
 .comments{
-  background: forestgreen;
+  // background: forestgreen;
+
+}
+.commentsCount{
+  font-size: $mediumIcon;
+  @include bottom_border($usualPadding,$mainColor);
 }
 .fhmm{
   

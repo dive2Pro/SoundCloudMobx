@@ -66,6 +66,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     // const { activitiesCount, activities } = this.props.trackStore
     const { label_name, release_day, user, artwork_url } = this.track
     const { username, id, avatar_url } = user;
+    const { commentsCount } = this.props.CommentStore
     return (
       <div className={styles.main}>
         <div className={styles.view}>
@@ -111,6 +112,9 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
         </div>
 
         <div className={styles.comments}>
+          <div className={styles.commentsCount}>
+            Comments : {commentsCount}
+          </div>
           <CommentsContainer
             CommentStore={this.props.CommentStore}
             track={this.track}
