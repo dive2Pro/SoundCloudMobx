@@ -28,6 +28,7 @@ export interface ICommentStore {
   fetchMoreComments: (nextHref?: string) => void;
   currentTrack: ITrack
   setCurrentTrack: (track: ITrack) => void;
+  commentsCount: number
 }
 
 class CommentStore implements ICommentStore {
@@ -35,6 +36,7 @@ class CommentStore implements ICommentStore {
   @observable currentTrack: ITrack
   @observable isLoading: boolean
   @observable nextHrefsByTrack = new ObservableMap<string>();
+
   transTrack(track: ITrack) {
     return { ...track, id: track.id + "" }
   }
@@ -43,7 +45,9 @@ class CommentStore implements ICommentStore {
     this.currentTrack = (track);
     this.fetchMoreComments();
   }
-
+  @computed get commentsCount() {
+    return this.currentTrackComments.length
+  }
   @computed get currentTrackComments() {
     if (!this.currentTrack) return [];
     const data = this.commentsByTracks.get(this.currentTrack.id + "") || []

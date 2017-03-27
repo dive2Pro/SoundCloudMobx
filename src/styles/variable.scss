@@ -35,6 +35,17 @@ $shuffleCollor:#14ff00;
 $contentMinWidth:89.143em;
 $playerHeight:3.571em;
 $playerDurationHeight:1.768em;
+
+@mixin bottom_border($size,$color){
+  @if $size != null
+   {
+     border-bottom: $size solid $color;
+   }
+   @else{
+     border-bottom: 1px solid $color;
+   } 
+}
+
 .panel{
   background: $mainColor;
   color:$fontColor;
