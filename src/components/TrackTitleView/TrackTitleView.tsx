@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Action } from '../HoverActions'
 import { ITrack } from "../../store/index";
+import { Link } from 'react-router-dom'
 const styles = require('./ttview.scss');
 import * as sortTypes from '../../constants/sortTypes'
 
@@ -11,14 +12,14 @@ interface TdTrackTitleViewProp {
 }
 
 const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) => {
-  const { user, title, playback_count,
+  const { user, title, playback_count, id,
     favoritings_count, comment_count, download_count } = track;
   const { username } = user
   const activeStyle = { color: '#14ff00' }
 
   return (
     <div className={styles.track_info}>
-      <h5><span>{title}</span> - <span>{username}</span></h5>
+      <h5><Link to={`/song?id=${id}`}>{title}</Link> - <span>{username}</span></h5>
       <div className={styles.track_counts}>
         <Action
           activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}

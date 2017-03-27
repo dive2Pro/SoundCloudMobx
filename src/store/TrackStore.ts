@@ -34,6 +34,7 @@ export interface ITrackStore {
   isLoading: boolean;
   currentTracks: ITrack[]
   setGenre: (genre: string) => void;
+  getTrackFromId: (id: number) => ITrack
 }
 
 class TrackList implements ITrackStore {
@@ -59,6 +60,13 @@ class TrackList implements ITrackStore {
     const tracks = this.tracksByGenre.get(this.currentGenre) || [];
     console.log(this.currentGenre, tracks)
     return tracks
+  }
+  getTrackFromId(id: number): ITrack {
+    const track = this.currentTracks.find((track) => track.id == id)
+    if (track) {
+      return track
+    }
+    throw Error('Cant find a track from gaving id ')
   }
   @computed get nextHref() {
     return this.nextHrefsByGenre.get(this.currentGenre) || ""
