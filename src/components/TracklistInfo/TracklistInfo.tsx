@@ -39,11 +39,12 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
   }
 
-  handlePlaylist = () => {
+  handlePlay = () => {
     const { PlayerStore, TrackStore } = this.props
     if (!PlayerStore || !TrackStore) {
       return;
     }
+    PlayerStore.setPlayingTrack(this.track)
     //TODO playintlist
   }
 
@@ -53,10 +54,10 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       return;
     }
     //TODO add to playinglist
-
+    PlayerStore.addToPlaylist(this.track)
   }
   handleFetchMoreComments = () => {
-
+    this.props.CommentStore.fetchMoreComments();
   }
   render() {
     if (!this.track) {
@@ -88,7 +89,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
             </div>
             <div className={styles.infos_actions}>
               <div className={styles.infos_actions_plays}>
-                <ButtonInline onClick={this.handlePlaylist}>播放</ButtonInline>
+                <ButtonInline onClick={this.handlePlay}>播放</ButtonInline>
                 <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
               </div>
               <ButtonInline>
@@ -103,9 +104,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
                 评论</ButtonInline>
             </div>
           </div>
-
-          comments....
-        <div className={styles.edit}>
+          <div className={styles.edit}>
             <i />
             <a href="#">编辑</a>
           </div>

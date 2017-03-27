@@ -7,6 +7,7 @@ margin: $padding/4;
 .info{
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 .content{
   padding: 0 $padding;
@@ -16,4 +17,5 @@ margin: $padding/4;
 }
 .time{
   text-align: right;
+  margin-top: $usualPadding;
 }
