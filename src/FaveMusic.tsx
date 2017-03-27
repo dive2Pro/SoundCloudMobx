@@ -10,6 +10,8 @@ import "./styles/index.scss";
 import { Provider } from 'mobx-react';
 import { UserStore, TrackStore, PlayerStore, ActivitiesStore, CommentStore } from './store';
 import TrackInfo from './components/TracklistInfo'
+import Player from './components/Player'
+import Playlist from './components/Playlist'
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
 // const stores = [ActivitiesStore, UserStore, TrackStore, PlayerStore]
@@ -31,6 +33,8 @@ const render = () => (
                     <Route path="/song" component={TrackInfo} />
                     <Route path="/callback(:*)" component={Callback} />
                 </Switch>
+                <Player />
+                <Playlist />
             </div>
         </Provider>
     </Router>

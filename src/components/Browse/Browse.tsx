@@ -5,9 +5,6 @@ import {
   // , inject
 } from 'mobx-react'
 import TrackList from '../Tracklist'
-// import Activities from '../Activities'
-import Player from '../Player'
-import Playlist from '../Playlist'
 import { ITrackStore } from "../../store";
 import { Link, Route, Redirect } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
@@ -47,8 +44,6 @@ class Browse extends React.Component<IDashBorardProps, any> {
         <Route path={`/main/genre=:genre`} component={TrackList} />
 
         <Redirect to={`/main/genre=${GENRES[0]}`} />
-        <Player />
-        <Playlist />
       </div>
     );
   }
