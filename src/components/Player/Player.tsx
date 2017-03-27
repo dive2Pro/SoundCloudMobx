@@ -51,13 +51,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       return;
     }
     const { playingUrl, isPlaying } = this.props.PlayerStore;
-    const audio = this.audio
+    // const audio = this.audio
     if (playingUrl && isPlaying) {
       console.log(playingUrl)
-      audio.src = playingUrl;
-      audio.play()
+      // audio.src = playingUrl;
+      // audio.play()
     } else {
-      audio.pause();
+      // audio.pause();
     }
   }
   handleOpenPlaylist = () => {
