@@ -1,6 +1,7 @@
 import * as React from 'react'
-require('./loadingspinner.scss');
+const styles = require('./loadingspinner.scss');
 // import {observer} from 'mobx-react'
+
 interface ILoadingSpinner {
   isLoading: boolean;
 }
@@ -8,8 +9,8 @@ interface ILoadingSpinner {
 const LoadingSpinner = ({ isLoading }: ILoadingSpinner) => {
 
   return isLoading ? (
-    <div className='spinner_loading'>
-      <i className='fa fa-spinner fa-spin'></i>
+    <div className={styles.spinner_loading}>
+      <i className='fa fa-spinner fa-spin fa-2x'></i>
     </div>) : <noscript />
 }
 

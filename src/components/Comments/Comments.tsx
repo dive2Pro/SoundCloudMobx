@@ -44,16 +44,18 @@ class Comments extends React.Component<ICommentsProps, any> {
   }
 
   render() {
-    const { currentTrackComments: comments, isLoading } = this.props.CommentStore
+    const { currentTrackComments: comments
+      // , isLoading
+    } = this.props.CommentStore
     return (
       <div>
         {
-          comments.map(item => {
-            return <CommentView key={item.id} comment={item} />
+          comments.map((item, index) => {
+            return <CommentView key={item.id + "-" + index} comment={item} />
           })
         }
 
-        <LoadingSpinner isLoading={isLoading} />
+        <LoadingSpinner isLoading={true} />
       </div>
     );
   }
