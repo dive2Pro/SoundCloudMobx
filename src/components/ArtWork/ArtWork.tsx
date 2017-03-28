@@ -8,13 +8,16 @@ export interface IArtWorkProps {
   src: string
   optionalImg?: string,
   clazz?: string
+  style?: {}
 }
+
 const ArtWork = (prop: IArtWorkProps) => {
-  const { size, src, clazz, optionalImg, alt } = prop
+  const { size, src, clazz, optionalImg, alt, style } = prop
   return (
     <img
-      styleName={clazz}
+      style={style}
+      className={clazz}
       src={src || optionalImg} width={size} height={size} alt={alt} />
   )
 }
-export default CSSModule(ArtWork,styles);
+export default CSSModule(ArtWork, styles);

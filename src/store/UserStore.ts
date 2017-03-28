@@ -2,7 +2,9 @@ import {
   observable, action
   , ObservableMap
   // , runInAction
-  , extendObservable, computed
+  , autorun
+  , extendObservable, computed, runInAction
+  , whyRun
 } from "mobx";
 import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
 import {
@@ -61,13 +63,20 @@ class ActivitiesModel implements IActivitiesStore {
   @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
   @observable tracks: ITrack[]
+  @observable filteredActivities: IActivitiesItem[];
+  constructor() {
+    const handler = autorun(() => {
+      this.filterFunc(this.activities, this.sortType, this.filterType)
+    })
+    whyRun(handler);
+  }
 
   @action setNextActivitiesHref(nextHref: string) {
     this.activities_nextHref$ = nextHref;
   }
 
   @action addActivities(arr: IActivitiesItem[]) {
-    this.activities.push(...arr);
+    this.activities.splice(this.activities.length, 0, ...arr);
   }
 
   @action setFilterTitle(title: string) {
@@ -78,14 +87,17 @@ class ActivitiesModel implements IActivitiesStore {
   }
 
   @computed get filteredTracks() {
-    return this.filteredActivities ? this.filteredActivities.map((item) => item.origin) : []
+    return this.filteredActivities
+      ? this.filteredActivities.map((item) => item.origin) : []
   }
 
   filterActivities(arr: IActivitiesItem[]) {
     Promise.resolve(arr)
       .then(data => {
         const filterArr = data.filter(item => {
-          const b = this.activities.some(active => active.created_at === item.created_at)
+          const b =
+            this.activities.some(active =>
+              active.created_at === item.created_at)
           // console.log(b)
           return !b;
         })
@@ -100,12 +112,8 @@ class ActivitiesModel implements IActivitiesStore {
       this.fetchActivities(this.activities_nextHref$);
   }
   @action async fetchActivities(nextHref?: string) {
-    let activitiesUrl;
-    if (nextHref) {
-      activitiesUrl = addAccessToken(nextHref, '&');
-    } else {
-      activitiesUrl = apiUrl(`me/activities?limit=50`, '&')
-    }
+    let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
+      apiUrl(`me/activities?limit=50`, '&')
     this.setLoadingActivities(true);
     fetch(activitiesUrl)
       .then(response => response.json())
@@ -118,19 +126,32 @@ class ActivitiesModel implements IActivitiesStore {
 
   @action setFilterType(filterType: string = "") {
     this.filterType = filterType;
-
   }
 
-  @computed get filteredActivities(): IActivitiesItem[] {
-    let fs = this.activities;
+  async filterFunc(activities: IActivitiesItem[], sortType: string, filterType: string) {
+    let fs = activities
+    fs = await this.filterByFilterTitle(fs);
+    fs = await this.filterBySortType(fs);
+    fs = await this.filterByFilterType(fs)
+    runInAction(() => {
+      this.filteredActivities = fs;
+    })
+  }
+
+  filterByFilterType(fs: IActivitiesItem[]) {
+    let temp = fs.slice();
     if (!!this.filterType) {
-      fs = fs.filter(item => {
+      temp = fs.filter(item => {
         return item.type === this.filterType
       })
     }
+    return temp;
+  }
 
+  filterBySortType(fs: IActivitiesItem[]) {
+    let temp = fs.slice();
     if (!!this.sortType) {
-      fs = fs.sort((p, n) => {
+      temp = fs.sort((p, n) => {
         let pCount = p.origin[this.sortType];
         let nCount = n.origin[this.sortType];
         pCount = !Number.isNaN(pCount) ? pCount : 0;
@@ -138,14 +159,16 @@ class ActivitiesModel implements IActivitiesStore {
         return nCount - pCount;
       })
     }
-
+    return temp
+  }
+  filterByFilterTitle(fs: IActivitiesItem[]) {
+    let temp = fs.slice();
     if (!!this.filterTitle) {
-      fs = fs.filter(item => {
+      temp = fs.filter(item => {
         return item.origin.title.indexOf(this.filterTitle) > -1
       })
     }
-
-    return fs;
+    return temp
   }
 
   @computed get activitiesCount() {

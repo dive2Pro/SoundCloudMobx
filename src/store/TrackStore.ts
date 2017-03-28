@@ -7,7 +7,6 @@ import {
 import { addAccessToken } from '../services/soundcloundApi'
 import { ITrack } from '../interfaces/interface';
 export { ITrack }
-// import { OAUTH_TOKEN, } from '../constants/authentification'
 import {
   unauthApiUrl
   // , addAccessToken
@@ -58,7 +57,6 @@ class TrackList implements ITrackStore {
   }
   @computed get currentTracks() {
     const tracks = this.tracksByGenre.get(this.currentGenre) || [];
-    console.log(this.currentGenre, tracks)
     return tracks
   }
   getTrackFromId(id: number): ITrack {
@@ -76,7 +74,6 @@ class TrackList implements ITrackStore {
   }
 
   set tracks({ genre, values }: { genre: string, values: ITrack[] }) {
-    console.log('--------', genre)
     const tracks = this.tracksByGenre.get(genre);
     if (tracks && Array.isArray(tracks.slice())) {
       tracks.splice(tracks.length, 0, ...values);

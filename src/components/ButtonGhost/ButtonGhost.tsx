@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 const styles = require('./btghost.scss')
 export interface IButtonGhostProps {
   onClick: ((...args: any[]) => void);
@@ -9,10 +8,10 @@ export interface IButtonGhostProps {
 
 const ButtonGhost = ({ onClick, isSmall, children }: IButtonGhostProps) => {
 
-  const clazz = isSmall ? "small" : 'normal';
+  const clazz = isSmall ? styles.small : styles.normal;
   return (
     <button
-      styleName={clazz}
+      className={clazz}
       type='button'
       onClick={onClick}
     >
@@ -21,4 +20,4 @@ const ButtonGhost = ({ onClick, isSmall, children }: IButtonGhostProps) => {
   );
 }
 
-export default CSSModule(ButtonGhost, styles);
+export default (ButtonGhost);

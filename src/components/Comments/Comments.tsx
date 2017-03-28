@@ -45,7 +45,7 @@ class Comments extends React.Component<ICommentsProps, any> {
 
   render() {
     const { currentTrackComments: comments
-      // , isLoading
+      , isLoading
     } = this.props.CommentStore
     return (
       <div>
@@ -54,8 +54,7 @@ class Comments extends React.Component<ICommentsProps, any> {
             return <CommentView key={item.id + "-" + index} comment={item} />
           })
         }
-
-        <LoadingSpinner isLoading={true} />
+        <LoadingSpinner isLoading={isLoading} />
       </div>
     );
   }

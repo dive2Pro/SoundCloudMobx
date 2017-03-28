@@ -21,7 +21,7 @@ const Favorites = (prop: IFavoritesProp) => {
     clazz: 'fa fa-like',
     count: favorites.length,
     typeContent: 'Favorites',
-    onClick: () => { }
+    path: 'favorites'
   }
 
   return (<section className={styles.base}>
