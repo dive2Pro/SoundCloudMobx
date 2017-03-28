@@ -61,13 +61,13 @@ class Community extends React.Component<ICommunityProps, any> {
     const { users
       , isLoading
     } = this.props
-
+    console.info(users)
     return (
       <div className={styles.main}>
         {
           users.map(user => {
             return <BigUserPic
-              key={user.id} user={user} handleFollow={() => this.handleFollow(user)} />
+              key={user.id + "_ bigpic"} user={user} handleFollow={() => this.handleFollow(user)} />
           })
         }
         <LoadingSpinner isLoading={isLoading} />

@@ -31,8 +31,9 @@ export interface IUserStore {
   followers: IUser[];
   followings: IUser[];
   favorites: ITrack[];
-  isLoadings: {}
+  isLoadings: ObservableMap<boolean>
   nextHrefs: {}
+  fetchWithType: (type: string) => void
   // fetchFollowers: (nextHref: string, id?: number, ) => void;
 }
 interface ICatchErr {
@@ -179,16 +180,19 @@ class ActivitiesModel implements IActivitiesStore {
 class UserStore implements IUserStore {
   @observable session: any;
   @observable user: IUser;
+  // TODO change to ObservableMap
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
   @observable favorites: ITrack[] = [];
+
   @observable isFetchFollowersLoading: boolean = false;
   isLoadings = new ObservableMap<boolean>();
-  @observable nextHrefs: {} = {};
+  nextHrefs = new ObservableMap<string>();
   oauth_token: string;
   constructor(private actsStore: ActivitiesModel) {
 
   }
+
   loadDataFromCookie() {
 
     const oauth_token = Cookies.get(OAUTH_TOKEN)
@@ -238,7 +242,7 @@ class UserStore implements IUserStore {
     this.isLoadings.set(type, loading)
   }
   @action changeNextHrefs(type: string, nextHref: string) {
-    this.nextHrefs[type] = nextHref
+    this.nextHrefs.set(type, nextHref)
   }
   @action resetLoadingState(type: string) {
     this.isLoadings.set(type, false);
@@ -259,27 +263,37 @@ class UserStore implements IUserStore {
     })
   }
 
-  @action async fetchWithType(type: string, nextHref: string, id?: number) {
+  @action async fetchWithType(type: string, id?: number) {
     if (id == null) {
       id = this.user.id;
     }
-    let url = ''
-    switch (type) {
-      case FETCH_FOLLOWERS:
-        url = `/users/${id}/followers`
-        break
-      case FETCH_FOLLOWINGS:
-        url = `/users/${id}/followings`
-        break
-      case FETCH_FAVORITES:
-        url = `/users/${id}/favorites`
-        break
+    let url = this.nextHrefs.get(type)
+    if (url) {
+      url = addAccessToken(url, '&')
+    } else if (!url && this[type].length < 1) {
+      switch (type) {
+        case FETCH_FOLLOWERS:
+          url = `users/${id}/followers`
+          break
+        case FETCH_FOLLOWINGS:
+          url = `users/${id}/followings`
+          break
+        case FETCH_FAVORITES:
+          url = `users/${id}/favorites`
+          break
+      }
+      url = apiUrl(url + `?limit=${limitPageSize}`, '&')
+    } else {
+      console.log('Does has more nextHref it is done!')
+      return;
     }
+
     const fetchType = type;
+
     this.changeLoadingState(fetchType, true);
+
     try {
-      const data = await SC.get(url,
-        { limit: limitPageSize, oauth_token: this.oauth_token });
+      const data: any = await fetch(url).then(response => response.json());
       if (Array.isArray(data)) {
         this.addData(type, data);
       } else {

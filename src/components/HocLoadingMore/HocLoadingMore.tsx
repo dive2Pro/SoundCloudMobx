@@ -24,6 +24,7 @@ function HocLoadingMore<T>(Component: ComponentClass<T>) {
         //   , document.body.offsetHeight
         //   , document.body.scrollHeight)
         if (trigger) {
+          console.log(trigger + ' -  loadmore')
           this.props.scrollFunc();
         }
       }

@@ -29,20 +29,21 @@ class Followers extends React.Component<IFollowersProps, any> {
   }
   render() {
     const { followings, isLoadings, user } = this.props.UserStore
-    const isLoading = isLoadings[FETCH_FOLLOWINGS] || false;
+    const isLoading = isLoadings.get(FETCH_FOLLOWINGS) || false;
     const obj = {
       count: user && user.followings_count,
       clazz: "fa fa-users",
       path: 'followings',
       typeContent: 'followings'
     }
+    const limitFollowings = followings.slice(0, 3);
     return <section styleName='base'>
       <div styleName="top">
         <ViewAll {...obj} />
       </div>
       <div styleName='main'>
-        {followings.map((follower: IUser) => {
-          return <UserItemContainer key={follower.id} user={follower} />
+        {limitFollowings.map((follower: IUser) => {
+          return <UserItemContainer key={follower.id + "-panel"} user={follower} />
         })}
         <ButtonMore isLoading={isLoading} onClick={this.handleMoreClick} />
       </div>
