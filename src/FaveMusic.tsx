@@ -28,7 +28,7 @@ const render = () => (
                 <Header />
                 <Switch>
                     <Route exact path="/" component={Browser} />
-                    <Route path="/my" component={DashBoard} />
+                    <Route path="/users" component={DashBoard} />
                     <Route path="/main" component={Browser} />
                     <Route path="/song" component={TrackInfo} />
                     <Route path="/callback(:*)" component={Callback} />

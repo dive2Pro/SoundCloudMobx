@@ -16,11 +16,13 @@ function HocLoadingMore<T>(Component: ComponentClass<T>) {
     }
     debounceFun: any
     handleScrolling = (e: any) => {
-      if (window && window.pageYOffset && this.div) {
-        const oh = window.pageYOffset,
-          sh = this.div.scrollHeight
-        const diff = sh - oh
-        const trigger = sh > window.outerHeight && sh > oh && diff < 500;
+      if (window) {
+        const trigger = window.innerHeight + window.pageYOffset >= document.body.scrollHeight - 500
+        // console.log(window.innerHeight
+        //   , window.pageYOffset
+        //   , window.screenY
+        //   , document.body.offsetHeight
+        //   , document.body.scrollHeight)
         if (trigger) {
           this.props.scrollFunc();
         }
@@ -36,9 +38,7 @@ function HocLoadingMore<T>(Component: ComponentClass<T>) {
 
     render() {
       return (
-        <div ref={r => this.div = r}>
-          <Component {...this.props} />
-        </div>
+        <Component {...this.props} />
       );
     }
   }

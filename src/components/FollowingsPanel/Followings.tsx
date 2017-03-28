@@ -10,6 +10,7 @@ const styles = require('./followings.scss')
 import * as CSSModule from 'react-css-modules'
 export interface IFollowersProps {
   UserStore: IUserStore
+  history?: any
 }
 @observer
 @CSSModule(styles)
@@ -22,7 +23,9 @@ class Followers extends React.Component<IFollowersProps, any> {
     // userStore.fetchFollowers(nextHref$);
   }
   handleViewAll = () => {
-    console.log('HANDLE view all click')
+    // console.log('HANDLE view all click')
+    this.props.history.push('/user/followers')
+
   }
   render() {
     const { followings, isLoadings, user } = this.props.UserStore
@@ -30,7 +33,7 @@ class Followers extends React.Component<IFollowersProps, any> {
     const obj = {
       count: user && user.followings_count,
       clazz: "fa fa-users",
-      onClick: this.handleViewAll,
+      path: 'followings',
       typeContent: 'followings'
     }
     return <section styleName='base'>

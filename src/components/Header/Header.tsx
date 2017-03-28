@@ -35,7 +35,7 @@ class Main extends React.Component<any, undefined> {
             to="/main/genre=country">主页</Link>
           <Link
             activeClassName={selected}
-            to='/my'>我的音乐</Link>
+            to='/users'>我的音乐</Link>
         </nav>
 
         {
