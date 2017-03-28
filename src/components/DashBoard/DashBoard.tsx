@@ -9,6 +9,7 @@ import FollowingsPanel from '../FollowingsPanel'
 import Favorites from "../FavoritesPanel";
 import { Route, Switch } from 'react-router-dom'
 import CommunityContainer from '../Community'
+import * as fetchTypes from '../../constants/fetchTypes'
 import { IActivitiesStore, IPlayerStore } from "../../store";
 interface IDashBorardProps {
   UserStore: IUserStore
@@ -27,8 +28,9 @@ export const BlankView = () => {
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
 
-  handlerFetchMoreContacts = () => {
+  handlerFetchMoreContacts = (type: string) => {
 
+    this.props.UserStore.fetchWithType(type);
   }
 
   componentDidMount() {
@@ -39,19 +41,21 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const userStore = this.props.UserStore;
     const { user
       , followers
-      , followings } = userStore;
-
+      , followings, isLoadings
+    } = userStore;
+    const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || false
+    const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || false
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
     return (
       <div className={styles.container}>
         <div className={styles.main}>
           <Switch>
-
             <Route
               path='/users/followers'
               render={() => {
-                return <CommunityContainer isLoading={false}
-                  scrollFunc={() => this.handlerFetchMoreContacts}
+                return <CommunityContainer
+                  isLoading={isloadingFollowers}
+                  scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
                   users={followers}
                 />
               }}
@@ -59,8 +63,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             <Route
               path='/users/followings'
               render={() => {
-                return <CommunityContainer isLoading={false}
-                  scrollFunc={() => this.handlerFetchMoreContacts}
+                return <CommunityContainer
+                  isLoading={isloadingFollowings}
+                  scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
                   users={followings}
                 />
               }}
@@ -68,7 +73,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             <Route
               path="/"
               component={FilterActivities} />
-            {/*component={CommunityContainer}*/}
           </Switch>
         </div>
         <aside className={styles.aside}>

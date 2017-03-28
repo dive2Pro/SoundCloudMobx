@@ -25,20 +25,22 @@ class Followers extends React.Component<IFollowersProps, any> {
   }
   render() {
     const { followers, isLoadings, user } = this.props.UserStore
-    const isLoading = isLoadings[FETCH_FOLLOWERS] || false;
+    const isLoading = isLoadings.get(FETCH_FOLLOWERS) || false;
     const obj = {
       count: user && user.followers_count,
       clazz: "fa fa-users",
       typeContent: 'follwers',
       path: 'followers'
     }
+    //todo turn in to mobx
+    const limitFollowers = followers.slice(0, 3);
     return <section styleName='base'>
       <div styleName="top">
         <ViewAll {...obj} />
       </div>
       <div styleName="main">
-        {followers.map((follower: IUser) => {
-          return <UserItemContainer key={follower.id} user={follower} />
+        {limitFollowers.map((follower: IUser) => {
+          return <UserItemContainer key={follower.id + "panel"} user={follower} />
         })}
         <ButtonMore isLoading={isLoading} onClick={this.handleMoreClick} />
       </div>

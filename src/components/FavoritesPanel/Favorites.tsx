@@ -15,7 +15,7 @@ interface IFavoritesProp {
 const Favorites = (prop: IFavoritesProp) => {
   const { PlayerStore } = prop
   const { favorites, isLoadings } = prop.UserStore
-  const isLoading = isLoadings[FETCH_FAVORITES] || false;
+  const isLoading = isLoadings.get(FETCH_FAVORITES) || false;
 
   const obj = {
     clazz: 'fa fa-like',
