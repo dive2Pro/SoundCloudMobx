@@ -10,7 +10,10 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 
-import { IActivitiesStore, IPlayerStore, IUserStore, IUserModel } from "../../store";
+import {
+  IActivitiesStore, IPlayerStore, IUserStore
+  // ,IUserModel
+} from "../../store";
 import {
   // observable,
   action
@@ -40,14 +43,13 @@ export const BlankView = () => {
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
   id: number
-  userModel: IUserModel
 
   handlerFetchMoreContacts = (type: string) => {
-    this.userModel.fetchWithType(type);
+    this.props.UserStore.userModel.fetchWithType(type);
   }
 
   componentDidMount() {
-    this.userModel && this.userModel.fetchCommunityData();
+    this.props.UserStore.userModel.fetchCommunityData();
   }
 
   componentWillMount() {
@@ -61,16 +63,15 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   @action changeUserId(id: number) {
     this.id = id;
-    this.userModel = this.props.UserStore.initUser(this.id)
-    this.userModel.fetchCommunityData();
+    const userModel = this.props.UserStore.initUser(this.id)
+    userModel.fetchCommunityData();
     // todo fetch tracklist
   }
 
 
   componentDidUpdate(prevProps: any, prevState: any) {
-    console.log('shouldComponentUpdate', prevProps)
-    const loc = prevProps.location;
-    if (this.props.location.search !== loc.search) {
+    const loc = this.props.location;
+    if (loc.search !== prevProps.location.search) {
       const id = +qs.parse(loc.search.substr(1))['id']
       this.changeUserId(id)
     }
@@ -79,7 +80,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (this.id == undefined) {
       return <Redirect to="/main" />
     }
-    const userModel = this.userModel
+    const userModel = this.props.UserStore.userModel
     if (!userModel) {
       return <LoadingSpinner isLoading={true} />
     }
