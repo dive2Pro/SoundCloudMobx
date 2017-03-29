@@ -88,7 +88,7 @@ class ActivitiesModel implements IActivitiesStore {
       ? this.filteredActivities.map(this.getAllTrackFromActivity) : []
   }
   @computed get tracks() {
-    return this.activities.map(this.getAllTrackFromActivity)
+    return this.activities && this.activities.map(this.getAllTrackFromActivity)
   }
   filterActivities(arr: IActivitiesItem[]) {
     Promise.resolve(arr)
@@ -179,32 +179,37 @@ class ActivitiesModel implements IActivitiesStore {
 export interface IUserStore {
   initUser: (id: number | IUser) => IUserModel
   fetchUserData: (id: number) => void;
+  userModel: IUserModel
 }
+
 export class UserList {
   users = new ObservableMap<UserModel>()
-
-  constructor() {
-
-  }
+  @observable userModel: IUserModel
+  constructor() { }
 
   initUser(obj: number | IUser): IUserModel {
-
     const isNumber = typeof obj === 'number'
     let id = isNumber ? obj : ((<IUser>obj).id)
     let user = this.users.get(id + "")
     if (!user) {
       user = new UserModel(obj)
-
       this.users.set(id + "", user)
     } else if (!isNumber) {
       user.setUser(<IUser>obj)
     }
+    this.setCurrentUserModel(user)
     return user;
+  }
+  @action setCurrentUserModel(model: IUserModel) {
+    this.userModel = model
   }
 
   fetchUserData(id: number) {
     const user = this.users.get(id + "")
-    user && user.fetchUser()
+    if (user) {
+      user.fetchUser()
+      this.setCurrentUserModel(user)
+    }
     return this;
   }
 
@@ -239,6 +244,7 @@ class UserModel implements IUserModel {
 
     if (typeof obj == 'number') {
       this.userId = obj
+      this.fetchUser()
     } else {
       this.setUser(obj)
     }
@@ -260,7 +266,7 @@ class UserModel implements IUserModel {
     this.fetchWithType(FETCH_FAVORITES);
   }
   @action fetchUser() {
-    const url = apiUrl(`users/${this.userId}`, "&")
+    const url = apiUrl(`users/${this.userId}`, "?")
     fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {
@@ -302,14 +308,20 @@ class UserModel implements IUserModel {
     })
   }
 
-  @action async fetchWithType(type: string, id?: number) {
+  @action async fetchWithType(type: string) {
+    if (this.isLoadings.get(type)) {
+      return
+    }
+    let id = this.userId;
     if (id == null) {
-      id = this.userId;
+      //todo 
+      return
     }
     let url = this.nextHrefs.get(type)
     if (url) {
       url = addAccessToken(url, '&')
     } else if (!url && this[type].length < 1) {
+      // debugger
       switch (type) {
         case FETCH_FOLLOWERS:
           url = `users/${id}/followers`
@@ -323,15 +335,14 @@ class UserModel implements IUserModel {
       }
       url = apiUrl(url + `?limit=${limitPageSize}`, '&')
     } else {
-      console.log('Does has more nextHref it is done!')
+      console.log('Does has more nextHref it is done!', this[type])
       return;
     }
 
     const fetchType = type;
 
-    this.changeLoadingState(fetchType, true);
-
     try {
+      this.changeLoadingState(fetchType, true);
       const data: any = await fetch(url).then(response => response.json());
       if (Array.isArray(data)) {
         // debugger
@@ -344,6 +355,8 @@ class UserModel implements IUserModel {
     }
     catch (err) {
       this.catchError({ err, fetchType })
+    } finally {
+      this.changeLoadingState(fetchType, false)
     }
   }
 }

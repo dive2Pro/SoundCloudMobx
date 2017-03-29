@@ -14,7 +14,7 @@ class UserContainer extends React.Component<IUserContainerProps, any> {
 
   render() {
     const user = this.props.user
-    const { avatar_url, full_name, id,
+    const { avatar_url, full_name, username, id,
       followers_count, track_count } = user;
     const infodata = [
       {
@@ -29,7 +29,7 @@ class UserContainer extends React.Component<IUserContainerProps, any> {
       <div styleName='container'>
         <ArtWork size={62} src={avatar_url} clazz="user" />
         <section styleName='content'>
-          <Permalink clazz='user' id={id} fullname={full_name} />
+          <Permalink clazz='user' id={id} fullname={full_name || username} />
           <InfoList data={infodata} />
         </section>
         <div styleName='actions'>
