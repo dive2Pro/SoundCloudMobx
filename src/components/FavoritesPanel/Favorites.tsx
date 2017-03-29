@@ -2,19 +2,19 @@ import * as React from 'react'
 import ViewAll from '../ViewAll';
 import MiniTrack from '../MiniTrack'
 import { IPlayerStore, ITrack } from "../../store/index";
-import { IUserStore } from "../../store/UserStore";
+import { IUserModel } from "../../store";
 import ButtonMore from '../ButtonMore'
 import { FETCH_FAVORITES } from '../../constants/fetchTypes'
 const styles = require('./favorites.scss')
 
 interface IFavoritesProp {
   PlayerStore: IPlayerStore
-  UserStore: IUserStore
+  UserModel: IUserModel
 }
 
 const Favorites = (prop: IFavoritesProp) => {
   const { PlayerStore } = prop
-  const { favorites, isLoadings } = prop.UserStore
+  const { favorites, isLoadings } = prop.UserModel
   const isLoading = isLoadings.get(FETCH_FAVORITES) || false;
 
   const obj = {

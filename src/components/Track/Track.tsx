@@ -9,7 +9,7 @@ import { ITrack, ICommentStore } from "../../store/index";
 import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
 import CommentsContainer from '../Comments'
 const qs = require('qs')
-const styles = require('./tracklistinfo.scss')
+const styles = require('./track.scss');
 
 
 interface ITracklistinfoViewProps {
@@ -35,6 +35,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       })
     } else {
     }
+    console.log(this.props);
     console.log(search);
 
   }
@@ -93,14 +94,14 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
                 <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
               </div>
               <ButtonInline>
-                <i className='fa fa-save'></i>
+                <i className='fa fa-save' />
                 收藏
               </ButtonInline>
               <ButtonInline>
-                <i className='fa fa-share-square-o'></i>
+                <i className='fa fa-share-square-o' />
                 分享</ButtonInline>
               <ButtonInline>
-                <i className='fa fa-comments'></i>
+                <i className='fa fa-comments' />
                 评论</ButtonInline>
             </div>
           </div>
@@ -114,6 +115,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
           <div className={styles.commentsCount}>
             Comments : {commentsCount}
           </div>
+
           <CommentsContainer
             CommentStore={this.props.CommentStore}
             track={this.track}

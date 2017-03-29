@@ -19,7 +19,10 @@ const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) =>
 
   return (
     <div className={styles.track_info}>
-      <h5><Link to={`/song?id=${id}`}>{title}</Link> - <span>{username}</span></h5>
+      <h5><Link to={{
+        pathname: `/song`,
+        search: `?id=${id}`
+      }}>{title}</Link> - <span>{username}</span></h5>
       <div className={styles.track_counts}>
         <Action
           activeStyle={sortType == sortTypes.SORT_PLAYBACK_COUNT ? activeStyle : {}}

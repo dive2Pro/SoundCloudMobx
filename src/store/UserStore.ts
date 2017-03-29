@@ -8,25 +8,18 @@ import {
 } from "mobx";
 import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
 import {
-  CLIENT_ID,
-  REDIRECT_URI,
-  OAUTH_TOKEN
-} from "../constants/authentification";
-import {
-  ISession, IUser
+  IUser
   // , IMePeopels
   , IActivitiesItem
 } from "../interfaces/interface";
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
-const SC = require("soundcloud");
-const Cookies = require("js-cookie")
+// const SC = require("soundcloud");
+// const Cookies = require("js-cookie")
 // const Remotedev = require("mobx-remotedev");
-// @Remotedev({ name: "UserStore" })
-export interface IUserStore {
-  session: string
+// @Remotedev({ name: "UserModel" })
+export interface IUserModel {
   user: IUser;
-  login: () => void;
   loadDataFromCookie: () => void;
   followers: IUser[];
   followings: IUser[];
@@ -34,6 +27,7 @@ export interface IUserStore {
   isLoadings: ObservableMap<boolean>
   nextHrefs: {}
   fetchWithType: (type: string) => void
+  fetchCommunityData: () => void
   // fetchFollowers: (nextHref: string, id?: number, ) => void;
 }
 interface ICatchErr {
@@ -177,58 +171,81 @@ class ActivitiesModel implements IActivitiesStore {
   }
 }
 
-class UserStore implements IUserStore {
-  @observable session: any;
+
+export interface IUserStore {
+  initUserById: (id: number | IUser) => IUserModel
+  fetchUserData: (id: number) => void;
+}
+export class UserList {
+  users = new ObservableMap<UserModel>()
+
+  constructor() {
+
+  }
+
+  initUserById(id: number | IUser): IUserModel {
+    let user = this.users.get(id + "")
+    if (!user) {
+      user = new UserModel(id)
+      this.users.set(id + "", user)
+    }
+    return user;
+  }
+
+  fetchUserData(id: number) {
+    const user = this.users.get(id + "")
+    user && user.fetchUser()
+    return this;
+  }
+}
+
+/**
+ * 以 用户id为key,保存数据
+ */
+class UserModel implements IUserModel {
   @observable user: IUser;
   // TODO change to ObservableMap
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
   @observable favorites: ITrack[] = [];
 
-  @observable isFetchFollowersLoading: boolean = false;
   isLoadings = new ObservableMap<boolean>();
   nextHrefs = new ObservableMap<string>();
-  oauth_token: string;
-  constructor(private actsStore: ActivitiesModel) {
+  userId: number
+  /**
+   * 
+   * @param obj 如果传入的是一个Iuser对象,直接去获取数据
+   */
+  constructor(obj: number | IUser) {
 
+    if (typeof obj == 'number') {
+      this.userId = obj
+    } else {
+      this.setUser(obj)
+    }
   }
 
   loadDataFromCookie() {
 
-    const oauth_token = Cookies.get(OAUTH_TOKEN)
-    if (oauth_token) {
-      this.fetchUser(oauth_token);
-      this.oauth_token = oauth_token;
-    }
   }
   //TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
     console.error(err);
     if (fetchType) this.resetLoadingState(fetchType);
     throw err;
-
-  }
-  @action login() {
-    SC.initialize({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI });
-    SC.connect().then((session: ISession) => {
-      Cookies.set(OAUTH_TOKEN, session.oauth_token);
-      this.oauth_token = session.oauth_token;
-      this.session = session;
-      this.fetchUser(session.oauth_token);
-    }).catch((err: any) => {
-      this.catchError(err);
-    });
   }
 
-  @action fetchUser(oauth_token: string) {
-    fetch(`https://api.soundcloud.com/me?oauth_token=${oauth_token}`)
+  @action fetchCommunityData() {
+    this.fetchWithType(FETCH_FOLLOWERS);
+    this.fetchWithType(FETCH_FOLLOWINGS);
+    this.fetchWithType(FETCH_FAVORITES);
+  }
+  @action fetchUser() {
+    const url = apiUrl(`users/${this.userId}`, "&")
+    fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {
         this.setUser(rawuser)
-        this.fetchWithType(FETCH_FOLLOWERS, rawuser.nextHref);
-        this.fetchWithType(FETCH_FOLLOWINGS, rawuser.nextHref);
-        this.fetchWithType(FETCH_FAVORITES, rawuser.nextHref);
-        this.actsStore.fetchActivities();
       }).catch(err => {
         this.catchError(err);
       })
@@ -236,6 +253,9 @@ class UserStore implements IUserStore {
 
   @action setUser(user: IUser) {
     this.user = user;
+    this.userId = user.id
+    // this.fetchCommunityData()
+
   }
 
   @action changeLoadingState(type: string, loading: boolean) {
@@ -265,7 +285,7 @@ class UserStore implements IUserStore {
 
   @action async fetchWithType(type: string, id?: number) {
     if (id == null) {
-      id = this.user.id;
+      id = this.userId;
     }
     let url = this.nextHrefs.get(type)
     if (url) {
@@ -311,4 +331,4 @@ class UserStore implements IUserStore {
 
 const ActivitiesStore = new ActivitiesModel()
 export { ActivitiesStore };
-export default new UserStore(ActivitiesStore);
+export default new UserList();
