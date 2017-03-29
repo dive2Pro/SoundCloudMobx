@@ -16,7 +16,7 @@ import {
   // , addAccessToken
   // , apiUrl
 } from '../services/soundcloundApi'
-import { ActivitiesStore } from './UserStore'
+import UserStore, { ActivitiesStore } from './UserStore'
 // const Cookie = require('js-cookie');
 export class Track {
 
@@ -108,7 +108,8 @@ class TrackStore implements ITrackStore {
     const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
       return preEntrey.concat(currentEntry)
     }) : []
-    return ActivitiesStore.tracks.concat(tracks);
+    return ActivitiesStore.tracks
+      .concat(tracks, UserStore.AllUsersFavorities);
   }
 
   fetchActivitiesURl(): string {

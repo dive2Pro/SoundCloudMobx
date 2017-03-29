@@ -57,7 +57,7 @@ class ActivitiesModel implements IActivitiesStore {
   @observable sortType: string
   @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
-  @observable tracks: ITrack[] = []
+
   @observable filteredActivities: IActivitiesItem[];
   constructor() {
     const handler = autorun(() => {
@@ -80,12 +80,16 @@ class ActivitiesModel implements IActivitiesStore {
   @action setSortType(type: string) {
     this.sortType = type;
   }
-
+  getAllTrackFromActivity(act: IActivitiesItem) {
+    return act.origin
+  }
   @computed get filteredTracks() {
     return this.filteredActivities
-      ? this.filteredActivities.map((item) => item.origin) : []
+      ? this.filteredActivities.map(this.getAllTrackFromActivity) : []
   }
-
+  @computed get tracks() {
+    return this.activities.map(this.getAllTrackFromActivity)
+  }
   filterActivities(arr: IActivitiesItem[]) {
     Promise.resolve(arr)
       .then(data => {
@@ -202,6 +206,15 @@ export class UserList {
     const user = this.users.get(id + "")
     user && user.fetchUser()
     return this;
+  }
+
+  @computed get AllUsersFavorities(): ITrack[] {
+    const tracks: ITrack[] = []
+    this.users.values().forEach((model) => {
+      tracks.push(...model.favorites)
+
+    })
+    return tracks;
   }
 }
 
