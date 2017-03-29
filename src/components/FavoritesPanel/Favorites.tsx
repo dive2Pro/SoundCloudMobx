@@ -4,6 +4,7 @@ import MiniTrack from '../MiniTrack'
 import { IPlayerStore, ITrack } from "../../store/index";
 import { IUserModel } from "../../store";
 import ButtonMore from '../ButtonMore'
+import { observer } from 'mobx-react'
 import { FETCH_FAVORITES } from '../../constants/fetchTypes'
 const styles = require('./favorites.scss')
 
@@ -12,9 +13,9 @@ interface IFavoritesProp {
   UserModel: IUserModel
 }
 
-const Favorites = (prop: IFavoritesProp) => {
-  const { PlayerStore } = prop
-  const { favorites, isLoadings } = prop.UserModel
+const Favorites = observer((prop: IFavoritesProp) => {
+  const { PlayerStore, UserModel } = prop
+  const { favorites, isLoadings } = UserModel
   const isLoading = isLoadings.get(FETCH_FAVORITES) || false;
 
   const obj = {
@@ -38,6 +39,6 @@ const Favorites = (prop: IFavoritesProp) => {
     </div>
   </section>
   );
-}
+})
 
 export default Favorites

@@ -71,7 +71,7 @@ class SessionStore implements ISessionStore {
       .then(data => data.json())
       .then((rawuser: any) => {
         this.setUser(rawuser)
-        UserList.initUserById(rawuser);
+        UserList.initUser(rawuser);
       }).catch(err => {
         this.catchError(err);
       })

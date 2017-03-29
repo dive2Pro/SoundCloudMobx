@@ -1,6 +1,9 @@
 import * as React from "react";
 import { IUser } from "../..//interfaces/interface";
-import { observer, inject } from "mobx-react";
+import {
+  observer
+  // , inject
+} from "mobx-react";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import * as CSSModules from "react-css-modules";
 import ArtWork from "../ArtWork/ArtWork";
@@ -14,6 +17,7 @@ interface IMiniCountPanelProp {
   followers_count: number,
   followings_count: number
 }
+@observer
 @CSSModules(styles)
 class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
   render() {
@@ -47,7 +51,6 @@ class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
   }
 }
 
-@inject("UserStore")
 @observer
 @CSSModules(styles)
 class Profile extends React.Component<IProfileProps, any> {

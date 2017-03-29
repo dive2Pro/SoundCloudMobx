@@ -41,6 +41,7 @@ class Followers extends React.Component<IFollowersProps, any> {
     }
     //todo turn in to mobx
     const limitFollowers = followers.slice(0, 3);
+    // console.table(followers)
     return <section styleName='base'>
       <div styleName="top">
         <ViewAll {...obj} />
