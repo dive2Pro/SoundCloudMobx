@@ -11,7 +11,13 @@ import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 
 import { IActivitiesStore, IPlayerStore, IUserStore, IUserModel } from "../../store";
-import { autorun } from ".3.1.7@mobx/lib/mobx";
+import {
+  // observable,
+  action
+  // , computed
+} from ".3.1.7@mobx/lib/mobx";
+// import { autorun } from ".3.1.7@mobx/lib/mobx";
+import LoadingSpinner from '../LoadingSpinner'
 const qs = require('qs')
 interface IDashBorardProps {
   UserStore: IUserStore
@@ -35,41 +41,56 @@ export const BlankView = () => {
 class DashBorard extends React.Component<IDashBorardProps, any> {
   id: number
   userModel: IUserModel
+
   handlerFetchMoreContacts = (type: string) => {
-
     this.userModel.fetchWithType(type);
-
   }
 
   componentDidMount() {
-    this.userModel.fetchCommunityData();
+    this.userModel && this.userModel.fetchCommunityData();
   }
-  componentWillMount() {
 
+  componentWillMount() {
     const loc = this.props.location
     if (loc) {
       //todo id undefined redicet to other 
-      this.id = +qs.parse(loc.search.substr(1))['id'];
+      const id = +qs.parse(loc.search.substr(1))['id'];
+      this.changeUserId(id)
     }
   }
 
+  @action changeUserId(id: number) {
+    this.id = id;
+    this.userModel = this.props.UserStore.initUser(this.id)
+    this.userModel.fetchCommunityData();
+    // todo fetch tracklist
+  }
+
+
+  componentDidUpdate(prevProps: any, prevState: any) {
+    console.log('shouldComponentUpdate', prevProps)
+    const loc = prevProps.location;
+    if (this.props.location.search !== loc.search) {
+      const id = +qs.parse(loc.search.substr(1))['id']
+      this.changeUserId(id)
+    }
+  }
   render() {
-    const userStore = this.props.UserStore;
     if (this.id == undefined) {
       return <Redirect to="/main" />
     }
-    const userModel = userStore.initUser(this.id)
-    this.userModel = userModel
+    const userModel = this.userModel
+    if (!userModel) {
+      return <LoadingSpinner isLoading={true} />
+    }
+
     const {
       user
       , followers
       , followings, isLoadings
     } = userModel;
-    autorun(() => {
-      // console.log(followers.slice())
-    })
-    const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || false
-    const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || false
+    const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || true
+    const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || true
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
     return (
       <div className={styles.container}>
