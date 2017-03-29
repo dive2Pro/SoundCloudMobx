@@ -32,6 +32,10 @@ class FilterActivities extends React.Component<IFilterActivitiesProps, any> {
     this.props.ActivitiesStore.setFilterTitle(value);
   };
 
+  componentDidMount() {
+    this.actStore.fetchNextActivities();
+  }
+
   handleScroll = () => {
 
     const { isLoading } = this.actStore;
@@ -75,6 +79,7 @@ class FilterActivities extends React.Component<IFilterActivitiesProps, any> {
       ].concat(sortItems),
       activeType: this.actStore.sortType
     };
+
     const { filteredTracks: tracks, isLoading, sortType } = this.actStore
 
     return (

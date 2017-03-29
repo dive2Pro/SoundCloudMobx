@@ -11,6 +11,7 @@ import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 
 import { IActivitiesStore, IPlayerStore, IUserStore, IUserModel } from "../../store";
+import { autorun } from ".3.1.7@mobx/lib/mobx";
 const qs = require('qs')
 interface IDashBorardProps {
   UserStore: IUserStore
@@ -41,7 +42,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   componentDidMount() {
-    console.log(this.props)
     this.userModel.fetchCommunityData();
   }
   componentWillMount() {
@@ -58,12 +58,16 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (this.id == undefined) {
       return <Redirect to="/main" />
     }
-    const userModel = userStore.initUserById(this.id)
+    const userModel = userStore.initUser(this.id)
     this.userModel = userModel
-    const { user
+    const {
+      user
       , followers
       , followings, isLoadings
     } = userModel;
+    autorun(() => {
+      // console.log(followers.slice())
+    })
     const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || false
     const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || false
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore

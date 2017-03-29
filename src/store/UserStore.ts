@@ -57,7 +57,7 @@ class ActivitiesModel implements IActivitiesStore {
   @observable sortType: string
   @observable activities: IActivitiesItem[] = [];
   @observable activities_nextHref$: string;
-  @observable tracks: ITrack[]
+  @observable tracks: ITrack[] = []
   @observable filteredActivities: IActivitiesItem[];
   constructor() {
     const handler = autorun(() => {
@@ -173,7 +173,7 @@ class ActivitiesModel implements IActivitiesStore {
 
 
 export interface IUserStore {
-  initUserById: (id: number | IUser) => IUserModel
+  initUser: (id: number | IUser) => IUserModel
   fetchUserData: (id: number) => void;
 }
 export class UserList {
@@ -183,11 +183,17 @@ export class UserList {
 
   }
 
-  initUserById(id: number | IUser): IUserModel {
+  initUser(obj: number | IUser): IUserModel {
+
+    const isNumber = typeof obj === 'number'
+    let id = isNumber ? obj : ((<IUser>obj).id)
     let user = this.users.get(id + "")
     if (!user) {
-      user = new UserModel(id)
+      user = new UserModel(obj)
+
       this.users.set(id + "", user)
+    } else if (!isNumber) {
+      user.setUser(<IUser>obj)
     }
     return user;
   }
@@ -315,12 +321,13 @@ class UserModel implements IUserModel {
     try {
       const data: any = await fetch(url).then(response => response.json());
       if (Array.isArray(data)) {
+        // debugger
         this.addData(type, data);
       } else {
         this.addData(type, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
-        this.changeLoadingState(fetchType, false);
       }
+      this.changeLoadingState(fetchType, false);
     }
     catch (err) {
       this.catchError({ err, fetchType })

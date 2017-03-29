@@ -104,10 +104,11 @@ class TrackStore implements ITrackStore {
 
   @computed get allTracks(): ITrack[] {
     //todo 优化
-    return this.tracksByGenre.values()
-      .reduce((preEntrey, currentEntry) => {
-        return preEntrey.concat(currentEntry)
-      }).concat(ActivitiesStore.tracks);
+    const values = this.tracksByGenre.values()
+    const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
+      return preEntrey.concat(currentEntry)
+    }) : []
+    return ActivitiesStore.tracks.concat(tracks);
   }
 
   fetchActivitiesURl(): string {
