@@ -1,97 +1,128 @@
-import * as React from "react";
-import { inject, observer } from "mobx-react";
-import { IPlayerStore, ITrack } from "../../store";
-import { seconds2time } from "../../services/utils";
-import Table, { ITableBody, ITableBodyItem } from "../Table";
-import ButtonInline from "../ButtonInline";
-import ArtWork from '../ArtWork'
-const styles = require("./playlist.scss");
-interface IPlaylistProp {
-  PlayerStore?: IPlayerStore
+import * as React from 'react'
+import ButtonInline from '../ButtonInline';
+import ArtWork from '../ArtWork';
+import Permalink from '../Permalink';
+import { observer, inject } from 'mobx-react'
+import { ITrackStore } from '../../store/TrackStore'
+import { IPlayerStore } from '../../store/PlayerStore'
+import { ITrack, ICommentStore } from "../../store/index";
+import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
+import CommentsContainer from '../Comments'
+const qs = require('qs')
+const styles = require('./tracklistinfo.scss')
+
+
+interface ITracklistinfoViewProps {
+  TrackStore: ITrackStore
+  PlayerStore: IPlayerStore
+  CommentStore: ICommentStore
+  match: any
+  location: any
 }
-@inject("PlayerStore")
+
+
+@inject("TrackStore", 'PlayerStore', "CommentStore")
 @observer
-class Playlist extends React.Component<IPlaylistProp, any> {
-  handlePlay = (track: ITrack | number) => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) return;
-    PlayerStore.setPlayingTrack(track);
-  };
-  handleClosePlaylist = () => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) return;
-    PlayerStore.togglePlaylistOpen(false);
-  };
-  handleClearlist = () => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) return;
-    PlayerStore.clearPlaylist();
-  };
-  handleRemoveFromlist = (track: ITrack) => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) return;
-    PlayerStore.removeFromPlaylist(track);
+class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
+  @observable track: ITrack
+
+  componentDidMount() {
+    const { location: { search }, TrackStore } = this.props
+    if (search) {
+      const id = qs.parse(search.substr(1)).id
+      runInAction(() => {
+        this.track = TrackStore.getTrackFromId(id)
+      })
+    } else {
+    }
+
+  }
+
+  handlePlay = () => {
+    const { PlayerStore, TrackStore } = this.props
+    if (!PlayerStore || !TrackStore) {
+      return;
+    }
+    PlayerStore.setPlayingTrack(this.track)
+    //TODO playintlist
+  }
+
+  handleAddToPlaylist = () => {
+    const { PlayerStore } = this.props
+    if (!PlayerStore) {
+      return;
+    }
+    PlayerStore.addToPlaylist(this.track)
+  }
+  handleFetchMoreComments = () => {
+    this.props.CommentStore.fetchMoreComments();
   }
   render() {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) return <noscript />;
-
-    const { playList, playingTrack, isPlaylistOpen } = PlayerStore;
-    const mainClass = isPlaylistOpen ? styles.main : styles.none;
-    // todo
-    const thead = [{ width: 12 }, { width: 50 }, { width: 24 }, { width: 24 }];
-    const tbody: ITableBody[] = [];
-    playList.map(item => {
-      const { id: trackId, title, user, duration, artwork_url } = item;
-      const { id, username } = user;
-      const configurations = [{
-        fn: () => { this.handlePlay(item) },
-        className: 'fa fa-play'
-      },
-      {
-        fn: () => { this.handleRemoveFromlist(item) },
-        className: "fa fa-trash"
-      }
-      ];
-      const isPlaying = playingTrack ? playingTrack.id == item.id : false;
-      const bodyData: ITableBodyItem[] = [
-        {
-          title: "",
-          render: () => (
-            <div>
-              <ArtWork size={35} src={artwork_url} />
-            </div>
-          )
-        },
-        { title },
-        { title: username },
-        { title: seconds2time(duration), tag: "anchor", }
-      ];
-      tbody.push({
-        trackId,
-        singerId: id,
-        bodyData,
-        configurations,
-        live: isPlaying
-      });
-    });
+    if (!this.track) {
+      //Todo 
+      return <noscript />
+    }
+    // const { activitiesCount, activities } = this.props.trackStore
+    const { label_name, release_day, user, artwork_url } = this.track
+    const { username, id, avatar_url } = user;
+    const { commentsCount } = this.props.CommentStore
     return (
-      <div className={mainClass}>
-        <div className={styles.top}>
-          <h3>播放列表{}</h3>
-          <div className={styles.top_right}>
-            <ButtonInline onClick={this.handleClearlist}>
-              <i className="fa fa-trash fa-2x"></i>
-            </ButtonInline>
+      <div className={styles.main}>
+        <div className={styles.view}>
+          <div className={styles.fhmm}>
+            <ArtWork size={250} src={artwork_url} />
           </div>
-          {/* <ButtonInline onClick={this.handleClosePlaylist}>
-            <i className="fa fa-close fa-2x" />
-          </ButtonInline>*/}
+          <div className={styles.infos}>
+            <div className={styles.infos_title}>
+              Song
+            <h2>
+                {label_name}
+              </h2>
+            </div>
+            <div className={styles.infos_user}>
+              <ArtWork src={avatar_url} size={50} />
+              <span>
+                <Permalink id={id} fullname={username} /></span>
+              <span>{release_day}创建</span>
+            </div>
+            <div className={styles.infos_actions}>
+              <div className={styles.infos_actions_plays}>
+                <ButtonInline onClick={this.handlePlay}>播放</ButtonInline>
+                <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
+              </div>
+              <ButtonInline>
+                <i className='fa fa-save'></i>
+                收藏
+              </ButtonInline>
+              <ButtonInline>
+                <i className='fa fa-share-square-o'></i>
+                分享</ButtonInline>
+              <ButtonInline>
+                <i className='fa fa-comments'></i>
+                评论</ButtonInline>
+            </div>
+          </div>
+          <div className={styles.edit}>
+            <i />
+            <a href="#">编辑</a>
+          </div>
         </div>
-        <Table thead={thead} tbody={tbody} />
+
+        <div className={styles.comments}>
+          <div className={styles.commentsCount}>
+            Comments : {commentsCount}
+          </div>
+
+          <CommentsContainer
+            CommentStore={this.props.CommentStore}
+            track={this.track}
+            scrollFunc={this.handleFetchMoreComments}
+          />
+        </div>
       </div>
+
     );
   }
 }
 
-export default Playlist;
+export default TracklistinfoView;

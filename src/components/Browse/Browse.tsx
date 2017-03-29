@@ -5,11 +5,9 @@ import {
   // , inject
 } from 'mobx-react'
 import TrackList from '../Tracklist'
-import { ITrackStore } from "../../store";
 import { Link, Route, Redirect } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
 interface IDashBorardProps {
-  TrackStore: ITrackStore
   location?: any
 }
 
@@ -42,7 +40,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
         </nav>
 
         <Route path={`/main/genre=:genre`} component={TrackList} />
-
+        {/* TODO what the hell is this?*/}
         <Redirect to={`/main/genre=${GENRES[0]}`} />
       </div>
     );

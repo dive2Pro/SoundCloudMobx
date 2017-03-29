@@ -3,16 +3,20 @@ import {
   // , extendObservable
   , computed, ObservableMap
 } from 'mobx';
-
+// import * as fetchTypes from '../constants/fetchTypes'
 import { addAccessToken } from '../services/soundcloundApi'
-import { ITrack } from '../interfaces/interface';
+import {
+  ITrack
+  // , IActivitiesItem
+} from '../interfaces/interface';
 export { ITrack }
 import {
-  unauthApiUrl
+  unauthApiUrl,
+  apiUrl
   // , addAccessToken
   // , apiUrl
 } from '../services/soundcloundApi'
-
+import { ActivitiesStore } from './UserStore'
 // const Cookie = require('js-cookie');
 export class Track {
 
@@ -36,12 +40,13 @@ export interface ITrackStore {
   getTrackFromId: (id: number) => ITrack
 }
 
-class TrackList implements ITrackStore {
+class TrackStore implements ITrackStore {
   token: string = ""
   tracksByGenre = new ObservableMap<ITrack[]>();
   @observable currentGenre: string
   @observable nextHrefsByGenre = new ObservableMap<string>();
   @observable isLoadingByGenre = new ObservableMap<boolean>();
+
   // @observable currentTracks: ITrack[] = [];
 
   constructor() {
@@ -60,10 +65,11 @@ class TrackList implements ITrackStore {
     return tracks
   }
   getTrackFromId(id: number): ITrack {
-    const track = this.currentTracks.find((track) => track.id == id)
-    if (track) {
-      return track
+    let track = this.currentTracks.find((track) => track.id == id)
+    if (!track) {
+      track = this.allTracks.find((track) => track.id == id)
     }
+    if (track) return track
     throw Error('Cant find a track from gaving id ')
   }
   @computed get nextHref() {
@@ -74,7 +80,9 @@ class TrackList implements ITrackStore {
   }
 
   set tracks({ genre, values }: { genre: string, values: ITrack[] }) {
+
     const tracks = this.tracksByGenre.get(genre);
+
     if (tracks && Array.isArray(tracks.slice())) {
       tracks.splice(tracks.length, 0, ...values);
     } else {
@@ -94,28 +102,61 @@ class TrackList implements ITrackStore {
     this.nextHrefsByGenre.set(genre, nextHref)
   }
 
-  @computed get allTracks() {
-    return this.tracksByGenre.entries()
-      .map(({ values }) => {
-        return values;
-      });
+  @computed get allTracks(): ITrack[] {
+    //todo 优化
+    return this.tracksByGenre.values()
+      .reduce((preEntrey, currentEntry) => {
+        return preEntrey.concat(currentEntry)
+      }).concat(ActivitiesStore.tracks);
   }
 
+  fetchActivitiesURl(): string {
+    return apiUrl('me/activities?limit=50', '&')
+  }
+
+  /*@observable filteredActivities: IActivitiesItem[];
+  @observable activities: IActivitiesItem[] = [];
+
+  @computed get filteredTracks() {
+    return this.filteredActivities
+      ? this.filteredActivities.map((item) => item.origin) : []
+  }*/
+
+  /* async filterActivities(arr: IActivitiesItem[]) {
+     const filterData = await
+       Promise.resolve(arr)
+         .then(data =>
+           data.filter(item => {
+             const b =
+               this.activities.some(active =>
+                 active.created_at === item.created_at)
+             // console.log(b)
+             return !b;
+           }))
+     
+     this.addActivities(filterData);
+ 
+   }*/
   @action async fetchTracks() {
-    let url = "", genre = this.currentGenre || "country";
-    const nextHref = this.nextHref;
-    if (nextHref) {
-      url = nextHref
-    } else {
+    let genre = this.currentGenre || "country", url;
+
+    url = this.nextHref
+    // if (!url && (genre = fetchTypes.FETCH_ACTIVITIES)) {
+    // url = this.fetchActivitiesURl()
+    // } else
+    if (!url) {
       url = unauthApiUrl(`tracks?linked_partitioning=1&limit=50&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
+
+
     this.setLoadingByGenre(genre, true)
     const data: any = await fetch(url).then(response => response.json())
     //todo catch error 
-    // debugger;
     runInAction('loadtracks', () => {
+      // if (genre === fetchTypes.FETCH_ACTIVITIES) {
+      // } else {
       this.tracks = { genre, values: data.collection };
-
+      // }
       this.setNextHrefByGenre(genre, data.next_href);
       this.setLoadingByGenre(genre, false)
     })
@@ -125,12 +166,11 @@ class TrackList implements ITrackStore {
   // todo
   @action  async fetchPlaylists(id: number) {
     const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
+    // const data =
     await fetch(playlistUrl)
-      .then(response => response.json())
-      .then((data: any) => {
+      .then(response => response.json());
 
-      })
   }
 }
 
-export default new TrackList();
+export default new TrackStore();
