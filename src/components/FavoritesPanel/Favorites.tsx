@@ -33,7 +33,7 @@ const Favorites = observer((prop: IFavoritesProp) => {
       {favorites.map((track: ITrack) => {
         return <MiniTrack
           PlayerStore={PlayerStore}
-          key={track.id} track={track} />
+          key={track.id + "- " + obj.path} track={track} />
       })}
       <ButtonMore isLoading={isLoading} onClick={() => { }} />
     </div>

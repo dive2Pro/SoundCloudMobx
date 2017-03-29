@@ -4,6 +4,7 @@ import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
 import { ICommentStore, IComment, ITrack } from "../../store/index";
 import ArtWork from '../ArtWork'
+import Permalink from '../Permalink'
 const styles = require('./comments.scss')
 
 
@@ -14,7 +15,7 @@ interface ICommentsProps {
 
 
 const CommentView = ({ comment }: { comment: IComment }) => {
-  const { user: { avatar_url, username }, body, created_at } = comment;
+  const { user: { id, avatar_url, username }, body, created_at } = comment;
 
   return (
     <div className={styles.comment}>
@@ -23,7 +24,9 @@ const CommentView = ({ comment }: { comment: IComment }) => {
       />
       <div className={styles.info}>
         <div className={styles.content}>
-          <a href="#">{username}</a>:\t {body}
+          <Permalink
+            id={id}
+            fullname={username} /> :\t {body}
         </div>
         <div className={styles.time}>
           {created_at}
