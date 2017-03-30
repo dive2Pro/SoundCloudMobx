@@ -37,7 +37,8 @@ class Followers extends React.Component<IFollowersProps, any> {
       count: user && user.followers_count,
       clazz: "fa fa-users",
       typeContent: 'follwers',
-      path: 'followers'
+      path: 'followers',
+      id: user.id
     }
     //todo turn in to mobx
     const limitFollowers = followers.slice(0, 3);

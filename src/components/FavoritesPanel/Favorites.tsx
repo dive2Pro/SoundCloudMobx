@@ -22,7 +22,8 @@ const Favorites = observer((prop: IFavoritesProp) => {
     clazz: 'fa fa-like',
     count: favorites.length,
     typeContent: 'Favorites',
-    path: 'favorites'
+    path: 'favorites',
+    id: UserModel.user && UserModel.user.id
   }
 
   return (<section className={styles.base}>

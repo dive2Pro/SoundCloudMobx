@@ -2,11 +2,13 @@ import {
   observable, action
   , ObservableMap
   // , runInAction
-  , autorun
-  , extendObservable, computed, runInAction
-  , whyRun
+  // , autorun
+  , extendObservable, computed,
+  runInAction
+  // , runInAction
+  // , whyRun
 } from "mobx";
-import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS } from '../constants/fetchTypes'
+import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES } from '../constants/fetchTypes'
 import {
   IUser
   // , IMePeopels
@@ -14,6 +16,7 @@ import {
 } from "../interfaces/interface";
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
+import { BaseAct } from "./TrackStore";
 // const SC = require("soundcloud");
 // const Cookies = require("js-cookie")
 // const Remotedev = require("mobx-remotedev");
@@ -30,6 +33,7 @@ export interface IUserModel {
   fetchCommunityData: () => void
   // fetchFollowers: (nextHref: string, id?: number, ) => void;
 }
+
 interface ICatchErr {
   err: any
   fetchType?: string;
@@ -41,7 +45,7 @@ export interface IActivitiesStore {
   fetchNextActivities: () => void;
   filteredActivities: IActivitiesItem[];
   isLoading: boolean;
-  activitiesCount: number
+  itemsCount: number
   setFilterType: (type: string) => void;
   setSortType: (type: string) => void;
   setFilterTitle: (type: string) => void;
@@ -50,91 +54,36 @@ export interface IActivitiesStore {
   filteredTracks: ITrack[];
 }
 
-class ActivitiesModel implements IActivitiesStore {
-  @observable isLoading: boolean
-  @observable filterType: string
-  @observable filterTitle: string
-  @observable sortType: string
-  @observable activities: IActivitiesItem[] = [];
-  @observable activities_nextHref$: string;
-
+class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesStore {
   @observable filteredActivities: IActivitiesItem[];
-  constructor() {
-    const handler = autorun(() => {
-      this.filterFunc(this.activities, this.sortType, this.filterType)
-    })
-    whyRun(handler);
+
+  @computed get isLoading(): boolean {
+    return this.isLoadingByGenre.get(FETCH_ACTIVITIES) || false
+  }
+
+  @computed get activities_nextHref$(): string {
+    return this.nextHrefsByGenre.get(FETCH_ACTIVITIES) || ""
   }
 
   @action setNextActivitiesHref(nextHref: string) {
-    this.activities_nextHref$ = nextHref;
+    this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
   }
+
 
   @action addActivities(arr: IActivitiesItem[]) {
-    this.activities.splice(this.activities.length, 0, ...arr);
+    this.items.splice(this.items.length, 0, ...arr);
   }
 
-  @action setFilterTitle(title: string) {
-    this.filterTitle = title;
+  transToTracks(items: IActivitiesItem[]): ITrack[] {
+    return items.map(this.getAllTrackFromActivity);
   }
-  @action setSortType(type: string) {
-    this.sortType = type;
-  }
+
   getAllTrackFromActivity(act: IActivitiesItem) {
     return act.origin
   }
-  @computed get filteredTracks() {
-    return this.filteredActivities
-      ? this.filteredActivities.map(this.getAllTrackFromActivity) : []
-  }
+
   @computed get tracks() {
-    return this.activities && this.activities.map(this.getAllTrackFromActivity)
-  }
-  filterActivities(arr: IActivitiesItem[]) {
-    Promise.resolve(arr)
-      .then(data => {
-        const filterArr = data.filter(item => {
-          const b =
-            this.activities.some(active =>
-              active.created_at === item.created_at)
-          // console.log(b)
-          return !b;
-        })
-        this.addActivities(filterArr);
-      })
-  }
-  @action setLoadingActivities(b: boolean) {
-    this.isLoading = b;
-  }
-  @action fetchNextActivities() {
-    if (!this.isLoading)
-      this.fetchActivities(this.activities_nextHref$);
-  }
-  @action async fetchActivities(nextHref?: string) {
-    let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
-      apiUrl(`me/activities?limit=50`, '&')
-    this.setLoadingActivities(true);
-    fetch(activitiesUrl)
-      .then(response => response.json())
-      .then((data: any) => {
-        this.setNextActivitiesHref(data.next_href)
-        this.filterActivities(data.collection);
-        this.setLoadingActivities(false)
-      })
-  }
-
-  @action setFilterType(filterType: string = "") {
-    this.filterType = filterType;
-  }
-
-  async filterFunc(activities: IActivitiesItem[], sortType: string, filterType: string) {
-    let fs = activities
-    fs = await this.filterByFilterTitle(fs);
-    fs = await this.filterBySortType(fs);
-    fs = await this.filterByFilterType(fs)
-    runInAction(() => {
-      this.filteredActivities = fs;
-    })
+    return this.items && this.items.map(this.getAllTrackFromActivity)
   }
 
   filterByFilterType(fs: IActivitiesItem[]) {
@@ -146,45 +95,60 @@ class ActivitiesModel implements IActivitiesStore {
     }
     return temp;
   }
-
-  filterBySortType(fs: IActivitiesItem[]) {
-    let temp = fs.slice();
-    if (!!this.sortType) {
-      temp = fs.sort((p, n) => {
-        let pCount = p.origin[this.sortType];
-        let nCount = n.origin[this.sortType];
-        pCount = !Number.isNaN(pCount) ? pCount : 0;
-        nCount = !Number.isNaN(nCount) ? nCount : 0;
-        return nCount - pCount;
+  filterActivities(arr: IActivitiesItem[]) {
+    Promise.resolve(arr)
+      .then(data => {
+        const filterArr = data.filter(item => {
+          const b =
+            this.items.some(active =>
+              active.created_at === item.created_at)
+          // console.log(b)
+          return !b;
+        })
+        this.addActivities(filterArr);
       })
-    }
-    return temp
-  }
-  filterByFilterTitle(fs: IActivitiesItem[]) {
-    let temp = fs.slice();
-    if (!!this.filterTitle) {
-      temp = fs.filter(item => {
-        return item.origin.title.indexOf(this.filterTitle) > -1
-      })
-    }
-    return temp
   }
 
-  @computed get activitiesCount() {
-    return this.activities.length;
+  @action setLoadingActivities(b: boolean) {
+    this.setLoadingByGenre(FETCH_ACTIVITIES, b);
+  }
+
+  @action fetchNextActivities() {
+    if (!this.isLoading)
+      this.fetchActivities(this.activities_nextHref$);
+  }
+  @action async fetchActivities(nextHref?: string) {
+    let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
+      apiUrl(`me/activities?limit=50`, '&')
+    try {
+      this.setLoadingActivities(true);
+      const data: any = await fetch(activitiesUrl)
+        .then(response => response.json());
+      console.log(data)
+      runInAction(() => {
+        this.setNextActivitiesHref(data.next_href)
+        this.filterActivities(data.collection);
+        this.setLoadingActivities(false)
+
+      })
+    } finally {
+      this.setLoadingActivities(false)
+    }
   }
 }
-
 
 export interface IUserStore {
   initUser: (id: number | IUser) => IUserModel
   fetchUserData: (id: number) => void;
   userModel: IUserModel
+  isLoginUser: boolean
 }
 
-export class UserList {
+
+export class UserList implements IUserStore {
   users = new ObservableMap<UserModel>()
   @observable userModel: IUserModel
+  loginedUserId: number
   constructor() { }
 
   initUser(obj: number | IUser): IUserModel {
@@ -202,6 +166,14 @@ export class UserList {
   }
   @action setCurrentUserModel(model: IUserModel) {
     this.userModel = model
+  }
+
+  @computed get isLoginUser() {
+    return this.loginedUserId === (this.userModel.user && this.userModel.user.id)
+  }
+
+  setLoginUserModel(userId: number) {
+    this.loginedUserId = userId
   }
 
   fetchUserData(id: number) {

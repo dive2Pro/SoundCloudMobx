@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="88900e52-29d4-4f56-9792-cdc661b96e59" name="Default" comment="auth pass">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/Playlist/playlist.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/TracklistInfo/TracklistInfo.tsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/TracklistInfo/index.ts" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/TracklistInfo/tracklistinfo.scss" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/FaveMusic.tsx" afterPath="$PROJECT_DIR$/src/FaveMusic.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Browse/Browse.tsx" afterPath="$PROJECT_DIR$/src/components/Browse/Browse.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Playlist/Playlist.tsx" afterPath="$PROJECT_DIR$/src/components/Playlist/Playlist.tsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Playlist/index.ts" afterPath="$PROJECT_DIR$/src/components/Playlist/index.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/TrackTitleView/TrackTitleView.tsx" afterPath="$PROJECT_DIR$/src/components/TrackTitleView/TrackTitleView.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Community/Community.tsx" afterPath="$PROJECT_DIR$/src/components/Community/Community.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/DashBoard/DashBoard.tsx" afterPath="$PROJECT_DIR$/src/components/DashBoard/DashBoard.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/FavoritesPanel/Favorites.tsx" afterPath="$PROJECT_DIR$/src/components/FavoritesPanel/Favorites.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/FilterActivities/FilterActivities.tsx" afterPath="$PROJECT_DIR$/src/components/FilterActivities/FilterActivities.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/FollowersPanel/Followers.tsx" afterPath="$PROJECT_DIR$/src/components/FollowersPanel/Followers.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/FollowingsPanel/Followings.tsx" afterPath="$PROJECT_DIR$/src/components/FollowingsPanel/Followings.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/ViewAll/ViewAll.tsx" afterPath="$PROJECT_DIR$/src/components/ViewAll/ViewAll.tsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/constants/fetchTypes.ts" afterPath="$PROJECT_DIR$/src/constants/fetchTypes.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/SessionStore.ts" afterPath="$PROJECT_DIR$/src/store/SessionStore.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/TrackStore.ts" afterPath="$PROJECT_DIR$/src/store/TrackStore.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/UserStore.ts" afterPath="$PROJECT_DIR$/src/store/UserStore.ts" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -30,26 +30,15 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TrackStore.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="TrackStore.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/store/TrackStore.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="30" column="24" lean-forward="false" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
+            <state relative-caret-position="418">
+              <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding>
-                <marker date="1490761322523" expanded="true" signature="7:8" ph="..." />
-                <marker date="1490761322523" expanded="true" signature="3347:3450" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TracklistInfo.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/Track/TracklistInfo.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1504">
-              <caret line="19" column="15" lean-forward="true" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
-              <folding>
-                <element signature="e#0#30#0" expanded="true" />
+                <marker date="1490842116282" expanded="true" signature="7:8" ph="..." />
+                <marker date="1490842116282" expanded="false" signature="7:94" ph="..." />
+                <marker date="1490842116282" expanded="true" signature="5080:6090" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -197,11 +186,11 @@
         <option value="$PROJECT_DIR$/src/components/InputRange/index.ts" />
         <option value="$PROJECT_DIR$/src/components/InputRange/InputRange.tsx" />
         <option value="$PROJECT_DIR$/src/components/Tracklist/Tracklist.tsx" />
-        <option value="$PROJECT_DIR$/src/store/TrackStore.ts" />
         <option value="$PROJECT_DIR$/src/components/Browse/index.ts" />
         <option value="$PROJECT_DIR$/src/components/Activities/Activities.tsx" />
         <option value="$PROJECT_DIR$/src/components/Browse/Browse.tsx" />
         <option value="$PROJECT_DIR$/src/components/Track/TracklistInfo.tsx" />
+        <option value="$PROJECT_DIR$/src/store/TrackStore.ts" />
       </list>
     </option>
   </component>
@@ -515,7 +504,7 @@
       <workItem from="1490252354518" duration="645000" />
       <workItem from="1490257452882" duration="4072000" />
       <workItem from="1490342748982" duration="3538000" />
-      <workItem from="1490761008733" duration="572000" />
+      <workItem from="1490761008733" duration="5228000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1489670783394</created>
@@ -535,7 +524,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29335000" />
+    <option name="totallyTimeSpent" value="33991000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
@@ -964,23 +953,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/store/TrackStore.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="30" column="24" lean-forward="false" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
-          <folding>
-            <marker date="1490761322523" expanded="true" signature="7:8" ph="..." />
-            <marker date="1490761322523" expanded="true" signature="3347:3450" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Track/TracklistInfo.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1504">
           <caret line="19" column="15" lean-forward="true" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/store/TrackStore.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding>
-            <element signature="e#0#30#0" expanded="true" />
+            <marker date="1490842116282" expanded="true" signature="7:8" ph="..." />
+            <marker date="1490842116282" expanded="false" signature="7:94" ph="..." />
+            <marker date="1490842116282" expanded="true" signature="5080:6090" ph="{...}" />
           </folding>
         </state>
       </provider>

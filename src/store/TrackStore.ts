@@ -1,7 +1,7 @@
 import {
   action, observable, runInAction
   // , extendObservable
-  , computed, ObservableMap
+  , computed, ObservableMap, autorun, whyRun
 } from 'mobx';
 // import * as fetchTypes from '../constants/fetchTypes'
 import { addAccessToken } from '../services/soundcloundApi'
@@ -39,11 +39,86 @@ export interface ITrackStore {
   setGenre: (genre: string) => void;
   getTrackFromId: (id: number) => ITrack
 }
+export abstract class BaseAct<T> {
 
+  @observable nextHrefsByGenre = new ObservableMap<string>();
+  @observable isLoadingByGenre = new ObservableMap<boolean>();
+
+  @observable filterType: string
+  @observable filterTitle: string
+  @observable sortType: string
+  // 记得初始化
+  @observable items: T[] = []
+  @observable filteredTracks: ITrack[] = []
+  constructor() {
+    const handler = autorun(() => {
+      this.filterFunc(this.items, this.sortType, this.filterType)
+    })
+    whyRun(handler);
+  }
+  @action setFilterTitle(title: string) {
+    this.filterTitle = title;
+  }
+  @action setSortType(type: string) {
+    this.sortType = type;
+  }
+  @action setFilterType(filterType: string = "") {
+    this.filterType = filterType;
+  }
+
+  filterByFilterType(fs: T[]): T[] {
+    return fs;
+  }
+  abstract transToTracks(act: T[]): ITrack[];
+
+  async filterFunc(activities: T[], sortType: string, filterType: string) {
+    let fs: ITrack[] = []
+    const filterByTypes = await this.filterByFilterType(activities)
+    fs = this.transToTracks(filterByTypes)
+    fs = await this.filterByFilterTitle(fs);
+    fs = await this.filterBySortType(fs);
+    runInAction(() => {
+      this.filteredTracks = fs
+    })
+  }
+  filterBySortType(fs: ITrack[]) {
+    let temp = fs.slice();
+    if (!!this.sortType) {
+      temp = fs.sort((p, n) => {
+        let pCount = p[this.sortType];
+        let nCount = n[this.sortType];
+        pCount = !Number.isNaN(pCount) ? pCount : 0;
+        nCount = !Number.isNaN(nCount) ? nCount : 0;
+        return nCount - pCount;
+      })
+    }
+    return temp
+  }
+  filterByFilterTitle(fs: ITrack[]) {
+    let temp = fs.slice();
+    if (!!this.filterTitle) {
+      temp = fs.filter(item => {
+        return item.title.indexOf(this.filterTitle) > -1
+      })
+    }
+    return temp
+  }
+  @action setLoadingByGenre(genre: string, loading: boolean) {
+    this.isLoadingByGenre.set(genre, loading);
+  }
+
+  @action setNextHrefByGenre(genre: string, nextHref: string) {
+    this.nextHrefsByGenre.set(genre, nextHref)
+  }
+  @computed get itemsCount() {
+    return this.items.length;
+  }
+}
 class TrackStore implements ITrackStore {
   token: string = ""
   tracksByGenre = new ObservableMap<ITrack[]>();
   @observable currentGenre: string
+
   @observable nextHrefsByGenre = new ObservableMap<string>();
   @observable isLoadingByGenre = new ObservableMap<boolean>();
 
@@ -116,29 +191,6 @@ class TrackStore implements ITrackStore {
     return apiUrl('me/activities?limit=50', '&')
   }
 
-  /*@observable filteredActivities: IActivitiesItem[];
-  @observable activities: IActivitiesItem[] = [];
-
-  @computed get filteredTracks() {
-    return this.filteredActivities
-      ? this.filteredActivities.map((item) => item.origin) : []
-  }*/
-
-  /* async filterActivities(arr: IActivitiesItem[]) {
-     const filterData = await
-       Promise.resolve(arr)
-         .then(data =>
-           data.filter(item => {
-             const b =
-               this.activities.some(active =>
-                 active.created_at === item.created_at)
-             // console.log(b)
-             return !b;
-           }))
-     
-     this.addActivities(filterData);
- 
-   }*/
   @action async fetchTracks() {
     let genre = this.currentGenre || "country", url;
 
