@@ -57,7 +57,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
     const { playlists, isLoadings } = userModel
     const isloading = isLoadings.get(FETCH_PLAYLIST) || true;
     return (
-      <div>
+      <div className={styles.playlist}>
         {playlists.map((item, i) => {
           return (
             <PlaylistItem
@@ -113,12 +113,13 @@ export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
     }
     const { label_name, artwork_url, user, tracks } = playlist
     return (
-      <div className={styles.main}>
+      <div className={styles.playlistInfo}>
         <TrackProfile
           label_name={label_name}
           type="list"
           bigPic={artwork_url}
           user={user}
+          playlist={playlist}
         />
 
         <Activities
