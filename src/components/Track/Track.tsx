@@ -1,7 +1,5 @@
 import * as React from 'react'
-import ButtonInline from '../ButtonInline';
-import ArtWork from '../ArtWork';
-import Permalink from '../Permalink';
+import TrackProfile from '../TrackProfile'
 import { observer, inject } from 'mobx-react'
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
@@ -66,50 +64,20 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       return <noscript />
     }
     // const { activitiesCount, activities } = this.props.trackStore
-    const { label_name, release_day, user, artwork_url } = this.track
-    const { username, id, avatar_url } = user;
+    const { label_name
+      // , release_day
+      , user, artwork_url } = this.track
+    // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.CommentStore
     return (
       <div className={styles.main}>
-        <div className={styles.view}>
-          <div className={styles.fhmm}>
-            <ArtWork size={250} src={artwork_url} />
-          </div>
-          <div className={styles.infos}>
-            <div className={styles.infos_title}>
-              Song
-            <h2>
-                {label_name}
-              </h2>
-            </div>
-            <div className={styles.infos_user}>
-              <ArtWork src={avatar_url} size={50} />
-              <span>
-                <Permalink id={id} fullname={username} /></span>
-              <span>{release_day}创建</span>
-            </div>
-            <div className={styles.infos_actions}>
-              <div className={styles.infos_actions_plays}>
-                <ButtonInline onClick={this.handlePlay}>播放</ButtonInline>
-                <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
-              </div>
-              <ButtonInline>
-                <i className='fa fa-save' />
-                收藏
-              </ButtonInline>
-              <ButtonInline>
-                <i className='fa fa-share-square-o' />
-                分享</ButtonInline>
-              <ButtonInline>
-                <i className='fa fa-comments' />
-                评论</ButtonInline>
-            </div>
-          </div>
-          <div className={styles.edit}>
-            <i />
-            <a href="#">编辑</a>
-          </div>
-        </div>
+        <TrackProfile
+          bigPic={artwork_url}
+          label_name={label_name}
+          track={this.track}
+          type={'Track'}
+          user={user}
+        />
 
         <div className={styles.comments}>
           <div className={styles.commentsCount}>
