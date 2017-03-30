@@ -12,7 +12,7 @@ const qs = require('qs')
 const styles = require('./tracklistinfo.scss')
 
 
-interface ITracklistinfoViewProps {
+interface IPlaylistProps {
   TrackStore: ITrackStore
   PlayerStore: IPlayerStore
   CommentStore: ICommentStore
@@ -21,18 +21,14 @@ interface ITracklistinfoViewProps {
 }
 
 
-@inject("TrackStore", 'PlayerStore', "CommentStore")
+@inject("TrackStore", 'PlayerStore')
 @observer
-class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
-  @observable track: ITrack
-
+class Playlist extends React.Component<IPlaylistProps, any> {
   componentDidMount() {
     const { location: { search }, TrackStore } = this.props
     if (search) {
       const id = qs.parse(search.substr(1)).id
-      runInAction(() => {
-        this.track = TrackStore.getTrackFromId(id)
-      })
+
     } else {
     }
 
@@ -43,8 +39,6 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     if (!PlayerStore || !TrackStore) {
       return;
     }
-    PlayerStore.setPlayingTrack(this.track)
-    //TODO playintlist
   }
 
   handleAddToPlaylist = () => {
@@ -65,7 +59,6 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     // const { activitiesCount, activities } = this.props.trackStore
     const { label_name, release_day, user, artwork_url } = this.track
     const { username, id, avatar_url } = user;
-    const { commentsCount } = this.props.CommentStore
     return (
       <div className={styles.main}>
         <div className={styles.view}>
@@ -108,21 +101,9 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
           </div>
         </div>
 
-        <div className={styles.comments}>
-          <div className={styles.commentsCount}>
-            Comments : {commentsCount}
-          </div>
-
-          <CommentsContainer
-            CommentStore={this.props.CommentStore}
-            track={this.track}
-            scrollFunc={this.handleFetchMoreComments}
-          />
-        </div>
       </div>
-
     );
   }
 }
 
-export default TracklistinfoView;
+export default Playlist;
