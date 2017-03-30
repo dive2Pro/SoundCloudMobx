@@ -1,7 +1,7 @@
 import {
   action, observable, runInAction
   // , extendObservable
-  , computed, ObservableMap, autorun, whyRun
+  , computed, ObservableMap, autorun, whyRun, IReactionDisposer
 } from 'mobx';
 // import * as fetchTypes from '../constants/fetchTypes'
 import { addAccessToken } from '../services/soundcloundApi'
@@ -12,7 +12,7 @@ import {
 export { ITrack }
 import {
   unauthApiUrl,
-  apiUrl
+  // apiUrl
   // , addAccessToken
   // , apiUrl
 } from '../services/soundcloundApi'
@@ -41,21 +41,45 @@ export interface ITrackStore {
 }
 export abstract class BaseAct<T> {
 
+  // 记得初始化
+  itemsMap = new ObservableMap<T[]>();
   @observable nextHrefsByGenre = new ObservableMap<string>();
   @observable isLoadingByGenre = new ObservableMap<boolean>();
 
   @observable filterType: string
   @observable filterTitle: string
   @observable sortType: string
-  // 记得初始化
-  @observable items: T[] = []
+
   @observable filteredTracks: ITrack[] = []
-  constructor() {
-    const handler = autorun(() => {
-      this.filterFunc(this.items, this.sortType, this.filterType)
-    })
-    whyRun(handler);
+  @observable currentGenre: string
+
+  autorunHandle: IReactionDisposer;
+
+  constructor(genre: string) {
+    this.setGenre(genre);
   }
+
+  @computed get currentItems(): T[] {
+    return <T[]>this.itemsMap.get(this.currentGenre)
+  }
+
+  initFilterFunction(type: string) {
+
+    if (this.autorunHandle) {
+      this.autorunHandle();
+    }
+    let has = this.itemsMap.has(type);
+    if (!has) {
+      this.itemsMap.set(type, []);
+    }
+    this.autorunHandle = autorun(() => {
+      this.filterFunc(<T[]>this.itemsMap.get(type), this.sortType, this.filterType)
+    })
+
+    whyRun(this.autorunHandle);
+
+  }
+
   @action setFilterTitle(title: string) {
     this.filterTitle = title;
   }
@@ -110,33 +134,33 @@ export abstract class BaseAct<T> {
   @action setNextHrefByGenre(genre: string, nextHref: string) {
     this.nextHrefsByGenre.set(genre, nextHref)
   }
-  @computed get itemsCount() {
-    return this.items.length;
+  @action setGenre(genre: string) {
+    genre = genre.toLocaleLowerCase()
+    this.currentGenre = genre;
+    this.initFilterFunction(genre);
+  }
+
+  @computed get nextHref() {
+    return this.nextHrefsByGenre.get(this.currentGenre) || ""
   }
 }
-class TrackStore implements ITrackStore {
+
+class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   token: string = ""
-  tracksByGenre = new ObservableMap<ITrack[]>();
+  static defaultGenre = 'country';
   @observable currentGenre: string
-
-  @observable nextHrefsByGenre = new ObservableMap<string>();
-  @observable isLoadingByGenre = new ObservableMap<boolean>();
-
-  // @observable currentTracks: ITrack[] = [];
-
-  constructor() {
-
-  }
 
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre) || false
   }
 
   @computed get hasCurrentGenreTracks() {
-    return this.tracksByGenre.has(this.currentGenre);
+    // const items = this.itemsMap.get(this.currentGenre)
+    return this.currentItems && this.currentItems.length > 0;
   }
+
   @computed get currentTracks() {
-    const tracks = this.tracksByGenre.get(this.currentGenre) || [];
+    const tracks = this.itemsMap.get(this.currentGenre) || [];
     return tracks
   }
   getTrackFromId(id: number): ITrack {
@@ -147,39 +171,26 @@ class TrackStore implements ITrackStore {
     if (track) return track
     throw Error('Cant find a track from gaving id ')
   }
-  @computed get nextHref() {
-    return this.nextHrefsByGenre.get(this.currentGenre) || ""
-  }
-  @action setLoadingByGenre(genre: string, loading: boolean) {
-    this.isLoadingByGenre.set(genre, loading);
+
+
+
+  transToTracks(ts: ITrack[]) {
+    return ts;
   }
 
   set tracks({ genre, values }: { genre: string, values: ITrack[] }) {
 
-    const tracks = this.tracksByGenre.get(genre);
+    const tracks = this.itemsMap.get(genre);
 
     if (tracks && Array.isArray(tracks.slice())) {
       tracks.splice(tracks.length, 0, ...values);
     } else {
-      this.tracksByGenre.set(genre, values);
+      this.itemsMap.set(genre, values);
     }
   }
-
-  @action setGenre(genre: string) {
-    genre = genre.toLocaleLowerCase()
-    this.currentGenre = genre;
-    if (!this.hasCurrentGenreTracks) {
-      this.fetchTracks();
-    }
-  }
-
-  @action setNextHrefByGenre(genre: string, nextHref: string) {
-    this.nextHrefsByGenre.set(genre, nextHref)
-  }
-
   @computed get allTracks(): ITrack[] {
     //todo 优化
-    const values = this.tracksByGenre.values()
+    const values = this.itemsMap.values()
     const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
       return preEntrey.concat(currentEntry)
     }) : []
@@ -187,36 +198,35 @@ class TrackStore implements ITrackStore {
       .concat(tracks, UserStore.AllUsersFavorities);
   }
 
-  fetchActivitiesURl(): string {
-    return apiUrl('me/activities?limit=50', '&')
-  }
 
   @action async fetchTracks() {
+    if (this.isLoading) {
+      return;
+    }
     let genre = this.currentGenre || "country", url;
-
     url = this.nextHref
-    // if (!url && (genre = fetchTypes.FETCH_ACTIVITIES)) {
-    // url = this.fetchActivitiesURl()
-    // } else
     if (!url) {
       url = unauthApiUrl(`tracks?linked_partitioning=1&limit=50&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
-
-
     this.setLoadingByGenre(genre, true)
     const data: any = await fetch(url).then(response => response.json())
     //todo catch error 
     runInAction('loadtracks', () => {
-      // if (genre === fetchTypes.FETCH_ACTIVITIES) {
-      // } else {
       this.tracks = { genre, values: data.collection };
-      // }
       this.setNextHrefByGenre(genre, data.next_href);
       this.setLoadingByGenre(genre, false)
     })
 
   }
 
+  @action setGenre(genre: string) {
+    super.setGenre(genre);
+
+    if (!this.hasCurrentGenreTracks) {
+      this.fetchTracks();
+    }
+
+  }
   // todo
   @action  async fetchPlaylists(id: number) {
     const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
@@ -227,4 +237,4 @@ class TrackStore implements ITrackStore {
   }
 }
 
-export default new TrackStore();
+export default new TrackStore(TrackStore.defaultGenre);

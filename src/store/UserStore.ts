@@ -45,7 +45,6 @@ export interface IActivitiesStore {
   fetchNextActivities: () => void;
   filteredActivities: IActivitiesItem[];
   isLoading: boolean;
-  itemsCount: number
   setFilterType: (type: string) => void;
   setSortType: (type: string) => void;
   setFilterTitle: (type: string) => void;
@@ -54,16 +53,16 @@ export interface IActivitiesStore {
   filteredTracks: ITrack[];
 }
 
+
 class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesStore {
   @observable filteredActivities: IActivitiesItem[];
-
+  constructor() {
+    super(FETCH_ACTIVITIES)
+  }
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(FETCH_ACTIVITIES) || false
   }
 
-  @computed get activities_nextHref$(): string {
-    return this.nextHrefsByGenre.get(FETCH_ACTIVITIES) || ""
-  }
 
   @action setNextActivitiesHref(nextHref: string) {
     this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
@@ -71,7 +70,9 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
 
 
   @action addActivities(arr: IActivitiesItem[]) {
-    this.items.splice(this.items.length, 0, ...arr);
+    const items = this.currentItems;
+    items.splice(items.length, 0, ...arr);
+
   }
 
   transToTracks(items: IActivitiesItem[]): ITrack[] {
@@ -83,7 +84,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
   }
 
   @computed get tracks() {
-    return this.items && this.items.map(this.getAllTrackFromActivity)
+    return this.currentItems && this.currentItems.map(this.getAllTrackFromActivity)
   }
 
   filterByFilterType(fs: IActivitiesItem[]) {
@@ -100,7 +101,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
       .then(data => {
         const filterArr = data.filter(item => {
           const b =
-            this.items.some(active =>
+            this.currentItems.some(active =>
               active.created_at === item.created_at)
           // console.log(b)
           return !b;
@@ -115,7 +116,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
 
   @action fetchNextActivities() {
     if (!this.isLoading)
-      this.fetchActivities(this.activities_nextHref$);
+      this.fetchActivities(this.nextHref);
   }
   @action async fetchActivities(nextHref?: string) {
     let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
