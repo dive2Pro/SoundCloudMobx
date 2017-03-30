@@ -4,7 +4,13 @@ import { observer, inject } from "mobx-react";
 import ButtonInline from "../ButtonInline";
 import { IPlayerStore } from "../../store/PlayerStore";
 import ArtWork from "../ArtWork";
-import { action, observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
+const mp3 = require('../../../public/assert/music.mp3')
+console.log(mp3)
+// const b = new File(mp3, 'mp3');
+
+// console.info(b)
+
 const styles = require("./player.scss");
 import Range from '../InputRange'
 interface IPlayerProps {
@@ -21,6 +27,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   main: any;
   audio: HTMLAudioElement;
   @observable isVisible = false;
+  @observable processValue = 0;
   @action setPlayerVisibleFromComponent(visible: boolean) {
     this.isVisible = visible;
   }
@@ -50,14 +57,19 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!this.props.PlayerStore) {
       return;
     }
-    const { playingUrl, isPlaying } = this.props.PlayerStore;
-    // const audio = this.audio
-    if (playingUrl && isPlaying) {
-      console.log(playingUrl)
-      // audio.src = playingUrl;
-      // audio.play()
-    } else {
-      // audio.pause();
+    const {
+      // playingUrl,
+      isPlaying } = this.props.PlayerStore;
+    const audio = this.audio
+    console.log('update????')
+    if (
+      // playingUrl &&
+      isPlaying && audio.paused) {
+      // console.log(playingUrl)
+      audio.src = mp3;
+      audio.play()
+    } else if (!isPlaying) {
+      audio.pause();
     }
   }
   handleOpenPlaylist = () => {
@@ -73,7 +85,34 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.props.PlayerStore.toggleShuffleMode();
     }
   }
+  // will be remove  just for test
+  @observable file: any;
+  handleFiles = (e: any) => {
+    runInAction(() => {
+      this.file = (e.target.files[0]);
+    })
+  }
+  handleProcessChange = (value: string) => {
+    // debugger 
+    const current = this.audio.duration * (+value)
+    console.info(current)
+    this.audio.currentTime = current;
+  }
+
+  handleAudioUpdate = (e: any) => {
+    // debugger
+    const t = e.target;
+    const duration = t.duration
+    const currentTime = t.currentTime
+    runInAction(() => {
+
+      this.processValue = currentTime / duration
+    })
+    // console.info(e);
+  }
+
   render() {
+
     const { PlayerStore } = this.props;
     let clazzName = styles.base;
     if (this.isVisible) {
@@ -82,7 +121,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />;
     }
-    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode, playingUrl } = PlayerStore;
+    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode
+      // , playingUrl
+    } = PlayerStore;
     if (isPlaying || isPlaylistOpen) {
       clazzName = styles.visible;
     }
@@ -96,6 +137,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     const shuffleClazz = isShuffleMode && styles.active;
     const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
+    const value = this.file && (this.processValue * this.file.size).toFixed(1)
     return (
       <div
         className={clazzName}
@@ -104,9 +146,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         ref={r => this.main = r}
       >
         <div className={rangeClazz}>
-          <Range data={1234} value={244} />
+          <Range
+            onDragEnd={this.handleProcessChange}
+            onDragIng={this.handleProcessChange}
+            data={this.file && this.file.size}
+            value={value} />
         </div>
         <div className={styles.content}>
+          <input type="file" onChange={this.handleFiles} />
           <div className={styles.content_plays}>
             <div className={styles.content_action}>
               <ButtonInline onClick={() => this.handlePlayNext(-1)}>
@@ -153,12 +200,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
           </div>
         </div>
         <audio
+          onTimeUpdate={this.handleAudioUpdate}
           ref={(audio: HTMLAudioElement) => {
             this.audio = audio;
           }}
-          src={playingUrl}
           id="audio"
         />
+        {/*src={mp3}*/}
       </div>
     );
   }
