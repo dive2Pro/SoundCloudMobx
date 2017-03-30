@@ -57,9 +57,15 @@ class InputRange extends React.Component<IInputRange, any> {
     value = value < l ? l : value > h ? h : value;
     this.currentValue = Math.round(+value);
     const { onDragIng } = this.props;
-    if (onDragIng) {
-      onDragIng(this.currentValue);
+    if (this.isMoving && onDragIng) {
+      const process = this.getCurrentProcssPercent()
+      onDragIng(process);
     }
+  }
+
+  getCurrentProcssPercent() {
+    return (this.currentValue / this.props.data).toFixed(2)
+
   }
 
   @computed get dotStyle() {
@@ -225,11 +231,17 @@ class InputRange extends React.Component<IInputRange, any> {
     this.actualPosition(this.getPos(e));
     const { onDragEnd } = this.props;
     if (onDragEnd) {
-      onDragEnd(this.currentValue);
+      const process = this.getCurrentProcssPercent()
+      onDragEnd(process);
     }
     window.removeEventListener("mousemove", this.handleMovind, false);
     window.removeEventListener("mouseup", this.handleMoveend, false);
   };
+  componentWillReceiveProps(nextProps: any) {
+    if (nextProps.value !== this.currentValue) {
+      this.setValue(nextProps.value)
+    }
+  }
   componentWillUnmount() {
     this.dot.removeEventListener("mousemove", this.handleMovind, false);
     this.process.removeEventListener("mouseup", this.handleMoveend, false);
