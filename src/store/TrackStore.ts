@@ -4,7 +4,9 @@ import {
   , computed, ObservableMap, autorun, whyRun, IReactionDisposer
 } from 'mobx';
 // import * as fetchTypes from '../constants/fetchTypes'
-import { addAccessToken } from '../services/soundcloundApi'
+import {
+  // addAccessToken
+} from '../services/soundcloundApi'
 import {
   ITrack
   // , IActivitiesItem
@@ -12,6 +14,7 @@ import {
 export { ITrack }
 import {
   unauthApiUrl,
+  // apiUrl,
   // apiUrl
   // , addAccessToken
   // , apiUrl
@@ -148,7 +151,7 @@ export abstract class BaseAct<T> {
 class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   token: string = ""
   static defaultGenre = 'country';
-  @observable currentGenre: string
+  @observable currentGenre: string = 'country'
 
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre) || false
@@ -180,10 +183,10 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
 
   set tracks({ genre, values }: { genre: string, values: ITrack[] }) {
 
-    const tracks = this.itemsMap.get(genre);
+    const items = this.itemsMap.get(genre);
 
-    if (tracks && Array.isArray(tracks.slice())) {
-      tracks.splice(tracks.length, 0, ...values);
+    if (items && Array.isArray(items.slice())) {
+      items.splice(items.length, 0, ...values);
     } else {
       this.itemsMap.set(genre, values);
     }
@@ -208,15 +211,8 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     if (!url) {
       url = unauthApiUrl(`tracks?linked_partitioning=1&limit=50&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
-    this.setLoadingByGenre(genre, true)
-    const data: any = await fetch(url).then(response => response.json())
-    //todo catch error 
-    runInAction('loadtracks', () => {
-      this.tracks = { genre, values: data.collection };
-      this.setNextHrefByGenre(genre, data.next_href);
-      this.setLoadingByGenre(genre, false)
-    })
 
+    this.fetchData(url)
   }
 
   @action setGenre(genre: string) {
@@ -227,14 +223,24 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     }
 
   }
-  // todo
-  @action  async fetchPlaylists(id: number) {
-    const playlistUrl = addAccessToken(`users/${id}/playlists`, "?")
-    // const data =
-    await fetch(playlistUrl)
-      .then(response => response.json());
+  async fetchData(url: string, gr?: string) {
+    const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
+    try {
+      this.setLoadingByGenre(genre, true)
 
+      const data: any =
+        await fetch(url)
+          .then(response => response.json());
+      runInAction('loadtracks', () => {
+        this.tracks = { genre, values: data.collection };
+        this.setNextHrefByGenre(genre, data.next_href);
+        this.setLoadingByGenre(genre, false)
+      })
+    } finally {
+      this.setLoadingByGenre(genre, false)
+    }
   }
+
 }
 
 export default new TrackStore(TrackStore.defaultGenre);

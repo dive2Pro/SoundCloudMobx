@@ -8,11 +8,15 @@ import {
   // , runInAction
   // , whyRun
 } from "mobx";
-import { FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES } from '../constants/fetchTypes'
+import {
+  FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES
+  // , FETCH_PLAYLIST
+} from '../constants/fetchTypes'
 import {
   IUser
   // , IMePeopels
-  , IActivitiesItem
+  , IActivitiesItem,
+  IPlaylist
 } from "../interfaces/interface";
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
@@ -27,6 +31,7 @@ export interface IUserModel {
   followers: IUser[];
   followings: IUser[];
   favorites: ITrack[];
+  playlists: IPlaylist[];
   isLoadings: ObservableMap<boolean>
   nextHrefs: {}
   fetchWithType: (type: string) => void
@@ -140,6 +145,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
 
 export interface IUserStore {
   initUser: (id: number | IUser) => IUserModel
+  findPlaylistFromCurrentUser: (id: number) => IPlaylist
   fetchUserData: (id: number) => void;
   userModel: IUserModel
   isLoginUser: boolean
@@ -185,6 +191,9 @@ export class UserList implements IUserStore {
     }
     return this;
   }
+  findPlaylistFromCurrentUser(id: number): IPlaylist {
+    return <IPlaylist>this.userModel.playlists.find((item) => item.id == id)
+  }
 
   @computed get AllUsersFavorities(): ITrack[] {
     const tracks: ITrack[] = []
@@ -196,6 +205,17 @@ export class UserList implements IUserStore {
   }
 }
 
+//目前不做歌单项目, 只能从用户那里过来
+// class PlaylistStore {
+
+//   优化内存的使用
+//   combineUserPlaylist() {
+
+//   }
+
+
+
+// }
 /**
  * 以 用户id为key,保存数据
  */
@@ -205,12 +225,13 @@ class UserModel implements IUserModel {
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
   @observable favorites: ITrack[] = [];
+  @observable playlists: IPlaylist[] = [];
 
   isLoadings = new ObservableMap<boolean>();
   nextHrefs = new ObservableMap<string>();
   userId: number
+
   /**
-   * 
    * @param obj 如果传入的是一个Iuser对象,直接去获取数据
    */
   constructor(obj: number | IUser) {
@@ -252,8 +273,6 @@ class UserModel implements IUserModel {
   @action setUser(user: IUser) {
     this.user = user;
     this.userId = user.id
-    // this.fetchCommunityData()
-
   }
 
   @action changeLoadingState(type: string, loading: boolean) {
@@ -287,7 +306,6 @@ class UserModel implements IUserModel {
     }
     let id = this.userId;
     if (id == null) {
-      //todo 
       return
     }
     let url = this.nextHrefs.get(type)
@@ -295,25 +313,13 @@ class UserModel implements IUserModel {
       url = addAccessToken(url, '&')
     } else if (!url && this[type].length < 1) {
       // debugger
-      switch (type) {
-        case FETCH_FOLLOWERS:
-          url = `users/${id}/followers`
-          break
-        case FETCH_FOLLOWINGS:
-          url = `users/${id}/followings`
-          break
-        case FETCH_FAVORITES:
-          url = `users/${id}/favorites`
-          break
-      }
+      url = `users/${id}/${type}`
       url = apiUrl(url + `?limit=${limitPageSize}`, '&')
     } else {
       console.log('Does has more nextHref it is done!', this[type])
       return;
     }
-
     const fetchType = type;
-
     try {
       this.changeLoadingState(fetchType, true);
       const data: any = await fetch(url).then(response => response.json());
@@ -324,7 +330,6 @@ class UserModel implements IUserModel {
         this.addData(type, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
       }
-      this.changeLoadingState(fetchType, false);
     }
     catch (err) {
       this.catchError({ err, fetchType })
