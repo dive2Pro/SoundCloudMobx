@@ -9,7 +9,7 @@ import Favorites from "../FavoritesPanel";
 import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
-
+// import Activities from '../Activities'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
   // ,IUserModel
@@ -80,7 +80,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (this.id == undefined) {
       return <Redirect to="/main" />
     }
-    const userModel = this.props.UserStore.userModel
+
+    const { userModel, isLoginUser } = this.props.UserStore
     if (!userModel) {
       return <LoadingSpinner isLoading={true} />
     }
@@ -92,6 +93,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     } = userModel;
     const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || true
     const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || true
+
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
     return (
       <div className={styles.container}>
@@ -117,9 +119,16 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               }}
             />
+
             <Route
               path="/"
-              component={FilterActivities} />
+              render={() => {
+                return isLoginUser &&
+                  <FilterActivities />
+              }}
+            />
+            {/*component={FilterActivities}*/}
+
           </Switch>
         </div>
         <aside className={styles.aside}>

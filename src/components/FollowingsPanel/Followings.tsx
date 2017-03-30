@@ -34,7 +34,8 @@ class Followers extends React.Component<IFollowersProps, any> {
       count: user && user.followings_count,
       clazz: "fa fa-users",
       path: 'followings',
-      typeContent: 'followings'
+      typeContent: 'followings',
+      id: user.id
     }
     const limitFollowings = followings.slice(0, 3);
     return <section styleName='base'>

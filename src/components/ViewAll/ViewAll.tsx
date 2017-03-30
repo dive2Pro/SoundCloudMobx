@@ -9,6 +9,7 @@ interface IViewALLProp {
   count: number
   typeContent: string
   path: string
+  id: number
 }
 
 const ViewALL = (prop: IViewALLProp) => {
@@ -21,7 +22,11 @@ const ViewALL = (prop: IViewALLProp) => {
         <span>{prop.count}  {prop.typeContent}</span>
       </div >
       <span styleName="view">
-        <Link to={`/users/${prop.path}`}> View all</Link></span>
+        <Link to={{
+          pathname: `/users/${prop.path}`,
+          search: `?id=${prop.id}`
+        }}
+        > View all</Link></span>
     </div >
   );
 

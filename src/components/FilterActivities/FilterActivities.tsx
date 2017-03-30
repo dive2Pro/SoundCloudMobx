@@ -9,9 +9,6 @@ import * as sortTypes from "../../constants/sortTypes";
 
 const styles = require('./filteractivities.scss')
 
-interface IFilterActivitiesProps {
-  ActivitiesStore: IActivitiesStore
-}
 
 
 const sortItems = sortTypes.sortObjs.map(item => {
@@ -23,13 +20,15 @@ const sortItems = sortTypes.sortObjs.map(item => {
 });
 @inject('ActivitiesStore')
 @observer
-class FilterActivities extends React.Component<IFilterActivitiesProps, any> {
+class FilterActivities extends React.Component<any, any> {
   actStore: IActivitiesStore
   componentWillMount() {
     this.actStore = this.props.ActivitiesStore
   }
   handleSearchValue = (value: string) => {
-    this.props.ActivitiesStore.setFilterTitle(value);
+
+    this.props.ActivitiesStore && this.props.ActivitiesStore.setFilterTitle(value);
+
   };
 
   componentDidMount() {
@@ -80,7 +79,7 @@ class FilterActivities extends React.Component<IFilterActivitiesProps, any> {
       activeType: this.actStore.sortType
     };
 
-    const { filteredTracks: tracks, isLoading, sortType } = this.actStore
+    const { filteredTracks, isLoading, sortType } = this.actStore
 
     return (
       <div>
@@ -92,7 +91,7 @@ class FilterActivities extends React.Component<IFilterActivitiesProps, any> {
         <Activities
           scrollFunc={this.handleScroll}
           sortType={sortType}
-          tracks={tracks}
+          tracks={filteredTracks}
           isLoading={isLoading}
         />
 

@@ -26,13 +26,15 @@ const BigUserPic = ({ user, handleFollow }: {
   return (
     <div className={styles.bigpic}>
 
-      <Link to={`user/${id}`} className={styles.pic} >
+      <Link to={{
+        pathname: `/users/home`,
+        search: `?id=${id}`
+      }} className={styles.pic} >
         <ArtWork
           style={style}
           src={avatar_url} size={180} />
       </Link>
       {username}
-
       <div
         className={styles.toggle}
       >

@@ -72,6 +72,7 @@ class SessionStore implements ISessionStore {
       .then((rawuser: any) => {
         this.setUser(rawuser)
         UserList.initUser(rawuser);
+        UserList.setLoginUserModel(rawuser.id)
       }).catch(err => {
         this.catchError(err);
       })
