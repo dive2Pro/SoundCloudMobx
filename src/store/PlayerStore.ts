@@ -10,7 +10,7 @@ export interface IPlayerStore {
   playList: ITrack[]
   setPlayingTrack: (track: ITrack | number) => void;
   togglePlaying: Lambda;
-  addToPlaylist: (track: ITrack) => void;
+  addToPlaylist: (track: ITrack | ITrack[]) => void;
   playingUrl: string
   playNextTrack: (diff: number) => boolean
   isPlaylistOpen: boolean
@@ -53,10 +53,21 @@ class PlayerStore implements IPlayerStore {
     this.isShuffleMode = !this.isShuffleMode
   }
 
-  @action addToPlaylist(track: ITrack) {
-    if (this.playList.indexOf(track) === -1) {
-      this.playList.push(track)
+  @action private pushToPlayerlist(t: ITrack) {
+    if (this.playList.indexOf(t) === -1) {
+      this.playList.push(t)
     }
+  }
+
+  addToPlaylist(tracks: ITrack | ITrack[]) {
+    if ('length' in tracks) {
+      (<ITrack[]>tracks).slice().forEach(t => {
+        this.pushToPlayerlist(t)
+      })
+    } else {
+      this.pushToPlayerlist(<ITrack>tracks)
+    }
+
   }
   @action clearPlaylist() {
     this.playList = [];
