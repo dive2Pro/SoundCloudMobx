@@ -1,2 +1,2 @@
-import P from './Playlist'
+import P from './Playerlist'
 export { P as default }

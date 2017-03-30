@@ -98,3 +98,45 @@ export interface ITrack {
     attachments_uri: "http://api.soundcloud.com/tracks/13158665/attachments"
 }
 
+export interface IPlaylist {
+    kind: string,
+    id: number
+    created_at: string,
+    user_id: number,
+    duration: number,
+    sharing: string,
+    tag_list: string,
+    permalink: string,
+    track_count: 5,
+    streamable: boolean,
+    downloadable: boolean,
+    embeddable_by: string,
+    purchase_url: string,
+    label_id: number,
+    type: string,
+    playlist_type: string,
+    ean: string,
+    description: string,
+    genre: string,
+    release: string,
+    purchase_title: string,
+    label_name: string,
+    title: string,
+    release_year: string,
+    release_month: string,
+    release_day: string,
+    license: string,
+    uri: string
+    permalink_url: string,
+    artwork_url: string,
+    user: {
+        id: number
+        kind: string,
+        permalink: string,
+        username: string,
+        uri: string,
+        permalink_url: string,
+        avatar_url: string
+    },
+    tracks: ITrack[]
+}

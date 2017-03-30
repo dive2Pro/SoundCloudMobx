@@ -1,42 +1,94 @@
 import * as React from 'react'
-import ButtonInline from '../ButtonInline';
-import ArtWork from '../ArtWork';
-import Permalink from '../Permalink';
 import { observer, inject } from 'mobx-react'
-import { ITrackStore } from '../../store/TrackStore'
-import { IPlayerStore } from '../../store/PlayerStore'
-import { ITrack, ICommentStore } from "../../store/index";
-import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
-import CommentsContainer from '../Comments'
+import { ITrackStore, IPlayerStore } from '../../store'
+import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
+import {
+  // ITrack,
+  IUserModel,
+  IUserStore
+} from "../../store/index";
+// import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
+import TrackProfile from '../TrackProfile'
+import Hoc from '../HocLoadingMore'
+import Activities from '../Activities'
+import { Link } from 'react-router-dom'
+import { IPlaylist } from "../../interfaces/interface";
+import ArtWork from '../ArtWork'
+import LoadingSpinner from '../LoadingSpinner'
+// import { observable } from ".3.1.7@mobx/lib/mobx";
 const qs = require('qs')
-const styles = require('./tracklistinfo.scss')
+
+const styles = require('./playlist.scss')
 
 
 interface IPlaylistProps {
-  TrackStore: ITrackStore
-  PlayerStore: IPlayerStore
-  CommentStore: ICommentStore
-  match: any
-  location: any
+  TrackStore?: ITrackStore
+  PlayerStore?: IPlayerStore
+  userModel: IUserModel
+  match?: any
 }
 
+const PlaylistItem = observer(({ info }: { info: IPlaylist }) => {
+  const { artwork_url, label_name, id } = info
+  const to = { pathname: "/playlist", search: `?id=${id}` }
+  return (
+    <div>
+      <Link to={to}>
+        <ArtWork src={artwork_url} size={250} />
+      </Link>
+      <div>
+        <Link to={to}><h3>{label_name}</h3></Link>
+      </div>
+    </div>
+  )
+})
 
-@inject("TrackStore", 'PlayerStore')
 @observer
-class Playlist extends React.Component<IPlaylistProps, any> {
+class Playlist extends React.Component<IPlaylistProps, any>{
   componentDidMount() {
-    const { location: { search }, TrackStore } = this.props
-    if (search) {
-      const id = qs.parse(search.substr(1)).id
+    const {
+       userModel
+    } = this.props
+    userModel.fetchWithType(FETCH_PLAYLIST);
 
-    } else {
-    }
+  }
+  render() {
+    const userModel = this.props.userModel
+    const { playlists, isLoadings } = userModel
+    const isloading = isLoadings.get(FETCH_PLAYLIST) || true;
+    return (
+      <div>
+        {playlists.map((item, i) => {
+          return (
+            <PlaylistItem
+              info={item}
+              key={item.id + "-info-" + i}
+            />
+          )
+        })}
+        <LoadingSpinner isLoading={isloading} />
+      </div>
+    )
+  }
+}
 
+export default Hoc(Playlist)
+
+interface IPlaylistInfoProp {
+  // userModel: IUserModel
+  location: any
+  PlayerStore: IPlayerStore
+  UserStore: IUserStore
+}
+@inject("TrackStore", 'PlayerStore', 'UserStore')
+@observer
+export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
+  componentDidMount() {
   }
 
   handlePlay = () => {
-    const { PlayerStore, TrackStore } = this.props
-    if (!PlayerStore || !TrackStore) {
+    const { PlayerStore } = this.props
+    if (!PlayerStore) {
       return;
     }
   }
@@ -46,64 +98,39 @@ class Playlist extends React.Component<IPlaylistProps, any> {
     if (!PlayerStore) {
       return;
     }
-    PlayerStore.addToPlaylist(this.track)
   }
-  handleFetchMoreComments = () => {
-    this.props.CommentStore.fetchMoreComments();
-  }
+
   render() {
-    if (!this.track) {
-      //Todo 
+    const {
+      UserStore, location: { search }
+    } = this.props
+    // debugger
+    const id = qs.parse(search.substr(1)).id
+
+    const playlist = UserStore.findPlaylistFromCurrentUser(id);
+    if (!playlist) {
       return <noscript />
     }
-    // const { activitiesCount, activities } = this.props.trackStore
-    const { label_name, release_day, user, artwork_url } = this.track
-    const { username, id, avatar_url } = user;
+    const { label_name, artwork_url, user, tracks } = playlist
     return (
       <div className={styles.main}>
-        <div className={styles.view}>
-          <div className={styles.fhmm}>
-            <ArtWork size={250} src={artwork_url} />
-          </div>
-          <div className={styles.infos}>
-            <div className={styles.infos_title}>
-              Song
-            <h2>
-                {label_name}
-              </h2>
-            </div>
-            <div className={styles.infos_user}>
-              <ArtWork src={avatar_url} size={50} />
-              <span>
-                <Permalink id={id} fullname={username} /></span>
-              <span>{release_day}创建</span>
-            </div>
-            <div className={styles.infos_actions}>
-              <div className={styles.infos_actions_plays}>
-                <ButtonInline onClick={this.handlePlay}>播放</ButtonInline>
-                <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
-              </div>
-              <ButtonInline>
-                <i className='fa fa-save'></i>
-                收藏
-              </ButtonInline>
-              <ButtonInline>
-                <i className='fa fa-share-square-o'></i>
-                分享</ButtonInline>
-              <ButtonInline>
-                <i className='fa fa-comments'></i>
-                评论</ButtonInline>
-            </div>
-          </div>
-          <div className={styles.edit}>
-            <i />
-            <a href="#">编辑</a>
-          </div>
-        </div>
+        <TrackProfile
+          label_name={label_name}
+          type="list"
+          bigPic={artwork_url}
+          user={user}
+        />
 
+        <Activities
+          isLoading={false}
+          scrollFunc={() => {
+            {/*Todo  loadmore tracks*/ }
+          }}
+          sortType=""
+          tracks={tracks}
+        />
       </div>
     );
   }
 }
 
-export default Playlist;

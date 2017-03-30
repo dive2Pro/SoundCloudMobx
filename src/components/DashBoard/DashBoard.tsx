@@ -10,6 +10,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
+import Playlist from '../Playlist'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
   // ,IUserModel
@@ -76,6 +77,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       this.changeUserId(id)
     }
   }
+  handleFetchMorePlaylist = () => {
+
+  }
   render() {
     if (this.id == undefined) {
       return <Redirect to="/main" />
@@ -130,6 +134,16 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             <Route
               path='/users/favorites'
               component={FavoView}
+            />
+
+            <Route
+              path='/users/playlist'
+              render={(match: any) => {
+                console.log(match)
+                return <Playlist
+                  scrollFunc={this.handleFetchMorePlaylist}
+                  userModel={userModel} />
+              }}
             />
 
             <Route

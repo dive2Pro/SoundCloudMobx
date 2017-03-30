@@ -11,7 +11,7 @@ interface IPlaylistProp {
 }
 @inject("PlayerStore")
 @observer
-class Playlist extends React.Component<IPlaylistProp, any> {
+class Playerlist extends React.Component<IPlaylistProp, any> {
   handlePlay = (track: ITrack | number) => {
     const PlayerStore = this.props.PlayerStore;
     if (!PlayerStore) return;
@@ -94,4 +94,4 @@ class Playlist extends React.Component<IPlaylistProp, any> {
   }
 }
 
-export default Playlist;
+export default Playerlist;

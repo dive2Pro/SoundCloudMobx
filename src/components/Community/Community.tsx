@@ -18,6 +18,7 @@ const BigUserPic = ({ user, handleFollow }: {
   , handleFollow: (id: number) => void
 }) => {
   const { username, avatar_url, id } = user;
+
   const style = {
     borderRadius: '50%',
     padding: '2px',
@@ -60,16 +61,15 @@ class Community extends React.Component<ICommunityProps, any> {
   }
 
   render() {
-    const { users
-      , isLoading
-    } = this.props
-    console.info(users)
+    const { users, isLoading } = this.props
     return (
       <div className={styles.main}>
         {
           users.map(user => {
             return <BigUserPic
-              key={user.id + "_ bigpic"} user={user} handleFollow={() => this.handleFollow(user)} />
+              key={user.id + "_ bigpic"}
+              user={user}
+              handleFollow={() => this.handleFollow(user)} />
           })
         }
         <LoadingSpinner isLoading={isLoading} />
