@@ -9,7 +9,7 @@ import Favorites from "../FavoritesPanel";
 import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
-// import Activities from '../Activities'
+import Activities from '../Activities'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
   // ,IUserModel
@@ -89,11 +89,17 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const {
       user
       , followers
-      , followings, isLoadings
+      , followings, isLoadings, favorites
     } = userModel;
     const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || true
     const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || true
-
+    const isloadingFavorites = isLoadings.get(fetchTypes.FETCH_ACTIVITIES) || true
+    const FavoView = () => <Activities
+      sortType={''}
+      isLoading={isloadingFavorites}
+      scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
+      tracks={favorites}
+    />
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
     return (
       <div className={styles.container}>
@@ -109,6 +115,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               }}
             />
+
             <Route
               path='/users/followings'
               render={() => {
@@ -121,13 +128,18 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             />
 
             <Route
+              path='/users/favorites'
+              component={FavoView}
+            />
+
+            <Route
               path="/"
               render={() => {
-                return isLoginUser &&
-                  <FilterActivities />
+                return isLoginUser ?
+                  <FilterActivities /> : <FavoView />
               }}
             />
-            {/*component={FilterActivities}*/}
+
 
           </Switch>
         </div>
