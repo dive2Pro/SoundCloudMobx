@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as CSSModule from 'react-css-modules'
 // import ButtonInline from '../ButtonInline'
-import { Link } from 'react-router-dom'
+import Link from '../RouterLink'
 const styles = require('./viewall.scss')
 
 interface IViewALLProp {
@@ -22,11 +22,8 @@ const ViewALL = (prop: IViewALLProp) => {
         <span>{prop.count}  {prop.typeContent}</span>
       </div >
       <span styleName="view">
-        <Link to={{
-          pathname: `/users/${prop.path}`,
-          search: `?id=${prop.id}`
-        }}
-        > View all</Link></span>
+        <Link path={`/users/${prop.path}`}
+          id={prop.id}> View all</Link></span>
     </div >
   );
 

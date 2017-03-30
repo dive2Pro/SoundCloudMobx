@@ -7,6 +7,7 @@ import {
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import * as CSSModules from "react-css-modules";
 import ArtWork from "../ArtWork/ArtWork";
+import Link from '../RouterLink'
 const styles = require("./profile.scss");
 export interface IProfileProps {
   user: IUser
@@ -15,36 +16,42 @@ export interface IProfileProps {
 interface IMiniCountPanelProp {
   playlist_count: number,
   followers_count: number,
-  followings_count: number
+  followings_count: number,
+  user: IUser
 }
 @observer
 @CSSModules(styles)
 class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
   render() {
-    const { playlist_count, followers_count, followings_count } = this.props;
+    const { user: { id }, playlist_count, followers_count, followings_count } = this.props;
+
     return (
       <ul styleName="miniPanel">
         <li>
-          <a href="#">
-            <i>PlayList</i>
+          <Link
+            path="playlist" id={id}
+          ><i>PlayList</i>
             <em>
               {playlist_count}
             </em>
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="#">
-            <i>Followings</i>
+          <Link
+            path="followings" id={id}
+
+          ><i>Followings</i>
             <em>
               {followings_count}
             </em>
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="#">
-            <i>Followers</i>
+          <Link
+            path="followers" id={id}
+          ><i>Followers</i>
             <em>{followers_count}</em>
-          </a>
+          </Link>
         </li>
       </ul>
     );
@@ -65,7 +72,7 @@ class Profile extends React.Component<IProfileProps, any> {
       followers_count,
       followings_count
     } = user;
-    const miniProp = { playlist_count, followers_count, followings_count };
+    const miniProp = { playlist_count, followers_count, followings_count, user };
     const artInfo = { size: 62, alt: "Me", src: avatar_url };
     return (
       <section styleName="container">
