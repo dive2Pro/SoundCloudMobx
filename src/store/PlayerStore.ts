@@ -15,10 +15,15 @@ export interface IPlayerStore {
   playNextTrack: (diff: number) => boolean
   isPlaylistOpen: boolean
   togglePlaylistOpen: (open?: boolean) => void;
+  toggleVolumeOpen: (open?: boolean) => void;
   removeFromPlaylist: (...args: ITrack[]) => void;
   clearPlaylist: Lambda;
   toggleShuffleMode: Lambda;
   isShuffleMode: boolean
+  isVolumeOpen: boolean
+  volume: number
+
+  setVolume: (n: number) => void
 }
 
 
@@ -28,10 +33,13 @@ class PlayerStore implements IPlayerStore {
   @observable playList: ITrack[] = [];
   @observable isPlaylistOpen: boolean = false;
   @observable isShuffleMode: boolean = false;
-
+  @observable isVolumeOpen: boolean = false
+  @observable volume: number = 0.25
   constructor() {
   }
-
+  @action setVolume(v: number) {
+    this.volume = v;
+  }
   @action setPlayingTrack(track: ITrack | number) {
     if (typeof track === 'number') {
       track = this.playList[track];
@@ -48,7 +56,14 @@ class PlayerStore implements IPlayerStore {
   @action togglePlaying() {
     this.isPlaying = !this.isPlaying;
   }
-
+  @action toggleVolumeOpen(open?: boolean) {
+    if (open != null) {
+      this.isVolumeOpen = open
+    } else {
+      //❤️ 将这里和下面的 listopen 进行代码优化
+      this.isVolumeOpen = !this.isVolumeOpen;
+    }
+  }
   @action toggleShuffleMode() {
     this.isShuffleMode = !this.isShuffleMode
   }

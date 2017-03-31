@@ -23,6 +23,8 @@ interface IInputRange {
 
 @observer
 class InputRange extends React.Component<IInputRange, any> {
+  downPosition: number;
+  downPointY: any;
   tt: HTMLElement
   container: HTMLElement
   process: HTMLElement
@@ -41,8 +43,10 @@ class InputRange extends React.Component<IInputRange, any> {
   @observable currentValue = 0;
   @observable isMoving = false;
   @observable maxWidth = 0;
+
   actualPosition(pos: number) {
     let value = pos * this.gap;
+    // console.log(value, pos, this.gap)
     const [, h] = this.valueLimit;
     if (this.isVertical) {
       value = h - value;
@@ -56,6 +60,7 @@ class InputRange extends React.Component<IInputRange, any> {
     const [l, h] = this.valueLimit;
     value = value < l ? l : value > h ? h : value;
     this.currentValue = Math.round(+value);
+
     const { onDragIng } = this.props;
     if (this.isMoving && onDragIng) {
       const process = this.getCurrentProcssPercent()
@@ -64,7 +69,10 @@ class InputRange extends React.Component<IInputRange, any> {
   }
 
   getCurrentProcssPercent() {
-    return (this.currentValue / this.props.data).toFixed(2)
+
+    // console.info(this.currentValue, '---', this.valueLimit[1])
+    const v = +(this.currentValue / this.valueLimit[1]).toFixed(2)
+    return Number.isNaN(v) ? 1 : v;
 
   }
 
@@ -72,6 +80,7 @@ class InputRange extends React.Component<IInputRange, any> {
     let position = this.position;
     let style = {};
     if (this.isVertical) {
+      // const difHeight = this.dot ? this.dot.offsetHeight / 2 : 0
       style = { transform: `translateY(${position}px)` };
     } else {
       style = { transform: `translateX(${position}px)` };
@@ -158,8 +167,7 @@ class InputRange extends React.Component<IInputRange, any> {
   @computed get gap(): number {
     const max = this.valueLimit[1];
     const [, width] = this.positionLimit;
-    console.log('width = ' + width)
-    return this.maxWidth > 0 ? parseFloat((max / width).toFixed(2)) : 1;
+    return parseFloat((max / width).toFixed(2)) || 1;
   }
   @computed get ContainerStyle() {
     // const [l, h] = this.valueLimit;
@@ -205,6 +213,8 @@ class InputRange extends React.Component<IInputRange, any> {
   handleMouseDown = (e: any) => {
     if (e.target == this.dot) {
       this.toggleMoving(true)
+      this.downPointY = e.pageY
+      this.downPosition = this.position
     }
     const { onDragStart } = this.props;
     if (onDragStart) {
@@ -221,14 +231,12 @@ class InputRange extends React.Component<IInputRange, any> {
     e.preventDefault();
     this.actualPosition(this.getPos(e));
   };
-  getPos(e: any): number {
-    const pos = this.isVertical ? e.clientY : e.clientX;
-    return pos - this.offLength;
-  }
   handleMoveend = (e: any) => {
-    this.toggleMoving(false)
     e.preventDefault();
     this.actualPosition(this.getPos(e));
+    this.toggleMoving(false)
+    this.downPointY = 0
+    this.downPosition = 0;
     const { onDragEnd } = this.props;
     if (onDragEnd) {
       const process = this.getCurrentProcssPercent()
@@ -237,8 +245,36 @@ class InputRange extends React.Component<IInputRange, any> {
     window.removeEventListener("mousemove", this.handleMovind, false);
     window.removeEventListener("mouseup", this.handleMoveend, false);
   };
+  isCurrentValueIntheRange() {
+    const value = this.currentValue
+    const [l, h] = this.valueLimit
+    return value !== l && value !== h
+  }
+  getPos(e: any): number {
+    let pos
+    if (this.isVertical) {
+      // 如果是垂直状态,且 不在移动状态,则直接赋值
+      if (!this.isMoving) {
+        pos = e.offsetY
+      } else {
+        // 如果是垂直状态 在移动状态 
+        const diff = (e.pageY - this.downPointY);
+        if (diff == 0) {
+          return this.position
+        }
+        pos = diff + this.downPosition;
+      }
+      return pos
+    }
+    else {
+      pos = e.clientX;
+    }
+    return pos - this.offLength;
+  }
+
   componentWillReceiveProps(nextProps: any) {
-    if (nextProps.value !== this.currentValue) {
+    if (nextProps.value && nextProps.value !== this.currentValue) {
+
       this.setValue(nextProps.value)
     }
   }
@@ -256,6 +292,7 @@ class InputRange extends React.Component<IInputRange, any> {
     if (value) {
       this.setValue(value);
     }
+
   }
 
   render() {
@@ -267,27 +304,23 @@ class InputRange extends React.Component<IInputRange, any> {
           onMouseDown={this.handleMouseDown}
           style={this.ContainerStyle}
           ref={r => this.container = r}
-          className={styles.input_container}
-        >
+          className={styles.input_container}>
           <div
             onMouseDown={this.handleMouseDown}
             ref={n => this.dot = n}
             className={styles.input_dot}
-            style={this.dotStyle}
-          >
+            style={this.dotStyle} >
             <span
               style={this.ttStyle}
               ref={n => this.tt = n}
-              className={styles.input_tooltip}
-            >
+              className={styles.input_tooltip}>
               {value}
             </span>
           </div>
           <div
             className={styles.process}
             style={this.ProcessStyle}
-            ref={n => this.process = n}
-          />
+            ref={n => this.process = n} />
 
         </div>
       </div>

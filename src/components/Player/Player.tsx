@@ -23,6 +23,9 @@ interface IPlayerState {
 @inject("PlayerStore")
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
+  volumeContainerStyle: { left: number; };
+  volumeContainer: HTMLDivElement;
+  volumeTag: HTMLDivElement;
   timer: any;
   main: any;
   audio: HTMLAudioElement;
@@ -52,25 +55,35 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       1500
     );
   };
-
+  componentDidMount() {
+    const vc = this.volumeContainer
+    const vt = this.volumeTag
+    const vol = vt.offsetLeft
+    const vcStyle = {
+      left: vol - vc.offsetWidth / 2
+    }
+    runInAction(() => {
+      this.volumeContainerStyle = vcStyle
+    })
+  }
   componentDidUpdate() {
     if (!this.props.PlayerStore) {
       return;
     }
     const {
       // playingUrl,
+      volume,
       isPlaying } = this.props.PlayerStore;
     const audio = this.audio
-    console.log('update????')
     if (
       // playingUrl &&
       isPlaying && audio.paused) {
-      // console.log(playingUrl)
       audio.src = mp3;
       audio.play()
     } else if (!isPlaying) {
       audio.pause();
     }
+    audio.volume = volume;
   }
   handleOpenPlaylist = () => {
     const playStore = this.props.PlayerStore;
@@ -85,7 +98,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.props.PlayerStore.toggleShuffleMode();
     }
   }
-  // will be remove  just for test
+  // 😱 😱 will be remove  just for test
   @observable file: any;
   handleFiles = (e: any) => {
     runInAction(() => {
@@ -94,23 +107,29 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
   handleProcessChange = (value: string) => {
     // debugger 
-    const current = this.audio.duration * (+value)
-    console.info(current)
+    const dru = this.audio.duration || 1;
+    const current = dru * (+value)
     this.audio.currentTime = current;
   }
 
+  // 监听播放进度,更新Iupet进度
+  // todo 其实可以传入一个mobx的值进行响应式
   handleAudioUpdate = (e: any) => {
     // debugger
     const t = e.target;
     const duration = t.duration
     const currentTime = t.currentTime
     runInAction(() => {
-
       this.processValue = currentTime / duration
-    })
-    // console.info(e);
-  }
 
+    })
+  }
+  handleVolimeProcessChange = (percent: string) => {
+    const p = this.props.PlayerStore
+    if (p) {
+      p.setVolume(+percent)
+    }
+  }
   render() {
 
     const { PlayerStore } = this.props;
@@ -123,6 +142,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode
       // , playingUrl
+      , isVolumeOpen, volume
     } = PlayerStore;
     if (isPlaying || isPlaylistOpen) {
       clazzName = styles.visible;
@@ -138,6 +158,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     const shuffleClazz = isShuffleMode && styles.active;
     const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
     const value = this.file && (this.processValue * this.file.size).toFixed(1)
+    const volumeContainerStyle = { ...this.volumeContainerStyle, display: isVolumeOpen ? "block" : "none" }
     return (
       <div
         className={clazzName}
@@ -145,12 +166,26 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         onMouseLeave={this.mouseOut}
         ref={r => this.main = r}
       >
-        <div className={rangeClazz}>
+        <div
+          className={rangeClazz}>
           <Range
             onDragEnd={this.handleProcessChange}
             onDragIng={this.handleProcessChange}
             data={this.file && this.file.size}
             value={value} />
+        </div>
+        <div
+          style={volumeContainerStyle}
+          ref={n => this.volumeContainer = n}
+          className={styles.volume_container}>
+          <Range
+            onDragEnd={this.handleVolimeProcessChange}
+            onDragIng={this.handleVolimeProcessChange}
+            vertical
+            wide={120}
+            data={100}
+            value={100 * volume}
+          />
         </div>
         <div className={styles.content}>
           <input type="file" onChange={this.handleFiles} />
@@ -182,11 +217,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             </div>
           </div>
           <div className={styles.content_options}>
-            <div className={styles.content_action}>
-              <ButtonInline>
-                <i className="fa fa-volume-up">&nbsp;</i>
+            <div
+              ref={n => this.volumeTag = n}
+              className={styles.content_action}>
+              <ButtonInline onClick={() => PlayerStore.toggleVolumeOpen()}>
+                <i className={`fa fa-volume-${volume > 0.5 ? "up" : volume == 0 ? 'off' : 'down'}`}>&nbsp;</i>
               </ButtonInline>
             </div>
+
             <div className={shuffleClazz}>
               <ButtonInline onClick={this.handleShuffleMode}>
                 <i className="fa fa-random">&nbsp;</i>
@@ -206,7 +244,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
           }}
           id="audio"
         />
-        {/*src={mp3}*/}
       </div>
     );
   }
