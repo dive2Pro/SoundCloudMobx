@@ -77,3 +77,10 @@
   composes:range;
   visibility: visible;
 }
+
+.volume_container{
+  position: absolute;
+   bottom: $playerHeight; 
+  padding: $padding;
+  background: black;
+}
