@@ -16,13 +16,33 @@ figure {
   width: $_180pxEm;
 }
 
+.showMore{
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.showMore_open{
+  composes:showMore;
+  height: initial;
+}
+.btn_showmore{
+  cursor: pointer;
+  height: $padding;
+}
+.wrapper{
+    height: $padding/2;
+    width: 100%;
+    background: linear-gradient(rgba(255,255,255,0),#ffffff);
+    position: absolute;
+    bottom: $padding;
+}
 .desc {
   font-size: $menuSize*0.85;
   color: $subFontColor; 
   top: $padding;
   line-height: 1.2em;
-  overflow: hidden;
-  height: 1.92em;
+  overflow: hidden; 
 }
 
 .miniPanel{ 
