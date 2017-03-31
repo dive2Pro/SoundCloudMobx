@@ -26,7 +26,10 @@ const CommentView = ({ comment }: { comment: IComment }) => {
         <div className={styles.content}>
           <Permalink
             id={id}
-            fullname={username} /> :\t {body}
+            fullname={username} /> :
+            <p>
+            {body}
+          </p>
         </div>
         <div className={styles.time}>
           {created_at}
@@ -63,4 +66,4 @@ class Comments extends React.Component<ICommentsProps, any> {
   }
 }
 
-export default Hoc(Comments);
+export default Hoc<ICommentsProps, any>(Comments);

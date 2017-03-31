@@ -21,6 +21,7 @@ figure {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-bottom: $padding/2;
 }
 .showMore_open{
   composes:showMore;

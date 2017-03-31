@@ -6,6 +6,7 @@ import ArtWork from '../ArtWork'
 import ButtonGhost from '../ButtonGhost'
 const styles = require('./community.scss')
 import { Link } from 'react-router-dom'
+import { observer } from ".4.1.3@mobx-react";
 interface ICommunityProps {
   users: IUser[]
   isLoading: boolean
@@ -52,7 +53,7 @@ export class EmptyView extends React.Component<any, any> {
     return <div />
   }
 }
-
+@observer
 class Community extends React.Component<ICommunityProps, any> {
 
   handleFollow = (user: IUser) => {
@@ -78,4 +79,4 @@ class Community extends React.Component<ICommunityProps, any> {
   }
 }
 
-export default Hoc(Community);
+export default Hoc<ICommunityProps, any>(Community);

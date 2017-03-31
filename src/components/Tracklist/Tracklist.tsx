@@ -43,13 +43,12 @@ class Tracklist extends React.Component<any, any> {
   render() {
 
     const { TrackStore: { currentTracks, isLoading } } = this.props
-    return <div>
-      <Activities
-        isLoading={isLoading}
-        tracks={currentTracks} sortType={''}
-        scrollFunc={this.handleScroll}
-      />
-    </div>
+
+    return <Activities
+      isLoading={isLoading}
+      tracks={currentTracks} sortType={''}
+      scrollFunc={this.handleScroll}
+    />
   }
 }
 
