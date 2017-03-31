@@ -3,6 +3,7 @@ import UserStore, { IUserStore, IUserModel, IActivitiesStore, ActivitiesStore } 
 import TrackStore, { ITrack, ITrackStore } from './TrackStore';
 import PlayerStore, { IPlayerStore } from './PlayerStore';
 import SessionStore, { ISessionStore } from './SessionStore';
+import PerformanceStore, { IPerformanceStore } from './PerformanceStore';
 import CommentStore, { IComment, ICommentStore } from './CommentStore';
 
 export {
@@ -20,5 +21,7 @@ export {
   ITrack,
   CommentStore,
   ICommentStore,
-  IComment
+  IComment,
+  PerformanceStore,
+  IPerformanceStore
 }

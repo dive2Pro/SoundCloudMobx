@@ -1,8 +1,7 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 const styles = require('./activities.scss')
 import { observer, inject } from 'mobx-react';
-import { IPlayerStore } from '../../store/PlayerStore'
+import { IPlayerStore, IPerformanceStore } from '../../store'
 import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
 import Table, { ITableBody, ITableBodyItem } from '../Table'
@@ -11,8 +10,13 @@ import ButtonInline from '../ButtonInline'
 import HocLoading from '../HocLoadingMore'
 import ArtWork from '../ArtWork';
 import TdTrackTitleView from '../TrackTitleView'
+
+const isEqual = require('lodash/isEqual')
+const debounce = require('lodash/debounce')
+// import { IObservableArray } from ".3.1.7@mobx/lib/mobx";
 interface IActivitiesProps {
   PlayerStore?: IPlayerStore
+  PerformanceStore?: IPerformanceStore
   isLoading: boolean,
   tracks: ITrack[],
   sortType: string
@@ -26,36 +30,36 @@ interface IndexAndPlayViewProp {
   isPlaying: boolean
 }
 
-const IndexAndPlayView = observer(({ track, onClick, index, isPlaying }: IndexAndPlayViewProp): React.ReactElement<any> => {
-  const { artwork_url } = track
-  const imgSize = 80;
-  const styleSize = {
-    width: imgSize,
-    height: imgSize
-  }
-  const divClazz = isPlaying ? styles.active : styles.indexPlay;
-  return (
-    <div className={divClazz}>
-      {/*<span>{index}</span>*/}
-      <ArtWork src={artwork_url} size={imgSize} />
-      <div className={styles.play} style={styleSize}>
-        <ButtonInline onClick={onClick}>
-          <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}></i>
-        </ButtonInline>
+const IndexAndPlayView =
+  observer(({ track, onClick, index, isPlaying }: IndexAndPlayViewProp)
+    : React.ReactElement<any> => {
+    const { artwork_url } = track
+    const imgSize = 80;
+    const styleSize = {
+      width: imgSize,
+      height: imgSize
+    }
+    const divClazz = isPlaying ? styles.active : styles.indexPlay;
+    return (
+      <div className={divClazz}>
+        {/*<span>{index}</span>*/}
+        <ArtWork
+          src={artwork_url}
+          size={imgSize} />
+        <div className={styles.play} style={styleSize}>
+          <ButtonInline onClick={onClick}>
+            <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}></i>
+          </ButtonInline>
+        </div>
+
       </div>
+    )
+  });
 
-    </div>
-  )
-});
-
-const StyledIndexAndPlayView = CSSModule(IndexAndPlayView, styles);
-
-
-
-@CSSModule(styles)
-@inject('PlayerStore')
+@inject('PlayerStore', 'PerformanceStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
+  dFunc: any;
 
   playTrack = (track: ITrack) => {
     const { PlayerStore } = this.props
@@ -63,12 +67,14 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.setPlayingTrack(track);
     }
   }
+
   addToTrackList = (track: ITrack) => {
     const { PlayerStore } = this.props
     if (PlayerStore) {
       PlayerStore.addToPlaylist(track);
     }
   }
+
   renderActivities = (arr: ITrack[], store: IPlayerStore, sortType: string) => {
     if (!store) {
       console.error("PlayerStore = " + store)
@@ -102,7 +108,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         {
           title: '', render: () => {
             return (
-              <StyledIndexAndPlayView
+              <IndexAndPlayView
                 isPlaying={isPlaying && playingTrack === item}
                 index={i} track={item} onClick={() => this.playTrack(item)} />
             )
@@ -125,15 +131,39 @@ class Activities extends React.Component<IActivitiesProps, any> {
       <Table thead={thead} tbody={tbodys} />
     )
   }
+  debounceFun = () => {
+    const lowLimit = window.innerHeight + window.scrollY;
+    const hightLimit = window.scrollY;
+    {/*console.log(lowLimit, hightLimit);*/ }
 
+    {/*if (!isEqual(this.state.limit, nextState.limit)) {*/ }
+    this.props.PerformanceStore && this.props.PerformanceStore.setScrollLimit(lowLimit, hightLimit)
+    {/*}*/ }
+  }
+
+  componentDidMount() {
+    this.dFunc = debounce(this.debounceFun, 500)
+    window.addEventListener('scroll', this.dFunc)
+  }
+
+  componentWiiUnmount() {
+    window.removeEventListener('scroll', this.dFunc)
+  }
+  componentWillReceiveProps(nextProps: any, nextState: any) {
+    {/*console.table(nextProps, nextState)*/ }
+    if (!isEqual(this.state.limit, nextState.limit)) {
+      {/*this.props.PerformanceStore && this.props.PerformanceStore.setScrollLimit(...nextState.limit)*/ }
+    }
+  }
+  state = { limit: [] }
   render() {
 
     const { isLoading, tracks, sortType } = this.props;
-    const tracksCount = tracks.length;
     const store = this.props.PlayerStore
-    if (!store) {
+    if (!store || !tracks) {
       return <noscript />
     }
+    const tracksCount = tracks.length;
     return (
       <div className={styles.main}>
         <div className={styles.top}>
@@ -151,4 +181,4 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 }
 
-export default HocLoading(Activities)
+export default HocLoading<IActivitiesProps, any>(Activities)

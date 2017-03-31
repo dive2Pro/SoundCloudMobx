@@ -8,7 +8,7 @@ import Browser from './components/Browse'
 import Header from './components/Header'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import { UserStore, TrackStore, PlayerStore, SessionStore, ActivitiesStore, CommentStore } from './store';
+import { UserStore, TrackStore, PlayerStore, SessionStore, ActivitiesStore, CommentStore, PerformanceStore } from './store';
 import TrackInfo from './components/Track'
 import Player from './components/Player'
 import Playerlist from './components/Playerlist'
@@ -25,6 +25,7 @@ const render = () => (
             SessionStore={SessionStore}
             PlayerStore={PlayerStore}
             CommentStore={CommentStore}
+            PerformanceStore={PerformanceStore}
         >
             <div>
                 <Header SessionStore={SessionStore} />

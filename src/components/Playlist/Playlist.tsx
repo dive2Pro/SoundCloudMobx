@@ -9,7 +9,7 @@ import {
 } from "../../store/index";
 // import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
 import TrackProfile from '../TrackProfile'
-import Hoc from '../HocLoadingMore'
+import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
 import { Link } from 'react-router-dom'
 import { IPlaylist } from "../../interfaces/interface";
@@ -45,16 +45,16 @@ const PlaylistItem = observer(({ info }: { info: IPlaylist }) => {
 
 @observer
 class Playlist extends React.Component<IPlaylistProps, any>{
+
   componentDidMount() {
     const {
        userModel
     } = this.props
     userModel.fetchWithType(FETCH_PLAYLIST);
-
   }
+
   render() {
-    const userModel = this.props.userModel
-    const { playlists, isLoadings } = userModel
+    const { playlists, isLoadings } = this.props.userModel
     const isloading = isLoadings.get(FETCH_PLAYLIST) || true;
     return (
       <div className={styles.playlist}>
@@ -72,7 +72,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
   }
 }
 
-export default Hoc(Playlist)
+export default HocLoadingMore<IPlaylistProps, any>(Playlist)
 
 interface IPlaylistInfoProp {
   // userModel: IUserModel
@@ -124,9 +124,7 @@ export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
 
         <Activities
           isLoading={false}
-          scrollFunc={() => {
-            {/*Todo  loadmore tracks*/ }
-          }}
+          scrollFunc={() => { }}
           sortType=""
           tracks={tracks}
         />
