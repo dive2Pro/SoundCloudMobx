@@ -76,8 +76,11 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
       }
     }
 
-    const { src } = this.props
-      ; image.src = src
+    let { src, size } = this.props
+    if (size <= 50) {
+      src = src.replace(/-{1}large\.{1}/, "-badge\.")
+    }
+    image.src = src
   }
   render() {
     const { size

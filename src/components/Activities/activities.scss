@@ -6,27 +6,17 @@
   table{
     font-size: $mediumIcon;
     tr{
-    text-align: left;
-    td:first-child{
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    &:nth-child(2n){
-      background: $backgroundSecondary;
-    }
-    &:hover{
-      .anchor{ 
-          div.duration{
-            display: none
-          }
-          div.actions{
-            display: block;
-        }
+      text-align: left;
+      td:first-child{
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
-    }
-  } 
-}
+      &:nth-child(2n){
+        background: $backgroundSecondary;
+      }
+     }   
+   } 
 }
 
 .indexPlay{
@@ -73,4 +63,74 @@
 
 .activeStyle{
   color:$mainColor!important;
+}
+
+
+
+table{
+  border: $borderGray;
+  border-top: 2px solid $mainColor; 
+  border-collapse: collapse;
+  width: 100%;
+  font-size: inherit;
+}
+td{
+  line-height: 1.286em;
+  padding: 0.429em 0.714em;
+  font-size: inherit;
+  text-align: center;
+  a{
+    color: #333!important;
+    &::visited{
+      color: #333;
+    }
+  } 
+}
+tr{
+  font-size: inherit;
+  &:hover{
+    .anchor{
+      div.actions{ 
+        display: flex;
+       }
+       div.duration{
+         display: none;
+       }
+    }
+  }
+}
+
+tr{
+  font-size: inherit;
+  &:hover{
+    .anchor{
+      div.actions{ 
+        display: flex;
+       }
+       div.duration{
+         display: none;
+       }
+    }
+  }
+}
+
+.anchor{
+  visibility: visible;
+}
+.duration{
+    display: block;
+ }
+.actions{ 
+    display: none;    
+    justify-content: space-around;
+    width: 100%;
+}
+.liveanchor{
+  composes:anchor;
+   div.actions{ 
+        display: flex;
+       }
+       div.duration{
+         display: none;
+       }
 }

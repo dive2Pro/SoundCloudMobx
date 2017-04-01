@@ -71,12 +71,12 @@ const Thead = ({ data }: ItableHeadProp) => {
 interface ITBodyTrProp {
   data: ITableBody
 }
-
+let TBodyTrCount = 0
 const TBodyTr = ({ data }: ITBodyTrProp) => {
   const { trackId: id, bodyData, configurations, live } = data
   const tds = bodyData.map((bitem, i) => {
     const { title, tag, onClick } = bitem;
-
+    console.log('TBodyTrCount = ' + TBodyTrCount++)
     const renderNormalDom = (<div className={styles.duration}>{title}</div>)
 
     const anchorClazz = live ? styles.liveanchor : styles.anchor;

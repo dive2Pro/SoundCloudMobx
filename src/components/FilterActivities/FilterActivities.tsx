@@ -80,7 +80,7 @@ class FilterActivities extends React.Component<any, any> {
     };
 
     const { filteredTracks, isLoading, sortType } = this.actStore
-
+    console.log('--------------------')
     return (
       <div>
         <div className={styles.types}>
