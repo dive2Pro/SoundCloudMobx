@@ -3,9 +3,14 @@ import TrackProfile from '../TrackProfile'
 import { observer, inject } from 'mobx-react'
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
-import { ITrack, ICommentStore } from "../../store/index";
-import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
+import {
+
+  ICommentStore
+} from "../../store/index";
+import LoadingSpinner from '../LoadingSpinner'
+
 import CommentsContainer from '../Comments'
+import { FETCH_TRACK } from "../../constants/fetchTypes";
 const qs = require('qs')
 const styles = require('./track.scss');
 
@@ -22,20 +27,14 @@ interface ITracklistinfoViewProps {
 @inject("TrackStore", 'PlayerStore', "CommentStore")
 @observer
 class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
-  @observable track: ITrack
 
   componentDidMount() {
     const { location: { search }, TrackStore } = this.props
     if (search) {
       const id = qs.parse(search.substr(1)).id
-      runInAction(() => {
-        this.track = TrackStore.getTrackFromId(id)
-      })
-    } else {
+      TrackStore.setGenre(FETCH_TRACK)
+      TrackStore.setTrackId(id)
     }
-    console.log(this.props);
-    console.log(search);
-
   }
 
   handlePlay = () => {
@@ -43,7 +42,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     if (!PlayerStore || !TrackStore) {
       return;
     }
-    PlayerStore.setPlayingTrack(this.track)
+    PlayerStore.setPlayingTrack(TrackStore.currentTrack)
     //TODO playintlist
   }
 
@@ -53,20 +52,22 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       return;
     }
     //TODO add to playinglist
-    PlayerStore.addToPlaylist(this.track)
+    PlayerStore.addToPlaylist(TrackStore.currentTrack)
+
   }
   handleFetchMoreComments = () => {
     this.props.CommentStore.fetchMoreComments();
   }
   render() {
-    if (!this.track) {
+    const { currentTrack, isLoading } = this.props.TrackStore
+    if (isLoading || !currentTrack) {
       //Todo 
-      return <noscript />
+      return <LoadingSpinner isLoading={true} />
     }
     // const { activitiesCount, activities } = this.props.trackStore
     const { label_name
       // , release_day
-      , user, artwork_url } = this.track
+      , user, artwork_url } = currentTrack
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.CommentStore
     return (
@@ -74,7 +75,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
         <TrackProfile
           bigPic={artwork_url}
           label_name={label_name}
-          track={this.track}
+          track={currentTrack}
           type={'Track'}
           user={user}
         />
@@ -86,7 +87,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
           <CommentsContainer
             CommentStore={this.props.CommentStore}
-            track={this.track}
+            track={currentTrack}
             scrollFunc={this.handleFetchMoreComments}
           />
         </div>

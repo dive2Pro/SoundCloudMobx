@@ -15,7 +15,7 @@ import {
   IActivitiesStore, IPlayerStore, IUserStore
 } from "../../store";
 import {
-  action
+  // action
 } from ".3.1.7@mobx/lib/mobx";
 // import { autorun } from ".3.1.7@mobx/lib/mobx";
 import LoadingSpinner from '../LoadingSpinner'
@@ -59,10 +59,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     }
   }
 
-  @action changeUserId(id: number) {
+  changeUserId(id: number) {
     this.id = id;
-    const userModel = this.props.UserStore.initUser(this.id)
+    const us = this.props.UserStore
+    const userModel = us.initUser(this.id)
     userModel.fetchCommunityData();
+    us.setCurrentUserModel(userModel)
   }
 
 

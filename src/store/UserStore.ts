@@ -141,6 +141,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
 export interface IUserStore {
   initUser: (id: number | IUser) => IUserModel
   findPlaylistFromCurrentUser: (id: number) => IPlaylist
+  setCurrentUserModel: (user: IUserModel) => void
   fetchUserData: (id: number) => void;
   userModel: IUserModel
   isLoginUser: boolean
@@ -163,14 +164,15 @@ export class UserList implements IUserStore {
     } else if (!isNumber) {
       user.setUser(<IUser>obj)
     }
-    this.setCurrentUserModel(user)
     return user;
   }
+
   @action setCurrentUserModel(model: IUserModel) {
     this.userModel = model
   }
 
   @computed get isLoginUser() {
+    if (!this.loginedUserId) { return false }
     return this.loginedUserId === (this.userModel.user && this.userModel.user.id)
   }
 
