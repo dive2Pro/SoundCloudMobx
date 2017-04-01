@@ -30,13 +30,7 @@ function HocLoadingMore<Props, State>(
     handleScrolling = (e: any) => {
       if (window) {
         const trigger = window.innerHeight + window.pageYOffset >= document.body.scrollHeight - 500
-        /*    console.log(window.innerHeight
-              , window.scrollY
-              , window.innerHeight
-              // , document.body.offsetHeight
-              // , document.body.scrollHeight
-            )*/
-        // console.log(trigger + ' -  loadmore', '---', this.cpt.wrappedInstance)
+
         if (trigger) {
           this.props.scrollFunc();
         }
