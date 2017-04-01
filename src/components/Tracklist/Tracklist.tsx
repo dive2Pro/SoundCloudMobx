@@ -43,7 +43,7 @@ class Tracklist extends React.Component<any, any> {
   render() {
 
     const { TrackStore: { currentTracks, isLoading } } = this.props
-
+    // console.log('TracklistCount ===  ' + TracklistCount++)
     return <Activities
       isLoading={isLoading}
       tracks={currentTracks} sortType={''}
@@ -51,5 +51,6 @@ class Tracklist extends React.Component<any, any> {
     />
   }
 }
+// let TracklistCount = 0;
 
 export default Tracklist;

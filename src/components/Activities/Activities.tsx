@@ -4,12 +4,16 @@ import { observer, inject } from 'mobx-react';
 import { IPlayerStore, IPerformanceStore } from '../../store'
 import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
-import Table, { ITableBody, ITableBodyItem } from '../Table'
+import Table, {
+  // ITableBody,
+  ITableBodyItem
+} from '../Table'
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
 import HocLoading from '../HocLoadingMore'
 import ArtWork from '../ArtWork';
 import TdTrackTitleView from '../TrackTitleView'
+import HoverActions from '../HoverActions'
 
 const isEqual = require('lodash/isEqual')
 const debounce = require('lodash/debounce')
@@ -56,6 +60,15 @@ const IndexAndPlayView =
     )
   });
 
+interface ITableBody {
+  trackId: number
+  singerId: number
+  bodyData: ITableBodyItem[]
+  configurations: any[]
+  live?: boolean
+}
+
+let Activitiescount = 0;
 @inject('PlayerStore', 'PerformanceStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
@@ -75,6 +88,65 @@ class Activities extends React.Component<IActivitiesProps, any> {
     }
   }
 
+  renderActivities2 = (track: ITrack, store: IPlayerStore, sortType: string, i: number) => {
+    if (!store) {
+      console.error("PlayerStore = " + store)
+      return (<noscript />)
+    }
+    console.log('Activitiescount = ' + Activitiescount++)
+    let {
+      // title,
+      duration, user } = track;
+    const { isPlaying, playingTrack } = store
+    // const preKey = UniqueKey[UniqueKey.length - 1].length++;
+    const configurations = [
+      {
+        fn: () => { this.addToTrackList(track) },
+        className: `fa fa-plus`
+      }
+      , {
+        fn: () => { }, className: "fa fa-share-square-o"
+      }, {
+        fn: () => { }, className: 'fa fa-folder-o'
+      }
+    ]
+
+    const anchorClazz = (isPlaying && (playingTrack === track)) ? styles.liveanchor : styles.anchor;
+
+    return (
+      <tr className={styles.ttr}>
+        <td >
+          <IndexAndPlayView
+            isPlaying={isPlaying && playingTrack === track}
+            track={track}
+            index={1}
+            onClick={() => { store.setPlayingTrack(track) }}
+          />
+          {/*index={i} track={item} onClick={() => this.playTrack(item)}*/}
+        </td>
+        <td>
+          <TdTrackTitleView sortType={"sortType"} track={track} />
+        </td>
+
+        <td
+          className={anchorClazz}
+        >
+          <div className={styles.duration}>
+            {seconds2time(duration)}
+          </div>
+          <div className={styles.actions}>
+            <HoverActions
+              configurations={configurations}
+              isVisible={true} />
+          </div>
+        </td>
+        <td>
+          <div className={styles.duration}>{user.username}</div>
+
+        </td>
+      </tr >)
+
+  }
   renderActivities = (arr: ITrack[], store: IPlayerStore, sortType: string) => {
     if (!store) {
       console.error("PlayerStore = " + store)
@@ -90,6 +162,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       }
     ]
     const tbodys: ITableBody[] = [];
+    // 这里重复了! 上层有被调用这里就会计算
     arr.forEach((item, i) => {
       const { id, title, duration, user } = item
       const { id: userId, username } = user
@@ -123,14 +196,17 @@ class Activities extends React.Component<IActivitiesProps, any> {
         { title: username }
       ];
       tbodys.push({
-        trackId: id, singerId: userId,
-        bodyData: bodyItems, configurations
+        trackId: id
+        , singerId: userId
+        , bodyData: bodyItems
+        , configurations
       })
     })
     return (
       <Table thead={thead} tbody={tbodys} />
     )
   }
+
   debounceFun = () => {
     const lowLimit = window.innerHeight + window.scrollY;
     const hightLimit = window.scrollY;
@@ -156,6 +232,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
     }
   }
   state = { limit: [] }
+
   render() {
 
     const { isLoading, tracks, sortType } = this.props;
@@ -163,7 +240,17 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (!store || !tracks) {
       return <noscript />
     }
+    //ont over render
+    // console.log(' ActivitiesCount = ' + ActivitiesCount++)
     const tracksCount = tracks.length;
+    const thead = [
+      { title: "", width: 8 },
+      { title: '歌曲标题', width: 25 }, {
+        title: '时长', width: 12
+      }, {
+        title: '歌手', width: 13
+      }
+    ]
     return (
       <div className={styles.main}>
         <div className={styles.top}>
@@ -173,12 +260,29 @@ class Activities extends React.Component<IActivitiesProps, any> {
           </div>
         </div>
         <div className={styles.tracks}>
-          {this.renderActivities(tracks, store, sortType)}
+          <table>
+            <thead>
+              <tr>
+                {thead.map((item, i) => {
+                  const { title, width } = item
+                  return (
+                    <th key={i + "-" + width} width={width + "%"}>
+                      {title}
+                    </th>
+                  )
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {tracks.map((item, i) => this.renderActivities2(item, store, sortType, i))}
+            </tbody>
+          </table>
         </div>
         <LoadingSpinner isLoading={isLoading} />
-      </div>
+      </div >
     );
   }
 }
+// let  ActivitiesCount = 0
 
 export default HocLoading<IActivitiesProps, any>(Activities)

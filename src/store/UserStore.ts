@@ -1,12 +1,8 @@
 import {
   observable, action
   , ObservableMap
-  // , runInAction
-  // , autorun
   , extendObservable, computed,
   runInAction
-  // , runInAction
-  // , whyRun
 } from "mobx";
 import {
   FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES
@@ -14,17 +10,13 @@ import {
 } from '../constants/fetchTypes'
 import {
   IUser
-  // , IMePeopels
   , IActivitiesItem,
   IPlaylist
 } from "../interfaces/interface";
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 import { BaseAct } from "./TrackStore";
-// const SC = require("soundcloud");
-// const Cookies = require("js-cookie")
-// const Remotedev = require("mobx-remotedev");
-// @Remotedev({ name: "UserModel" })
+
 export interface IUserModel {
   user: IUser;
   loadDataFromCookie: () => void;
@@ -36,7 +28,6 @@ export interface IUserModel {
   nextHrefs: {}
   fetchWithType: (type: string) => void
   fetchCommunityData: () => void
-  // fetchFollowers: (nextHref: string, id?: number, ) => void;
 }
 
 interface ICatchErr {

@@ -8,6 +8,7 @@ export interface IPerformanceStore {
 class PerformanceStore implements IPerformanceStore {
 
   @observable scrollLimit: number[] = []
+
   @action setScrollLimit(...limit: number[]) {
     (<IObservableArray<number>>this.scrollLimit).replace(limit);
   }

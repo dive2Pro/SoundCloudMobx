@@ -1,37 +1,19 @@
 import {
   action, observable, runInAction
-  // , extendObservable
-  , computed, ObservableMap, autorun, whyRun, IReactionDisposer
+  , computed, ObservableMap, autorun, whyRun, IReactionDisposer, IObservableArray
 } from 'mobx';
-// import * as fetchTypes from '../constants/fetchTypes'
-import {
-  // addAccessToken
-} from '../services/soundcloundApi'
 import {
   ITrack
-  // , IActivitiesItem
 } from '../interfaces/interface';
 export { ITrack }
 import {
-  unauthApiUrl,
-  // apiUrl,
-  // apiUrl
-  // , addAccessToken
-  // , apiUrl
+  unauthApiUrl
 } from '../services/soundcloundApi'
 import UserStore, { ActivitiesStore } from './UserStore'
-// const Cookie = require('js-cookie');
 export class Track {
-
-  constructor() {
-
-  }
 
   @action updateFromJson(data: any) {
     Object.assign(this, data);
-  }
-  play() {
-
   }
 }
 
@@ -62,9 +44,6 @@ export abstract class BaseAct<T> {
     this.setGenre(genre);
   }
 
-  @computed get currentItems(): T[] {
-    return <T[]>this.itemsMap.get(this.currentGenre)
-  }
 
   initFilterFunction(type: string) {
 
@@ -101,11 +80,12 @@ export abstract class BaseAct<T> {
   async filterFunc(activities: T[], sortType: string, filterType: string) {
     let fs: ITrack[] = []
     const filterByTypes = await this.filterByFilterType(activities)
-    fs = this.transToTracks(filterByTypes)
+    fs = await this.transToTracks(filterByTypes)
     fs = await this.filterByFilterTitle(fs);
     fs = await this.filterBySortType(fs);
-    runInAction(() => {
-      this.filteredTracks = fs
+
+    runInAction('set-filteredTracks', () => {
+      (<IObservableArray<ITrack>>this.filteredTracks).replace(fs)
     })
   }
   filterBySortType(fs: ITrack[]) {
@@ -142,6 +122,9 @@ export abstract class BaseAct<T> {
     this.currentGenre = genre;
     this.initFilterFunction(genre);
   }
+  @computed get currentItems(): T[] {
+    return <T[]>this.itemsMap.get(this.currentGenre)
+  }
 
   @computed get nextHref() {
     return this.nextHrefsByGenre.get(this.currentGenre) || ""
@@ -169,7 +152,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   getTrackFromId(id: number): ITrack {
     let track = this.currentTracks.find((track) => track.id == id)
     if (!track) {
-      track = this.allTracks.find((track) => track.id == id)
+      track = this.allTracks().find((track) => track.id == id)
     }
     if (track) return track
     throw Error('Cant find a track from gaving id ')
@@ -191,7 +174,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
       this.itemsMap.set(genre, values);
     }
   }
-  @computed get allTracks(): ITrack[] {
+  allTracks(): ITrack[] {
     //todo 优化
     const values = this.itemsMap.values()
     const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
@@ -209,7 +192,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     let genre = this.currentGenre || "country", url;
     url = this.nextHref
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=50&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
+      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
 
     this.fetchData(url)
@@ -228,14 +211,14 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     try {
       this.setLoadingByGenre(genre, true)
 
-      const data: any =
-        await fetch(url)
-          .then(response => response.json());
+      const raw: any = await fetch(url)
+      const data = await raw.json()
       runInAction('loadtracks', () => {
         this.tracks = { genre, values: data.collection };
-        this.setNextHrefByGenre(genre, data.next_href);
-        this.setLoadingByGenre(genre, false)
+
       })
+      this.setNextHrefByGenre(genre, data.next_href);
+      this.setLoadingByGenre(genre, false)
     } finally {
       this.setLoadingByGenre(genre, false)
     }
