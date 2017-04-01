@@ -42,7 +42,8 @@ class Tracklist extends React.Component<any, any> {
 
   render() {
 
-    const { TrackStore: { currentTracks, isLoading } } = this.props
+    const {
+      TrackStore: { currentTracks, isLoading } } = this.props
     // console.log('TracklistCount ===  ' + TracklistCount++)
     return <Activities
       isLoading={isLoading}

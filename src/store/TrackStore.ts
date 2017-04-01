@@ -10,6 +10,7 @@ import {
   unauthApiUrl
 } from '../services/soundcloundApi'
 import UserStore, { ActivitiesStore } from './UserStore'
+import PerformanceStore from "./PerformanceStore";
 export class Track {
 
   @action updateFromJson(data: any) {
@@ -36,7 +37,7 @@ export abstract class BaseAct<T> {
   @observable sortType: string
 
   @observable filteredTracks: ITrack[] = []
-  @observable currentGenre: string
+  @observable currentGenre: string = 'country'
 
   autorunHandle: IReactionDisposer;
 
@@ -120,6 +121,7 @@ export abstract class BaseAct<T> {
   @action setGenre(genre: string) {
     genre = genre.toLocaleLowerCase();
     this.currentGenre = genre;
+    PerformanceStore.setCurrentGenre(this.currentGenre)
     this.initFilterFunction(genre);
   }
   @computed get currentItems(): T[] {
@@ -134,7 +136,6 @@ export abstract class BaseAct<T> {
 class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   token: string = ""
   static defaultGenre = 'country';
-  @observable currentGenre: string = 'country'
 
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre) || false

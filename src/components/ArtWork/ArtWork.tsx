@@ -28,7 +28,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
   componentDidMount() {
     this.handlerObserver = autorun(() => {
       const ps = this.props.PerformanceStore
-      if (ps && ps.scrollLimit.length > 0) {
+      if (this.img && ps && ps.scrollLimit.length > 0) {
         const [l, h] = ps.scrollLimit
         const y = this.img.y
         const imgHeight = this.img.offsetHeight;
@@ -61,9 +61,11 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
   goToLoadImage() {
     const image = new Image()
     image.onload = () => {
-      this.img.src = image.src
-      // 取消观察
-      this.handlerObserver()
+      if (this.img) {
+        this.img.src = image.src
+        // 取消观察
+        this.handlerObserver()
+      }
     }
 
     image.onerror = () => {

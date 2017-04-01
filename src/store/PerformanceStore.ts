@@ -1,4 +1,12 @@
-import { observable, action, IObservableArray } from 'mobx'
+import {
+  observable
+  , action
+  , IObservableArray
+  , ObservableMap
+  , computed
+} from 'mobx'
+// import TrackStore from './TrackStore'
+
 export interface IPerformanceStore {
   scrollLimit: number[]
   setScrollLimit: (...limit: number[]) => void
@@ -7,11 +15,24 @@ export interface IPerformanceStore {
 
 class PerformanceStore implements IPerformanceStore {
 
-  @observable scrollLimit: number[] = []
+  scrollLimitByGenre = new ObservableMap<number[]>()
+  @observable genre: string
 
-  @action setScrollLimit(...limit: number[]) {
-    (<IObservableArray<number>>this.scrollLimit).replace(limit);
+  @computed get scrollLimit(): number[] {
+    return this.scrollLimitByGenre.get(this.genre) || [];
   }
+  @action setCurrentGenre(genre: string) {
+    this.genre = genre;
+  }
+  @action setScrollLimit(...limit: number[]) {
+    const map = this.scrollLimitByGenre.get(this.genre);
+    if (map) {
+      (<IObservableArray<number>>map).replace(limit);
+    } else {
+      this.scrollLimitByGenre.set(this.genre, limit)
+    }
+  }
+
 }
 
 export default new PerformanceStore()

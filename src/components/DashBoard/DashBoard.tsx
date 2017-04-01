@@ -98,12 +98,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || true
     const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || true
     const isloadingFavorites = isLoadings.get(fetchTypes.FETCH_ACTIVITIES) || true
-    const FavoView = () => <Activities
-      sortType={''}
-      isLoading={isloadingFavorites}
-      scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-      tracks={favorites}
-    />
+    const FavoView = () =>
+      <Activities
+        sortType={''}
+        isLoading={isloadingFavorites}
+        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
+        tracks={favorites}
+      />
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
     return (
       <div className={styles.container}>

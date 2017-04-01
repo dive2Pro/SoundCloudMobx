@@ -16,7 +16,7 @@ import {
 import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 import { BaseAct } from "./TrackStore";
-
+import PerformanceStore from './PerformanceStore'
 export interface IUserModel {
   user: IUser;
   loadDataFromCookie: () => void;
@@ -111,6 +111,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
   }
 
   @action fetchNextActivities(first?: boolean) {
+    PerformanceStore.setCurrentGenre(this.currentGenre)
     if (first && this.currentItems.length > 0) {
       return
     }
