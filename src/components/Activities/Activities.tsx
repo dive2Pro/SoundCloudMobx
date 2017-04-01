@@ -7,7 +7,9 @@ import LoadingSpinner from '../LoadingSpinner'
 
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
-import HocLoading from '../HocLoadingMore'
+import
+// HocLoading
+{ HocMounted } from '../HocLoadingMore'
 import ArtWork from '../ArtWork';
 import TdTrackTitleView from '../TrackTitleView'
 import HoverActions from '../HoverActions'
@@ -212,6 +214,9 @@ class Activities extends React.Component<IActivitiesProps, any> {
     );
   }
 }
+
 // let  ActivitiesCount = 0
 
-export default HocLoading<IActivitiesProps, any>(Activities)
+export default HocMounted<IActivitiesProps, any>(Activities, (v?: any) => {
+  console.log(v)
+})

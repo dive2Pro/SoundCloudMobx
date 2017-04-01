@@ -32,7 +32,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         const [l, h] = ps.scrollLimit
         const y = this.img.y
         const imgHeight = this.img.offsetHeight;
-        // console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)
+        console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)
 
         if ((l === h && y <= l) || (y < l && (y + imgHeight > h))) {
           // console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)

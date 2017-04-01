@@ -1,6 +1,8 @@
 import {
   action, observable, runInAction
-  , computed, ObservableMap, autorun, whyRun, IReactionDisposer, IObservableArray
+  , computed, ObservableMap, autorun
+  // , whyRun
+  , IReactionDisposer, IObservableArray
 } from 'mobx';
 import {
   ITrack
@@ -59,7 +61,6 @@ export abstract class BaseAct<T> {
       this.filterFunc(<T[]>this.itemsMap.get(type), this.sortType, this.filterType)
     })
 
-    whyRun(this.autorunHandle);
 
   }
 

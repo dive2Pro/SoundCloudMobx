@@ -1,3 +1,3 @@
 import H from './HocLoadingMore';
-
-export { H as default }
+import { HocMounted } from './HocMounted'
+export { H as default, HocMounted }

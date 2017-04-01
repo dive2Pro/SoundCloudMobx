@@ -23,6 +23,10 @@ class PerformanceStore implements IPerformanceStore {
   }
   @action setCurrentGenre(genre: string) {
     this.genre = genre;
+    if (!this.scrollLimitByGenre.get(genre)) {
+      // window.innerHeight + window.pageYOffset
+      this.scrollLimitByGenre.set(genre, [window.innerHeight, window.innerHeight])
+    }
   }
   @action setScrollLimit(...limit: number[]) {
     const map = this.scrollLimitByGenre.get(this.genre);

@@ -13,12 +13,9 @@ import Activities from '../Activities'
 import Playlist from '../Playlist'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
-  // ,IUserModel
 } from "../../store";
 import {
-  // observable,
   action
-  // , computed
 } from ".3.1.7@mobx/lib/mobx";
 // import { autorun } from ".3.1.7@mobx/lib/mobx";
 import LoadingSpinner from '../LoadingSpinner'
@@ -66,7 +63,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     this.id = id;
     const userModel = this.props.UserStore.initUser(this.id)
     userModel.fetchCommunityData();
-    // todo fetch tracklist
   }
 
 
