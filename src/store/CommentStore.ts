@@ -43,7 +43,9 @@ class CommentStore implements ICommentStore {
 
   @action setCurrentTrack(track: ITrack) {
     this.currentTrack = (track);
-    this.fetchMoreComments();
+    if (this.commentsCount < 1)
+      this.fetchMoreComments();
+
   }
   @computed get commentsCount() {
     return this.currentTrackComments.length
@@ -57,6 +59,7 @@ class CommentStore implements ICommentStore {
     return this.nextHrefsByTrack.get(this.currentTrack.id + "") || ""
   }
   @action async fetchMoreComments(nextHref?: string) {
+    if (this.isLoading) return
     nextHref = this.currentCommentNextHref;
     const { id } = this.currentTrack
     const keyId = id + ""
