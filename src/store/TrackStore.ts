@@ -9,10 +9,12 @@ import {
 } from '../interfaces/interface';
 export { ITrack }
 import {
-  unauthApiUrl
+  unauthApiUrl,
+  apiUrl
 } from '../services/soundcloundApi'
 import UserStore, { ActivitiesStore } from './UserStore'
 import PerformanceStore from "./PerformanceStore";
+// import { FETCH_TRACK } from "../constants/fetchTypes";
 export class Track {
 
   @action updateFromJson(data: any) {
@@ -24,8 +26,9 @@ export interface ITrackStore {
   fetchTracks: (nextHref: string, genre?: string) => void;
   isLoading: boolean;
   currentTracks: ITrack[]
+  currentTrack: ITrack
   setGenre: (genre: string) => void;
-  getTrackFromId: (id: number) => ITrack
+  setTrackId: (id: number) => void
 }
 export abstract class BaseAct<T> {
 
@@ -137,6 +140,7 @@ export abstract class BaseAct<T> {
 class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   token: string = ""
   static defaultGenre = 'country';
+  @observable currentTrack: ITrack
 
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre) || false
@@ -151,15 +155,24 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     const tracks = this.itemsMap.get(this.currentGenre) || [];
     return tracks
   }
-  getTrackFromId(id: number): ITrack {
+  setTrackId(id: number) {
+
     let track = this.currentTracks.find((track) => track.id == id)
     if (!track) {
       track = this.allTracks().find((track) => track.id == id)
     }
-    if (track) return track
-    throw Error('Cant find a track from gaving id ')
+    if (track) {
+      this.setCurrentTrack(track)
+    } else {
+      // 下载数据
+      // 可能放在 Track中会好一些?
+      this.fetchSingleTrack(id)
+    }
   }
 
+  @action setCurrentTrack(track: ITrack) {
+    this.currentTrack = track
+  }
 
 
   transToTracks(ts: ITrack[]) {
@@ -187,6 +200,15 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   }
 
 
+  fetchSingleTrack(id: number) {
+    const url = apiUrl(`tracks/${id}`, "?")
+    this.fetchData(url, (data) => {
+      // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.  
+      this.setCurrentTrack(data);// mayby Track?
+
+    })
+  }
+
   @action async fetchTracks() {
     if (this.isLoading) {
       return;
@@ -197,8 +219,12 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
       url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
     }
 
-    this.fetchData(url)
+    this.fetchData(url, (data: any) => {
+      this.tracks = { genre, values: data.collection };
+      this.setNextHrefByGenre(genre, data.next_href);
+    })
   }
+
 
   @action setGenre(genre: string) {
     super.setGenre(genre);
@@ -208,19 +234,17 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     }
 
   }
-  async fetchData(url: string, gr?: string) {
+  //这里设计的不好,genre不太可调?
+  // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
+  async fetchData(url: string, fn: (data: any) => void, gr?: string) {
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
-
       const raw: any = await fetch(url)
       const data = await raw.json()
-      runInAction('loadtracks', () => {
-        this.tracks = { genre, values: data.collection };
-
+      runInAction('loaddata', () => {
+        fn.call(this, data)
       })
-      this.setNextHrefByGenre(genre, data.next_href);
-      this.setLoadingByGenre(genre, false)
     } finally {
       this.setLoadingByGenre(genre, false)
     }
