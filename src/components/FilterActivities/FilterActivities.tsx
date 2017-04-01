@@ -6,7 +6,7 @@ import SearchPanel from "../SearchPanel";
 import { IActivitiesStore } from "../../store/index";
 import { inject, observer } from ".4.1.3@mobx-react";
 import * as sortTypes from "../../constants/sortTypes";
-
+// import { FETCH_ACTIVITIES } from '../../constants/fetchTypes'
 const styles = require('./filteractivities.scss')
 
 

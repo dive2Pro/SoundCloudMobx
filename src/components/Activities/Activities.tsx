@@ -136,68 +136,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.addToPlaylist(track);
     }
   }
-
-  /*
-    renderActivities = (arr: ITrack[], store: IPlayerStore, sortType: string) => {
-      if (!store) {
-        console.error("PlayerStore = " + store)
-        return (<noscript />)
-      }
-      const { playingTrack, isPlaying } = store;
-      const thead = [
-        { title: "", width: 8 },
-        { title: '歌曲标题', width: 25 }, {
-          title: '时长', width: 12
-        }, {
-          title: '歌手', width: 13
-        }
-      ]
-      const tbodys: ITableBody[] = [];
-      // 这里重复了! 上层有被调用这里就会计算
-      arr.forEach((item, i) => {
-        const { id, title, duration, user } = item
-        const { id: userId, username } = user
-        const configurations = [
-          {
-            fn: () => { this.addToTrackList(item) },
-            className: `fa fa-plus`
-          }
-          , {
-            fn: () => { }, className: "fa fa-share-square-o"
-          }, {
-            fn: () => { }, className: 'fa fa-folder-o'
-          }
-        ]
-        const bodyItems: ITableBodyItem[] = [
-          {
-            title: '', render: () => {
-              return (
-                <IndexAndPlayView
-                  isPlaying={isPlaying && playingTrack === item}
-                  index={i} track={item} onClick={() => this.playTrack(item)} />
-              )
-            }
-          },
-          {
-            title, render: () => {
-              return (<TdTrackTitleView sortType={sortType} track={item} />)
-            }
-          },
-          { title: seconds2time(duration), tag: 'anchor' },
-          { title: username }
-        ];
-        tbodys.push({
-          trackId: id
-          , singerId: userId
-          , bodyData: bodyItems
-          , configurations
-        })
-      })
-      return (
-        <Table thead={thead} tbody={tbodys} />
-      )
-    }*/
-
   debounceFun = () => {
     const lowLimit = window.innerHeight + window.scrollY;
     const hightLimit = window.scrollY;
