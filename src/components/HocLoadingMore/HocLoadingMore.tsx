@@ -24,41 +24,33 @@ function HocLoadingMore<Props, State>(
     // @observable limit: number[] = [];
     constructor() {
       super()
-      this.setLimit(0, 0)
-      this.debounceFun = _.debounce(this.handleScrolling, 500);
+      this.debounceFun = _.debounce(this.handleScrolling, 300);
     }
 
     handleScrolling = (e: any) => {
       if (window) {
         const trigger = window.innerHeight + window.pageYOffset >= document.body.scrollHeight - 500
-        console.log(window.innerHeight
-          , window.scrollY
-          , window.innerHeight
-          // , document.body.offsetHeight
-          // , document.body.scrollHeight
-        )
-        const lowLimit = window.innerHeight + window.scrollY;
-        const hightLimit = window.scrollY;
-        this.setLimit(lowLimit, hightLimit);
+        /*    console.log(window.innerHeight
+              , window.scrollY
+              , window.innerHeight
+              // , document.body.offsetHeight
+              // , document.body.scrollHeight
+            )*/
         // console.log(trigger + ' -  loadmore', '---', this.cpt.wrappedInstance)
         if (trigger) {
           this.props.scrollFunc();
         }
       }
     }
-    setLimit(l: number, h: number) {
 
-      this.setState({ limit: [l, h] })
-    }
     componentDidMount() {
 
-      window.addEventListener('scroll', this.debounceFun)
+      window.addEventListener('scroll', this.handleScrolling)
     }
 
     componentWiiUnmount() {
-      window.removeEventListener('scroll', this.debounceFun)
+      window.removeEventListener('scroll', this.handleScrolling)
     }
-    state = { limit: [] }
     render() {
       return (
         <Comp

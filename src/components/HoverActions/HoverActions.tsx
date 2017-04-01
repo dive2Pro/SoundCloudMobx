@@ -28,7 +28,7 @@ export const Action = (cfg: IconfiguType) => {
   )
 }
 
-const HoverActions = observer((prop: IHoverActionsProp) => {
+const HoverActions = observer(function HoverActions(prop: IHoverActionsProp) {
   const { isVisible, configurations } = prop;
   let styleName = isVisible ? "active" : 'normal'
   return (

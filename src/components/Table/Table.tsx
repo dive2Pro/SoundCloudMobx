@@ -84,7 +84,6 @@ const TBodyTr = ({ data }: ITBodyTrProp) => {
       <td
         key={i + title + '-' + id}
         onClick={() => {
-          console.log(onClick);
           onClick && onClick(id)
         }}
         className={tag && anchorClazz}>
