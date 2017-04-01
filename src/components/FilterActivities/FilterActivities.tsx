@@ -32,7 +32,7 @@ class FilterActivities extends React.Component<any, any> {
   };
 
   componentDidMount() {
-    this.actStore.fetchNextActivities();
+    this.actStore.fetchNextActivities(true);
   }
 
   handleScroll = () => {
@@ -80,7 +80,6 @@ class FilterActivities extends React.Component<any, any> {
     };
 
     const { filteredTracks, isLoading, sortType } = this.actStore
-    console.log('--------------------')
     return (
       <div>
         <div className={styles.types}>
@@ -94,7 +93,6 @@ class FilterActivities extends React.Component<any, any> {
           tracks={filteredTracks}
           isLoading={isLoading}
         />
-
       </div>
     );
   }
