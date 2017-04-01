@@ -24,7 +24,7 @@ export interface IArtWorkProps {
 class ArtWork extends React.Component<IArtWorkProps, any> {
   handlerObserver: IReactionDisposer;
   img: HTMLImageElement;
-
+  retryCount = 3
   componentDidMount() {
     this.handlerObserver = autorun(() => {
       const ps = this.props.PerformanceStore
@@ -33,28 +33,28 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         const y = this.img.y
         const imgHeight = this.img.offsetHeight;
         // console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)
-        if (y < l && (y + imgHeight > h)) {
-          console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)
+
+        if ((l === h && y <= l) || (y < l && (y + imgHeight > h))) {
+          // console.log(l, h, '-------', y, 'imgHeight=' + imgHeight)
           this.goToLoadImage()
         }
       }
     })
   }
   //  放在这里显然是不合适的,这样不能按需加载
-
   handleScroll = (e: any) => {
     // 当图片的位置出现在窗口中才加载
 
     // 1. 获取图片的top位置
-    const imgTop = this.img.y
+    // const imgTop = this.img.y
     // 2. 获取窗口的底部底部位置
-    const slideInAt = window.scrollY + window.innerHeight
+    // const slideInAt = window.scrollY + window.innerHeight
     // logInfo('scroll', slideInAt, '--', imgTop)
-    if (slideInAt > imgTop) {
-      // 3. 正在滑动的也不加载
-    } else {
+    // if (slideInAt > imgTop) {
+    // 3. 正在滑动的也不加载
+    // } else {
 
-    }
+    // }
 
   }
 
@@ -62,26 +62,28 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
     const image = new Image()
     image.onload = () => {
       this.img.src = image.src
+      // 取消观察
       this.handlerObserver()
     }
 
     image.onerror = () => {
-      //出现错误怎么办?  todo
+      //出现错误怎么办?  
+      if (this.retryCount-- > 0) {
+        this.goToLoadImage()
+      } else {
+        // show broken?
+
+      }
     }
 
-    const { src
-    } = this.props
-    image.src = src
+    const { src } = this.props
+      ; image.src = src
   }
   render() {
     const { size
       , clazz
       , alt, style } = this.props
-    const ps = this.props.PerformanceStore
-    if (ps) {
-      // const [l, h] = ps.scrollLimit
-      // console.log(l, h)
-    }
+
     return (
       <img
         ref={n => this.img = n}

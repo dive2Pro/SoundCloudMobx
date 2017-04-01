@@ -31,8 +31,8 @@ interface IndexAndPlayViewProp {
 }
 
 const IndexAndPlayView =
-  observer(({ track, onClick, index, isPlaying }: IndexAndPlayViewProp)
-    : React.ReactElement<any> => {
+  observer(function IndexAndPlayView({ track, onClick, index, isPlaying }: IndexAndPlayViewProp)
+    : React.ReactElement<any> {
     const { artwork_url } = track
     const imgSize = 80;
     const styleSize = {
@@ -142,7 +142,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 
   componentDidMount() {
-    this.dFunc = debounce(this.debounceFun, 500)
+    this.dFunc = debounce(this.debounceFun, 600)
     window.addEventListener('scroll', this.dFunc)
   }
 

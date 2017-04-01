@@ -11,7 +11,7 @@ interface TdTrackTitleViewProp {
   sortType?: string
 }
 
-const TdTrackTitleView = observer(({ track, sortType }: TdTrackTitleViewProp) => {
+const TdTrackTitleView = observer(function TdTrackTitleView({ track, sortType }: TdTrackTitleViewProp) {
   const { user, title, playback_count, id,
     favoritings_count, comment_count, download_count } = track;
   const { username } = user
