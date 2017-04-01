@@ -38,7 +38,7 @@ const limitPageSize = 20;
 
 
 export interface IActivitiesStore {
-  fetchNextActivities: () => void;
+  fetchNextActivities: (first?: boolean) => void;
   filteredActivities: IActivitiesItem[];
   isLoading: boolean;
   setFilterType: (type: string) => void;
@@ -72,7 +72,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
   }
 
   transToTracks(items: IActivitiesItem[]): ITrack[] {
-    return items.map(this.getAllTrackFromActivity);
+    return items.map(this.getAllTrackFromActivity).filter(item => item != null);
   }
 
   getAllTrackFromActivity(act: IActivitiesItem) {
@@ -110,7 +110,10 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
     this.setLoadingByGenre(FETCH_ACTIVITIES, b);
   }
 
-  @action fetchNextActivities() {
+  @action fetchNextActivities(first?: boolean) {
+    if (first && this.currentItems.length > 0) {
+      return
+    }
     if (!this.isLoading)
       this.fetchActivities(this.nextHref);
   }

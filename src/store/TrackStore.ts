@@ -118,7 +118,7 @@ export abstract class BaseAct<T> {
     this.nextHrefsByGenre.set(genre, nextHref)
   }
   @action setGenre(genre: string) {
-    genre = genre.toLocaleLowerCase()
+    genre = genre.toLocaleLowerCase();
     this.currentGenre = genre;
     this.initFilterFunction(genre);
   }
