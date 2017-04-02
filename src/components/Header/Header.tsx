@@ -1,15 +1,12 @@
 import * as React from 'react';
-// import {observable,action} from 'mobx'
 import {
   observer
   , inject
 } from "mobx-react";
-// import { IUserStore } from "../../store/UserStore";
-// import { IUser } from "./interfaces/interface";
-
 import DevTool from 'mobx-react-devtools'
-import { NavLink as Link } from 'react-router-dom'
+import Link from '../StyleLink'
 import { ISessionStore } from "../../store/index";
+import { observable } from ".3.1.7@mobx/lib/mobx";
 
 const styles = require('./header.scss');
 
@@ -19,7 +16,7 @@ interface IHeaderProp {
 @inject("SessionStore")
 @observer
 class Main extends React.Component<IHeaderProp, undefined> {
-
+  @observable currentLink = ''
   loginIn = () => {
     const { SessionStore } = this.props;
     SessionStore.login();
@@ -31,19 +28,24 @@ class Main extends React.Component<IHeaderProp, undefined> {
   render() {
 
     const { user } = this.props.SessionStore;
-    const selected = styles.selected
     return (
       <section className={styles.main}>
         <div className={styles.title}>
-          <h1><Link
-            to="/" >MUSIC</Link></h1>
+          <h1>
+            <Link
+              to="/">MUSIC</Link></h1>
         </div>
         <nav>
           <Link
-            activeClassName={selected}
             to="/main/genre=country">主页</Link>
+
           <Link
-            activeClassName={selected}
+            to="/main/ssr"
+            render={() => {
+              return <div>laallaalalalal</div>
+            }}
+          >SSR</Link>
+          <Link
             to={{
               pathname: '/users/home',
               search: `?id=${user && user.id}`
