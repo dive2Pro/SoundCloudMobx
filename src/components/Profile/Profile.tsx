@@ -101,7 +101,7 @@ class Profile extends React.Component<IProfileProps, any> {
           <div
             className={styles.btn_showmore}
             style={{
-              display: description.length > 150
+              display: description && description.length > 150
                 ? 'block' : 'none'
             }}
             onClick={this.handleMoreDesc}>

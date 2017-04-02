@@ -6,7 +6,6 @@ import {
 } from "mobx";
 import {
   FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES
-  // , FETCH_PLAYLIST
 } from '../constants/fetchTypes'
 import {
   IUser
@@ -17,6 +16,7 @@ import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 import { BaseAct } from "./TrackStore";
 import PerformanceStore from './PerformanceStore'
+import { logError } from '../services/logger'
 export interface IUserModel {
   user: IUser;
   loadDataFromCookie: () => void;
@@ -24,7 +24,6 @@ export interface IUserModel {
   followings: IUser[];
   favorites: ITrack[];
   playlists: IPlaylist[];
-  // isLoadings: ObservableMap<boolean>
   nextHrefs: {}
   fetchWithType: (type: string) => void
   fetchCommunityData: () => void
@@ -36,7 +35,6 @@ interface ICatchErr {
   fetchType?: string;
 }
 const limitPageSize = 20;
-
 
 export interface IActivitiesStore {
   fetchNextActivities: (first?: boolean) => void;
@@ -100,7 +98,6 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
           const b =
             this.currentItems.some(active =>
               active.created_at === item.created_at)
-          // console.log(b)
           return !b;
         })
         this.addActivities(filterArr);
@@ -247,8 +244,9 @@ class UserModel implements IUserModel {
   }
   //TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
-    console.error(err);
-    if (fetchType) this.resetLoadingState(fetchType);
+    logError(err);
+    if (fetchType)
+      this.resetLoadingState(fetchType);
     throw err;
   }
 
@@ -264,7 +262,7 @@ class UserModel implements IUserModel {
       .then((rawuser: any) => {
         this.setUser(rawuser)
       }).catch(err => {
-        this.catchError(err);
+        this.catchError({ err });
       })
   }
 

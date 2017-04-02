@@ -10,6 +10,7 @@ import {
 export interface IPerformanceStore {
   scrollLimit: number[]
   setScrollLimit: (...limit: number[]) => void
+  setCurrentGenre: (genre: string) => void
 }
 
 
@@ -21,13 +22,16 @@ class PerformanceStore implements IPerformanceStore {
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }
+
   @action setCurrentGenre(genre: string) {
     this.genre = genre;
     if (!this.scrollLimitByGenre.get(genre)) {
       // window.innerHeight + window.pageYOffset
-      this.scrollLimitByGenre.set(genre, [window.innerHeight, window.innerHeight])
+      this.scrollLimitByGenre.set(genre,
+        [window.innerHeight, window.innerHeight])
     }
   }
+
   @action setScrollLimit(...limit: number[]) {
     const map = this.scrollLimitByGenre.get(this.genre);
     if (map) {

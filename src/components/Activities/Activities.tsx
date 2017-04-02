@@ -7,16 +7,11 @@ import LoadingSpinner from '../LoadingSpinner'
 
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
-import
-// HocLoading
-{ HocMounted } from '../HocLoadingMore'
+import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import ArtWork from '../ArtWork';
 import TdTrackTitleView from '../TrackTitleView'
 import HoverActions from '../HoverActions'
 
-// const isEqual = require('lodash/isEqual')
-const debounce = require('lodash/debounce')
-// import { IObservableArray } from ".3.1.7@mobx/lib/mobx";
 interface IActivitiesProps {
   PlayerStore?: IPlayerStore
   PerformanceStore?: IPerformanceStore
@@ -138,26 +133,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
       PlayerStore.addToPlaylist(track);
     }
   }
-  debounceFun = () => {
-    const lowLimit = window.innerHeight + window.scrollY;
-    const hightLimit = window.scrollY;
-    {/*console.log(lowLimit, hightLimit);*/ }
-
-    {/*if (!isEqual(this.state.limit, nextState.limit)) {*/ }
-    this.props.PerformanceStore && this.props.PerformanceStore.setScrollLimit(lowLimit, hightLimit)
-    {/*}*/ }
-  }
-
-  componentDidMount() {
-    this.dFunc = debounce(this.debounceFun, 600)
-    window.addEventListener('scroll', this.dFunc)
-  }
-
-  componentWiiUnmount() {
-    window.removeEventListener('scroll', this.dFunc)
-  }
-  state = { limit: [] }
-
   render() {
 
     const { isLoading, tracks, sortType } = this.props;
@@ -216,7 +191,5 @@ class Activities extends React.Component<IActivitiesProps, any> {
 }
 
 // let  ActivitiesCount = 0
-
-export default HocMounted<IActivitiesProps, any>(Activities, (v?: any) => {
-  console.log(v)
-})
+// 这里不需要传入 type,因为已经在 TrackStore中setGenre的时候设置了
+export default Hoc<IActivitiesProps, any>(Activities)
