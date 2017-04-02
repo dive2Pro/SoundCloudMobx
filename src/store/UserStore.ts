@@ -16,7 +16,7 @@ import { addAccessToken, apiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 import { BaseAct } from "./TrackStore";
 import PerformanceStore from './PerformanceStore'
-import { logError } from '../services/logger'
+import { logError, logInfo } from '../services/logger'
 export interface IUserModel {
   user: IUser;
   loadDataFromCookie: () => void;
@@ -123,7 +123,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
       this.setLoadingActivities(true);
       const data: any = await fetch(activitiesUrl)
         .then(response => response.json());
-      console.log(data)
+      // console.log(data)
       runInAction(() => {
         this.setNextActivitiesHref(data.next_href)
         this.filterActivities(data.collection);
@@ -317,7 +317,7 @@ class UserModel implements IUserModel {
       url = `users/${id}/${type}`
       url = apiUrl(url + `?limit=${limitPageSize}`, '&')
     } else {
-      console.log('Does has more nextHref it is done!', this[type])
+      logInfo('Does has more nextHref it is done!', this[type])
       return;
     }
     const fetchType = type;

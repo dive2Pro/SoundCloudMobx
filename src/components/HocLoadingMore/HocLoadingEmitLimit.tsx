@@ -30,7 +30,6 @@ export default function HocMounted<Props, ComponentState>(
     handleEmit = () => {
       // const name = Comp.name
       const ps: any = this.props.PerformanceStore
-      console.info(ps)
 
       if (ps) {
         const l = window.innerHeight + window.scrollY
