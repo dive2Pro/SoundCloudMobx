@@ -22,7 +22,7 @@ const ViewALL = (prop: IViewALLProp) => {
         <span>{prop.count}  {prop.typeContent}</span>
       </div >
       <span styleName="view">
-        <Link path={`/users/${prop.path}`}
+        <Link path={prop.path}
           id={prop.id}> View all</Link></span>
     </div >
   );

@@ -24,10 +24,11 @@ export interface IUserModel {
   followings: IUser[];
   favorites: ITrack[];
   playlists: IPlaylist[];
-  isLoadings: ObservableMap<boolean>
+  // isLoadings: ObservableMap<boolean>
   nextHrefs: {}
   fetchWithType: (type: string) => void
   fetchCommunityData: () => void
+  isLoading: (type: string) => boolean
 }
 
 interface ICatchErr {
@@ -272,6 +273,10 @@ class UserModel implements IUserModel {
     this.userId = user.id
   }
 
+  isLoading(type: string): boolean {
+    const isIng = this.isLoadings.get(type)
+    return isIng == null ? false : isIng
+  }
   @action changeLoadingState(type: string, loading: boolean) {
     this.isLoadings.set(type, loading)
   }
@@ -306,6 +311,7 @@ class UserModel implements IUserModel {
       return
     }
     let url = this.nextHrefs.get(type)
+    // 
     if (url) {
       url = addAccessToken(url, '&')
     } else if (!url && this[type].length < 1) {

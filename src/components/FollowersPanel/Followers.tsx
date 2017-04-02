@@ -29,10 +29,10 @@ class Followers extends React.Component<IFollowersProps, any> {
     // userStore.fetchFollowers(nextHref$);
   }
   render() {
+    const um = this.props.UserModel
+    const { followers, user } = um
 
-    const { followers, isLoadings, user } = this.props.UserModel
-
-    const isLoading = isLoadings.get(FETCH_FOLLOWERS) || false;
+    const isLoading = um.isLoading(FETCH_FOLLOWERS);
     const obj = {
       count: user && user.followers_count,
       clazz: "fa fa-users",

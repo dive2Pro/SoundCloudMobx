@@ -16,20 +16,11 @@ export interface IFollowersProps {
 @CSSModule(styles)
 class Followers extends React.Component<IFollowersProps, any> {
 
-  handleMoreClick = () => {
-    // const userModel = this.props.UserModel
-    // const { nextHrefs } = userModel;
-    // const nextHref$ = nextHrefs[FETCH_FOLLOWINGS];
-    // userModel.fetchFollowers(nextHref$);
-  }
-  handleViewAll = () => {
-    // console.log('HANDLE view all click')
-    this.props.history.push('/user/followers')
-
-  }
+  // TODO refacotror for repeart this with follower  
   render() {
-    const { followings, isLoadings, user } = this.props.UserModel
-    const isLoading = isLoadings.get(FETCH_FOLLOWINGS) || false;
+    const um = this.props.UserModel
+    const { followings, user } = um
+    const isLoading = um.isLoading(FETCH_FOLLOWINGS)
     const obj = {
       count: user && user.followings_count,
       clazz: "fa fa-users",
@@ -46,7 +37,7 @@ class Followers extends React.Component<IFollowersProps, any> {
         {limitFollowings.map((follower: IUser) => {
           return <UserItemContainer key={follower.id + "-panel"} user={follower} />
         })}
-        <ButtonMore isLoading={isLoading} onClick={this.handleMoreClick} />
+        <ButtonMore isLoading={isLoading} onClick={() => { }} />
       </div>
     </section>
   }
