@@ -43,17 +43,18 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
     const tbody: ITableBody[] = [];
     playList.map(item => {
       const { id: trackId, title, user, duration, artwork_url } = item;
+      const isPlaying = playingTrack ? playingTrack.id == item.id : false;
+      // const itemIsplaying = isPlaying && playingTrack === item
       const { id, username } = user;
       const configurations = [{
         fn: () => { this.handlePlay(item) },
-        className: 'fa fa-play'
+        className: `fa fa-${isPlaying ? 'pause' : 'play'}`
       },
       {
         fn: () => { this.handleRemoveFromlist(item) },
         className: "fa fa-trash"
       }
       ];
-      const isPlaying = playingTrack ? playingTrack.id == item.id : false;
       const bodyData: ITableBodyItem[] = [
         {
           title: "",
@@ -84,9 +85,7 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
               <i className="fa fa-trash fa-2x"></i>
             </ButtonInline>
           </div>
-          {/* <ButtonInline onClick={this.handleClosePlaylist}>
-            <i className="fa fa-close fa-2x" />
-          </ButtonInline>*/}
+
         </div>
         <Table thead={thead} tbody={tbody} />
       </div>

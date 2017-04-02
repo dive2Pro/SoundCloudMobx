@@ -144,11 +144,11 @@ class Activities extends React.Component<IActivitiesProps, any> {
     // console.log(' ActivitiesCount = ' + ActivitiesCount++)
     const tracksCount = tracks.length;
     const thead = [
-      { title: "", width: 8 },
-      { title: '歌曲标题', width: 25 }, {
-        title: '时长', width: 12
+      { title: "", width: 15 },
+      { title: '歌曲标题', width: 35 }, {
+        title: '时长', width: 25
       }, {
-        title: '歌手', width: 13
+        title: '歌手', width: 15
       }
     ]
     console.log('tracksCount = ' + tracksCount)
