@@ -91,11 +91,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const {
       user
       , followers
-      , followings, isLoadings, favorites
+      , followings, favorites
     } = userModel;
-    const isloadingFollowers = isLoadings.get(fetchTypes.FETCH_FOLLOWERS) || true
-    const isloadingFollowings = isLoadings.get(fetchTypes.FETCH_FOLLOWINGS) || true
-    const isloadingFavorites = isLoadings.get(fetchTypes.FETCH_ACTIVITIES) || true
+    const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
+    const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
+    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES)
     const FavoView = () =>
       <Activities
         sortType={''}

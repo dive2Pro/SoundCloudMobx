@@ -54,8 +54,9 @@ class Playlist extends React.Component<IPlaylistProps, any>{
   }
 
   render() {
-    const { playlists, isLoadings } = this.props.userModel
-    const isloading = isLoadings.get(FETCH_PLAYLIST) || true;
+    const um = this.props.userModel
+    const { playlists } = um
+    const isloading = um.isLoading(FETCH_PLAYLIST)
     return (
       <div className={styles.playlist}>
         {playlists.map((item, i) => {
