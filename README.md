@@ -18,12 +18,19 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
  - 个人主页歌曲排序
 
 
-##页面
+## 截图
 
 
 ## 注意 🔥🔥
 因为 soundcloud 被墙,所以需要工具才能获取数据.
 现在这个id已经**不能用于播放**,所以我放了一首歌在 public 包中模拟播放
+
+
+## 使用
+1. git clone
+2. yarn install
+3. yarn start
+
 
 ## todo 📇📇
 - [ ] 更好的ui
