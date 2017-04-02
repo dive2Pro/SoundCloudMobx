@@ -4,8 +4,8 @@ import { observer, inject } from 'mobx-react'
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
 import {
-
-  ICommentStore
+  ICommentStore,
+  ITrack
 } from "../../store/index";
 import LoadingSpinner from '../LoadingSpinner'
 
@@ -43,7 +43,6 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       return;
     }
     PlayerStore.setPlayingTrack(TrackStore.currentTrack)
-    //TODO playintlist
   }
 
   handleAddToPlaylist = () => {
@@ -51,46 +50,48 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     if (!PlayerStore || !TrackStore) {
       return;
     }
-    //TODO add to playinglist
     PlayerStore.addToPlaylist(TrackStore.currentTrack)
 
   }
   handleFetchMoreComments = () => {
     this.props.CommentStore.fetchMoreComments();
   }
-  render() {
-    const { currentTrack, isLoading } = this.props.TrackStore
-    if (isLoading || !currentTrack) {
-      //Todo 
-      return <LoadingSpinner isLoading={true} />
-    }
-    // const { activitiesCount, activities } = this.props.trackStore
+  renderContent = (currentTrack: ITrack) => {
     const { label_name
       // , release_day
       , user, artwork_url } = currentTrack
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.CommentStore
+    return <div>
+      <TrackProfile
+        bigPic={artwork_url}
+        label_name={label_name}
+        track={currentTrack}
+        type={'Track'}
+        user={user}
+      />
+
+      <div className={styles.comments}>
+        <div className={styles.commentsCount}>
+          Comments : {commentsCount}
+        </div>
+
+        <CommentsContainer
+          CommentStore={this.props.CommentStore}
+          track={currentTrack}
+          scrollFunc={this.handleFetchMoreComments}
+        />
+      </div>
+    </div>
+  }
+  render() {
+    const { currentTrack, isLoading } = this.props.TrackStore
+
     return (
       <div className={styles.main}>
-        <TrackProfile
-          bigPic={artwork_url}
-          label_name={label_name}
-          track={currentTrack}
-          type={'Track'}
-          user={user}
-        />
-
-        <div className={styles.comments}>
-          <div className={styles.commentsCount}>
-            Comments : {commentsCount}
-          </div>
-
-          <CommentsContainer
-            CommentStore={this.props.CommentStore}
-            track={currentTrack}
-            scrollFunc={this.handleFetchMoreComments}
-          />
-        </div>
+        {isLoading || !currentTrack
+          ? <LoadingSpinner isLoading={true} />
+          : this.renderContent(currentTrack)}
       </div>
 
     );

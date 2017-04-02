@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Hoc from '../HocLoadingMore'
+import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
 import { ICommentStore, IComment, ITrack } from "../../store/index";
@@ -13,6 +13,7 @@ interface ICommentsProps {
   track: ITrack
 }
 
+const TYPE_COMMENTS = 'Comments';
 
 const CommentView = ({ comment }: { comment: IComment }) => {
   const { user: { id, avatar_url, username }, body, created_at } = comment;
@@ -44,6 +45,7 @@ const CommentView = ({ comment }: { comment: IComment }) => {
 class Comments extends React.Component<ICommentsProps, any> {
 
   componentDidMount() {
+
     const { track, CommentStore } = this.props
     // const { id } = track
     CommentStore.setCurrentTrack(track);
@@ -66,4 +68,4 @@ class Comments extends React.Component<ICommentsProps, any> {
   }
 }
 
-export default Hoc<ICommentsProps, any>(Comments);
+export default Hoc<ICommentsProps, any>(Comments, TYPE_COMMENTS);

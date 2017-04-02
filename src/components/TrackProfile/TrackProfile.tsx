@@ -94,7 +94,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
         </div>
         <div className={styles.edit}>
           <i />
-          <a href="#">编辑</a>
+          {/*<a href="#">编辑</a>*/}
         </div>
       </div>
     );

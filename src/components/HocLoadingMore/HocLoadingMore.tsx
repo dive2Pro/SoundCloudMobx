@@ -4,7 +4,6 @@ import {
   // observable,
   // action
 } from 'mobx'
-import * as _ from 'lodash'
 import { observer } from ".4.1.3@mobx-react";
 
 interface ET {
@@ -20,16 +19,15 @@ function HocLoadingMore<Props, State>(
   class InnerComponent extends Component<Props & ET, MyState> {
     cpt: any;
     div: HTMLDivElement;
-    debounceFun: any;
-    // @observable limit: number[] = [];
     constructor() {
       super()
-      this.debounceFun = _.debounce(this.handleScrolling, 300);
+      this.handleScrolling = this.handleScrolling.bind(this)
     }
 
-    handleScrolling = (e: any) => {
+    handleScrolling(e: any) {
       if (window) {
-        const trigger = window.innerHeight + window.pageYOffset >= document.body.scrollHeight - 500
+        const trigger = window.innerHeight + window.pageYOffset
+          >= document.body.scrollHeight - 500
 
         if (trigger) {
           this.props.scrollFunc();
