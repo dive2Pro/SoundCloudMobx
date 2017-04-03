@@ -3,8 +3,7 @@ const styles = require('./dashboard.scss')
 import Profile from '../Profile/Profile';
 import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
-import FollowersPanel from '../FollowersPanel'
-import FollowingsPanel from '../FollowingsPanel'
+import FollowsPanel, { FollowType } from '../FollowsPanel'
 import Favorites from "../FavoritesPanel";
 import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
@@ -84,7 +83,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const { userModel } = this.props.UserStore
     const { favorites } = userModel
     const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES);
-    return (
+    return () => (
       <Activities
         sortType={''}
         isLoading={isloadingFavorites}
@@ -109,10 +108,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     } = userModel;
     const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
     const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
-
-    // const { filteredTracks: tracks, isLoading, sortType } = actsStore
-    console.log(this.props)
     const { match: { url } } = this.props
+    const FV = this.FavoView()
 
     return (
       <div className={styles.container}>
@@ -140,7 +137,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             />
             <Route
               path={`${url}/favorites`}
-              component={this.FavoView()}
+              component={FV}
             />
             <Route
               path={`${url}/playlist`}
@@ -154,7 +151,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               path="/"
               render={() => {
                 return isLoginUser ?
-                  <FilterActivities /> : this.FavoView()
+                  <FilterActivities /> : <FV />
               }}
             />
           </Switch>
@@ -164,8 +161,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <Favorites
             PlayerStore={this.props.PlayerStore}
             UserModel={userModel} />
-          <FollowersPanel UserModel={userModel} />
-          <FollowingsPanel UserModel={userModel} />
+          <FollowsPanel
+            type={FollowType.FOLLOWERS}
+            UserModel={userModel} />
+          <FollowsPanel
+            type={FollowType.FOLLOWINGS}
+            UserModel={userModel} />
         </aside>
       </div>
     );

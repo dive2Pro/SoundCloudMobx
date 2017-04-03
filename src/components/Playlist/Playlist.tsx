@@ -3,11 +3,9 @@ import { observer, inject } from 'mobx-react'
 import { ITrackStore, IPlayerStore } from '../../store'
 import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
 import {
-  // ITrack,
   IUserModel,
   IUserStore
 } from "../../store/index";
-// import { runInAction, observable } from ".3.1.7@mobx/lib/mobx";
 import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
@@ -15,7 +13,6 @@ import { Link } from 'react-router-dom'
 import { IPlaylist } from "../../interfaces/interface";
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
-// import { observable } from ".3.1.7@mobx/lib/mobx";
 const qs = require('qs')
 
 const styles = require('./playlist.scss')
@@ -28,7 +25,7 @@ interface IPlaylistProps {
   match?: any
 }
 
-const PlaylistItem = observer(({ info }: { info: IPlaylist }) => {
+const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist }) {
   const { artwork_url, label_name, id, title } = info
   const to = { pathname: "/playlist", search: `?id=${id}` }
   return (
@@ -37,6 +34,7 @@ const PlaylistItem = observer(({ info }: { info: IPlaylist }) => {
         <ArtWork src={artwork_url} size={250} />
       </Link>
       <div className={styles.itemTitle}>
+
         <Link to={to}><h3>{label_name || title}</h3></Link>
       </div>
     </div>
