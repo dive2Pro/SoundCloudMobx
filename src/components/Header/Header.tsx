@@ -2,6 +2,10 @@ import * as React from 'react';
 import { observer, inject } from "mobx-react";
 import DevTool from 'mobx-react-devtools'
 import Link from '../StyleLink'
+import {
+  // NavLink as L,
+  withRouter
+} from 'react-router-dom'
 import { ISessionStore } from "../../store/index";
 const styles = require('./header.scss');
 
@@ -19,27 +23,25 @@ class Main extends React.Component<IHeaderProp, undefined> {
   componentDidMount() {
     this.props.SessionStore.loadDataFromCookie();
   }
+  componentWillReceiveProps(nextProps: any) {
 
+    console.log(nextProps)
+  }
   render() {
 
     const { user } = this.props.SessionStore;
+    console.log('hehehehehehehe')
     return (
       <section className={styles.main}>
         <div className={styles.title}>
           <h1><Link to="/">MUSIC</Link></h1>
         </div>
         <nav>
-          <Link to="/main">主页</Link>
           <Link
-            exact
-            activeStyle={{
-              color: 'green',
-              fontStyle: 'bold'
-            }}
+
+            to="/main">主页</Link>
+          <Link
             to="/ssr"
-            render={() => {
-              return <div>laallaalalalal</div>
-            }}
           >SSR</Link>
           <Link
             to={{
@@ -56,4 +58,4 @@ class Main extends React.Component<IHeaderProp, undefined> {
     );
   }
 }
-export default Main;
+export default withRouter(Main);

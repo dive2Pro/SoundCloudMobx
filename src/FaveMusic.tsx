@@ -41,8 +41,13 @@ const routes = [
         , component: PlaylistInfo
     }
     , {
-        path: '/callback:*',
+        path: '/callback(:*)',
         component: Callback
+    }, {
+        path: '/ssr',
+        render: (match: any) => {
+            return (<div style={{ height: '100vh', background: 'purple' }}>Hallo</div>)
+        }
     }
 ]
 
