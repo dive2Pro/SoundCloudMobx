@@ -50,11 +50,9 @@ class Browse extends React.Component<IDashBorardProps, any> {
     const { match: { isExact } } = nextProps
     if (isExact) {
       this.setCurrentGenreView()
-      // console.log(isExact, '------------')
     }
   }
   componentDidUpdate(prevProps: any) {
-    console.info(prevProps)
     if (prevProps.location.pathname !== this.props.location.pathname) {
 
     }

@@ -22,8 +22,6 @@ class Tracklist extends React.Component<any, any> {
   }
   setCurrentGenre = (props: any) => {
     let { match: { params: genre } } = props
-    console.log('------------------')
-    console.log(this.props)
     genre = genre.genre || "Country";
 
     if (genre != this.currentGenre) {
