@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink as Link } from 'react-router-dom'
 // import * as CSSModule from 'react-css-modules'
 // const styles = require('./.scss')
 

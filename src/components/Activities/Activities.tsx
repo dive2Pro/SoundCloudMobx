@@ -151,7 +151,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         title: '歌手', width: 15
       }
     ]
-    console.log('tracksCount = ' + tracksCount)
+
     return (
       <div className={styles.main}>
         <div className={styles.top}>

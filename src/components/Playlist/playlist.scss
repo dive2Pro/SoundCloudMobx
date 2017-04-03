@@ -2,4 +2,18 @@
 
 .playlistInfo{
   margin-top: $headerHight*1.4;
+  
+}
+.itemContainer{
+  padding: $padding/2;
+}
+.itemTitle{
+  text-align: center;
+  margin-top: $padding;
+}
+.playlist{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: $padding auto;
 }
