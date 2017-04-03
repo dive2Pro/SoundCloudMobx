@@ -28,7 +28,7 @@ class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
       <ul className={styles.miniPanel}>
         <li>
           <Link
-            path={styles.playlist} id={id}
+            path="playlist" id={id}
           ><i>PlayList</i>
             <em>
               {playlist_count}
@@ -38,7 +38,6 @@ class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
         <li>
           <Link
             path="followings" id={id}
-
           ><i>Followings</i>
             <em>
               {followings_count}
@@ -47,8 +46,7 @@ class MiniCountPanel extends React.Component<IMiniCountPanelProp, any> {
         </li>
         <li>
           <Link
-            path="followers" id={id}
-          ><i>Followers</i>
+            path="followers" id={id} ><i>Followers</i>
             <em>{followers_count}</em>
           </Link>
         </li>

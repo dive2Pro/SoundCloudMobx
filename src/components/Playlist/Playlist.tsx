@@ -29,15 +29,15 @@ interface IPlaylistProps {
 }
 
 const PlaylistItem = observer(({ info }: { info: IPlaylist }) => {
-  const { artwork_url, label_name, id } = info
+  const { artwork_url, label_name, id, title } = info
   const to = { pathname: "/playlist", search: `?id=${id}` }
   return (
-    <div>
+    <div className={styles.itemContainer}>
       <Link to={to}>
         <ArtWork src={artwork_url} size={250} />
       </Link>
-      <div>
-        <Link to={to}><h3>{label_name}</h3></Link>
+      <div className={styles.itemTitle}>
+        <Link to={to}><h3>{label_name || title}</h3></Link>
       </div>
     </div>
   )

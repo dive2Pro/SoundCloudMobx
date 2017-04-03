@@ -13,6 +13,7 @@ import Activities from '../Activities'
 import Playlist from '../Playlist'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
+  // , IUserModel
 } from "../../store";
 import {
   // action
@@ -25,6 +26,7 @@ interface IDashBorardProps {
   ActivitiesStore: IActivitiesStore
   PlayerStore: IPlayerStore
   location?: any
+  match: any
 }
 
 export const BlankView = () => {
@@ -47,7 +49,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   componentDidMount() {
-    console.info('----------------')
     this.props.UserStore.userModel.fetchCommunityData();
   }
 
@@ -79,6 +80,18 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   handleFetchMorePlaylist = () => {
 
   }
+  FavoView = () => {
+    const { userModel } = this.props.UserStore
+    const { favorites } = userModel
+    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES);
+    return (
+      <Activities
+        sortType={''}
+        isLoading={isloadingFavorites}
+        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
+        tracks={favorites}
+      />)
+  }
   render() {
     if (Number.isNaN(this.id) || this.id == undefined) {
       return <Redirect to="/main" />
@@ -92,25 +105,21 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const {
       user
       , followers
-      , followings, favorites
+      , followings
     } = userModel;
     const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
     const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
-    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES)
-    const FavoView = () =>
-      <Activities
-        sortType={''}
-        isLoading={isloadingFavorites}
-        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-        tracks={favorites}
-      />
+
     // const { filteredTracks: tracks, isLoading, sortType } = actsStore
+    console.log(this.props)
+    const { match: { url } } = this.props
+
     return (
       <div className={styles.container}>
         <div className={styles.main}>
           <Switch>
             <Route
-              path='/users/followers'
+              path={`${url}/followers`}
               render={() => {
                 return <CommunityContainer
                   isLoading={isloadingFollowers}
@@ -120,7 +129,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               }}
             />
             <Route
-              path='/users/followings'
+              path={`${url}/followings`}
               render={() => {
                 return <CommunityContainer
                   isLoading={isloadingFollowings}
@@ -130,13 +139,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               }}
             />
             <Route
-              path='/users/favorites'
-              component={FavoView}
+              path={`${url}/favorites`}
+              component={this.FavoView()}
             />
             <Route
-              path='/users/playlist'
+              path={`${url}/playlist`}
               render={(match: any) => {
-                console.log(match)
                 return <Playlist
                   scrollFunc={this.handleFetchMorePlaylist}
                   userModel={userModel} />
@@ -146,11 +154,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               path="/"
               render={() => {
                 return isLoginUser ?
-                  <FilterActivities /> : <FavoView />
+                  <FilterActivities /> : this.FavoView()
               }}
             />
-
-
           </Switch>
         </div>
         <aside className={styles.aside}>
