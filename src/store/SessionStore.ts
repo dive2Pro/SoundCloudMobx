@@ -36,7 +36,6 @@ class SessionStore implements ISessionStore {
   @observable user: IUser;
   oauth_token: string;
 
-
   loadDataFromCookie() {
     const oauth_token = Cookies.get(OAUTH_TOKEN);
     if (oauth_token) {

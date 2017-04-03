@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react'
 import { IUser } from '../../interfaces/interface'
-import UserItemContainer from '../User'
+import UserItemContainer from '../MiniUser'
 import { IUserModel } from '../../store'
 // import { FETCH_FOLLOWINGS, FETCH_FOLLOWERS } from '../../constants/fetchTypes'
 import ButtonMore from '../ButtonMore';
 import ViewAll from '../ViewAll';
-const styles = require('./followings.scss')
+const styles = require('./followers.scss')
 import * as CSSModule from 'react-css-modules'
 
 export enum FollowType {
@@ -44,7 +44,10 @@ class Followers extends React.PureComponent<IFollowersProps, any> {
       </div>
       <div styleName='main'>
         {limitUsers.map((follower: IUser) => {
-          return <UserItemContainer key={follower.id + "-panel"} user={follower} />
+          return <UserItemContainer
+            userModel={um}
+            key={follower.id + "-panel"}
+            user={follower} />
         })}
         <ButtonMore isLoading={isLoading} onClick={() => { }} />
       </div>
