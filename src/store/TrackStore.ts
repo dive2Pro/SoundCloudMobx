@@ -197,7 +197,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
       return preEntrey.concat(currentEntry)
     }) : []
     return ActivitiesStore.tracks
-      .concat(tracks, UserStore.AllUsersFavorities);
+      .concat(tracks, UserStore.AllUsersFavorities());
   }
 
 

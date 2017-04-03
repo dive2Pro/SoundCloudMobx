@@ -12,23 +12,12 @@ import {
   , IActivitiesItem,
   IPlaylist
 } from "../interfaces/interface";
-import { addAccessToken, apiUrl } from "../services/soundcloundApi";
+import { addAccessToken, apiUrl, unauthApiUrl } from "../services/soundcloundApi";
 import { ITrack } from "./index";
 import { BaseAct } from "./TrackStore";
 import PerformanceStore from './PerformanceStore'
 import { logError, logInfo } from '../services/logger'
-export interface IUserModel {
-  user: IUser;
-  loadDataFromCookie: () => void;
-  followers: IUser[];
-  followings: IUser[];
-  favorites: ITrack[];
-  playlists: IPlaylist[];
-  nextHrefs: {}
-  fetchWithType: (type: string) => void
-  fetchCommunityData: () => void
-  isLoading: (type: string) => boolean
-}
+
 
 interface ICatchErr {
   err: any
@@ -157,7 +146,7 @@ export class UserList implements IUserStore {
     let id = isNumber ? obj : ((<IUser>obj).id)
     let user = this.users.get(id + "")
     if (!user) {
-      user = new UserModel(obj)
+      user = new UserModel(this, obj)
       this.users.set(id + "", user)
     } else if (!isNumber) {
       user.setUser(<IUser>obj)
@@ -189,8 +178,26 @@ export class UserList implements IUserStore {
   findPlaylistFromCurrentUser(id: number): IPlaylist {
     return <IPlaylist>this.userModel.playlists.find((item) => item.id == id)
   }
+  /**
+   * follow用户
+   *
+   */
 
-  @computed get AllUsersFavorities(): ITrack[] {
+  async followUser(id: number) {
+    const url = unauthApiUrl(`users/followings/${id}`, '&')
+    const raw = await fetch(url, {
+      method: 'PUT'
+    })
+    const data = await raw.json()
+    console.log(data)
+    return true
+  }
+
+  async unFollowUser(id: number) {
+
+  }
+
+  AllUsersFavorities(): ITrack[] {
     const tracks: ITrack[] = []
     this.users.values().forEach((model) => {
       tracks.push(...model.favorites)
@@ -208,6 +215,19 @@ export class UserList implements IUserStore {
 
 //   }
 
+export interface IUserModel {
+  user: IUser;
+  loadDataFromCookie: () => void;
+  followers: IUser[];
+  followings: IUser[];
+  favorites: ITrack[];
+  playlists: IPlaylist[];
+  nextHrefs: {}
+  fetchWithType: (type: string) => void
+  fetchCommunityData: () => void
+  isLoading: (type: string) => boolean
+  followUser: () => void
+}
 
 
 // }
@@ -225,12 +245,13 @@ class UserModel implements IUserModel {
   isLoadings = new ObservableMap<boolean>();
   nextHrefs = new ObservableMap<string>();
   userId: number
+  userList: UserList;
 
   /**
    * @param obj 如果传入的是一个Iuser对象,直接去获取数据
    */
-  constructor(obj: number | IUser) {
-
+  constructor(userList: UserList, obj: number | IUser) {
+    this.userList = userList
     if (typeof obj == 'number') {
       this.userId = obj
       this.fetchUser()
@@ -242,6 +263,13 @@ class UserModel implements IUserModel {
   loadDataFromCookie() {
 
   }
+
+  followUser() {
+    this.userList.followUser(this.userId)
+  }
+
+
+
   //TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
     logError(err);
