@@ -6,7 +6,7 @@ import ArtWork from '../ArtWork'
 import ButtonGhost from '../ButtonGhost'
 const styles = require('./community.scss')
 import { Link } from 'react-router-dom'
-import { observer } from ".4.1.3@mobx-react";
+import { observer } from "mobx-react";
 interface ICommunityProps {
   users: IUser[]
   isLoading: boolean

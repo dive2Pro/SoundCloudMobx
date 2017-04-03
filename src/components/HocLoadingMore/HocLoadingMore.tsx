@@ -1,10 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react'
-import {
-  // observable,
-  // action
-} from 'mobx'
-import { observer } from ".4.1.3@mobx-react";
 
 interface ET {
   scrollFunc: () => void;
@@ -15,7 +10,6 @@ interface MyState {
 function HocLoadingMore<Props, State>(
   Comp: new () => Component<Props, State>
 ) {
-  @observer
   class InnerComponent extends Component<Props & ET, MyState> {
     cpt: any;
     div: HTMLDivElement;
@@ -36,7 +30,6 @@ function HocLoadingMore<Props, State>(
     }
 
     componentDidMount() {
-
       window.addEventListener('scroll', this.handleScrolling)
     }
 

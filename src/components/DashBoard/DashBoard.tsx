@@ -16,8 +16,8 @@ import {
 } from "../../store";
 import {
   // action
-} from ".3.1.7@mobx/lib/mobx";
-// import { autorun } from ".3.1.7@mobx/lib/mobx";
+} from "mobx";
+// import { autorun } from "mobx";
 import LoadingSpinner from '../LoadingSpinner'
 const qs = require('qs')
 interface IDashBorardProps {
@@ -47,6 +47,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   componentDidMount() {
+    console.info('----------------')
     this.props.UserStore.userModel.fetchCommunityData();
   }
 
@@ -79,7 +80,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   }
   render() {
-    if (this.id == undefined) {
+    if (Number.isNaN(this.id) || this.id == undefined) {
       return <Redirect to="/main" />
     }
 
@@ -118,7 +119,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               }}
             />
-
             <Route
               path='/users/followings'
               render={() => {
@@ -129,12 +129,10 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               }}
             />
-
             <Route
               path='/users/favorites'
               component={FavoView}
             />
-
             <Route
               path='/users/playlist'
               render={(match: any) => {
@@ -144,7 +142,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                   userModel={userModel} />
               }}
             />
-
             <Route
               path="/"
               render={() => {
