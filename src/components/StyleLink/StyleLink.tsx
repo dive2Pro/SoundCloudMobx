@@ -9,6 +9,7 @@ interface IStyleLinkProp {
   activeStyle?: {}
   children?: any
   render?: () => any
+  exact?: boolean
 }
 
 // const defaultStyle

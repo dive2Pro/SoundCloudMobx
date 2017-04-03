@@ -29,6 +29,7 @@ export interface ITrackStore {
   currentTrack: ITrack
   setGenre: (genre: string) => void;
   setTrackId: (id: number) => void
+  currentGenre: string
 }
 export abstract class BaseAct<T> {
 

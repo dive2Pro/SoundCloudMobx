@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IUser } from "../..//interfaces/interface";
+import { IUser } from "../../interfaces/interface";
 import {
   observer
   // , inject
@@ -7,7 +7,7 @@ import {
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import ArtWork from "../ArtWork/ArtWork";
 import Link from '../RouterLink'
-import { observable, action } from ".3.1.7@mobx/lib/mobx";
+import { observable, action } from "mobx";
 const styles = require("./profile.scss");
 export interface IProfileProps {
   user: IUser

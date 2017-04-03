@@ -7,12 +7,11 @@ import { IPerformanceStore } from "../../store/index";
 interface IE {
   PerformanceStore?: IPerformanceStore
 }
-// whoa!!
-export default function HocMounted<Props, ComponentState>(
+export default function HocLoadingEmitLimit<Props, ComponentState>(
   Comp: new () => React.Component<Props, ComponentState>, type?: string
 ) {
   @inject('PerformanceStore')
-  class HocWrapper extends (HocLoadingMore<Props & IE, ComponentState>(Comp)) {
+  class HocWrapper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
     debounceFun: any;
     constructor() {
       super()

@@ -2,13 +2,20 @@ import * as React from 'react'
 const styles = require('./browse.scss')
 import {
   observer
-  // , inject
+  , inject
 } from 'mobx-react'
 import TrackList from '../Tracklist'
-import { Link, Route, Redirect } from 'react-router-dom'
+import {
+  Link, Route
+  // , Redirect
+} from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
+import { ITrackStore } from "../../store/index";
 interface IDashBorardProps {
-  location?: any
+  location?: any,
+  genre?: string
+  TrackStore: ITrackStore
+  history: any
 }
 
 
@@ -21,10 +28,39 @@ const FlagLink = ({ to, label }: any) => {
   }}
   />
 }
-
+@inject('TrackStore')
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
+    genre: GENRES[0]
+  }
+  componentDidMount() {
+
+    this.setCurrentGenreView()
+  }
+  setCurrentGenreView() {
+    const { TrackStore, history } = this.props
+    const genre = TrackStore.currentGenre
+    if (genre) {
+      history.push(`/main/genre=${genre}`)
+    }
+  }
+  componentWillReceiveProps(nextProps: any) {
+    console.info('componentWillReceiveProps', nextProps)
+    const { match: { isExact } } = nextProps
+    if (isExact) {
+      this.setCurrentGenreView()
+      // console.log(isExact, '------------')
+    }
+  }
+  componentDidUpdate(prevProps: any) {
+    console.info(prevProps)
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+
+    }
+  }
+  componentWillUnmount() {
+    console.info('componentWillUnmount')
   }
   render() {
     // const { } = this.props.location
@@ -38,10 +74,9 @@ class Browse extends React.Component<IDashBorardProps, any> {
               label={item} />
           })}
         </nav>
-
-        <Route path={`/main/genre=:genre`} component={TrackList} />
-        {/* TODO what the hell is this?*/}
-        <Redirect to={`/main/genre=${GENRES[0]}`} />
+        <Route
+          path={`/main/genre=:genre`} component={TrackList} />
+        {/*<Redirect></Redirect>*/}
       </div>
     );
   }

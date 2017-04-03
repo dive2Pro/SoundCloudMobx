@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {
-  observer
-  , inject
-} from "mobx-react";
+import { observer, inject } from "mobx-react";
 import DevTool from 'mobx-react-devtools'
 import Link from '../StyleLink'
 import { ISessionStore } from "../../store/index";
-import { observable } from ".3.1.7@mobx/lib/mobx";
-
 const styles = require('./header.scss');
 
 interface IHeaderProp {
@@ -16,7 +11,7 @@ interface IHeaderProp {
 @inject("SessionStore")
 @observer
 class Main extends React.Component<IHeaderProp, undefined> {
-  @observable currentLink = ''
+
   loginIn = () => {
     const { SessionStore } = this.props;
     SessionStore.login();
@@ -31,16 +26,17 @@ class Main extends React.Component<IHeaderProp, undefined> {
     return (
       <section className={styles.main}>
         <div className={styles.title}>
-          <h1>
-            <Link
-              to="/">MUSIC</Link></h1>
+          <h1><Link to="/">MUSIC</Link></h1>
         </div>
         <nav>
+          <Link to="/main">主页</Link>
           <Link
-            to="/main/genre=country">主页</Link>
-
-          <Link
-            to="/main/ssr"
+            exact
+            activeStyle={{
+              color: 'green',
+              fontStyle: 'bold'
+            }}
+            to="/ssr"
             render={() => {
               return <div>laallaalalalal</div>
             }}

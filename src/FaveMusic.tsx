@@ -16,6 +16,36 @@ import { PlaylistInfo } from './components/Playlist'
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
 // const stores = [ActivitiesStore, UserStore, TrackStore, PlayerStore]
+
+
+const routes = [
+    {
+        exact: true,
+        path: '/',
+        component: Browser
+    }
+    , {
+        path: '/main',
+        component: Browser
+    },
+    {
+        path: '/users',
+        component: DashBoard
+    },
+    {
+        path: '/song'
+        , component: TrackInfo
+    }
+    , {
+        path: '/playlist'
+        , component: PlaylistInfo
+    }
+    , {
+        path: '/callback:*',
+        component: Callback
+    }
+]
+
 const render = () => (
     <Router>
         <Provider
@@ -30,12 +60,13 @@ const render = () => (
             <div>
                 <Header SessionStore={SessionStore} />
                 <Switch>
-                    <Route exact path="/" component={Browser} />
-                    <Route path="/main" component={Browser} />
-                    <Route path="/users" component={DashBoard} />
-                    <Route path="/song" component={TrackInfo} />
-                    <Route path='/playlist' component={PlaylistInfo} />
-                    <Route path="/callback(:*)" component={Callback} />
+                    {
+                        routes.map((route, i) => (
+                            <Route
+                                key={i}
+                                {...route} />
+                        ))
+                    }
                 </Switch>
                 <Player />
                 <Playerlist />
