@@ -5,21 +5,17 @@ import InfoList from '../InfoList'
 import { IUser } from '../../interfaces/interface'
 import ButtonGhost from '../ButtonGhost'
 import { observer } from 'mobx-react'
-import { IUserModel } from "../../store/index";
+// import { IUserModel } from "../../store/index";
 const styles = require('./user.scss')
 export interface IUserContainerProps {
   user: IUser
-  userModel: IUserModel
+  onClick: () => void
 }
 
 const UserContainer = observer(function UserContainer(props: IUserContainerProps) {
-  const { user, userModel } = props
+  const { user, onClick } = props
   const { avatar_url, full_name, username, id,
-    followers_count, track_count } = user;
-
-  const handleToggleFollowing = () => {
-    userModel.followUser();
-  }
+    followers_count, track_count, isFollowing } = user;
 
   const infodata = [
     {
@@ -34,12 +30,12 @@ const UserContainer = observer(function UserContainer(props: IUserContainerProps
     <div className={styles.container}>
       <ArtWork size={62} src={avatar_url} clazz="user" />
       <section className={styles.content}>
-        <Permalink clazz='user' id={id} fullname={full_name || username} />
+        <Permalink clazz='user' id={id} fullname={username || full_name} />
         <InfoList data={infodata} />
       </section>
       <div className={styles.actions}>
-        <ButtonGhost onClick={handleToggleFollowing} >
-          following
+        <ButtonGhost onClick={onClick} >
+          {isFollowing ? 'unfollow' : 'follow'}
         </ButtonGhost>
       </div>
     </div>

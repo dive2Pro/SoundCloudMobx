@@ -8,6 +8,10 @@ export interface ISession {
     error_description: string
     oauth_token: string
 }
+
+
+
+// User 的接口 不实现，做提示用
 export interface IUser {
     id: number;
     permalink: string
@@ -34,6 +38,9 @@ export interface IUser {
     private_tracks_count: number
     private_playlists_count: number
     primary_email_confirmed: number
+
+    // custom perpoty 
+    isFollowing: boolean
 }
 
 export interface IMePeopels {

@@ -8,6 +8,7 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import ArtWork from "../ArtWork/ArtWork";
 import Link from '../RouterLink'
 import { observable, action } from "mobx";
+// import { User } from "../../store/UserStore";
 const styles = require("./profile.scss");
 export interface IProfileProps {
   user: IUser

@@ -2,6 +2,11 @@
 .container {
   display: flex;
   margin: $padding 0;
+   &:hover {
+   .actions{
+      visibility: visible;
+    } 
+  }
 }
 
 .content {
@@ -10,10 +15,12 @@
   justify-content: center;
   flex-direction: column;
   margin-left: $padding/2;
-  
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .actions {
-  visibility: visible;
-  &:hover {}
+  visibility: hidden;
 }

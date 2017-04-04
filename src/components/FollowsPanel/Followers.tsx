@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import { IUser } from '../../interfaces/interface'
 import UserItemContainer from '../MiniUser'
-import { IUserModel } from '../../store'
+import { IUserModel, IUserStore } from '../../store'
 // import { FETCH_FOLLOWINGS, FETCH_FOLLOWERS } from '../../constants/fetchTypes'
 import ButtonMore from '../ButtonMore';
 import ViewAll from '../ViewAll';
+import { User } from "../../store/UserStore";
 const styles = require('./followers.scss')
-import * as CSSModule from 'react-css-modules'
+const debounce = require('lodash/debounce')
 
 export enum FollowType {
   FOLLOWINGS,
@@ -18,36 +19,62 @@ export interface IFollowersProps {
   UserModel: IUserModel
   history?: any,
   type: FollowType
+  UserStore?: IUserStore
 }
+@inject('UserStore')
 @observer
-@CSSModule(styles)
 class Followers extends React.PureComponent<IFollowersProps, any> {
+  debounceFunc: any;
 
+  constructor() {
+    super()
+  }
   // TODO refacotror for repeart this with follower  
+  getSpecObj = (user: User, type: string) => {
+    return {
+      count: user && user[`${type}_count`],
+      clazz: "fa fa-users",
+      path: type,
+      typeContent: type,
+      id: user && user.userId
+    }
+  }
+  handleFollowUser = (user: IUser) => {
+    const { UserStore } = this.props
+    const debounceFunc = debounce(() => {
+      if (UserStore) UserStore.followUser(user);
+    }, 500)
+    return () => {
+      debounceFunc();
+    }
+  }
+  // isFollowingUser = (user: IUser) => {
+  // const { UserStore } = this.props
+  // if (UserStore) {
+  // return UserStore.isFollowingUser(user.id)
+  // }
+  // return false
+  // }
+
   render() {
     const { UserModel: um, type: t } = this.props
     const type = FollowType[t].toLowerCase();
     const { user } = um
     const users = um[type];
     const isLoading = um.isLoading(type)
-    const obj = {
-      count: user && user[`${type}_count`],
-      clazz: "fa fa-users",
-      path: type,
-      typeContent: type,
-      id: user && user.id
-    }
+
     const limitUsers = users.slice(0, 3);
-    return <section styleName='base'>
-      <div styleName="top">
-        <ViewAll {...obj} />
+
+    return <section className={styles.base}>
+      <div className={styles.top}>
+        <ViewAll {...this.getSpecObj(user, type) } />
       </div>
-      <div styleName='main'>
-        {limitUsers.map((follower: IUser) => {
+      <div className={styles.main}>
+        {limitUsers.map((user: IUser) => {
           return <UserItemContainer
-            userModel={um}
-            key={follower.id + "-panel"}
-            user={follower} />
+            key={user.id + "-panel"}
+            onClick={this.handleFollowUser(user)}
+            user={user} />
         })}
         <ButtonMore isLoading={isLoading} onClick={() => { }} />
       </div>
