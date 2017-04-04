@@ -1,5 +1,6 @@
 import * as React from 'react'
 const styles = require('./btghost.scss')
+
 export interface IButtonGhostProps {
   onClick: ((...args: any[]) => void);
   isSmall?: boolean,
@@ -7,7 +8,6 @@ export interface IButtonGhostProps {
 }
 
 const ButtonGhost = ({ onClick, isSmall, children }: IButtonGhostProps) => {
-
   const clazz = isSmall ? styles.small : styles.normal;
   return (
     <button

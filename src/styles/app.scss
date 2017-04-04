@@ -22,7 +22,10 @@ ul, li {
 a {
   color: $fontColor;
   text-decoration: none;
-
+  text-overflow: inherit;
+  white-space: inherit;
+  overflow: inherit;
+  width: inherit;
   &:hover {
     color: $hyperlinkHover;
   }

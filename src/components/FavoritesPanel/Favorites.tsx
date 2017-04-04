@@ -23,7 +23,7 @@ const Favorites = observer((prop: IFavoritesProp) => {
     count: favorites.length,
     typeContent: 'Favorites',
     path: 'favorites',
-    id: UserModel.user && UserModel.user.id
+    id: UserModel.user && UserModel.user.userId
   }
 
   return (<section className={styles.base}>

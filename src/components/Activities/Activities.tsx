@@ -46,7 +46,7 @@ const IndexAndPlayView =
           size={imgSize} />
         <div className={styles.play} style={styleSize}>
           <ButtonInline onClick={onClick}>
-            <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}></i>
+            <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}/>
           </ButtonInline>
         </div>
 
@@ -135,8 +135,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
   render() {
 
-    const { isLoading, tracks, sortType } = this.props;
-    const store = this.props.PlayerStore
+    const { isLoading, tracks, sortType ,PlayerStore:store} = this.props;
     if (!store || !tracks) {
       return <noscript />
     }

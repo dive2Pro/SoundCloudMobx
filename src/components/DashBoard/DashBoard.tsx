@@ -14,6 +14,7 @@ import {
   IActivitiesStore, IPlayerStore, IUserStore
   // , IUserModel
 } from "../../store";
+// import { IUser } from '../../interfaces/interface'
 import {
   // action
 } from "mobx";
@@ -102,10 +103,10 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     }
 
     const {
-      user
-      , followers
+       followers
       , followings
     } = userModel;
+    const user: any = userModel.user;
     const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
     const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
     const { match: { url } } = this.props
@@ -158,6 +159,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
         </div>
         <aside className={styles.aside}>
           <Profile user={user} />
+
           <Favorites
             PlayerStore={this.props.PlayerStore}
             UserModel={userModel} />

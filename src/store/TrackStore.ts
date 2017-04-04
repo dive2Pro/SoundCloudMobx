@@ -15,10 +15,12 @@ import {
 import UserStore, { ActivitiesStore } from './UserStore'
 import PerformanceStore from "./PerformanceStore";
 // import { FETCH_TRACK } from "../constants/fetchTypes";
+
+
 export class Track {
 
   @action updateFromJson(data: any) {
-    Object.assign(this, data);
+    // extendsObjFromJson(this, data)
   }
 }
 
