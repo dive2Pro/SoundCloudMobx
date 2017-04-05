@@ -2,7 +2,7 @@
 
 .container{ 
   background: $background; 
-  min-width: 85.429em;
+  width: $contentMinWidth;
   margin-top: $headerHight;
   margin-bottom: $playerHeight;
   justify-content: space-around;

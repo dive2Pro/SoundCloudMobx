@@ -7,10 +7,7 @@
 .track_info{
   padding: $padding/2;  
   text-align: initial;
-  text-overflow: ellipsis;
-  max-width: $_100pxEm*5;
-  overflow: hidden;
-  white-space: nowrap;
+  @include ellipsisTexts($_100pxEm*5);
   &>*{
     // padding: $padding 0;
     text-overflow: inherit;

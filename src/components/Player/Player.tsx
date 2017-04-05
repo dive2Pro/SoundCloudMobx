@@ -4,7 +4,10 @@ import { observer, inject } from "mobx-react";
 import ButtonInline from "../ButtonInline";
 import { IPlayerStore } from "../../store/PlayerStore";
 import ArtWork from "../ArtWork";
-import { action, observable, runInAction, autorun, when } from "mobx";
+import {
+  action, observable, runInAction, autorun
+  // , when
+} from "mobx";
 const mp3 = require('../../../public/assert/music.mp3')
 const styles = require("./player.scss");
 import Range from '../InputRange'
@@ -73,6 +76,125 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
 
   }
+  renderPlayerOpearators = (store: IPlayerStore) => {
+    const { isPlaying, playingTrack, isShuffleMode
+      , volume
+      // , isVolumeOpen
+    } = store;
+
+    let artworkUrl = "", trackName, username = "";
+    if (playingTrack) {
+      //todo es6的对象扩展
+      const { artwork_url, title, user: { username: uname } } = playingTrack;
+      artworkUrl = artwork_url;
+      trackName = title;
+      username = uname
+    }
+    const volumeContainerStyle = {
+      ...this.volumeContainerStyle,
+      // display: isVolumeOpen ? "block" : "none"
+    }
+
+    const shuffleClazz = isShuffleMode && styles.active;
+
+    return (
+      <div
+        className={styles.content}>
+        {/*<input type="file" onChange={this.handleFiles} />*/}
+        <div className={styles.content_name}>
+          <div >
+            <ArtWork clazz={styles.content_img} size={50} src={artworkUrl} />
+          </div>
+          <div className={styles.content_dur}>
+            <span className={styles.trackName}>{trackName}</span>
+            <span className={styles.author}>{username}</span>
+          </div>
+        </div>
+
+        <div className={styles.content_plays}>
+          <div className={shuffleClazz}>
+            <ButtonInline onClick={this.handleShuffleMode}>
+              <i className="fa fa-random">&nbsp;</i>
+            </ButtonInline>
+          </div>
+
+          <div className={styles.content_action}>
+            <ButtonInline onClick={() => this.handlePlayNext(-1)}>
+              <i className="fa fa-step-backward">&nbsp;</i>
+            </ButtonInline>
+          </div>
+          <div className={styles.content_action}>
+            <ButtonInline onClick={() => store.togglePlaying()}>
+              <i className={`fa ${isPlaying ? "fa-pause" : "fa-play"}`} />
+              &nbsp;
+              </ButtonInline>
+          </div>
+          <div className={styles.content_action}>
+            <ButtonInline onClick={() => this.handlePlayNext(1)}>
+              <i className="fa fa-step-forward">&nbsp;</i>
+              &nbsp;
+              </ButtonInline>
+          </div>
+        </div>
+
+        <div className={styles.content_options}>
+          <div className={styles.content_action}>
+            <ButtonInline onClick={this.handleOpenPlaylist}>
+              <i className="fa fa-bars fa-2x">&nbsp;</i>
+            </ButtonInline>
+          </div>
+          <div
+            ref={n => this.volumeTag = n}
+            className={styles.content_action}>
+            <i
+              style={{ width: '25px' }}
+              className={`fa fa-volume-${volume > 0.5 ?
+                "up" : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
+            <div
+              style={volumeContainerStyle}
+              ref={n => this.volumeContainer = n}
+              className={styles.volume_container}>
+              <Range
+                onDragEnd={this.handleVolimeProcessChange}
+                onDragIng={this.handleVolimeProcessChange}
+                wide={120}
+                data={100}
+                value={100 * volume}
+                backgroundColor={'#b6bbbb'}
+                defaultColor={'#9e9f9f'}
+                contaiStyle={{ height: '7px' }}
+                dotStyle={{
+                  backgroundColor: 'white',
+                  boxShadow: '0px 0px 2px 0px black'
+                }}
+              />
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    )
+
+  }
+  renderPlayerRanges = (store: IPlayerStore) => {
+    const { playingTrack, isPlaying } = store
+    const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
+    const value = this.file && (this.processValue * this.file.size).toFixed(1)
+
+    return (
+      <div>
+        <div
+          className={rangeClazz}>
+          <Range
+            onDragEnd={this.handleProcessChange}
+            onDragIng={this.handleProcessChange}
+            data={this.file && this.file.size}
+            value={value} />
+        </div>
+
+      </div>)
+  }
 
   /**
    * 同步更新 glass的偏移值
@@ -96,41 +218,21 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       autorun(() => {
         if (ps.allLoadingIsSettle) {//当为true 即更新node
           resetNode$(ps.glassNode)
-            ;//当没有状态改变时,启动when观察是否有loading改变
         }
       })
 
-      // let onceLoadingSettleReset: any;
-      // const onceLister =
-      //   () => {
-      //     when(
-      //       () => !ps.allLoadingIsSettle,//false 时 启动追踪true
-      //       () => {
-      //         onceLoadingSettleReset = autorun(() => {
-      //           if (ps.allLoadingIsSettle) {//当为true 即更新node
-      //             resetNode$(ps.glassNode)
-      //             if (onceLoadingSettleReset) onceLoadingSettleReset()//解绑,
-      //             onceLister();//当没有状态改变时,启动when观察是否有loading改变
-      //           }
-      //         })
-      //       }
-      //     )
-      //   };
-      //默认启动
-      // onceLister();
       autorun(() => {
         const { scrollY, glassNode } = ps
         if (!node$ || node$.id !== glassNode) {
           resetNode$(glassNode)
         }
         if (node$) {
+          console.log('node$.offsetWidth = ' + node$.offsetWidth)
           style.width = node$.offsetWidth + 'px';
           style.height = node$.offsetHeight + 'px';
-          style.left = -(node$.offsetLeft + main.offsetLeft) + "px"
+          // style.left = -(30) + "px"
           style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
-          // console.log(glass, scrollY, node$.offsetLeft, node$.offsetWidth)
         }
-        // console.log(this.scrollNode, scrollY);
       })
     }
   }
@@ -194,6 +296,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
   handleVolimeProcessChange = (percent: string) => {
     const p = this.props.PlayerStore
+    console.log(percent)
     if (p) {
       p.setVolume(+percent)
     }
@@ -208,25 +311,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (!PlayerStore) {
       return <noscript />;
     }
-    const { isPlaying, isPlaylistOpen, playingTrack, isShuffleMode
-      // , playingUrl
-      , isVolumeOpen, volume
-    } = PlayerStore;
-    if (isPlaying || isPlaylistOpen) {
-      clazzName = styles.visible;
-    }
-    let artworkUrl = "", trackName, username = "";
-    if (playingTrack) {
-      //todo es6的对象扩展
-      const { artwork_url, title, user: { username: uname } } = playingTrack;
-      artworkUrl = artwork_url;
-      trackName = title;
-      username = uname
-    }
-    const shuffleClazz = isShuffleMode && styles.active;
-    const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
-    const value = this.file && (this.processValue * this.file.size).toFixed(1)
-    const volumeContainerStyle = { ...this.volumeContainerStyle, display: isVolumeOpen ? "block" : "none" }
     return (
       <div
         className={clazzName}
@@ -234,80 +318,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         onMouseLeave={this.mouseOut}
         ref={r => this.main = r}>
         <div
-          className={rangeClazz}>
-          <Range
-            onDragEnd={this.handleProcessChange}
-            onDragIng={this.handleProcessChange}
-            data={this.file && this.file.size}
-            value={value} />
+          ref={n => this.fronsted_glass = n}
+          className={styles.fronsted_glass}>
         </div>
-        <div
-          style={volumeContainerStyle}
-          ref={n => this.volumeContainer = n}
-          className={styles.volume_container}>
-          <Range
-            onDragEnd={this.handleVolimeProcessChange}
-            onDragIng={this.handleVolimeProcessChange}
-            vertical
-            wide={120}
-            data={100}
-            value={100 * volume}
-          />
-        </div>
-        <div
-          className={styles.content}>
-          <div
-            ref={n => this.fronsted_glass = n}
-            className={styles.fronsted_glass}></div>
-          <input type="file" onChange={this.handleFiles} />
-          <div className={styles.content_plays}>
-            <div className={styles.content_action}>
-              <ButtonInline onClick={() => this.handlePlayNext(-1)}>
-                <i className="fa fa-step-backward">&nbsp;</i>
-              </ButtonInline>
-            </div>
-            <div className={styles.content_action}>
-              <ButtonInline onClick={() => PlayerStore.togglePlaying()}>
-                <i className={`fa ${isPlaying ? "fa-pause" : "fa-play"}`} />
-                &nbsp;
-              </ButtonInline>
-            </div>
-            <div className={styles.content_action}>
-              <ButtonInline onClick={() => this.handlePlayNext(1)}>
-                <i className="fa fa-step-forward">&nbsp;</i>
-                &nbsp;
-              </ButtonInline>
-            </div>
-          </div>
-          <div className={styles.content_name}>
-            <div className={styles.content_img}>
-              <ArtWork size={35} src={artworkUrl} />
-            </div>
-            <div className={styles.content_dur}>
-              <span>{trackName} - {username}</span>
-            </div>
-          </div>
-          <div className={styles.content_options}>
-            <div
-              ref={n => this.volumeTag = n}
-              className={styles.content_action}>
-              <ButtonInline onClick={() => PlayerStore.toggleVolumeOpen()}>
-                <i className={`fa fa-volume-${volume > 0.5 ? "up" : volume == 0 ? 'off' : 'down'}`}>&nbsp;</i>
-              </ButtonInline>
-            </div>
-
-            <div className={shuffleClazz}>
-              <ButtonInline onClick={this.handleShuffleMode}>
-                <i className="fa fa-random">&nbsp;</i>
-              </ButtonInline>
-            </div>
-            <div className={styles.content_action}>
-              <ButtonInline onClick={this.handleOpenPlaylist}>
-                <i className="fa fa-bars">&nbsp;</i>
-              </ButtonInline>
-            </div>
-          </div>
-        </div>
+        {this.renderPlayerRanges(PlayerStore)}
+        {this.renderPlayerOpearators(PlayerStore)}
         <audio
           onTimeUpdate={this.handleAudioUpdate}
           ref={(audio: HTMLAudioElement) => {

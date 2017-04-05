@@ -1,8 +1,7 @@
 @import '../../styles/variable.scss';
 
-.container{
-  margin-top: $headerHight;
-  min-width: $contentMinWidth;
+.container{ 
+  width: $contentMinWidth;
 }
 .nav{
     display: flex;

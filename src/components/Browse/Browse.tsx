@@ -11,10 +11,12 @@ import {
 } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
 import { ITrackStore } from "../../store/index";
+import { IPerformanceStore } from "../../store/PerformanceStore";
 interface IDashBorardProps {
   location?: any,
   genre?: string
   TrackStore: ITrackStore
+  PerformanceStore: IPerformanceStore
   history: any
 }
 
@@ -28,15 +30,15 @@ const FlagLink = ({ to, label }: any) => {
   }}
   />
 }
-@inject('TrackStore')
+@inject('TrackStore', 'PerformanceStore')
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
   componentDidMount() {
-
     this.setCurrentGenreView()
+    this.props.PerformanceStore.setCurrentGlassNodeId('Browser')
   }
   setCurrentGenreView() {
     const { TrackStore, history } = this.props
@@ -63,7 +65,9 @@ class Browse extends React.Component<IDashBorardProps, any> {
   render() {
     // const { } = this.props.location
     return (
-      <div className={styles.container}>
+      <div
+        id="Browser"
+        className={styles.container}>
         <nav className={styles.nav}>
           {GENRES.map((item, i) => {
             return <FlagLink
