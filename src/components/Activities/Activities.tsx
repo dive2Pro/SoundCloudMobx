@@ -10,7 +10,7 @@ import ButtonInline from '../ButtonInline'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import ArtWork from '../ArtWork';
 import HoverActions from '../HoverActions'
-
+import { Link } from 'react-router-dom'
 interface IActivitiesProps {
   PlayerStore?: IPlayerStore
   PerformanceStore?: IPerformanceStore
@@ -92,8 +92,17 @@ const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProp
         index={i}
         onClick={onClick} />
       <div className={styles._song_info}>
-        <span className={styles._song_info_title}>{label_name}</span>
-        <span className={styles._song_info_author}>{username}</span>
+
+        <Link to={{
+          pathname: '/song',
+          search: `?id=${id}`
+        }}>  <span className={styles._song_info_title}>{label_name}</span>
+        </Link>
+        <Link to={{
+          pathname: '/users'
+          , search: `?id=${user.id}`
+        }}> <span className={styles._song_info_author}>{username}</span>
+        </Link>
       </div>
       <div className={styles._song_duration}>
         <div className={styles.duration}>

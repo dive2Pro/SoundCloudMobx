@@ -3,12 +3,12 @@
   position: fixed;
   bottom: 0;
   height: $playerHeight;
-  width: 100vw;
+  width: $contentMinWidth!important;
   left:$_asiderWidth;
   z-index: 2;
   /*top: 100%;*/
   transition: 0.2s transform ;
-  transform: translateY(90%) ; 
+  // transform: translateY(90%) ; 
   display: flex;
   overflow: hidden;
 }
@@ -24,27 +24,39 @@
   padding: 5px 50px;
   width: 100%;
   height: 100%;
-  background: #222222;
+  // background: #222222;
   display: flex;
 }
 .content_plays {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 .content_img{
-  padding: 2px;
+  // padding: 2px;
   border-radius: 5px;
-  border: $border;
+  // border: $border;
   text-align: center;
 }
 
 .content_dur{
-  color:$white;
+  color:$mainFontColor;
   margin-left: $padding;  
+  &>span{
+    display: block;
+  }
 }
+.trackName{
+  font-size: $mediumIcon;
+  font-weight: bold;
+  @include ellipsisTexts($_100pxEm*2.5);
 
+}
+.author{
+  font-size: $smallIcon;
+  color: $seconFontColor;
+}
 .content_plays>div{
   margin: 0 7px;
 }
@@ -60,7 +72,8 @@
   align-items: center;
 }
 .content_action{
-  
+  display: flex;
+  align-items: center;
 }
 .content_options>div{
   margin: 0 $padding;
@@ -78,11 +91,8 @@
   visibility: visible;
 }
 
-.volume_container{
-  position: absolute;
-   bottom: $playerHeight; 
-  padding: $padding;
-  background: black;
+.volume_container{  
+  margin-left: $padding/2;
 }
 
 
@@ -90,12 +100,15 @@
 .fronsted_glass{
   position:absolute;
   content: "";
-  width:100%;
-  height: 100%;
-  filter:blur(8px);
-&::before{
-  background: red;
-}  
+  top:0;
+  right: 0;
+  left: 0;
+  bottom: 0;  
+  filter: blur(8px);
+  z-index: -1; 
+  &::before{
+  // background: red;
+  }  
 }
 
 

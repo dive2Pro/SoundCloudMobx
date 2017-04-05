@@ -32,11 +32,14 @@ $headerHight:/*5em*/ 0;
 $white:#fff;
 $circleRadius:50%;
 $shuffleCollor:#14ff00;
+
 $contentMinWidth:89.143em;
-$playerHeight:3.571em;
+
+$playerHeight:4.071em;
 $playerDurationHeight:1.768em;
 $_asiderWidth:$_100pxEm*2.5;
-
+$mainFontColor:#000;
+$seconFontColor:#a9a9a9;
 @mixin bottom_border($size,$color){
   @if $size != null
    {
@@ -53,4 +56,12 @@ $_asiderWidth:$_100pxEm*2.5;
   border:$border; 
   font-size: $mediumIcon;
   padding: $padding/2;
+}
+
+@mixin ellipsisTexts($maxWidth){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxWidth;
+
 }
