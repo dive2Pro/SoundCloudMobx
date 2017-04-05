@@ -9,7 +9,6 @@ import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import ArtWork from '../ArtWork';
-import TdTrackTitleView from '../TrackTitleView'
 import HoverActions from '../HoverActions'
 
 interface IActivitiesProps {
@@ -26,18 +25,19 @@ interface IndexAndPlayViewProp {
   track: ITrack
   onClick: (track: ITrack) => void
   isPlaying: boolean
+  isHidden: boolean
 }
 
 const IndexAndPlayView =
-  observer(function IndexAndPlayView({ track, onClick, index, isPlaying }: IndexAndPlayViewProp)
+  observer(function IndexAndPlayView({ track, onClick, index, isPlaying, isHidden }: IndexAndPlayViewProp)
     : React.ReactElement<any> {
     const { artwork_url } = track
-    const imgSize = 80;
+    const imgSize = 50;
     const styleSize = {
       width: imgSize,
       height: imgSize
     }
-    const divClazz = isPlaying ? styles.active : styles.indexPlay;
+    const divClazz = isHidden ? styles.indexPlay : styles.active;
     return (
       <div className={divClazz}>
         {/*<span>{index}</span>*/}
@@ -46,7 +46,7 @@ const IndexAndPlayView =
           size={imgSize} />
         <div className={styles.play} style={styleSize}>
           <ButtonInline onClick={onClick}>
-            <i className={`fa fa-${isPlaying ? 'pause' : 'play '} fa-3x`}/>
+            <i className={`fa fa-${!isHidden && isPlaying ? 'pause' : 'play '} fa-2x`} />
           </ButtonInline>
         </div>
 
@@ -54,67 +54,64 @@ const IndexAndPlayView =
     )
   });
 
-interface ITableIdsProps {
-  track: ITrack, store: IPlayerStore, sortType: string, i: number
+interface ISongViewProps {
+  track: ITrack, store: IPlayerStore, sortType: string, i: number,
+  onClick: () => void
 }
 
-const TableTds = observer(({ track, store, sortType, i }: ITableIdsProps) => {
-  if (!store || !track) {
-    console.error("PlayerStore = " + store)
-    return (<noscript />)
-  }
-  let { duration, user } = track;
+const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProps) => {
   const { isPlaying, playingTrack } = store
-  // const preKey = UniqueKey[UniqueKey.length - 1].length++;
+  const { user, label_name,
+    id,
+    duration
+  } = track
+  const { username } = user
   const configurations = [
     {
-      fn: () => { store.addToPlaylist(track) },
-      className: `fa fa-plus`
-    }
-    , {
       fn: () => { }, className: "fa fa-share-square-o"
     }, {
       fn: () => { }, className: 'fa fa-folder-o'
     }
   ]
-
-  const anchorClazz = (isPlaying && (playingTrack === track)) ? styles.liveanchor : styles.anchor;
-
-  // key={track.id + " - " + 'TableIds'}
+  const isHidden = !playingTrack || playingTrack.id !== id;
   return (
-    <tr
-      className={styles.ttr}>
-      <td >
-        <IndexAndPlayView
-          isPlaying={isPlaying && playingTrack === track}
-          track={track}
-          index={i}
-          onClick={() => { store.setPlayingTrack(track) }}
-        />
-      </td>
-      <td>
-        <TdTrackTitleView sortType={sortType} track={track} />
-      </td>
-
-      <td
-        className={anchorClazz}
-      >
+    <section
+      onClick={onClick}
+      className={styles._song}>
+      <span className={styles._song_position}
+      >{i}</span>
+      <span
+        onClick={() => { store.addToPlaylist(track) }}
+        className={styles._song_act_plus}>
+        <i className='fa fa-plus'></i>
+      </span>
+      <IndexAndPlayView
+        isPlaying={isPlaying}
+        isHidden={isHidden}
+        track={track}
+        index={i}
+        onClick={onClick} />
+      <div className={styles._song_info}>
+        <span className={styles._song_info_title}>{label_name}</span>
+        <span className={styles._song_info_author}>{username}</span>
+      </div>
+      <div className={styles._song_duration}>
         <div className={styles.duration}>
           {seconds2time(duration)}
         </div>
+
         <div className={styles.actions}>
           <HoverActions
             configurations={configurations}
             isVisible={true} />
         </div>
-      </td>
-      <td>
-        <div className={styles.duration}>{user.username}</div>
-      </td>
-    </tr >)
-}
-);
-
+      </div>
+      <span className={styles._song_settings}>
+        <i>::</i>
+      </span>
+    </section >
+  );
+})
 @inject('PlayerStore', 'PerformanceStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
@@ -135,53 +132,23 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
   render() {
 
-    const { isLoading, tracks, sortType ,PlayerStore:store} = this.props;
+    const { isLoading, tracks, sortType, PlayerStore: store } = this.props;
     if (!store || !tracks) {
       return <noscript />
     }
-    //ont over render
-    // console.log(' ActivitiesCount = ' + ActivitiesCount++)
-    const tracksCount = tracks.length;
-    const thead = [
-      { title: "", width: 15 },
-      { title: '歌曲标题', width: 35 }, {
-        title: '时长', width: 25
-      }, {
-        title: '歌手', width: 15
-      }
-    ]
 
     return (
       <div className={styles.main}>
-        <div className={styles.top}>
-          <div>
-            <h3>歌曲列表</h3>
-            <span>{tracksCount}首歌</span>
-          </div>
-        </div>
         <div className={styles.tracks}>
-          <table>
-            <thead>
-              <tr>
-                {thead.map((item, i) => {
-                  const { title, width } = item
-                  return (
-                    <th key={i + "-" + width} width={width + "%"}>
-                      {title}
-                    </th>
-                  )
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {tracks.map((item, i) => <TableTds
-                key={item.id + "-" + i}
-                sortType={sortType}
-                track={item}
-                i={i}
-                store={store} />)}
-            </tbody>
-          </table>
+          {tracks.map((item, i) =>
+            <SongView
+              key={item.id + "-" + i}
+              sortType={sortType}
+              track={item}
+              onClick={() => this.playTrack(item)}
+              i={i}
+              store={store} />)
+          }
         </div>
         <LoadingSpinner isLoading={isLoading} />
       </div >

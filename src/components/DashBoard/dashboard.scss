@@ -1,19 +1,99 @@
 @import "../../styles/variable.scss";
 
 .container{ 
-  background: $background;
-  display: flex;
+  background: $background; 
   min-width: 85.429em;
-  margin: 0 auto;
   margin-top: $headerHight;
   margin-bottom: $playerHeight;
   justify-content: space-around;
 }
+  
 
-.aside{
-   float: left;
-   width: ($_100pxEm*3);
+
+._contentBody{
+  display: flex; 
+  position: relative;
 }
-.main{
+._contentHeader{
+  position: relative;
+}
+._contentHeader_img{
+  /*background: url("./images/mountain.jpg")*/
+}
+._contentHeader_info{
+  background: linear-gradient(to bottom,transparent,white); 
+  padding: 20px 40px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+}
+
+._contentHeader_actions{
+  padding: 20px 0; 
+  width: 100%;
+}
+._contentHeader_actions button{
+  padding: 5px 40px ;
+  margin-right: 20px;
+  outline: none;
+  border-radius: 20px;
+  background: white;
+  border: 1px solid white;
+  box-shadow: 0px 0px 2px 1px #a9a9a9;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+._contentHeader_genre{
+  color: #a9a9a9;
+}
+._contentHeader_actions button:hover{
+  background: #a9a9a9;
+  box-shadow: none;
+
+ }
+ ._contentHeader_profile{
+   position: absolute;
+   right: 5%;;
+   top: 5%;
+   z-index: 2;
+   justify-content: center;
+   display: flex;
+   align-items: center;
+ }
+ ._contentHeader_profile>span{
+   font-size: 18px;
+   margin-left: 10px;
+ }
+ ._contentHeader_profile>img{
+   width: 50px;
+   border-radius: 25%;
+   height: 50px;
+   display: inline-flex;
+   
+ }
+
+/*--------body-----------*/
+._contentBody_main{
+  padding: 0 15px;
+  flex: 3;
   width: 83em;
+}
+
+._contentBody_community{
+   flex: 2;
+ }
+._contentBody_community_tag{
+  padding-left: 10px;
+  font-size: 18px;
+  padding-bottom: 20px;
+  font-weight: bold;
+} 
+._contentBody_community_list{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
 }
