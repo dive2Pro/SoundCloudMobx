@@ -38,7 +38,9 @@ export abstract class BaseAct<T> {
   // 记得初始化
   itemsMap = new ObservableMap<T[]>();
   @observable nextHrefsByGenre = new ObservableMap<string>();
-  @observable isLoadingByGenre = new ObservableMap<boolean>();
+  isLoadingByGenre = {
+    get: PerformanceStore.getLoadingStateWidthKey
+  }
 
   @observable filterType: string
   @observable filterTitle: string
@@ -119,7 +121,8 @@ export abstract class BaseAct<T> {
     return temp
   }
   @action setLoadingByGenre(genre: string, loading: boolean) {
-    this.isLoadingByGenre.set(genre, loading);
+    // this.isLoadingByGenre.set(genre, loading);
+    PerformanceStore.setLoadingStateWithKey(genre, loading);
   }
 
   @action setNextHrefByGenre(genre: string, nextHref: string) {

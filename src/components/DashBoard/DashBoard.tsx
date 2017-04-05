@@ -12,7 +12,7 @@ import Activities from '../Activities'
 import Playlist from '../Playlist'
 import ArtWork from '../ArtWork'
 import {
-  IActivitiesStore, IPlayerStore, IUserStore
+  IActivitiesStore, IPlayerStore, IUserStore, IPerformanceStore
 } from "../../store";
 import LoadingSpinner from '../LoadingSpinner'
 // import { IUser } from '../../interfaces/interface'
@@ -20,6 +20,7 @@ const qs = require('qs')
 interface IDashBorardProps {
   UserStore: IUserStore
   ActivitiesStore: IActivitiesStore
+  PerformanceStore: IPerformanceStore
   PlayerStore: IPlayerStore
   location?: any
   match: any
@@ -35,7 +36,7 @@ export const BlankView = () => {
 /**
  * 用户界面
  */
-@inject("UserStore", "ActivitiesStore", 'PlayerStore')
+@inject("UserStore", "ActivitiesStore", 'PlayerStore', 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
   id: number
@@ -46,6 +47,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   componentDidMount() {
     this.props.UserStore.userModel.fetchCommunityData();
+    this.props.PerformanceStore.setCurrentGlassNodeId('DashBoard')
   }
 
   componentWillMount() {
@@ -110,7 +112,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const avatar_url = user.avatar_url
 
     return (
-      <div className={styles.container}>
+      <div
+        id='DashBoard'
+        className={styles.container}>
         <div className={styles._contentHeader}>
           <div className={styles._contentHeader_img}>
 
@@ -183,7 +187,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           </div>
           <aside className={styles._contentBody_community}>
             <Profile user={user} />
-
             <Favorites
               PlayerStore={this.props.PlayerStore}
               UserModel={userModel} />
@@ -201,4 +204,4 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 }
 
 
-export default (DashBorard);
+export default DashBorard;
