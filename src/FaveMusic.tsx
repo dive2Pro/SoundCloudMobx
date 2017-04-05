@@ -62,7 +62,7 @@ const render = () => (
             CommentStore={CommentStore}
             PerformanceStore={PerformanceStore}
         >
-            <div>
+            <div style={{ display: 'flex' }}>
                 <Header SessionStore={SessionStore} />
                 <Switch>
                     {

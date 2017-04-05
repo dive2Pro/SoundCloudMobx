@@ -12,6 +12,11 @@ const styles = require('./header.scss');
 interface IHeaderProp {
   SessionStore: ISessionStore
 }
+const StyleButton = (props: any) => {
+  return <button
+
+    type="button">{props.children} </button>;
+};
 @inject("SessionStore")
 @observer
 class Main extends React.Component<IHeaderProp, undefined> {
@@ -30,29 +35,68 @@ class Main extends React.Component<IHeaderProp, undefined> {
   render() {
 
     const { user } = this.props.SessionStore;
-    console.log('hehehehehehehe')
     return (
-      <section className={styles.main}>
-        <div className={styles.title}>
-          <h1><Link to="/">MUSIC</Link></h1>
+      <section className={styles._aside}>
+        <div className={styles._aside_header}>
+          <div className={styles._aside_header_img}>
+            <img
+              alt="#"
+              style={{
+                width: '50px',
+                height: '50px'
+              }}
+            />
+          </div>
+          <ul className={styles._aside_header_ul}>
+            <li><StyleButton>Library</StyleButton></li>
+            <li>
+              <Link to="/"><StyleButton>Browse</StyleButton>
+              </Link>
+            </li>
+            <li>
+              <Link to="/ssr"><StyleButton>Radio</StyleButton>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={{
+                  pathname: '/users/home',
+                  search: `?id=${user && user.id}`
+                }}>
+                <StyleButton>home</StyleButton>
+              </Link>
+            </li>
+          </ul>
         </div>
-        <nav>
-          <Link
-
-            to="/main">主页</Link>
-          <Link
-            to="/ssr"
-          >SSR</Link>
-          <Link
-            to={{
-              pathname: '/users/home',
-              search: `?id=${user && user.id}`
-            }}>我的音乐</Link>
-        </nav>
-
-        {
+        <div className={styles._aside_mymusic}>
+          <div className={styles._aside_title}>
+            MY Music
+            </div>
+          <ul className={styles._aside_header_ul}>
+            <li><StyleButton> <i className='fa fa-star'></i> likes </StyleButton> </li>
+            <li><StyleButton> <i className='fa fa-music'></i> Tracks </StyleButton> </li>
+            <li><StyleButton> <i className='fa fa-users'></i> Followings</StyleButton> </li>
+            <li><StyleButton> <i className='fa fa-user'></i> Followers</StyleButton> </li>
+            {/*<li><StyleButton> <i>o</i> Albums</StyleButton> </li>
+            <li><StyleButton> <i>o</i> Recent</StyleButton> </li>
+            <li><StyleButton> <i>o</i> Local </StyleButton> </li>
+            <li><StyleButton> <i>o</i> Arists</StyleButton> </li>*/}
+          </ul>
+        </div>
+        <div className={styles._aside_playlist}>
+          <div className={styles._aside_title}>
+            <span> MY PLAYLIST </span> <i className='fa fa-plus '></i>
+          </div>
+          <ul className={styles._aside_header_ul}>
+            <li><StyleButton> <i>🎶</i> Recent</StyleButton> </li>
+            <li><StyleButton> <i>🎶</i> Local </StyleButton> </li>
+            <li><StyleButton> <i>🎶</i> Albums</StyleButton> </li>
+            <li><StyleButton> <i>🎶</i> Arists</StyleButton> </li>
+          </ul>
+        </div>
+        {/*{
           <button onClick={this.loginIn}>{user ? "Loginout" : 'Login'}</button>
-        }
+        }*/}
         <DevTool />
       </section>
     );
