@@ -1,36 +1,38 @@
 import * as React from "react";
-import * as CSSModule from "react-css-modules";
+
 import { observer, inject } from "mobx-react";
 import ButtonInline from "../ButtonInline";
 import { IPlayerStore } from "../../store/PlayerStore";
 import ArtWork from "../ArtWork";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, autorun, when } from "mobx";
 const mp3 = require('../../../public/assert/music.mp3')
-console.log(mp3)
-// const b = new File(mp3, 'mp3');
-
-// console.info(b)
-
 const styles = require("./player.scss");
 import Range from '../InputRange'
+import { IPerformanceStore } from "../../store/index";
+
 interface IPlayerProps {
   PlayerStore?: IPlayerStore
+  PerformanceStore?: IPerformanceStore
 }
 interface IPlayerState {
   visible: boolean
 }
 
-@inject("PlayerStore")
+@inject("PlayerStore", 'PerformanceStore')
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
+  scrollNode: any;
+  fronsted_glass: HTMLDivElement;
   volumeContainerStyle: { left: number; };
   volumeContainer: HTMLDivElement;
   volumeTag: HTMLDivElement;
   timer: any;
   main: any;
   audio: HTMLAudioElement;
+
   @observable isVisible = false;
   @observable processValue = 0;
+
   @action setPlayerVisibleFromComponent(visible: boolean) {
     this.isVisible = visible;
   }
@@ -55,6 +57,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       1500
     );
   };
+
   componentDidMount() {
     const vc = this.volumeContainer
     const vt = this.volumeTag
@@ -65,6 +68,71 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     runInAction(() => {
       this.volumeContainerStyle = vcStyle
     })
+
+    this.initGlassData();
+
+
+  }
+
+  /**
+   * 同步更新 glass的偏移值
+   */
+  initGlassData = () => {
+    const ps = this.props.PerformanceStore
+    if (ps) {
+      let node$: any;
+      const main = this.main
+      const glass = this.fronsted_glass
+      const style = glass.style;
+      // let loadingAllSettle = false
+
+      const resetNode$ = (glassNode: string) => {
+        node$ = document.querySelector(`#${glassNode}`)
+        node$ = node$.cloneNode(true);
+        glass.innerHTML = '';
+        glass.appendChild(node$);
+      }
+
+      autorun(() => {
+        if (ps.allLoadingIsSettle) {//当为true 即更新node
+          resetNode$(ps.glassNode)
+            ;//当没有状态改变时,启动when观察是否有loading改变
+        }
+      })
+
+      // let onceLoadingSettleReset: any;
+      // const onceLister =
+      //   () => {
+      //     when(
+      //       () => !ps.allLoadingIsSettle,//false 时 启动追踪true
+      //       () => {
+      //         onceLoadingSettleReset = autorun(() => {
+      //           if (ps.allLoadingIsSettle) {//当为true 即更新node
+      //             resetNode$(ps.glassNode)
+      //             if (onceLoadingSettleReset) onceLoadingSettleReset()//解绑,
+      //             onceLister();//当没有状态改变时,启动when观察是否有loading改变
+      //           }
+      //         })
+      //       }
+      //     )
+      //   };
+      //默认启动
+      // onceLister();
+      autorun(() => {
+        const { scrollY, glassNode } = ps
+        if (!node$ || node$.id !== glassNode) {
+          resetNode$(glassNode)
+        }
+        if (node$) {
+          style.width = node$.offsetWidth + 'px';
+          style.height = node$.offsetHeight + 'px';
+          style.left = -(node$.offsetLeft + main.offsetLeft) + "px"
+          style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
+          // console.log(glass, scrollY, node$.offsetLeft, node$.offsetWidth)
+        }
+        // console.log(this.scrollNode, scrollY);
+      })
+    }
   }
   componentDidUpdate() {
     if (!this.props.PlayerStore) {
@@ -164,8 +232,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         className={clazzName}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseOut}
-        ref={r => this.main = r}
-      >
+        ref={r => this.main = r}>
         <div
           className={rangeClazz}>
           <Range
@@ -187,7 +254,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             value={100 * volume}
           />
         </div>
-        <div className={styles.content}>
+        <div
+          className={styles.content}>
+          <div
+            ref={n => this.fronsted_glass = n}
+            className={styles.fronsted_glass}></div>
           <input type="file" onChange={this.handleFiles} />
           <div className={styles.content_plays}>
             <div className={styles.content_action}>
@@ -249,4 +320,4 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
 }
 
-export default CSSModule(Player, styles);
+export default Player 

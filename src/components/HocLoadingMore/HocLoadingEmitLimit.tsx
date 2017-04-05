@@ -27,7 +27,6 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
     }
 
     handleEmit = () => {
-      // const name = Comp.name
       const ps: any = this.props.PerformanceStore
 
       if (ps) {
@@ -36,10 +35,18 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
         ps.setScrollLimit(l, h);
       }
     }
+    emitScrollY = () => {
+      const ps: any = this.props.PerformanceStore
+
+      if (ps) {
+        ps.setScrollY(window.scrollY);
+      }
+    }
 
     handleScrolling(e: any) {
       super.handleScrolling(e)
       this.debounceFun()
+      this.emitScrollY();
     }
   }
   return HocWrapper

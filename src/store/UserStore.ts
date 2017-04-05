@@ -287,18 +287,6 @@ export class User {
   @action setFollowingState(following: boolean) {
     this.isFollowing = following
   }
-
-  async fetchUser() {
-    const url = apiUrl(`users/${this.userId}`, "?")
-    try {
-      const rawUser: any = await fetch(url)
-        .then(data => data.json());
-      this.updateFromServe(rawUser)
-    } catch (err) {
-      // this.catchError({ err });
-    }
-
-  }
 }
 class UserModel implements IUserModel {
   @observable user: User;
@@ -310,7 +298,10 @@ class UserModel implements IUserModel {
   @observable playlists: IPlaylist[] = [];
 
 
-  isLoadings = new ObservableMap<boolean>();
+  isLoadings = {
+    get: PerformanceStore.getLoadingStateWidthKey,
+    set: PerformanceStore.setLoadingStateWithKey
+  };
   nextHrefs = new ObservableMap<string>();
   userStore: UserStore;
 
@@ -321,7 +312,7 @@ class UserModel implements IUserModel {
     this.userStore = userStore
     if (typeof obj == 'number') {
       this.user = new User(obj)
-      this.user.fetchUser()
+      this.fetchUser()
     } else {
       this.setUser(obj)
     }
@@ -344,8 +335,15 @@ class UserModel implements IUserModel {
     this.fetchWithType(FETCH_FOLLOWINGS);
     this.fetchWithType(FETCH_FAVORITES);
   }
-  fetchUser() {
-    this.user.fetchUser();
+  async fetchUser() {
+    const url = apiUrl(`users/${this.user.userId}`, "?")
+    try {
+      const rawUser: any = await fetch(url)
+        .then(data => data.json());
+      this.user.updateFromServe(rawUser)
+    } catch (err) {
+      // this.catchError({ err });
+    }
   }
 
   @action setUser(rawUser: IUser) {

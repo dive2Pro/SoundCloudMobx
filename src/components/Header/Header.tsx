@@ -3,7 +3,6 @@ import { observer, inject } from "mobx-react";
 import DevTool from 'mobx-react-devtools'
 import Link from '../StyleLink'
 import {
-  // NavLink as L,
   withRouter
 } from 'react-router-dom'
 import { ISessionStore } from "../../store/index";
@@ -17,9 +16,10 @@ const StyleButton = (props: any) => {
 
     type="button">{props.children} </button>;
 };
+
 @inject("SessionStore")
 @observer
-class Main extends React.Component<IHeaderProp, undefined> {
+class Header extends React.Component<IHeaderProp, undefined> {
 
   loginIn = () => {
     const { SessionStore } = this.props;
@@ -77,6 +77,7 @@ class Main extends React.Component<IHeaderProp, undefined> {
             <li><StyleButton> <i className='fa fa-music'></i> Tracks </StyleButton> </li>
             <li><StyleButton> <i className='fa fa-users'></i> Followings</StyleButton> </li>
             <li><StyleButton> <i className='fa fa-user'></i> Followers</StyleButton> </li>
+            {/*wating*/}
             {/*<li><StyleButton> <i>o</i> Albums</StyleButton> </li>
             <li><StyleButton> <i>o</i> Recent</StyleButton> </li>
             <li><StyleButton> <i>o</i> Local </StyleButton> </li>
@@ -102,4 +103,4 @@ class Main extends React.Component<IHeaderProp, undefined> {
     );
   }
 }
-export default withRouter(Main);
+export default withRouter(Header);
