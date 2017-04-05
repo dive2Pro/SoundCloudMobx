@@ -28,13 +28,14 @@ $_100pxEm:7.143em;
 $_30pxEm:2.143em;
 $_180pxEm:12.857em;
 $borderGray:1px solid #dadada;
-$headerHight:5em;
+$headerHight:/*5em*/ 0;
 $white:#fff;
 $circleRadius:50%;
 $shuffleCollor:#14ff00;
 $contentMinWidth:89.143em;
 $playerHeight:3.571em;
 $playerDurationHeight:1.768em;
+$_asiderWidth:$_100pxEm*2.5;
 
 @mixin bottom_border($size,$color){
   @if $size != null

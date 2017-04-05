@@ -1,28 +1,56 @@
 @import '../../styles/variable.scss';
 
-.main{
-  position: fixed;
-  height: $headerHight;
-  background: $nav;
-  color:white;
+._aside{
+  position: relative;
+  background: #f7f7f7;
+  width: $_asiderWidth;
+  min-height: 100%;
   display: flex;
-  justify-content: space-around;
-  align-items:center;
-  top: 0;
+  flex-direction: column;
+  padding: $padding;
+  font-weight: bold!important;
+}
+
+._aside_playlist{
+  /*position: absolute;*/
+  /*bottom: 0;*/
+
+}
+._aside_header_img{
+  text-align: center;
+  margin-bottom: $padding;
+}
+ ._aside_header_ul{ 
+  text-align: left;
+}
+._aside_title{
+  color: #a9a9a9;
+  padding: 20px 0 20px 8px ;
+  display: flex;
+  justify-content: space-between;
+}
+._aside_header button{
+  font-size: $mediumIcon;
+}
+
+._aside_header_ul li button{
+  font-weight: bold;
+  border: none;
+  background: inherit;
+  padding: 10px;
   width: 100%;
-  z-index: 10;
-  left: 0;
-  &>*{
-    padding: 0 $_30pxEm/3;
+  text-align: inherit;
+  color: $nav;  
+  &>i{
+    margin-right: 5px;
   }
 }
-nav{
-  display: flex;
-  h1{
-    font-size: $_30pxEm; 
-  }
-    align-items: center;
-  a{
-      padding: $padding;
-  }
-} 
+
+._aside button:hover{
+  background: #f55874;
+  color: #FBFBFB;
+  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
+  text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+  border-radius: 5px;
+  
+}
