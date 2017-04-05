@@ -10,16 +10,12 @@ import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
 import Playlist from '../Playlist'
+import ArtWork from '../ArtWork'
 import {
   IActivitiesStore, IPlayerStore, IUserStore
-  // , IUserModel
 } from "../../store";
-// import { IUser } from '../../interfaces/interface'
-import {
-  // action
-} from "mobx";
-// import { autorun } from "mobx";
 import LoadingSpinner from '../LoadingSpinner'
+// import { IUser } from '../../interfaces/interface'
 const qs = require('qs')
 interface IDashBorardProps {
   UserStore: IUserStore
@@ -111,65 +107,94 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
     const { match: { url } } = this.props
     const FV = this.FavoView()
+    const avatar_url = user.avatar_url
 
     return (
       <div className={styles.container}>
-        <div className={styles.main}>
-          <Switch>
-            <Route
-              path={`${url}/followers`}
-              render={() => {
-                return <CommunityContainer
-                  isLoading={isloadingFollowers}
-                  scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
-                  users={followers}
-                />
-              }}
-            />
-            <Route
-              path={`${url}/followings`}
-              render={() => {
-                return <CommunityContainer
-                  isLoading={isloadingFollowings}
-                  scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
-                  users={followings}
-                />
-              }}
-            />
-            <Route
-              path={`${url}/favorites`}
-              component={FV}
-            />
-            <Route
-              path={`${url}/playlist`}
-              render={(match: any) => {
-                return <Playlist
-                  scrollFunc={this.handleFetchMorePlaylist}
-                  userModel={userModel} />
-              }}
-            />
-            <Route
-              path="/"
-              render={() => {
-                return isLoginUser ?
-                  <FilterActivities /> : <FV />
-              }}
-            />
-          </Switch>
-        </div>
-        <aside className={styles.aside}>
-          <Profile user={user} />
+        <div className={styles._contentHeader}>
+          <div className={styles._contentHeader_img}>
 
-          <Favorites
-            PlayerStore={this.props.PlayerStore}
-            UserModel={userModel} />
-          <FollowsPanel
-            type={FollowType.FOLLOWERS}
-            UserModel={userModel} />
-          <FollowsPanel
-            type={FollowType.FOLLOWINGS}
-            UserModel={userModel} />
-        </aside>
+            <ArtWork
+              style={{ width: '100%', height: '250px' }}
+              src={avatar_url} alt="#"
+            />
+
+          </div>
+          <div className={styles._contentHeader_info}>
+            <h3 className={styles._contentHeader_genre}>Hip Hop</h3>
+            <span style={{ fontSize: '36px', fontWeight: 600 }}>Big Daddy</span>
+            <div className={styles._contentHeader_actions}>
+              <button>PLAY</button>
+              <button>FOLLOW</button>
+            </div>
+          </div>
+          <div className={styles._contentHeader_profile}>
+            <ArtWork
+              size={50}
+              src={avatar_url}
+              alt="user Profile" />
+            <span>Allen Iversion  v</span>
+          </div>
+        </div>
+        <div className={styles._contentBody}>
+
+          <div className={styles._contentBody_main}>
+            <Switch>
+              <Route
+                path={`${url}/followers`}
+                render={() => {
+                  return <CommunityContainer
+                    isLoading={isloadingFollowers}
+                    scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
+                    users={followers}
+                  />
+                }}
+              />
+              <Route
+                path={`${url}/followings`}
+                render={() => {
+                  return <CommunityContainer
+                    isLoading={isloadingFollowings}
+                    scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
+                    users={followings}
+                  />
+                }}
+              />
+              <Route
+                path={`${url}/favorites`}
+                component={FV}
+              />
+              <Route
+                path={`${url}/playlist`}
+                render={(match: any) => {
+                  return <Playlist
+                    scrollFunc={this.handleFetchMorePlaylist}
+                    userModel={userModel} />
+                }}
+              />
+              <Route
+                path="/"
+                render={() => {
+                  return isLoginUser ?
+                    <FilterActivities /> : <FV />
+                }}
+              />
+            </Switch>
+          </div>
+          <aside className={styles._contentBody_community}>
+            <Profile user={user} />
+
+            <Favorites
+              PlayerStore={this.props.PlayerStore}
+              UserModel={userModel} />
+            <FollowsPanel
+              type={FollowType.FOLLOWERS}
+              UserModel={userModel} />
+            <FollowsPanel
+              type={FollowType.FOLLOWINGS}
+              UserModel={userModel} />
+          </aside>
+        </div>
       </div>
     );
   }

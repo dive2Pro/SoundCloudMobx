@@ -10,12 +10,12 @@ import {
 import { IPerformanceStore } from "../../store/index";
 // import { logInfo } from '../../services/logger'
 export interface IArtWorkProps {
-  size: number
+  size?: number
   alt?: string
   src: string
   optionalImg?: string,
   clazz?: string
-  style?: {}
+  style?: { width?: any, height?: any }
   PerformanceStore?: IPerformanceStore
 }
 
@@ -76,10 +76,26 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
 
       }
     }
+    const reg = /-{1}large\.{1}/
+    let { src, size, style } = this.props
 
-    let { src, size } = this.props
-    if (src && size <= 50) {
-      src = src.replace(/-{1}large\.{1}/, "-badge\.")
+    if (src && (size && size <= 50)) {
+      src = src.replace(reg, "-badge\.")
+    } else if (src && style) {
+      const width = parseInt(style.width)
+      const height = parseInt(style.height);
+
+      if (width > 100 || height > 100) {
+        const size = Math.max(Math.ceil(width), Math.ceil(height))
+        let replace = 't300x300'
+        // console.log(size)
+        if (size > 300 && size < 500) {
+          replace = 'crop'
+        } else {
+          replace = 't500x500'
+        }
+        src = src.replace(reg, `-${replace}\.`);
+      }
     }
     image.src = src
   }
@@ -91,9 +107,10 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
     return (
       <img
         ref={n => this.img = n}
-        style={style}
         className={clazz}
-        src={preImage} width={size} height={size} alt={alt} />
+        src={preImage} width={size} height={size} alt={alt}
+        style={style}
+      />
     )
   }
 }
