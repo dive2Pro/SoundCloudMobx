@@ -23,13 +23,13 @@ interface IActivitiesProps {
 interface IndexAndPlayViewProp {
   index: number
   track: ITrack
-  onClick: (track: ITrack) => void
   isPlaying: boolean
   isHidden: boolean
+  onClick: () => void
 }
 
 const IndexAndPlayView =
-  observer(function IndexAndPlayView({ track, onClick, index, isPlaying, isHidden }: IndexAndPlayViewProp)
+  observer(function IndexAndPlayView({ track, index, isPlaying, isHidden, onClick }: IndexAndPlayViewProp)
     : React.ReactElement<any> {
     const { artwork_url } = track
     const imgSize = 50;
@@ -40,13 +40,12 @@ const IndexAndPlayView =
     const divClazz = isHidden ? styles.indexPlay : styles.active;
     return (
       <div className={divClazz}>
-        {/*<span>{index}</span>*/}
         <ArtWork
           src={artwork_url}
           size={imgSize} />
         <div className={styles.play} style={styleSize}>
           <ButtonInline onClick={onClick}>
-            <i className={`fa fa-${!isHidden && isPlaying ? 'pause' : 'play '} fa-2x`} />
+            <i className={`fa fa-${(!isHidden && isPlaying) ? 'pause' : 'play '} fa-2x`} />
           </ButtonInline>
         </div>
 
@@ -56,12 +55,11 @@ const IndexAndPlayView =
 
 interface ISongViewProps {
   track: ITrack, store: IPlayerStore, sortType: string, i: number,
-  onClick: () => void
 }
 
-const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProps) => {
+const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
   const { isPlaying, playingTrack } = store
-  const { user, label_name,
+  const { user, title,
     id,
     duration
   } = track
@@ -73,15 +71,25 @@ const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProp
       fn: () => { }, className: 'fa fa-folder-o'
     }
   ]
+  const handleSectionClick = (e: any) => {
+    const name = e.target.className
+    if (name == (styles._song_act_plus) || e.target.tagName == 'A' || e.target.tagName == 'I') {
+    } else {
+      store.setPlayingTrack(track)
+    }
+  }
   const isHidden = !playingTrack || playingTrack.id !== id;
   return (
     <section
-      onClick={onClick}
-      className={styles._song}>
+      onClick={(e) => handleSectionClick(e)}
+      className={styles._song} >
       <span className={styles._song_position}
       >{i}</span>
       <span
-        onClick={() => { store.addToPlaylist(track) }}
+        onClick={(e: any) => {
+          e.preventDefault();
+          store.addToPlaylist(track);
+        }}
         className={styles._song_act_plus}>
         <i className='fa fa-plus'></i>
       </span>
@@ -89,19 +97,27 @@ const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProp
         isPlaying={isPlaying}
         isHidden={isHidden}
         track={track}
-        index={i}
-        onClick={onClick} />
+        onClick={() => store.setPlayingTrack(track)}
+        index={i} />
       <div className={styles._song_info}>
 
-        <Link to={{
-          pathname: '/song',
-          search: `?id=${id}`
-        }}>  <span className={styles._song_info_title}>{label_name}</span>
+        <Link
+          className={styles._song_info_title}
+          to={{
+            pathname: '/song',
+            search: `?id=${id}`
+          }}>
+          {title}
         </Link>
-        <Link to={{
-          pathname: '/users'
-          , search: `?id=${user.id}`
-        }}> <span className={styles._song_info_author}>{username}</span>
+
+        <Link
+          className={styles._song_info_author}
+          to={{
+            pathname: '/users'
+            , search: `?id=${user.id}`
+          }}>
+          {username}
+
         </Link>
       </div>
       <div className={styles._song_duration}>
@@ -121,17 +137,13 @@ const SongView = observer(({ track, store, sortType, i, onClick }: ISongViewProp
     </section >
   );
 })
+
 @inject('PlayerStore', 'PerformanceStore')
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
   dFunc: any;
 
-  playTrack = (track: ITrack) => {
-    const { PlayerStore } = this.props
-    if (PlayerStore) {
-      PlayerStore.setPlayingTrack(track);
-    }
-  }
+
 
   addToTrackList = (track: ITrack) => {
     const { PlayerStore } = this.props
@@ -154,7 +166,6 @@ class Activities extends React.Component<IActivitiesProps, any> {
               key={item.id + "-" + i}
               sortType={sortType}
               track={item}
-              onClick={() => this.playTrack(item)}
               i={i + 1}
               store={store} />)
           }
