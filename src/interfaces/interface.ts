@@ -55,53 +55,80 @@ export interface IActivitiesItem {
     origin: ITrack;
 }
 export interface ITrack {
-    id: number,
-    created_at: string,
-    user_id: number,
-    duration: number,
-    commentable: true,
-    state: string,
-    sharing: string,
-    tag_list: string,
-    permalink: string,
-    description: string,
-    streamable: true,
-    downloadable: true,
-    genre: string,
-    release: string,
-    purchase_url: string,
-    label_id: string,
-    label_name: string,
-    isrc: string,
-    video_url: string,
-    track_type: string,
-    key_signature: string,
-    bpm: string,
-    title: string,
-    release_year: string,
-    release_month: string,
-    release_day: string,
-    original_format: string,
-    original_content_size: number,
-    license: string,
-    uri: string,
-    permalink_url: string
+
     artwork_url: string,
-    waveform_url: string
-    user: {
+    commentable: boolean,
+
+    comment_count: string,
+    download_count: string,
+    playback_count: string,
+    favoritings_count: string,
+
+    created_at: string,
+    description: string,
+    downloadable: boolean,
+    download_url: null,
+    duration: number,
+    full_duration: number,
+    embeddable_by: string,
+    genre: string,
+    has_downloads_left: boolean,
+    id: number,
+    kind: string,
+    label_name: string,
+    last_modified: string,
+    license: string,
+    likes_count: number,
+    permalink: string,
+    permalink_url: string,
+    public: boolean,
+    publisher_metadata: {
         id: number,
-        permalink: string
-        username: string,
-        uri: string,
+        urn: string,
+        artist: string,
+        contains_music: boolean,
+        publisher: string,
+        upc_or_ean: string,
+        isrc: string,
+        writer_composer: string,
+        release_title: string
+    },
+    purchase_title: null,
+    purchase_url: string,
+    release_date: string,
+    reposts_count: number,
+    secret_token: null,
+    sharing: string,
+    state: string,
+    streamable: boolean,
+    tag_list: string,
+    title: string,
+    uri: string,
+    urn: string,
+    user_id: number,
+    visuals: null,
+    waveform_url: string,
+    display_date: string,
+    monetization_model: string,
+    policy: string,
+    user: {
+        avatar_url: string,
+        first_name: string,
+        full_name: string,
+        id: number,
+        kind: string,
+        last_modified: string,
+        last_name: string,
+        permalink: string,
         permalink_url: string,
-        avatar_url: string
-    }
+        uri: string,
+        urn: string,
+        username: string,
+        verified: boolean,
+        city: string,
+        country_code: null
+    },
     stream_url: string
-    download_url: string,
-    playback_count: number | string,
-    download_count: number | string,
-    favoritings_count: number | string,
-    comment_count: number | string,
     attachments_uri: string
 }
 
@@ -146,4 +173,31 @@ export interface IPlaylist {
         avatar_url: string
     },
     tracks: ITrack[]
+}
+
+
+
+export interface IStream {
+    created_at: string,
+    type: string,
+    user: {
+        avatar_url: string,
+        first_name: string,
+        full_name: string,
+        id: number,
+        kind: string,
+        last_modified: string,
+        last_name: string,
+        permalink: string,
+        permalink_url: string,
+        uri: string,
+        urn: string,
+        username: string,
+        verified: boolean,
+        city: string,
+        country_code: null
+    },
+    uuid: string,
+    track: ITrack,
+    playlist: IPlaylist
 }

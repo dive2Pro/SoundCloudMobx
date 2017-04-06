@@ -5,15 +5,20 @@ import {
   runInAction
 } from "mobx";
 import {
-  FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES
+  FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES,
+  FETCH_STREAM
 } from '../constants/fetchTypes'
 import {
   IUser
   , IActivitiesItem,
-  IPlaylist
+  IPlaylist,
+  IStream
 } from "../interfaces/interface";
 import {
   addAccessToken, apiUrl
+  // , apiUrlV2
+  // , unauthApiUrl,
+  , unauthApiUrlV2
   // , unauthApiUrl
 } from "../services/soundcloundApi";
 import { ITrack } from "./index";
@@ -163,7 +168,6 @@ export class UserStore implements IUserStore {
     }
     return userModel;
   }
-
   @action setCurrentUserModel(model: IUserModel) {
     this.userModel = model
   }
@@ -252,6 +256,8 @@ export interface IUserModel {
   followers: IUser[];
   followings: IUser[];
   favorites: ITrack[];
+  streams: IStream[]
+  getAllTrackFromStreams: () => ITrack[]
   playlists: IPlaylist[];
   nextHrefs: {}
   fetchWithType: (type: string) => void
@@ -293,6 +299,8 @@ class UserModel implements IUserModel {
   // TODO change to ObservableMap  
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
+  // 
+  @observable streams: IStream[] = [];
 
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
@@ -317,7 +325,9 @@ class UserModel implements IUserModel {
       this.setUser(obj)
     }
   }
-
+  getAllTrackFromStreams(): ITrack[] {
+    return this.streams.filter(stream => stream.track != null).map(s => s.track);
+  }
   loadDataFromCookie() {
 
   }
@@ -334,7 +344,9 @@ class UserModel implements IUserModel {
     this.fetchWithType(FETCH_FOLLOWERS);
     this.fetchWithType(FETCH_FOLLOWINGS);
     this.fetchWithType(FETCH_FAVORITES);
+    // this.fetchWithType(FETCH_STREAM);
   }
+
   async fetchUser() {
     const url = apiUrl(`users/${this.user.userId}`, "?")
     try {
@@ -364,7 +376,6 @@ class UserModel implements IUserModel {
   @action resetLoadingState(type: string) {
     this.isLoadings.set(type, false);
   }
-
   @action addData(type: string, fs: IUser[]) {
     const targetArr = this[type]
     if (!targetArr) {
@@ -388,6 +399,10 @@ class UserModel implements IUserModel {
     }
   }
 
+  apiStream(id: number) {
+    return unauthApiUrlV2(`stream/users/${id}`
+      , `limit=15&offset=0&linked_partitioning=1`)
+  }
 
   @action async fetchWithType(type: string) {
     if (this.isLoadings.get(type)) {
@@ -399,16 +414,26 @@ class UserModel implements IUserModel {
     }
     let url = this.nextHrefs.get(type)
     // 
+    const fetchType = type;
+
     if (url) {
       url = addAccessToken(url, '&')
     } else if (!url && this[type].length < 1) {
       // debugger
-      url = `users/${id}/${type}`
-      url = apiUrl(url + `?limit=${limitPageSize}`, '&')
+      switch (fetchType) {
+        case FETCH_STREAM:
+          url = this.apiStream(id);
+          break
+        default:
+          url = `users/${id}/${type}`
+          url = apiUrl(url + `?limit=${limitPageSize}&offset=0&linked_partitioning=1`, '&')
+
+      }
     } else {
       return;
     }
-    const fetchType = type;
+    console.log(url);
+
     try {
       this.changeLoadingState(fetchType, true);
       const data: any = await fetch(url).then(response => response.json());
@@ -416,6 +441,7 @@ class UserModel implements IUserModel {
         // debugger
         this.addData(type, data);
       } else {
+        console.log(type, data)
         this.addData(type, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
       }

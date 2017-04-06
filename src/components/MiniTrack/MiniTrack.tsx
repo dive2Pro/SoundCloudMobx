@@ -51,7 +51,8 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
       <div className={styles.mini}>
         <div className={styles.track}>
           <ArtWork src={artwork_url} size={62} />
-          <TrackTitleView track={this.transform(track)} />
+          <TrackTitleView
+            track={this.transform(track)} />
         </div>
         <div className={isPlayingTrack ? styles.visibleActions : styles.actions}>
           <HoverActions

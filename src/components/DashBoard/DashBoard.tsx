@@ -19,6 +19,7 @@ import {
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
+// import StreamContainer from "../Stream";
 // import { IUser } from '../../interfaces/interface'
 const qs = require('qs')
 interface IDashBorardProps {
@@ -112,6 +113,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   handleFetchMorePlaylist = () => {
 
   }
+
   FavoView = () => {
     const { userModel } = this.props.UserStore
     const { favorites } = userModel
@@ -256,9 +258,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 path="/"
                 render={() => {
                   return isLoginUser ?
-                    <FilterActivities /> : <FV />
+                    <FilterActivities />
+                    : <FV />
                 }}
               />
+              {/*<StreamContainer userModel={userModel} />*/}
             </Switch>
           </div>
           <aside className={styles._contentBody_community}>

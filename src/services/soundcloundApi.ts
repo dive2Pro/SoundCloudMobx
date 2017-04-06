@@ -4,13 +4,24 @@ const Cookies = require("js-cookie")
 export const unauthApiUrl = (url: string, symbol: string) => {
   return `//api.soundcloud.com/${url}${symbol}client_id=${CLIENT_ID}`;
 }
+export const unauthApiUrlV2 = (url: string, plus: string) => {
+  return `//api-v2.soundcloud.com/${url}?client_id=${CLIENT_ID}&${plus}`;
 
+}
 export const apiUrl = (url: string, symbol: string) => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
   if (!accessToken) {
     return unauthApiUrl(url, symbol);
   }
   return `//api.soundcloud.com/${url}${symbol}oauth_token=${accessToken}`;
+}
+
+export const apiUrlV2 = (url: string, symbol: string) => {
+  const accessToken = Cookies.get(OAUTH_TOKEN);
+  if (!accessToken) {
+    return unauthApiUrl(url, symbol);
+  }
+  return `//api-v2.soundcloud.com/${url}${symbol}client_id=${accessToken}`;
 }
 
 export const addAccessToken = (url: string, symbol: string): string => {
@@ -24,6 +35,10 @@ export const addAccessToken = (url: string, symbol: string): string => {
 export enum PicSize {
   NORMAL, SMALL, BIG, CROP, MASTER, X67, BADGE, TINY, MINI
 }
+
+
+
+
 /**
  * t500x500: 500×500
  * crop: 400×400
