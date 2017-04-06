@@ -155,7 +155,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
               sortType={sortType}
               track={item}
               onClick={() => this.playTrack(item)}
-              i={i}
+              i={i + 1}
               store={store} />)
           }
         </div>

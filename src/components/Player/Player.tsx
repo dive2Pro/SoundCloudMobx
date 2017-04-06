@@ -8,7 +8,7 @@ import {
   action, observable, runInAction, autorun
   , when
 } from "mobx";
-const mp3 = require('../../../public/assert/music.mp3')
+// const mp3 = require('../../../public/assert/music.mp3')
 const styles = require("./player.scss");
 import Range from '../InputRange'
 import { IPerformanceStore } from "../../store/index";
@@ -224,14 +224,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         glass.appendChild(node$);
         glassFrame.style.width = node$.offsetWidth + 'px';
         glassFrame.style.height = node$.offsetHeight + 'px';
+        style.width = node$.offsetWidth + 'px';
+        style.height = node$.offsetHeight + 'px';
         resetPositoin();
       }
       const resetPositoin = () => {
         if (node$) {
           // console.log('node$.offsetWidth = ' + node$.offsetWidth)
           const scrollY = ps.scrollY || 0;
-          style.width = node$.offsetWidth + 'px';
-          style.height = node$.offsetHeight + 'px';
           style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
           // style.left = -(30) + "px"
           // console.log(style.top, main.offsetTop, node$.offsetTop, scrollY)
@@ -262,18 +262,18 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
   }
   componentDidUpdate() {
+
+    this.playMusic()
+  }
+
+  playMusic() {
     if (!this.props.PlayerStore) {
       return;
     }
-    const {
-      // playingUrl,
-      volume,
-      isPlaying } = this.props.PlayerStore;
+    const { playingUrl, volume, isPlaying } = this.props.PlayerStore;
     const audio = this.audio
-    if (
-      // playingUrl &&
-      isPlaying && audio.paused) {
-      audio.src = mp3;
+    if (playingUrl && isPlaying || audio.paused) {
+      audio.src = playingUrl;
       audio.play()
     } else if (!isPlaying) {
       audio.pause();

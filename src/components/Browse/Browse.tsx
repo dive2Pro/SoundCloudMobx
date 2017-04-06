@@ -78,7 +78,6 @@ class Browse extends React.Component<IDashBorardProps, any> {
         </nav>
         <Route
           path={`/main/genre=:genre`} component={TrackList} />
-        {/*<Redirect></Redirect>*/}
       </div>
     );
   }

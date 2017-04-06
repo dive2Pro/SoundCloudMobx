@@ -12,8 +12,7 @@
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  // background: rgba(0, 0, 0, 1);
-
+  background: rgba(226,226,226,1);
 }
 
 .visible{
@@ -108,11 +107,14 @@
   z-index: -1;
   &::before{
      margin:-20px;
-
+    //  background: url('../../../public/images/glass.jpg')
   }
 }
 .fronsted_glass{ 
   position: absolute;
+  &>*{
+    background: inherit;
+  }
 }
 
 

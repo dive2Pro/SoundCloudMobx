@@ -25,13 +25,14 @@ export class Track {
 }
 
 export interface ITrackStore {
-  fetchTracks: (nextHref: string, genre?: string) => void;
+  fetchTracks: () => void;
   isLoading: boolean;
   currentTracks: ITrack[]
   currentTrack: ITrack
   setGenre: (genre: string) => void;
   setTrackId: (id: number) => void
   currentGenre: string
+  hasMoreTracks: boolean
 }
 export abstract class BaseAct<T> {
 
@@ -147,7 +148,9 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
   token: string = ""
   static defaultGenre = 'country';
   @observable currentTrack: ITrack
-
+  @computed get hasMoreTracks() {
+    return this.hasCurrentGenreTracks
+  }
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre) || false
   }
@@ -161,6 +164,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     const tracks = this.itemsMap.get(this.currentGenre) || [];
     return tracks
   }
+
   setTrackId(id: number) {
 
     let track = this.currentTracks.find((track) => track.id == id)

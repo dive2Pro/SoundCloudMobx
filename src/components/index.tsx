@@ -49,7 +49,11 @@ class Main extends React.Component<any, undefined> {
   route: HTMLDivElement;
   render() {
     return (
-      <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+      <div style={{
+        display: 'flex', height: '100%', overflow: 'hidden'
+        , justifyContent: 'center'
+        , position: 'relative'
+      }}>
         <Header />
         <div ref={n => this.route = n}>
           <Switch>

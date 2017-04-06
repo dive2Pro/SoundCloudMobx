@@ -43,10 +43,14 @@ export const BlankView = () => {
 @inject("UserStore", "ActivitiesStore", 'PlayerStore', 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
+  headerInfo: any;
+  handlePlayAll: any;
+  handleFollow: any;
   headerImg: any;
   profile: any;
   id: number
   glassStyle: any = {}
+  infoGlassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
     this.props.UserStore.userModel.fetchWithType(type);
   }
@@ -55,9 +59,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     this.props.UserStore.userModel.fetchCommunityData();
     this.props.PerformanceStore.setCurrentGlassNodeId('DashBoard')
     const p = this.profile
-    p.addEventListener('change', function lis() {
-      console.log(p.offsetLeft)
-    })
+    const hi = this.headerInfo
     this.glassStyle = {
       // TODO 这里如果修改父组件的display为 block,则需要修改为40
       // why?
@@ -67,13 +69,18 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , width: this.headerImg.offsetWidth + 'px'
       , position: 'absolute'
       , zIndex: '-1'
-      , margin: 0
-      , padding: 0
       , display: 'inline-flex'
-      , border: 'none'
-      , outline: 'none'
-    }
-    console.log(this.glassStyle)
+    },
+      this.infoGlassStyle = {
+        left: -hi.offsetLeft + "px"
+        // , top: -hi.offsetTop + 'px'// todo
+        , top: '-140px'
+        , height: hi.offsetHeight + "px"
+        , width: this.headerImg.offsetWidth + 'px'
+        , position: 'absolute'
+        , zIndex: '-1'
+      }
+    console.log(this.infoGlassStyle, hi.offsetTop)
     this.forceUpdate()
   }
 
@@ -165,24 +172,35 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             style={{
               backgroundImage: `url(${backgroundImageUrl})`
               , width: '1248px', height: '300px'
-            }}
-
-          >
-
+            }}>
           </div>
-          <div className={styles._contentHeader_info}>
+          <div
+            ref={n => this.headerInfo = n}
+            className={styles._contentHeader_info}>
             <h3 className={styles._contentHeader_genre}>Hip Hop</h3>
-            <span style={{ fontSize: '36px', fontWeight: 600 }}>Big Daddy</span>
+            <span style={{
+              fontSize: '36px', color: 'white'
+              , fontWeight: 600
+            }}>{user.username}</span>
             <div className={styles._contentHeader_actions}>
-              <button>PLAY</button>
-              <button>FOLLOW</button>
+              <button onClick={this.handlePlayAll}>PLAY</button>
+              <button onClick={this.handleFollow}>{user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}</button>
             </div>
+
+            <Blur
+              img={backgroundImageUrl}
+              blurRadius={5}
+              style={this.infoGlassStyle}
+            >
+            </Blur>
+
+
+
           </div>
           <div
             ref={n => this.profile = n}
             style={profile$}
             className={styles._contentHeader_profile}
-
           >
 
             <ArtWork
@@ -191,16 +209,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               alt="user Profile" />
             <span>{user.username}</span>
             <span> <i className='fa fa-angle-down'></i> </span>
-
-
             <Blur
               img={backgroundImageUrl}
               blurRadius={10}
               style={this.glassStyle}>
             </Blur>
-
-
-
           </div>
         </div>
         <div className={styles._contentBody}>
