@@ -12,7 +12,7 @@
   display: flex;
   overflow: hidden;
   flex-direction: column;
-    background: rgba(0, 0, 0, 1);
+  // background: rgba(0, 0, 0, 1);
 
 }
 
@@ -102,9 +102,10 @@
   overflow: hidden;
   filter: blur(8px);
   top:0; 
-  left: 0; 
-  background: red;    
-  z-index: 2;
+  left: $padding; 
+  // background: red;    
+  margin: -$padding;
+  z-index: -1;
   &::before{
      margin:-20px;
 

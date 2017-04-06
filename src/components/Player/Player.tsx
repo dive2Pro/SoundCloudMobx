@@ -6,7 +6,7 @@ import { IPlayerStore } from "../../store/PlayerStore";
 import ArtWork from "../ArtWork";
 import {
   action, observable, runInAction, autorun
-  // , when
+  , when
 } from "mobx";
 const mp3 = require('../../../public/assert/music.mp3')
 const styles = require("./player.scss");
@@ -206,7 +206,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
    */
   initGlassData = () => {
     if (0 == 0) {
-      return
+      // return
     }
     const ps = this.props.PerformanceStore
     if (ps) {
@@ -217,35 +217,47 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       const glassFrame = this.blurredContentFrame
       // let loadingAllSettle = false
 
-      const resetNode$ = (glassNode: string) => {
+      const resetNode$ = (glassNode: string, n: number) => {
         node$ = document.querySelector(`#${glassNode}`)
         node$ = node$.cloneNode(true);
         glass.innerHTML = '';
         glass.appendChild(node$);
         glassFrame.style.width = node$.offsetWidth + 'px';
         glassFrame.style.height = node$.offsetHeight + 'px';
-
+        resetPositoin();
       }
-
-      autorun(() => {
-        if (ps.allLoadingIsSettle) {//当为true 即更新node
-          resetNode$(ps.glassNode)
-        }
-      })
-
-      autorun(() => {
-        const { scrollY, glassNode } = ps
-        if (!node$ || node$.id !== glassNode) {
-          resetNode$(glassNode)
-        }
+      const resetPositoin = () => {
         if (node$) {
           // console.log('node$.offsetWidth = ' + node$.offsetWidth)
+          const scrollY = ps.scrollY || 0;
           style.width = node$.offsetWidth + 'px';
           style.height = node$.offsetHeight + 'px';
-
-          // style.left = -(30) + "px"
           style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
+          // style.left = -(30) + "px"
+          // console.log(style.top, main.offsetTop, node$.offsetTop, scrollY)
         }
+      }
+
+      const onceObservser = () => when(
+        () => !ps.allLoadingIsSettle,
+        () => {
+          const handleObservaer = autorun(
+            () => {
+              if (ps.allLoadingIsSettle) {//当为true 即更新node //fuck 
+                console.log('ps+ -------------')
+                resetNode$(ps.glassNode, ps.scrollY)
+                handleObservaer()
+                onceObservser()
+              }
+            })
+        })
+      onceObservser();
+      autorun(() => {
+        const { glassNode } = ps
+        if (!node$ || node$.id !== glassNode) {
+          resetNode$(glassNode, ps.scrollY)
+        }
+        resetPositoin();
       })
     }
   }
