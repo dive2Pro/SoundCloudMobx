@@ -6,6 +6,7 @@
   margin-top: $headerHight;
   margin-bottom: $playerHeight;
   justify-content: space-around;
+  position: relative;
 }
   
 
@@ -19,6 +20,9 @@
 }
 ._contentHeader_img{
   /*background: url("./images/mountain.jpg")*/
+     background-size: cover;
+     background-repeat: no-repeat;
+     background-position: center;
 }
 ._contentHeader_info{
   background: linear-gradient(to bottom,transparent,white); 
@@ -52,26 +56,25 @@
 ._contentHeader_actions button:hover{
   background: #a9a9a9;
   box-shadow: none;
+  overflow: hidden
+ }
 
- }
  ._contentHeader_profile{
-   position: absolute;
-   right: 5%;;
-   top: 5%;
-   z-index: 2;
-   justify-content: center;
-   display: flex;
-   align-items: center;
+      font-size: 18px;
+      justify-content: space-around;
+      min-width: 180px;
+    &>span{
+       border:none;
+    }
+    &>img{
+      border-radius: 25%; 
+      // display: flex;
+       border:none;
+    }
  }
- ._contentHeader_profile>span{
-   font-size: 18px;
-   margin-left: 10px;
- }
- ._contentHeader_profile>img{
-   width: 50px;
-   border-radius: 25%;
-   height: 50px;
-   display: inline-flex;
+
+
+ ._contentHeader_profile>img{ 
    
  }
 

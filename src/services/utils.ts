@@ -50,3 +50,15 @@ export const extendsObservableObjFromJson = (target: any, data: any) => {
   }
 
 }
+
+export const findRootParentOffSet = (root: any) => {
+  while ((root = root.parentNode) != null) {
+    // console.log('recatroot' in root.dataset)
+    if (root.parentNode && root.parentNode.dataset &&
+      root.parentNode.dataset.reactroot != null) {
+      break;
+    }
+  }
+  console.log(root)
+  return root.offsetLeft || 0
+}
