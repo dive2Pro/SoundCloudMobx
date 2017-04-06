@@ -4,6 +4,7 @@
 import * as React from "react";
 import { computed, observable, action } from "mobx";
 import { observer } from "mobx-react";
+import { findRootParentOffSet as findRootParentOffSet$ } from '../../services/utils'
 const styles = require("./style.scss");
 interface IInputRange {
   vertical?: boolean,
@@ -176,15 +177,7 @@ class InputRange extends React.Component<IInputRange, any> {
   findRootParentOffSet = () => {
     if (this.rootOffsetLeft) return this.rootOffsetLeft;
     let root: any = this.container
-    while ((root = root.parentNode) != null) {
-      // console.log('recatroot' in root.dataset)
-      if (root.parentNode && root.parentNode.dataset &&
-        root.parentNode.dataset.reactroot != null) {
-        break;
-      }
-    }
-
-    this.rootOffsetLeft = root.offsetLeft;
+    this.rootOffsetLeft = findRootParentOffSet$(root)
     return this.rootOffsetLeft
   }
 

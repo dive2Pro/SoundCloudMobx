@@ -11,10 +11,14 @@ import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
 import Playlist from '../Playlist'
 import ArtWork from '../ArtWork'
+// import { findRootParentOffSet as findRootParentOffSet$ } from '../../services/utils'
+
 import {
   IActivitiesStore, IPlayerStore, IUserStore, IPerformanceStore
 } from "../../store";
 import LoadingSpinner from '../LoadingSpinner'
+import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
+import Blur from 'react-blur'
 // import { IUser } from '../../interfaces/interface'
 const qs = require('qs')
 interface IDashBorardProps {
@@ -39,8 +43,10 @@ export const BlankView = () => {
 @inject("UserStore", "ActivitiesStore", 'PlayerStore', 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
+  headerImg: any;
+  profile: any;
   id: number
-
+  glassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
     this.props.UserStore.userModel.fetchWithType(type);
   }
@@ -48,6 +54,27 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   componentDidMount() {
     this.props.UserStore.userModel.fetchCommunityData();
     this.props.PerformanceStore.setCurrentGlassNodeId('DashBoard')
+    const p = this.profile
+    p.addEventListener('change', function lis() {
+      console.log(p.offsetLeft)
+    })
+    this.glassStyle = {
+      // TODO 这里如果修改父组件的display为 block,则需要修改为40
+      // why?
+      left: -(p.offsetLeft) + 'px'
+      , top: -p.offsetTop + 'px'
+      , height: '300px'
+      , width: this.headerImg.offsetWidth + 'px'
+      , position: 'absolute'
+      , zIndex: '-1'
+      , margin: 0
+      , padding: 0
+      , display: 'inline-flex'
+      , border: 'none'
+      , outline: 'none'
+    }
+    console.log(this.glassStyle)
+    this.forceUpdate()
   }
 
   componentWillMount() {
@@ -110,18 +137,37 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const { match: { url } } = this.props
     const FV = this.FavoView()
     const avatar_url = user.avatar_url
+    let backgroundImageUrl = 'preImage'
+    if (Object.keys(this.glassStyle).length > 0) {
+      backgroundImageUrl = avatar_url && getSpecPicPath(avatar_url, PicSize.MASTER);
+    }
+    const profile$: any = {
+      position: 'absolute',
+      right: '5%',
+      top: '5%',
+      zIndex: '2',
+      background: 'hsla(0, 0, 100 % ,0.3)',
+      overflow: 'hidden',
+      display: 'inline-flex'
+      , alignItems: 'center'
+      // , justifyContent: 'center'
+      // , width: '180px'
 
+    }
     return (
       <div
         id='DashBoard'
         className={styles.container}>
         <div className={styles._contentHeader}>
-          <div className={styles._contentHeader_img}>
+          <div
+            ref={n => this.headerImg = n}
+            className={styles._contentHeader_img}
+            style={{
+              backgroundImage: `url(${backgroundImageUrl})`
+              , width: '1248px', height: '300px'
+            }}
 
-            <ArtWork
-              style={{ width: '100%', height: '250px' }}
-              src={avatar_url} alt="#"
-            />
+          >
 
           </div>
           <div className={styles._contentHeader_info}>
@@ -132,12 +178,29 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               <button>FOLLOW</button>
             </div>
           </div>
-          <div className={styles._contentHeader_profile}>
+          <div
+            ref={n => this.profile = n}
+            style={profile$}
+            className={styles._contentHeader_profile}
+
+          >
+
             <ArtWork
               size={50}
               src={avatar_url}
               alt="user Profile" />
-            <span>Allen Iversion  v</span>
+            <span>{user.username}</span>
+            <span> <i className='fa fa-angle-down'></i> </span>
+
+
+            <Blur
+              img={backgroundImageUrl}
+              blurRadius={10}
+              style={this.glassStyle}>
+            </Blur>
+
+
+
           </div>
         </div>
         <div className={styles._contentBody}>

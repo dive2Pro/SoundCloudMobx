@@ -5,5 +5,6 @@ declare module 'mobx-remotedev';
 declare module 'react-router-dom';
 declare module 'react-dom';
 declare module 'qs';
+declare module 'react-blur';
 
 declare module '*.scss';
