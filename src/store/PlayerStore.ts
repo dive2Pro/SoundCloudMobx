@@ -44,13 +44,15 @@ class PlayerStore implements IPlayerStore {
     if (typeof track === 'number') {
       track = this.playList[track];
     }
+    console.log(this.playingTrack === track, track, this.playingTrack)
     if (this.playingTrack === track && this.isPlaying) {
+      console.log('false - ---')
       this.isPlaying = false;
     } else {
       this.playingTrack = track;
       this.isPlaying = true;
+      this.addToPlaylist(track);
     }
-    this.addToPlaylist(track);
   }
 
   @action togglePlaying() {
@@ -82,7 +84,6 @@ class PlayerStore implements IPlayerStore {
     } else {
       this.pushToPlayerlist(<ITrack>tracks)
     }
-
   }
   @action clearPlaylist() {
     this.playList = [];

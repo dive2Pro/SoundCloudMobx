@@ -72,15 +72,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     runInAction(() => {
       this.volumeContainerStyle = vcStyle
     })
-
     this.initGlassData();
-
-
   }
+
   renderPlayerOpearators = (store: IPlayerStore) => {
     const { isPlaying, playingTrack, isShuffleMode
       , volume
-      // , isVolumeOpen
     } = store;
 
     let artworkUrl = "", trackName, username = "";
@@ -97,7 +94,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
 
     const shuffleClazz = isShuffleMode && styles.active;
-
+    console.log('isPlaying = ' + isPlaying)
     return (
       <div
         className={styles.content}>
@@ -272,9 +269,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     const { playingUrl, volume, isPlaying } = this.props.PlayerStore;
     const audio = this.audio
-    if (playingUrl && isPlaying || audio.paused) {
-      audio.src = playingUrl;
+    if (isPlaying || audio.paused) {
+      if (audio.src != playingUrl && playingUrl)
+        audio.src = playingUrl;
       audio.play()
+
     } else if (!isPlaying) {
       audio.pause();
     }

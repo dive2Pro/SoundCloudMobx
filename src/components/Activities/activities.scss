@@ -96,15 +96,28 @@ div .indexPlay{
 ._song_info{
   flex: 7;
   padding-left: 20px;
+   &>a{
+    &:hover{
+      color: white;
+    }
+   
+    }
 }
 ._song_info>*{
-  display: block;
+  // display: inline-block;
 }
 ._song_info_title{
   font-weight: bold;
+   &:visited{
+      color:#333;
+     }
 }
 ._song_info_author{
   color: #bababa;
+  display: table-cell;
+   &:visited{
+      color:#bababa;
+     }
 }
 ._song_duration{
   color: #777;
