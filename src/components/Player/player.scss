@@ -5,12 +5,15 @@
   height: $playerHeight;
   width: $contentMinWidth!important;
   left:$_asiderWidth;
-  z-index: 2;
+  z-index: 3;
   /*top: 100%;*/
   transition: 0.2s transform ;
   // transform: translateY(90%) ; 
   display: flex;
   overflow: hidden;
+  flex-direction: column;
+    background: rgba(0, 0, 0, 1);
+
 }
 
 .visible{
@@ -38,6 +41,7 @@
   border-radius: 5px;
   // border: $border;
   text-align: center;
+  margin-top: 5px;
 }
 
 .content_dur{
@@ -78,13 +82,9 @@
 .content_options>div{
   margin: 0 $padding;
 }
-.range{
-  background: green;
-  width: 100%;
-  bottom: $playerHeight;
-  margin: 0 8px;
-  position: absolute;
-  visibility: hidden;
+.range{ 
+  width: 100%; 
+  visibility: visible;
 }
 .range_visible{
   composes:range;
@@ -97,18 +97,21 @@
 
 
 /*------------毛玻璃--------*/
-.fronsted_glass{
-  position:absolute;
-  content: "";
-  top:0;
-  right: 0;
-  left: 0;
-  bottom: 0;  
+.blurredContentFrame{
+  position: absolute;
+  overflow: hidden;
   filter: blur(8px);
-  z-index: -1; 
+  top:0; 
+  left: 0; 
+  background: red;    
+  z-index: 2;
   &::before{
-  // background: red;
-  }  
+     margin:-20px;
+
+  }
+}
+.fronsted_glass{ 
+  position: absolute;
 }
 
 
