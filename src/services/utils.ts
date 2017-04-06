@@ -29,9 +29,9 @@ export function seconds2time(seconds: number): string {
   return time;
 }
 
-export function transBigMath(value: number) {
+export function transBigMath(value: number): string {
   if (value < 1000) {
-    return value;
+    return value + "";
   }
   let v = +(value / 1000000).toFixed(2)
   if (v >= 1) {

@@ -107,7 +107,7 @@ class PlayerStore implements IPlayerStore {
   }
   @computed get playingUrl() {
     if (this.playingTrack) {
-      let url = this.playingTrack.stream_url;
+      let url = this.playingTrack.uri + "/stream";
       url = addAccessToken(url, '?');
       // console.log(url)
       return url
