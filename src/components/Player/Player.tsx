@@ -24,6 +24,7 @@ interface IPlayerState {
 @inject("PlayerStore", 'PerformanceStore')
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
+  blurredContentFrame: HTMLDivElement;
   scrollNode: any;
   fronsted_glass: HTMLDivElement;
   volumeContainerStyle: { left: number; };
@@ -103,7 +104,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         {/*<input type="file" onChange={this.handleFiles} />*/}
         <div className={styles.content_name}>
           <div >
-            <ArtWork clazz={styles.content_img} size={50} src={artworkUrl} />
+            <ArtWork clazz={styles.content_img} size={45} src={artworkUrl} />
           </div>
           <div className={styles.content_dur}>
             <span className={styles.trackName}>{trackName}</span>
@@ -160,8 +161,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                 wide={120}
                 data={100}
                 value={100 * volume}
-                backgroundColor={'#b6bbbb'}
-                defaultColor={'#9e9f9f'}
+                backgroundColor={'#9e9f9f'}
+                defaultColor={'#b6bbbb'}
                 contaiStyle={{ height: '7px' }}
                 dotStyle={{
                   backgroundColor: 'white',
@@ -178,8 +179,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
   }
   renderPlayerRanges = (store: IPlayerStore) => {
-    const { playingTrack, isPlaying } = store
-    const rangeClazz = playingTrack || isPlaying ? styles.range_visible : styles.range;
+    // const { playingTrack, isPlaying } = store
+    const rangeClazz = styles.range;
     const value = this.file && (this.processValue * this.file.size).toFixed(1)
 
     return (
@@ -190,6 +191,10 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             onDragEnd={this.handleProcessChange}
             onDragIng={this.handleProcessChange}
             data={this.file && this.file.size}
+            dotStyle={{ visibility: 'hidden' }}
+            contaiStyle={{ height: '4px' }}
+            backgroundColor={'#9e9f9f'}
+            defaultColor={'#b6bbbb'}
             value={value} />
         </div>
 
@@ -200,12 +205,16 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
    * 同步更新 glass的偏移值
    */
   initGlassData = () => {
+    if (0 == 0) {
+      return
+    }
     const ps = this.props.PerformanceStore
     if (ps) {
       let node$: any;
       const main = this.main
       const glass = this.fronsted_glass
       const style = glass.style;
+      const glassFrame = this.blurredContentFrame
       // let loadingAllSettle = false
 
       const resetNode$ = (glassNode: string) => {
@@ -213,6 +222,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         node$ = node$.cloneNode(true);
         glass.innerHTML = '';
         glass.appendChild(node$);
+        glassFrame.style.width = node$.offsetWidth + 'px';
+        glassFrame.style.height = node$.offsetHeight + 'px';
+
       }
 
       autorun(() => {
@@ -227,9 +239,10 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
           resetNode$(glassNode)
         }
         if (node$) {
-          console.log('node$.offsetWidth = ' + node$.offsetWidth)
+          // console.log('node$.offsetWidth = ' + node$.offsetWidth)
           style.width = node$.offsetWidth + 'px';
           style.height = node$.offsetHeight + 'px';
+
           // style.left = -(30) + "px"
           style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
         }
@@ -296,7 +309,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
   handleVolimeProcessChange = (percent: string) => {
     const p = this.props.PlayerStore
-    console.log(percent)
     if (p) {
       p.setVolume(+percent)
     }
@@ -318,8 +330,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         onMouseLeave={this.mouseOut}
         ref={r => this.main = r}>
         <div
-          ref={n => this.fronsted_glass = n}
-          className={styles.fronsted_glass}>
+          ref={n => this.blurredContentFrame = n}
+          className={styles.blurredContentFrame}>
+          <div
+            ref={n => this.fronsted_glass = n}
+            className={styles.fronsted_glass}>
+          </div>
         </div>
         {this.renderPlayerRanges(PlayerStore)}
         {this.renderPlayerOpearators(PlayerStore)}

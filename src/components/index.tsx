@@ -47,11 +47,9 @@ const routes = [
 
 class Main extends React.Component<any, undefined> {
   route: HTMLDivElement;
-
-
   render() {
     return (
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
         <Header />
         <div ref={n => this.route = n}>
           <Switch>
