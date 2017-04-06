@@ -1,6 +1,7 @@
 import * as React from "react";
 import Activities from '../Activities'
 // import { observable } from 'mobx'
+import ButtonMore from '../ButtonMore'
 import { observer, inject } from 'mobx-react'
 // import { action } from "mobx";
 
@@ -42,14 +43,25 @@ class Tracklist extends React.Component<any, any> {
 
   render() {
 
-    const {
-      TrackStore: { currentTracks, isLoading } } = this.props
-    // console.log('TracklistCount ===  ' + TracklistCount++)
-    return <Activities
-      isLoading={isLoading}
-      tracks={currentTracks} sortType={''}
-      scrollFunc={this.handleScroll}
-    />
+    const { TrackStore } = this.props;
+    const { currentTracks, isLoading } = TrackStore
+
+    return (
+      <div>
+        <Activities
+          isLoading={isLoading}
+          tracks={currentTracks} sortType={''}
+          scrollFunc={this.handleScroll}
+        />
+        <ButtonMore
+          onClick={() => TrackStore.fetchTracks()}
+          isHidden={isLoading || currentTracks.length > 20}
+          isLoading={isLoading}
+        >
+
+        </ButtonMore>
+      </div>
+    )
   }
 }
 // let TracklistCount = 0;

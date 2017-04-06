@@ -1,7 +1,7 @@
 @import "../../styles/variable.scss";
 
 .container{ 
-  background: $background; 
+  // background: $background; 
   width: $contentMinWidth;
   margin-top: $headerHight;
   margin-bottom: $playerHeight;
@@ -25,13 +25,15 @@
      background-position: center;
 }
 ._contentHeader_info{
-  background: linear-gradient(to bottom,transparent,white); 
+  // background: linear-gradient(to bottom,transparent,white); 
   padding: 20px 40px;
   position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 2;
-  width: 100%;
+  // top:0;
+  // right: 40%;
+  z-index: 2; 
+  overflow: hidden;
 }
 
 ._contentHeader_actions{
