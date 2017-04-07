@@ -8,13 +8,7 @@
   justify-content: space-around;
   position: relative;
 }
-  
 
-
-._contentBody{
-  display: flex; 
-  position: relative;
-}
 ._contentHeader{
   position: relative;
 }
@@ -81,7 +75,11 @@
  }
 
 /*--------body-----------*/
-
+._contentBody{
+  display: flex; 
+  position: relative;
+  padding: $padding/2  0;
+}
 ._songs_tag{
   color: #333;
   font-size: 1.2em;
@@ -96,8 +94,11 @@
 }
 
 ._contentBody_community{
-   flex: 2;
+  //  flex: 2;
+   border-left: 1px solid #a9a9a9;
+   padding-left: $padding;
  }
+
 ._contentBody_community_tag{
   padding-left: 10px;
   font-size: 18px;

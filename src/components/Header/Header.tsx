@@ -1,23 +1,21 @@
 import * as React from 'react';
-import { observer, inject } from "mobx-react";
+import { observer, inject } from 'mobx-react';
 import DevTool from 'mobx-react-devtools'
 import Link from '../StyleLink'
 import {
   withRouter
 } from 'react-router-dom'
-import { ISessionStore } from "../../store/index";
+import { ISessionStore } from '../../store/index';
 const styles = require('./header.scss');
 
 interface IHeaderProp {
   SessionStore: ISessionStore
 }
 const StyleButton = (props: any) => {
-  return <button
-
-    type="button">{props.children} </button>;
+  return <button type="button">{props.children} </button>;
 };
 
-@inject("SessionStore")
+@inject('SessionStore')
 @observer
 class Header extends React.Component<IHeaderProp, undefined> {
 
@@ -27,10 +25,6 @@ class Header extends React.Component<IHeaderProp, undefined> {
   };
   componentDidMount() {
     this.props.SessionStore.loadDataFromCookie();
-  }
-  componentWillReceiveProps(nextProps: any) {
-
-    console.log(nextProps)
   }
   render() {
 
@@ -62,7 +56,8 @@ class Header extends React.Component<IHeaderProp, undefined> {
                 to={{
                   pathname: '/users/home',
                   search: `?id=${user && user.id}`
-                }}>
+                }}
+              >
                 <StyleButton>home</StyleButton>
               </Link>
             </li>
@@ -73,10 +68,10 @@ class Header extends React.Component<IHeaderProp, undefined> {
             MY Music
             </div>
           <ul className={styles._aside_header_ul}>
-            <li><StyleButton> <i className='fa fa-star'></i> likes </StyleButton> </li>
-            <li><StyleButton> <i className='fa fa-music'></i> Tracks </StyleButton> </li>
-            <li><StyleButton> <i className='fa fa-users'></i> Followings</StyleButton> </li>
-            <li><StyleButton> <i className='fa fa-user'></i> Followers</StyleButton> </li>
+            <li><StyleButton> <i className="fa fa-star" /> likes </StyleButton> </li>
+            <li><StyleButton> <i className="fa fa-music" /> Tracks </StyleButton> </li>
+            <li><StyleButton> <i className="fa fa-users" /> Followings</StyleButton> </li>
+            <li><StyleButton> <i className="fa fa-user" /> Followers</StyleButton> </li>
             {/*wating*/}
             {/*<li><StyleButton> <i>o</i> Albums</StyleButton> </li>
             <li><StyleButton> <i>o</i> Recent</StyleButton> </li>
@@ -86,7 +81,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
         </div>
         <div className={styles._aside_playlist}>
           <div className={styles._aside_title}>
-            <span> MY PLAYLIST </span> <i className='fa fa-plus '></i>
+            <span> MY PLAYLIST </span> <i className="fa fa-plus " />
           </div>
           <ul className={styles._aside_header_ul}>
             <li><StyleButton> <i>🎶</i> Recent</StyleButton> </li>

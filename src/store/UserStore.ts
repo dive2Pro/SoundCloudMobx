@@ -1,12 +1,13 @@
 import {
-  observable, action
+  observable
+  , action
   , ObservableMap
-  , extendObservable, computed,
-  runInAction
-  // , observe
+  , extendObservable
+  , computed
+  , runInAction
   , isObservable
-
-} from "mobx";
+  ,
+} from 'mobx';
 import {
   FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES,
   FETCH_STREAM
@@ -16,24 +17,20 @@ import {
   , IActivitiesItem,
   IPlaylist,
   IStream
-} from "../interfaces/interface";
+} from '../interfaces/interface';
 import {
-  addAccessToken, apiUrl
-  // , apiUrlV2
-  // , unauthApiUrl,
-  , unauthApiUrlV2
-  // , unauthApiUrl
-} from "../services/soundcloundApi";
-import { ITrack } from "./index";
-import { BaseAct } from "./TrackStore";
+  addAccessToken, apiUrl,
+  unauthApiUrlV2
+  ,
+} from '../services/soundcloundApi';
+import { ITrack } from './index';
+import { BaseAct } from './TrackStore';
 import PerformanceStore from './PerformanceStore'
 import {
   logError
-  // , logInfo
+
 } from '../services/logger'
-import { extendsObservableObjFromJson } from "../services/utils";
-// import { extendsObservableObjFromJson } from '../services/utils'
-// import * as _ from "lodash";
+// import { extendsObservableObjFromJson } from '../services/utils';
 
 interface ICatchErr {
   err: any
@@ -53,7 +50,6 @@ export interface IActivitiesStore {
   filteredTracks: ITrack[];
 }
 
-
 class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesStore {
   @observable filteredActivities: IActivitiesItem[];
   constructor() {
@@ -63,11 +59,9 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
     return this.isLoadingByGenre.get(FETCH_ACTIVITIES) || false
   }
 
-
   @action setNextActivitiesHref(nextHref: string) {
     this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
   }
-
 
   @action addActivities(arr: IActivitiesItem[]) {
     const items = this.currentItems;
@@ -118,8 +112,9 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
     if (first && this.currentItems.length > 0) {
       return
     }
-    if (!this.isLoading)
+    if (!this.isLoading) {
       this.fetchActivities(this.nextHref);
+    }
   }
   @action async fetchActivities(nextHref?: string) {
     let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
@@ -151,7 +146,6 @@ export interface IUserStore {
   isLoginUser: boolean
 }
 
-
 export class UserStore implements IUserStore {
 
   userModels = new ObservableMap<UserModel>()
@@ -159,15 +153,14 @@ export class UserStore implements IUserStore {
   loginModel: IUserModel
   @observable userModel: IUserModel
   loginedUserId: number
-  constructor() { }
 
   initUser(obj: number | IUser): IUserModel {
     const isNumber = typeof obj === 'number'
     let id = isNumber ? obj : ((<IUser>obj).id)
-    let userModel = this.userModels.get(id + "")
+    let userModel = this.userModels.get(id + '')
     if (!userModel) {
       userModel = new UserModel(this, obj)
-      this.userModels.set(id + "", userModel)
+      this.userModels.set(id + '', userModel)
     } else if (!isNumber) {
       userModel.setUser(<IUser>obj)
     }
@@ -182,18 +175,21 @@ export class UserStore implements IUserStore {
     const lum = this.getLoginUserModel();
     return this.loginedUserId === (lum.user && lum.user.userId)
   }
-
+  @computed get isLogined() {
+    return this.loginedUserId != null
+  }
   setLoginUserModel(userId: number) {
     this.loginedUserId = userId
   }
   getLoginUserModel() {
-    if (!this.loginModel)
-      this.loginModel = <IUserModel>this.userModels.get(this.loginedUserId + "")
+    if (!this.loginModel) {
+      this.loginModel = <IUserModel>this.userModels.get(this.loginedUserId + '')
+    }
     return this.loginModel
   }
 
   fetchUserData(id: number) {
-    const userModel = this.userModels.get(id + "")
+    const userModel = this.userModels.get(id + '')
     if (userModel) {
       userModel.fetchUser()
       this.setCurrentUserModel(userModel)
@@ -209,6 +205,10 @@ export class UserStore implements IUserStore {
    * todo fix 404
    */
   async followUser(user: IUser) {
+    // todo 添加modal
+    if (!this.getLoginUserModel()) {
+      return
+    }
     const { id, isFollowing } = user
     // const isFollowing = await this.isFollowingUser(id)
     const raw = await fetch(apiUrl(`me/followings/${id}`, '?'), {
@@ -220,11 +220,11 @@ export class UserStore implements IUserStore {
     }
   }
 
-  // isFollowingUser(id: number): boolean {
-  //   const lm = this.getLoginUserModel()
-  //   if (!lm) return false
-  //   return lm.followings.find(u => u.id == id) != undefined
-  // }
+  isFollowingUser(id: number): boolean {
+    const lm = this.getLoginUserModel()
+    if (!lm) { return false }
+    return lm.followings.find(u => u.id === id) != null
+  }
 
   AllUsersFavorities(): ITrack[] {
     const tracks: ITrack[] = []
@@ -257,7 +257,6 @@ export class UserStore implements IUserStore {
 
 export interface IUserModel {
   user: User;
-  loadDataFromCookie: () => void;
   followers: IUser[];
   followings: IUser[];
   favorites: ITrack[];
@@ -318,9 +317,7 @@ class UserModel implements IUserModel {
   // TODO change to ObservableMap  
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
-
-  @observable streams: IStream[] = [];
-
+  @observable streams: IStream[] = []
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
 
@@ -329,6 +326,7 @@ class UserModel implements IUserModel {
     get: PerformanceStore.getLoadingStateWidthKey,
     set: PerformanceStore.setLoadingStateWithKey
   };
+
   nextHrefs = new ObservableMap<string>();
   userStore: UserStore;
 
@@ -348,15 +346,13 @@ class UserModel implements IUserModel {
   getAllTrackFromStreams(): ITrack[] {
     return this.streams.filter(stream => stream.track != null).map(s => s.track);
   }
-  loadDataFromCookie() {
 
-  }
-
-  //TODO : type
+  // TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
     logError(err);
-    if (fetchType)
-      this.resetLoadingState(fetchType);
+    if (fetchType) {
+      this.resetLoadingState(fetchType)
+    }
     throw err;
   }
 
@@ -368,15 +364,15 @@ class UserModel implements IUserModel {
   }
 
   async fetchUser() {
-    const url = apiUrl(`users/${this.user.userId}`, "?")
+    const url = apiUrl(`users/${this.user.userId}`, '?')
     try {
       const rawUser: any =
         await fetch(url)
           .then(data => data.json());
       this.user.updateFromServe(rawUser)
-      console.log(this.user)
+      // console.log(this.user)
     } catch (err) {
-      // this.catchError({ err });
+      this.catchError({ err });
     }
   }
 
@@ -398,23 +394,24 @@ class UserModel implements IUserModel {
   @action resetLoadingState(type: string) {
     this.isLoadings.set(type, false);
   }
+
+
   @action addData(type: string, fs: IUser[]) {
     const targetArr = this[type]
     if (!targetArr) {
       extendObservable(this[type], []);
     }
-    let user: any = {}
-    if (type === FETCH_FOLLOWERS) {
-      fs.forEach(data => {
-        user = new User(data)
-        targetArr.push(user);
-      })
-    } else if (type === FETCH_FOLLOWINGS) {
-      fs.forEach(data => {
-        user = new User(data)
-        targetArr.push(user);
-        user.isFollowing = true
 
+    let user: any = {}
+    // 除了是登录用户外,
+
+    if (type === FETCH_FOLLOWERS || type === FETCH_FOLLOWINGS) {
+      fs.forEach(data => {
+        user = new User(data)
+        targetArr.push(user)
+        if (this.userStore.isLogined) {
+          user.isFollowing = this.userStore.isFollowingUser(user.id);
+        }
       })
     } else {
       fs.forEach(data => targetArr.push(data))
@@ -422,55 +419,54 @@ class UserModel implements IUserModel {
   }
 
   apiStream(id: number) {
-    return unauthApiUrlV2(`stream/users/${id}`
-      , `limit=15&offset=0&linked_partitioning=1`)
+    return unauthApiUrlV2(`stream/users/${id}`, `limit=15&offset=0&linked_partitioning=1`)
   }
 
+
+
   @action async fetchWithType(type: string) {
-    if (this.isLoadings.get(type)) {
+    if (this.isLoadings.get(type) === true) {
       return
     }
     let id = this.user.userId;
     if (id == null) {
       return
     }
-    let url = this.nextHrefs.get(type)
-    // 
-    const fetchType = type;
+    const fetchType = type
+    let url = this.getFetchUrl(fetchType, id)
+    if (!url) { return }
+    try {
+      this.changeLoadingState(fetchType, true);
+      const data: any = await fetch(url).then(response => response.json());
+      if (Array.isArray(data)) {
+        this.addData(type, data);
+      } else {
+        this.addData(type, data.collection);
+        this.changeNextHrefs(fetchType, data.next_href);
+      }
+    } catch (err) {
+      this.catchError({ err, fetchType })
+    } finally {
+      this.changeLoadingState(fetchType, false)
+    }
+  }
 
+  private getFetchUrl(fetchType: string, id: number) {
+    let url = this.nextHrefs.get(fetchType)
     if (url) {
       url = addAccessToken(url, '&')
-    } else if (!url && this[type].length < 1) {
+    } else if (!url && this[fetchType].length < 1) {
       // debugger
       switch (fetchType) {
         case FETCH_STREAM:
           url = this.apiStream(id);
           break
         default:
-          url = `users/${id}/${type}`
+          url = `users/${id}/${fetchType}`
           url = apiUrl(url + `?limit=${limitPageSize}&offset=0&linked_partitioning=1`, '&')
-
-      }
-    } else {
-      return;
-    }
-
-    try {
-      this.changeLoadingState(fetchType, true);
-      const data: any = await fetch(url).then(response => response.json());
-      if (Array.isArray(data)) {
-        // debugger
-        this.addData(type, data);
-      } else {
-        this.addData(type, data.collection);
-        this.changeNextHrefs(fetchType, data.next_href);
       }
     }
-    catch (err) {
-      this.catchError({ err, fetchType })
-    } finally {
-      this.changeLoadingState(fetchType, false)
-    }
+    return url
   }
 }
 

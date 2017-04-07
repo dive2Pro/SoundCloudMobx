@@ -4,7 +4,7 @@ import { createTransformer } from 'mobx'
 import TrackTitleView from '../TrackTitleView';
 import HoverActions from '../HoverActions'
 import { observer } from 'mobx-react'
-import { ITrack, IPlayerStore } from "../../store/index";
+import { ITrack, IPlayerStore } from '../../store/index';
 import { transBigMath } from '../../services/utils'
 const styles = require('./minitrack.scss')
 interface IMiniTrackProps {
@@ -14,19 +14,20 @@ interface IMiniTrackProps {
 @observer
 class MiniTrack extends React.Component<IMiniTrackProps, any> {
   transform = (track: ITrack) => {
-    return createTransformer((track: ITrack) => {
-      const { comment_count, download_count
-        , playback_count, favoritings_count
+    return createTransformer(
+      (track: ITrack) => {
+        const { comment_count, download_count
+          , playback_count, favoritings_count
       } = track
 
-      return {
-        ...track,
-        comment_count: transBigMath(+comment_count),
-        download_count: transBigMath(+download_count),
-        playback_count: transBigMath(+playback_count),
-        favoritings_count: transBigMath(+favoritings_count),
-      }
-    })(track)
+        return {
+          ...track,
+          comment_count: transBigMath(+comment_count),
+          download_count: transBigMath(+download_count),
+          playback_count: transBigMath(+playback_count),
+          favoritings_count: transBigMath(+favoritings_count),
+        }
+      })(track)
   }
   render() {
     const { track, PlayerStore } = this.props
@@ -34,16 +35,20 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
     const { artwork_url } = track
     const isPlayingTrack = playingTrack === track
     const isTrackPlaying = isPlayingTrack && isPlaying
-    const playClazz = isTrackPlaying ? 'fa fa-pause' : "fa fa-play"
+    const playClazz = isTrackPlaying ? 'fa fa-pause' : 'fa fa-play'
 
     const configurations = [
       {
         fn: () => { PlayerStore.setPlayingTrack(track) },
-        className: playClazz + " fa-2x"
+        className: playClazz,
+        style: { width: '20px', height: '20px' }
+        // + ' fa-2x'
       },
       {
         fn: () => { PlayerStore.addToPlaylist(track) },
-        className: 'fa fa-folder-o fa-2x'
+        className: 'fa fa-plus',
+        style: { width: '20px', height: '20px' }
+        // +'fa - 2x'
       }
     ]
 
@@ -57,7 +62,9 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
         <div className={isPlayingTrack ? styles.visibleActions : styles.actions}>
           <HoverActions
             isVisible={isPlayingTrack}
-            configurations={configurations} />
+            configurations={configurations}
+
+          />
         </div>
       </div>
     );

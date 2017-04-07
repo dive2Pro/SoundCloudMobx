@@ -1,19 +1,19 @@
 import {
   observable, action
-} from "mobx";
+} from 'mobx';
 import {
   CLIENT_ID,
   REDIRECT_URI,
   OAUTH_TOKEN
-} from "../constants/authentification";
+} from '../constants/authentification';
 import {
   ISession, IUser
-} from "../interfaces/interface";
+} from '../interfaces/interface';
 // import TrackStore from './TrackStore'
 import UserList from './UserStore'
-import { apiUrl } from "../services/soundcloundApi";
-const SC = require("soundcloud");
-const Cookies = require("js-cookie")
+import { apiUrl } from '../services/soundcloundApi';
+const SC = require('soundcloud');
+const Cookies = require('js-cookie')
 
 // const Remotedev = require("mobx-remotedev");
 // @Remotedev({ name: "SessionStore" })
@@ -48,11 +48,11 @@ class SessionStore implements ISessionStore {
 
   //TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
-    console.error(err);
+    // console.error(err);
     throw err;
   }
   @action login() {
-    if (this.loadDataFromCookie()) return
+    if (this.loadDataFromCookie()) { return }
     SC.initialize({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI });
     SC.connect().then((session: ISession) => {
       Cookies.set(OAUTH_TOKEN, session.oauth_token);
@@ -64,8 +64,9 @@ class SessionStore implements ISessionStore {
     });
   }
 
+  // tslint:disable-next-line:variable-name
   @action fetchUser(oauth_token: string) {
-    const url = apiUrl(`me`, "?")
+    const url = apiUrl(`me`, '?')
     fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {

@@ -90,7 +90,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const loc = this.props.location
     if (loc) {
       //todo id undefined redicet to other 
-      const id = +qs.parse(loc.search.substr(1))['id'];
+      const id = +qs.parse(loc.search.substr(1)).id
       this.changeUserId(id)
     }
   }
@@ -107,7 +107,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   componentDidUpdate(prevProps: any, prevState: any) {
     const loc = this.props.location;
     if (loc.search !== prevProps.location.search) {
-      const id = +qs.parse(loc.search.substr(1))['id']
+      const id = +qs.parse(loc.search.substr(1)).id
       this.changeUserId(id)
     }
   }
@@ -236,21 +236,27 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               <Route
                 path={`${url}/followers`}
                 render={() => {
-                  return <CommunityContainer
-                    isLoading={isloadingFollowers}
-                    scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
-                    users={followers}
-                  />
+                  return (
+                    <CommunityContainer
+                      isLoading={isloadingFollowers}
+                      scrollFunc={() =>
+                        this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
+                      users={followers}
+                    />
+                  )
                 }}
               />
               <Route
                 path={`${url}/followings`}
                 render={() => {
-                  return <CommunityContainer
-                    isLoading={isloadingFollowings}
-                    scrollFunc={() => this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
-                    users={followings}
-                  />
+                  return (
+                    <CommunityContainer
+                      isLoading={isloadingFollowings}
+                      scrollFunc={() =>
+                        this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
+                      users={followings}
+                    />
+                  )
                 }}
               />
               <Route
@@ -260,9 +266,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               <Route
                 path={`${url}/playlist`}
                 render={(match: any) => {
-                  return <Playlist
-                    scrollFunc={this.handleFetchMorePlaylist}
-                    userModel={userModel} />
+                  return (
+                    <Playlist
+                      scrollFunc={this.handleFetchMorePlaylist}
+                      userModel={userModel}
+                    />
+                  )
                 }}
               />
               <Route

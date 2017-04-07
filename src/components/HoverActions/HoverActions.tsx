@@ -6,7 +6,7 @@ const styles = require('./hoveractions.scss')
 interface IconfiguType {
   fn?: () => void
   className: string
-  activeStyle?: {}
+  style?: {}
   children?: React.ReactChild
 }
 interface IHoverActionsProp {
@@ -15,16 +15,19 @@ interface IHoverActionsProp {
 }
 
 export const Action = (cfg: IconfiguType) => {
-  const { fn, className, activeStyle, children } = cfg
-  return (<div
-    className={styles.btnContainer}
-    style={activeStyle}>
-    <ButtonInline
-      onClick={fn && fn}>
-      <i className={className}></i>
-      {children}
-    </ButtonInline>
-  </div>
+  const { fn, className, style, children } = cfg
+  return (
+    <div
+      className={styles.btnContainer}
+      style={style}
+    >
+      <ButtonInline
+        onClick={fn && fn}
+      >
+        <i className={className} />
+        {children}
+      </ButtonInline>
+    </div>
   )
 }
 
@@ -34,11 +37,11 @@ const HoverActions = observer(function HoverActions(prop: IHoverActionsProp) {
   return (
     <div styleName={styleName}>
       {configurations.map((cfg, index) => {
-        return <Action
-          {...cfg}
-          key={index + cfg.className} >
-
-        </Action>
+        return (
+          <Action
+            {...cfg}
+            key={index + cfg.className}
+          />)
       })}
     </div>
   )

@@ -15,15 +15,18 @@ interface IViewALLProp {
 const ViewALL = (prop: IViewALLProp) => {
 
   return (
-    <div
-      styleName="base">
+    <div styleName="base">
       <div >
-        <i className={prop.clazz}></i>
+        <i className={prop.clazz} />
         <span>{prop.count}  {prop.typeContent}</span>
       </div >
       <span styleName="view">
-        <Link path={prop.path}
-          id={prop.id}> View all</Link></span>
+        <Link
+          path={prop.path}
+          id={prop.id}
+        > View all
+        </Link>
+      </span>
     </div >
   );
 
