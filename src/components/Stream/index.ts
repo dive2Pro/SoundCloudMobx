@@ -1,2 +1,4 @@
 import S from './Stream';
-export { S as default };
+import StreamMain from './StreamMain'
+
+export { S as default, StreamMain };

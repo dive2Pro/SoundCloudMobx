@@ -361,17 +361,7 @@ class UserModel implements IUserModel {
     return this.streams.filter(stream => stream.track != null).map(s => s.track);
   }
 
-  // TODO : type
-  @action catchError({ err, fetchType }: ICatchErr) {
-    logError(err.type, err.msg);
 
-    if (fetchType) {
-      this.resetLoadingState(fetchType)
-    }
-
-
-    throw err;
-  }
 
   @action fetchCommunityData() {
     this.fetchWithType(FETCH_FOLLOWERS);
@@ -389,7 +379,7 @@ class UserModel implements IUserModel {
       // .then(data => data.json()); 
       this.user.updateFromServe(rawUser)
     } catch (err) {
-      this.catchError({ err, fetchType: FETCH_USER });
+      this.catchErr(err, FETCH_USER);
     } finally {
       this.changeLoadingState(FETCH_USER, false)
     }
@@ -465,7 +455,7 @@ class UserModel implements IUserModel {
         this.changeNextHrefs(fetchType, data.next_href);
       }
     } catch (err) {
-      this.catchError({ err, fetchType })
+      this.catchErr({ err, fetchType }, fetchType)
     } finally {
       this.changeLoadingState(fetchType, false)
     }

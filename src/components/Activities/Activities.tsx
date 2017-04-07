@@ -13,7 +13,7 @@ interface IActivitiesProps {
   tracks: ITrack[],
   sortType: string
   scrollFunc?: () => void
-  isError: boolean
+  isError?: boolean
 }
 
 @inject('PlayerStore', 'PerformanceStore')
@@ -30,6 +30,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       isLoading,
       tracks,
       sortType,
+      isError,
       PlayerStore: store } = this.props;
 
     if (!store || !tracks) {
@@ -50,7 +51,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         </div>
         <LoadingSpinner
           isLoading={isLoading}
-          isError={true}
+          isError={isError}
           onErrorHandler={() => this.props.scrollFunc && this.props.scrollFunc()}
         />
       </div >
