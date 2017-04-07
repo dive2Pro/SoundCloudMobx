@@ -78,7 +78,11 @@ class FilterActivities extends React.Component<any, any> {
       activeType: this.actStore.sortType
     };
 
-    const { filteredTracks, isLoading, sortType } = this.actStore
+    const { filteredTracks
+      , isLoading
+      , sortType
+      , currentGenre
+      , isError } = this.actStore
     return (
       <div>
         <div className={styles.types}>
@@ -91,6 +95,7 @@ class FilterActivities extends React.Component<any, any> {
           sortType={sortType}
           tracks={filteredTracks}
           isLoading={isLoading}
+          isError={isError(currentGenre)}
         />
       </div>
     );

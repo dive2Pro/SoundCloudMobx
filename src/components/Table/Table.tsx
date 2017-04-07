@@ -59,7 +59,7 @@ const Thead = ({ data }: ItableHeadProp) => {
       {data.map((item, i) => {
         const { title, width } = item
         return (
-          <th key={i + "-" + width} width={width + "%"}>
+          <th key={i + '-' + width} width={width + '%'}>
             {title}
           </th>
         )
@@ -71,12 +71,11 @@ const Thead = ({ data }: ItableHeadProp) => {
 interface ITBodyTrProp {
   data: ITableBody
 }
-let TBodyTrCount = 0
+
 const TBodyTr = ({ data }: ITBodyTrProp) => {
   const { trackId: id, bodyData, configurations, live } = data
   const tds = bodyData.map((bitem, i) => {
     const { title, tag, onClick } = bitem;
-    console.log('TBodyTrCount = ' + TBodyTrCount++)
     const renderNormalDom = (<div className={styles.duration}>{title}</div>)
 
     const anchorClazz = live ? styles.liveanchor : styles.anchor;
@@ -91,19 +90,24 @@ const TBodyTr = ({ data }: ITBodyTrProp) => {
           (bitem.render) ?
             bitem.render() : renderNormalDom
         }
-        {tag && <div className={styles.actions}>
-          <HoverActions
-            configurations={configurations}
-            isVisible={true} />
-        </div>}
+        {tag && (
+          <div className={styles.actions}>
+            <HoverActions
+              configurations={configurations}
+              isVisible={true}
+            />
+          </div>)}
       </td>)
   })
+  // tslint:disable-next-line:no-use-before-declare
   const preKey = UniqueKey[UniqueKey.length - 1].length++;
-  return (<tr className={styles.ttr}
-    key={id + "-!-" + preKey}
-  >
-    {tds}
-  </tr>)
+  return (
+    <tr
+      className={styles.ttr}
+      key={id + '-!-' + preKey}
+    >
+      {tds}
+    </tr>)
 }
 const UniqueKey: any[] = [];
 
@@ -129,7 +133,7 @@ class Tbody extends React.Component<{ arr: ITableBody[] }, any> {
         {arr.map((item, i) => {
           return (
             <TBodyTr
-              key={item.trackId + "--" + i}
+              key={item.trackId + '--' + i}
               data={item}
             />
           )

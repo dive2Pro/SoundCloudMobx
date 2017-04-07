@@ -152,9 +152,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     return this.nextHrefsByGenre.get(this.currentGenre) || ''
   }
 
-
-
-  isError(genre: string): boolean {
+  isError = (genre: string): boolean => {
     return this.isErrorsMap.get(genre) || false
   }
 

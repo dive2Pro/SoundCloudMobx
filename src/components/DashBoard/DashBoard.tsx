@@ -116,14 +116,15 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   FavoView = () => {
-    const { userModel } = this.props.UserStore
-    const { favorites } = userModel
+    const { userModel, } = this.props.UserStore
+    const { favorites, isError } = userModel
     const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_FAVORITES);
     return () => (
       <div >
         <p className={styles._songs_tag}>FAVORITES SONGS</p>
         <Activities
           sortType={''}
+          isError={isError(fetchTypes.FETCH_FAVORITES)}
           isLoading={isloadingFavorites}
           scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
           tracks={favorites}

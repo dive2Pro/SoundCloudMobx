@@ -62,27 +62,28 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       , user, artwork_url } = currentTrack
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.CommentStore
-    return (<div>
-      <TrackProfile
-        bigPic={artwork_url}
-        label_name={label_name}
-        track={currentTrack}
-        type={'Track'}
-        user={user}
-      />
-
-      <div className={styles.comments}>
-        <div className={styles.commentsCount}>
-          Comments : {commentsCount}
-        </div>
-
-        <CommentsContainer
-          CommentStore={this.props.CommentStore}
+    return (
+      <div>
+        <TrackProfile
+          bigPic={artwork_url}
+          label_name={label_name}
           track={currentTrack}
-          scrollFunc={this.handleFetchMoreComments}
+          type={'Track'}
+          user={user}
         />
-      </div>
-    </div>)
+
+        <div className={styles.comments}>
+          <div className={styles.commentsCount}>
+            Comments : {commentsCount}
+          </div>
+
+          <CommentsContainer
+            CommentStore={this.props.CommentStore}
+            track={currentTrack}
+            scrollFunc={this.handleFetchMoreComments}
+          />
+        </div>
+      </div>)
   }
   render() {
     const {

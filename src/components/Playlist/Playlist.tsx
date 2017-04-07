@@ -123,6 +123,7 @@ export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
           isLoading={false}
           scrollFunc={() => { }}
           sortType=""
+          isError={false}
           tracks={tracks}
         />
       </div>
