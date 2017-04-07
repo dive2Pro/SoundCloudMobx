@@ -6,11 +6,11 @@ import { IPlayerStore } from '../../store/PlayerStore'
 import {
   ICommentStore,
   ITrack
-} from "../../store/index";
+} from '../../store/index';
 import LoadingSpinner from '../LoadingSpinner'
 
 import CommentsContainer from '../Comments'
-import { FETCH_TRACK } from "../../constants/fetchTypes";
+import { FETCH_TRACK } from '../../constants/fetchTypes';
 const qs = require('qs')
 const styles = require('./track.scss');
 
@@ -24,7 +24,7 @@ interface ITracklistinfoViewProps {
 }
 
 
-@inject("TrackStore", 'PlayerStore', "CommentStore")
+@inject('TrackStore', 'PlayerStore', 'CommentStore')
 @observer
 class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
@@ -62,7 +62,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
       , user, artwork_url } = currentTrack
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.CommentStore
-    return <div>
+    return (<div>
       <TrackProfile
         bigPic={artwork_url}
         label_name={label_name}
@@ -82,10 +82,13 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
           scrollFunc={this.handleFetchMoreComments}
         />
       </div>
-    </div>
+    </div>)
   }
   render() {
-    const { currentTrack, isLoading } = this.props.TrackStore
+    const {
+       currentTrack,
+      isLoading
+     } = this.props.TrackStore
 
     return (
       <div className={styles.main}>

@@ -13,7 +13,8 @@ import {
   apiUrl
 } from '../services/soundcloundApi'
 import UserStore, { ActivitiesStore } from './UserStore'
-import PerformanceStore from "./PerformanceStore";
+import PerformanceStore from './PerformanceStore';
+import { RaceFetch as fetch } from '../services/Fetch'
 // import { FETCH_TRACK } from "../constants/fetchTypes";
 
 
@@ -24,17 +25,21 @@ export class Track {
   }
 }
 
-export interface ITrackStore {
+export interface ITrackStore extends IBaseActStore {
   fetchTracks: () => void;
-  isLoading: boolean;
   currentTracks: ITrack[]
   currentTrack: ITrack
   setGenre: (genre: string) => void;
   setTrackId: (id: number) => void
-  currentGenre: string
   hasMoreTracks: boolean
 }
-export abstract class BaseAct<T> {
+
+export interface IBaseActStore {
+  isLoading: boolean;
+  currentGenre: string
+  isError: (genre: string) => boolean
+}
+export abstract class BaseAct<T> implements IBaseActStore {
 
   // 记得初始化
   itemsMap = new ObservableMap<T[]>();
@@ -42,6 +47,7 @@ export abstract class BaseAct<T> {
   isLoadingByGenre = {
     get: PerformanceStore.getLoadingStateWidthKey
   }
+  isErrorsMap = new ObservableMap<boolean>()
 
   @observable filterType: string
   @observable filterTitle: string
@@ -56,6 +62,9 @@ export abstract class BaseAct<T> {
     this.setGenre(genre);
   }
 
+  @computed get isLoading(): boolean {
+    return this.isLoadingByGenre.get(this.currentGenre) || false
+  }
 
   initFilterFunction(type: string) {
 
@@ -79,7 +88,7 @@ export abstract class BaseAct<T> {
   @action setSortType(type: string) {
     this.sortType = type;
   }
-  @action setFilterType(filterType: string = "") {
+  @action setFilterType(filterType: string = '') {
     this.filterType = filterType;
   }
 
@@ -140,20 +149,31 @@ export abstract class BaseAct<T> {
   }
 
   @computed get nextHref() {
-    return this.nextHrefsByGenre.get(this.currentGenre) || ""
+    return this.nextHrefsByGenre.get(this.currentGenre) || ''
+  }
+
+
+
+  isError(genre: string): boolean {
+    return this.isErrorsMap.get(genre) || false
+  }
+
+  protected catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+
   }
 }
 
 class TrackStore extends BaseAct<ITrack> implements ITrackStore {
-  token: string = ""
+  token: string = ''
   static defaultGenre = 'country';
   @observable currentTrack: ITrack
+
+
   @computed get hasMoreTracks() {
     return this.hasCurrentGenreTracks
   }
-  @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(this.currentGenre) || false
-  }
+
 
   @computed get hasCurrentGenreTracks() {
     // const items = this.itemsMap.get(this.currentGenre)
@@ -211,7 +231,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
 
 
   fetchSingleTrack(id: number) {
-    const url = apiUrl(`tracks/${id}`, "?")
+    const url = apiUrl(`tracks/${id}`, '?')
     this.fetchData(url, (data) => {
       // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.  
       this.setCurrentTrack(data);// mayby Track?
@@ -219,14 +239,16 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     })
   }
 
+
+
   @action async fetchTracks() {
     if (this.isLoading) {
       return;
     }
-    let genre = this.currentGenre || "country", url;
+    let genre = this.currentGenre || 'country', url;
     url = this.nextHref
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
+      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, '&')
     }
 
     this.fetchData(url, (data: any) => {
@@ -244,17 +266,20 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     }
 
   }
+
   //这里设计的不好,genre不太可调?
+
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
-  async fetchData(url: string, fn: (data: any) => void, gr?: string) {
+  private async fetchData(url: string, fn: (data: any) => void, gr?: string) {
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
-      const raw: any = await fetch(url)
-      const data = await raw.json()
+      const data: any = await fetch(url)
       runInAction('loaddata', () => {
         fn.call(this, data)
       })
+    } catch (e) {
+      this.catchErr(e, genre)
     } finally {
       this.setLoadingByGenre(genre, false)
     }

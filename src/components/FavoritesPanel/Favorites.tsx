@@ -18,7 +18,7 @@ const Favorites = observer((prop: IFavoritesProp) => {
   const { PlayerStore, UserModel } = prop
   const { favorites } = UserModel
   const isLoading = UserModel.isLoading(FETCH_FAVORITES)
-
+  const isError = UserModel.isError(FETCH_FAVORITES);
   const obj = {
     clazz: 'fa fa-like',
     count: favorites.length,
@@ -41,7 +41,11 @@ const Favorites = observer((prop: IFavoritesProp) => {
               track={track}
             />)
         })}
-        <LoadingSpinner isLoading={isLoading} />
+        <LoadingSpinner
+          isError={isError}
+          onErrorHandler={() => UserModel.fetchWithType(FETCH_FAVORITES)}
+          isLoading={isLoading}
+        />
       </div>
     </section>
   );

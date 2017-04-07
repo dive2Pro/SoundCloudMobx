@@ -5,9 +5,8 @@ import {
   , ObservableMap
   , computed
   , expr
-  , when
+  // , when
 } from 'mobx'
-// import TrackStore from './TrackStore'
 
 export interface IPerformanceStore {
   scrollLimit: number[]
@@ -25,19 +24,11 @@ class PerformanceStore implements IPerformanceStore {
 
   scrollLimitByGenre = new ObservableMap<number[]>()
   @observable genre: string
-  //这个用来记录当前应该被 player 进行毛玻璃效果处理的dom id
+  // 这个用来记录当前应该被 player 进行毛玻璃效果处理的dom id
   @observable glassNode: string
   @observable scrollY: number
   isLoadingsByKey = new ObservableMap<boolean>();
-  constructor() {
 
-    when(() => this.allLoadingIsSettle,
-      () => {
-
-      }
-    )
-
-  }
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }
@@ -46,8 +37,10 @@ class PerformanceStore implements IPerformanceStore {
     this.genre = genre;
     if (!this.scrollLimitByGenre.get(genre)) {
       // window.innerHeight + window.pageYOffset
-      this.scrollLimitByGenre.set(genre,
-        [window.innerHeight, window.innerHeight])
+      this.scrollLimitByGenre.set(
+        genre,
+        [window.innerHeight, window.innerHeight]
+      )
     }
   }
 
@@ -69,23 +62,23 @@ class PerformanceStore implements IPerformanceStore {
   }
 
   @action setLoadingStateWithKey = (key: string, loading: boolean) => {
-
     this.isLoadingsByKey.set(key, loading)
-
   }
 
   getLoadingStateWidthKey = (key: string) => {
     return this.isLoadingsByKey.get(key) || false
   }
 
+  /**
+   * 当前所以请求完毕
+   */
   @computed get allLoadingIsSettle(): boolean {
-
     const allSettle = expr(() =>
       Array.from(this.isLoadingsByKey.values()).every(v => v === false))
-    // 这里只运行一次,得到true之后,解绑,如果里面有元素变化则再次绑定
-
     return allSettle
   }
+
+
 
 }
 
