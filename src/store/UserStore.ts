@@ -3,6 +3,9 @@ import {
   , ObservableMap
   , extendObservable, computed,
   runInAction
+  // , observe
+  , isObservable
+
 } from "mobx";
 import {
   FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES,
@@ -28,7 +31,9 @@ import {
   logError
   // , logInfo
 } from '../services/logger'
-import { extendsObservableObjFromJson } from '../services/utils'
+import { extendsObservableObjFromJson } from "../services/utils";
+// import { extendsObservableObjFromJson } from '../services/utils'
+// import * as _ from "lodash";
 
 interface ICatchErr {
   err: any
@@ -274,20 +279,34 @@ export interface IUserModel {
 
 export class User {
   userId: number
-
+  description: string
+  objMap = new ObservableMap<any>()
   @observable isFollowing: boolean = false
 
   constructor(obj: IUser | number) {
     if (typeof obj === 'number') {
       this.userId = obj
+      return this;
     } else {
       this.userId = obj.id
       this.updateFromServe(obj);
     }
   }
 
-  @action updateFromServe(rawUser: IUser) {
-    extendsObservableObjFromJson(this, rawUser);
+  @action updateFromServe = (rawUser: IUser) => {
+    // extendsObservableObjFromJson(this, rawUser);
+    // _.assignInWith(this, _.cloneDeep(rawUser))
+    for (let p in rawUser) {
+      if (!isObservable(this[p])) {
+        this.objMap.set(p, rawUser[p]);
+        Object.defineProperty(this, p, {
+          get: () => {
+            return this.objMap.get(p);
+          }
+        })
+      }
+    }
+
   }
 
   @action setFollowingState(following: boolean) {
@@ -299,7 +318,7 @@ class UserModel implements IUserModel {
   // TODO change to ObservableMap  
   @observable followers: IUser[] = [];
   @observable followings: IUser[] = [];
-  // 
+
   @observable streams: IStream[] = [];
 
   @observable favorites: ITrack[] = [];
@@ -320,6 +339,7 @@ class UserModel implements IUserModel {
     this.userStore = userStore
     if (typeof obj == 'number') {
       this.user = new User(obj)
+      observable.struct(this.user);
       this.fetchUser()
     } else {
       this.setUser(obj)
@@ -350,9 +370,11 @@ class UserModel implements IUserModel {
   async fetchUser() {
     const url = apiUrl(`users/${this.user.userId}`, "?")
     try {
-      const rawUser: any = await fetch(url)
-        .then(data => data.json());
+      const rawUser: any =
+        await fetch(url)
+          .then(data => data.json());
       this.user.updateFromServe(rawUser)
+      console.log(this.user)
     } catch (err) {
       // this.catchError({ err });
     }
@@ -432,7 +454,6 @@ class UserModel implements IUserModel {
     } else {
       return;
     }
-    console.log(url);
 
     try {
       this.changeLoadingState(fetchType, true);
@@ -441,7 +462,6 @@ class UserModel implements IUserModel {
         // debugger
         this.addData(type, data);
       } else {
-        console.log(type, data)
         this.addData(type, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
       }

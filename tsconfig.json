@@ -3,7 +3,10 @@
     "outDir": "build/dist",
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -15,8 +18,9 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "experimentalDecorators":true
+    "noUnusedLocals": false,
+    "experimentalDecorators": true,
+    "allowUnusedLabels": false
   },
   "exclude": [
     "node_modules",

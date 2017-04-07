@@ -30,7 +30,7 @@ const UserContainer = observer(function UserContainer(props: IUserContainerProps
     <div className={styles.container}>
       <ArtWork size={62} src={avatar_url} clazz="user" />
       <section className={styles.content}>
-        <Permalink clazz='user' id={id} fullname={username || full_name} />
+        <Permalink clazz="user" id={id} fullname={username || full_name} />
         <InfoList data={infodata} />
       </section>
       <div className={styles.actions}>

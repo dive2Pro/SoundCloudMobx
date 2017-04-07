@@ -6,7 +6,7 @@ import { IUserModel, IUserStore } from '../../store'
 // import { FETCH_FOLLOWINGS, FETCH_FOLLOWERS } from '../../constants/fetchTypes'
 import ButtonMore from '../ButtonMore';
 import ViewAll from '../ViewAll';
-import { User } from "../../store/UserStore";
+import { User } from '../../store/UserStore';
 const styles = require('./followers.scss')
 const debounce = require('lodash/debounce')
 
@@ -23,8 +23,8 @@ export interface IFollowersProps {
 }
 @inject('UserStore')
 @observer
-class Followers extends React.PureComponent<IFollowersProps, any> {
-  debounceFunc: any;
+class Followers extends React.PureComponent<IFollowersProps, {}> {
+  debounceFunc: {};
 
   constructor() {
     super()
@@ -33,7 +33,7 @@ class Followers extends React.PureComponent<IFollowersProps, any> {
   getSpecObj = (user: User, type: string) => {
     return {
       count: user && user[`${type}_count`],
-      clazz: "fa fa-users",
+      clazz: 'fa fa-users',
       path: type,
       typeContent: type,
       id: user && user.userId
@@ -41,44 +41,45 @@ class Followers extends React.PureComponent<IFollowersProps, any> {
   }
   handleFollowUser = (user: IUser) => {
     const { UserStore } = this.props
-    const debounceFunc = debounce(() => {
-      if (UserStore) UserStore.followUser(user);
-    }, 500)
+    const debounceFunc = debounce(
+      () => {
+        if (UserStore) {
+          UserStore.followUser(user);
+        }
+      }, 500)
     return () => {
       debounceFunc();
     }
   }
-  // isFollowingUser = (user: IUser) => {
-  // const { UserStore } = this.props
-  // if (UserStore) {
-  // return UserStore.isFollowingUser(user.id)
-  // }
-  // return false
-  // }
-
   render() {
     const { UserModel: um, type: t } = this.props
     const type = FollowType[t].toLowerCase();
     const { user } = um
     const users = um[type];
     const isLoading = um.isLoading(type)
+    const limitUsers = users.slice(0, 3)
 
-    const limitUsers = users.slice(0, 3);
-
-    return <section className={styles.base}>
-      <div className={styles.top}>
-        <ViewAll {...this.getSpecObj(user, type) } />
-      </div>
-      <div className={styles.main}>
-        {limitUsers.map((user: IUser) => {
-          return <UserItemContainer
-            key={user.id + "-panel"}
-            onClick={this.handleFollowUser(user)}
-            user={user} />
-        })}
-        <ButtonMore isLoading={isLoading} onClick={() => { }} />
-      </div>
-    </section>
+    return (
+      <section
+        className={styles.base}
+      >
+        <div className={styles.top}>
+          <ViewAll {...this.getSpecObj(user, type) } />
+        </div>
+        <div className={styles.main}>
+          {limitUsers.map((user: IUser, i: number) => {
+            return (
+              <UserItemContainer
+                key={i + '-' + user.id + '-panel'}
+                onClick={this.handleFollowUser(user)}
+                user={user}
+              />
+            )
+          })}
+          <ButtonMore isLoading={isLoading} onClick={() => { }} />
+        </div>
+      </section>
+    )
   }
 }
 
