@@ -3,7 +3,10 @@ import { observer, inject } from 'mobx-react'
 import { IUser } from '../../interfaces/interface'
 import UserItemContainer from '../MiniUser'
 import { IUserModel, IUserStore } from '../../store'
-// import { FETCH_FOLLOWINGS, FETCH_FOLLOWERS } from '../../constants/fetchTypes'
+import {
+  // FETCH_FOLLOWINGS,
+  FETCH_FOLLOWERS
+} from '../../constants/fetchTypes'
 import ButtonMore from '../ButtonMore';
 import ViewAll from '../ViewAll';
 import { User } from '../../store/UserStore';
@@ -26,14 +29,11 @@ export interface IFollowersProps {
 class Followers extends React.PureComponent<IFollowersProps, {}> {
   debounceFunc: {};
 
-  constructor() {
-    super()
-  }
   // TODO refacotror for repeart this with follower  
   getSpecObj = (user: User, type: string) => {
     return {
       count: user && user[`${type}_count`],
-      clazz: 'fa fa-users',
+      clazz: `fa fa-${type === FETCH_FOLLOWERS ? 'user' : 'users'}`,
       path: type,
       typeContent: type,
       id: user && user.userId
@@ -64,9 +64,12 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
         className={styles.base}
       >
         <div className={styles.top}>
-          <ViewAll {...this.getSpecObj(user, type) } />
+          <ViewAll
+            {...this.getSpecObj(user, type) }
+          />
         </div>
-        <div className={styles.main}>
+        <div
+          className={styles.main}>
           {limitUsers.map((user: IUser, i: number) => {
             return (
               <UserItemContainer

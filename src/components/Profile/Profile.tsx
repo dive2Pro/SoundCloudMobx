@@ -39,9 +39,9 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           path="playlist"
           id={id}
         ><i>PlayList</i>
-          <em>
+          <span>
             {playlist_count}
-          </em>
+          </span>
         </Link>
       </li>
       <li>
@@ -49,9 +49,9 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           path="followings"
           id={id}
         ><i>Followings</i>
-          <em>
+          <span>
             {followings_count + ''}
-          </em>
+          </span>
         </Link>
       </li>
       <li>
@@ -60,7 +60,7 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           id={id}
         >
           <i>Followers</i>
-          <em>{followers_count + ''}</em>
+          <span>{followers_count + ''}</span>
         </Link>
       </li>
     </ul>

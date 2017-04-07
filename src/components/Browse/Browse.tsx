@@ -10,8 +10,8 @@ import {
   // , Redirect
 } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
-import { ITrackStore } from "../../store/index";
-import { IPerformanceStore } from "../../store/PerformanceStore";
+import { ITrackStore } from '../../store/index';
+import { IPerformanceStore } from '../../store/PerformanceStore';
 interface IDashBorardProps {
   location?: any,
   genre?: string
@@ -23,8 +23,8 @@ interface IDashBorardProps {
 
 const FlagLink = ({ to, label }: any) => {
   return <Route path={to} exact={true} children={({ match }: any) => {
-    return (<div className={match ? "active" : ""}>
-      {match ? <i className='fa fa-flag'></i> : ""}
+    return (<div className={match ? 'active' : ''}>
+      {match ? <i className="fa fa-flag"></i> : ''}
       <Link to={to} >{label}</Link>
     </div>)
   }}
@@ -37,30 +37,22 @@ class Browse extends React.Component<IDashBorardProps, any> {
     genre: GENRES[0]
   }
   componentDidMount() {
-    this.setCurrentGenreView()
     this.props.PerformanceStore.setCurrentGlassNodeId('Browser')
+    this.setCurrentGenreView()
   }
   setCurrentGenreView() {
     const { TrackStore, history } = this.props
-    const genre = TrackStore.currentGenre
+    const genre = TrackStore.currentGenre || Browse.defaultProps.genre
     if (genre) {
       history.push(`/main/genre=${genre}`)
     }
   }
   componentWillReceiveProps(nextProps: any) {
-    console.info('componentWillReceiveProps', nextProps)
+    // console.info('componentWillReceiveProps', nextProps)
     const { match: { isExact } } = nextProps
     if (isExact) {
       this.setCurrentGenreView()
     }
-  }
-  componentDidUpdate(prevProps: any) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-
-    }
-  }
-  componentWillUnmount() {
-    console.info('componentWillUnmount')
   }
   render() {
     // const { } = this.props.location
@@ -70,14 +62,16 @@ class Browse extends React.Component<IDashBorardProps, any> {
         className={styles.container}>
         <nav className={styles.nav}>
           {GENRES.map((item, i) => {
-            return <FlagLink
-              key={i + "-" + item}
+            return (<FlagLink
+              key={i + '-' + item}
               to={`/main/genre=${item}`}
-              label={item} />
+              label={item} />)
           })}
         </nav>
         <Route
-          path={`/main/genre=:genre`} component={TrackList} />
+          path={`/main/genre=:genre`}
+          component={TrackList}
+        />
       </div>
     );
   }

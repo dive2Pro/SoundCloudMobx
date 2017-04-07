@@ -6,7 +6,7 @@
   margin: 1.429em 0;
   &:hover{
     .actions{
-      transform: translateX(0)
+       opacity:1;
     }
   }
 }
@@ -19,10 +19,11 @@
   overflow: inherit;
   width: inherit;
 }
+
 .actions{
   // position: absolute;
-  transition: transform 0.2s ease;
-  transform: translateX(1010%);
+  transition: opacity 0.2s ease;
+  opacity: 0;
   position: absolute;
   right: 0;
   padding: $padding;
@@ -33,5 +34,5 @@
 }
 .visibleActions{
   composes:actions;
-  transform: translateX(0);
+  opacity:1;
 }

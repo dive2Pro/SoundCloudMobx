@@ -1,2 +1,2 @@
-import F, { FollowType } from './Followers';
+import F, { FollowType } from './Follows';
 export { F as default, FollowType }
