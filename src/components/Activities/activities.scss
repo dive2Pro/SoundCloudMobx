@@ -45,7 +45,7 @@ div .indexPlay{
 } 
 
 ._contentBody_songs{
-  padding: 0 15px;
+  padding: 0 $contentPadding;
   flex: 3;
 }
 ._contentBody_songs_tag{
@@ -55,6 +55,7 @@ div .indexPlay{
   font-weight: bold;
   
 }
+
 ._song{
   display: inline-flex;
   padding: 5px 0 ;
@@ -108,13 +109,14 @@ div .indexPlay{
 }
 ._song_info_title{
   font-weight: bold;
+  display: table-cell;  
+  @include ellipsisTexts($_180pxEm);
    &:visited{
       color:#333;
      }
 }
 ._song_info_author{
   color: #bababa;
-  display: table-cell;
    &:visited{
       color:#bababa;
      }

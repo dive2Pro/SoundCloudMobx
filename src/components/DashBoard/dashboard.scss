@@ -81,10 +81,18 @@
  }
 
 /*--------body-----------*/
+
+._songs_tag{
+  color: #333;
+  font-size: 1.2em;
+    font-weight: bold;
+    padding-left: 1.358em;
+}
+
 ._contentBody_main{
-  padding: 0 15px;
-  flex: 3;
-  width: 83em;
+  padding: 0 $contentPadding;
+  flex: 4;
+  // width: 83em;
 }
 
 ._contentBody_community{

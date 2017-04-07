@@ -4,7 +4,7 @@ import Profile from '../Profile/Profile';
 import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel, { FollowType } from '../FollowsPanel'
-import Favorites from "../FavoritesPanel";
+import Favorites from '../FavoritesPanel';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
@@ -15,13 +15,14 @@ import ArtWork from '../ArtWork'
 
 import {
   IActivitiesStore, IPlayerStore, IUserStore, IPerformanceStore
-} from "../../store";
+} from '../../store';
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
 // import StreamContainer from "../Stream";
 // import { IUser } from '../../interfaces/interface'
 const qs = require('qs')
+
 interface IDashBorardProps {
   UserStore: IUserStore
   ActivitiesStore: IActivitiesStore
@@ -41,7 +42,7 @@ export const BlankView = () => {
 /**
  * 用户界面
  */
-@inject("UserStore", "ActivitiesStore", 'PlayerStore', 'PerformanceStore')
+@inject('UserStore', 'ActivitiesStore', 'PlayerStore', 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
   headerInfo: any;
@@ -73,15 +74,15 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , display: 'inline-flex'
     },
       this.infoGlassStyle = {
-        left: -hi.offsetLeft + "px"
+        left: -hi.offsetLeft + 'px'
         // , top: -hi.offsetTop + 'px'// todo
         , top: '-140px'
-        , height: hi.offsetHeight + "px"
+        , height: hi.offsetHeight + 'px'
         , width: this.headerImg.offsetWidth + 'px'
         , position: 'absolute'
         , zIndex: '-1'
       }
-    console.log(this.infoGlassStyle, hi.offsetTop)
+    // console.log(this.infoGlassStyle, hi.offsetTop)
     this.forceUpdate()
   }
 
@@ -119,12 +120,16 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const { favorites } = userModel
     const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES);
     return () => (
-      <Activities
-        sortType={''}
-        isLoading={isloadingFavorites}
-        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-        tracks={favorites}
-      />)
+      <div >
+        <p className={styles._songs_tag}>FAVORITES SONGS</p>
+        <Activities
+          sortType={''}
+          isLoading={isloadingFavorites}
+          scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
+          tracks={favorites}
+        />
+      </div>
+    )
   }
   render() {
     if (Number.isNaN(this.id) || this.id == undefined) {
@@ -141,6 +146,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , followings
     } = userModel;
     const user: any = userModel.user;
+
     const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
     const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
     const { match: { url } } = this.props
@@ -161,11 +167,10 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , alignItems: 'center'
       // , justifyContent: 'center'
       // , width: '180px'
-
     }
     return (
       <div
-        id='DashBoard'
+        id="DashBoard"
         className={styles.container}>
         <div className={styles._contentHeader}>
           <div
@@ -174,16 +179,20 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             style={{
               backgroundImage: `url(${backgroundImageUrl})`
               , width: '1248px', height: '300px'
-            }}>
-          </div>
+            }}
+          />
           <div
             ref={n => this.headerInfo = n}
             className={styles._contentHeader_info}>
             <h3 className={styles._contentHeader_genre}>Hip Hop</h3>
-            <span style={{
-              fontSize: '36px', color: 'white'
-              , fontWeight: 600
-            }}>{user.username}</span>
+            <span
+              style={{
+                fontSize: '36px', color: 'white'
+                , fontWeight: 600
+              }}
+            >
+              {user.username}
+            </span>
             <div className={styles._contentHeader_actions}>
               <button onClick={this.handlePlayAll}>PLAY</button>
               <button onClick={this.handleFollow}>{user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}</button>
@@ -193,10 +202,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               img={backgroundImageUrl}
               blurRadius={5}
               style={this.infoGlassStyle}
-            >
-            </Blur>
-
-
+            />
 
           </div>
           <div
@@ -210,12 +216,17 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               src={avatar_url}
               alt="user Profile" />
             <span>{user.username}</span>
-            <span> <i className='fa fa-angle-down'></i> </span>
+            <span>
+              <i
+                className="fa fa-angle-down"
+              />
+            </span>
             <Blur
               img={backgroundImageUrl}
               blurRadius={10}
-              style={this.glassStyle}>
-            </Blur>
+              style={this.glassStyle}
+            />
+
           </div>
         </div>
         <div className={styles._contentBody}>
@@ -266,22 +277,25 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             </Switch>
           </div>
           <aside className={styles._contentBody_community}>
-            <Profile user={user} />
+            <Profile user={userModel.user} />
+
             <Favorites
               PlayerStore={this.props.PlayerStore}
-              UserModel={userModel} />
+              UserModel={userModel}
+            />
             <FollowsPanel
               type={FollowType.FOLLOWERS}
-              UserModel={userModel} />
+              UserModel={userModel}
+            />
             <FollowsPanel
               type={FollowType.FOLLOWINGS}
-              UserModel={userModel} />
+              UserModel={userModel}
+            />
           </aside>
         </div>
       </div>
     );
   }
 }
-
 
 export default DashBorard;

@@ -1,5 +1,8 @@
 import * as  _ from 'lodash'
-import { observable } from 'mobx'
+import {
+  observable,
+  // extendObservable
+} from 'mobx'
 
 export function seconds2time(seconds: number): string {
   let days = Math.floor(seconds / (3600 * 24));
@@ -45,8 +48,14 @@ export function transBigMath(value: number): string {
 export const extendsObservableObjFromJson = (target: any, data: any) => {
   _.assignInWith(target, _.cloneDeep(data))
   let p = '';
+  // observable(target
+  // , p, { value: target[p] }
+  // )
   for (p in target) {
-    observable(target, p, { value: target[p] })
+    // extendObservable(target, { p: target[p] })
+    observable(target
+      , p, observable({ p: target[p] })
+    )
   }
 
 }

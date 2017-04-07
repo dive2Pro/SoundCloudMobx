@@ -94,7 +94,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
 
     const shuffleClazz = isShuffleMode && styles.active;
-    console.log('isPlaying = ' + isPlaying)
+    // console.log('isPlaying = ' + isPlaying)
     return (
       <div
         className={styles.content}>
