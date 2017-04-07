@@ -2,16 +2,16 @@ import * as React from "react";
 
 import { observer, inject } from "mobx-react";
 import ButtonInline from "../ButtonInline";
-import { IPlayerStore } from "../../store/PlayerStore";
-import ArtWork from "../ArtWork";
+import { IPlayerStore } from '../../store/PlayerStore';
+import ArtWork from '../ArtWork';
 import {
   action, observable, runInAction, autorun
   , when
-} from "mobx";
+} from 'mobx';
 // const mp3 = require('../../../public/assert/music.mp3')
-const styles = require("./player.scss");
+const styles = require('./player.scss');
 import Range from '../InputRange'
-import { IPerformanceStore } from "../../store/index";
+import { IPerformanceStore } from '../../store/index';
 
 interface IPlayerProps {
   PlayerStore?: IPlayerStore
@@ -21,7 +21,7 @@ interface IPlayerState {
   visible: boolean
 }
 
-@inject("PlayerStore", 'PerformanceStore')
+@inject('PlayerStore', 'PerformanceStore')
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
   blurredContentFrame: HTMLDivElement;
@@ -48,7 +48,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     this.setPlayerVisibleFromComponent(true);
   };
   mouseOut = (event: any) => {
-    if (event.target.className !== "player__content") {
+    if (event.target.className !== 'player__content') {
       return;
     }
     if (this.timer) {
@@ -80,7 +80,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       , volume
     } = store;
 
-    let artworkUrl = "", trackName, username = "";
+    let artworkUrl = '', trackName, username = '';
     if (playingTrack) {
       //todo es6的对象扩展
       const { artwork_url, title, user: { username: uname } } = playingTrack;
@@ -123,7 +123,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
           </div>
           <div className={styles.content_action}>
             <ButtonInline onClick={() => store.togglePlaying()}>
-              <i className={`fa ${isPlaying ? "fa-pause" : "fa-play"}`} />
+              <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'}`} />
               &nbsp;
               </ButtonInline>
           </div>
@@ -147,7 +147,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             <i
               style={{ width: '25px' }}
               className={`fa fa-volume-${volume > 0.5 ?
-                "up" : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
+                'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
             <div
               style={volumeContainerStyle}
               ref={n => this.volumeContainer = n}
@@ -217,6 +217,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       const resetNode$ = (glassNode: string, n: number) => {
         node$ = document.querySelector(`#${glassNode}`)
         node$ = node$.cloneNode(true);
+        // main.style.left = -node$.offsetLeft + "px"
         glass.innerHTML = '';
         glass.appendChild(node$);
         glassFrame.style.width = node$.offsetWidth + 'px';
@@ -339,14 +340,16 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         className={clazzName}
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseOut}
-        ref={r => this.main = r}>
+        ref={r => this.main = r}
+      >
         <div
           ref={n => this.blurredContentFrame = n}
-          className={styles.blurredContentFrame}>
+          className={styles.blurredContentFrame}
+        >
           <div
             ref={n => this.fronsted_glass = n}
-            className={styles.fronsted_glass}>
-          </div>
+            className={styles.fronsted_glass}
+          />
         </div>
         {this.renderPlayerRanges(PlayerStore)}
         {this.renderPlayerOpearators(PlayerStore)}

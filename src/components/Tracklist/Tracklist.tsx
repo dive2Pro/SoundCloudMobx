@@ -3,6 +3,7 @@ import Activities from '../Activities'
 
 import ButtonMore from '../ButtonMore'
 import { observer, inject } from 'mobx-react'
+import { ITrackStore } from "../../store/index";
 
 export function getGenreFromPathname(pathname: string) {
   const reg = /=\w{2,8}/g;
@@ -13,7 +14,7 @@ export function getGenreFromPathname(pathname: string) {
 
 @inject('TrackStore')
 @observer
-class Tracklist extends React.Component<any, any> {
+class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
   currentGenre = ''
   componentDidMount() {
     this.setCurrentGenre(this.props);
@@ -41,7 +42,7 @@ class Tracklist extends React.Component<any, any> {
   render() {
 
     const { TrackStore } = this.props;
-    const { currentTracks, isLoading } = TrackStore
+    const { currentTracks, isLoading, isError } = TrackStore
 
     return (
       <div>
@@ -49,6 +50,7 @@ class Tracklist extends React.Component<any, any> {
           isLoading={isLoading}
           tracks={currentTracks}
           sortType={''}
+          isError={isError(this.currentGenre)}
           scrollFunc={this.handleScroll}
         />
         <ButtonMore

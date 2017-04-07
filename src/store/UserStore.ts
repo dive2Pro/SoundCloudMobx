@@ -470,7 +470,7 @@ class UserModel implements IUserModel {
       this.changeLoadingState(fetchType, false)
     }
   }
-  isError(genre: string): boolean {
+  isError = (genre: string): boolean => {
     return this.isErrorsMap.get(genre) || false
   }
 

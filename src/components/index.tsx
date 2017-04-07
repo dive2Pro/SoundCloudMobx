@@ -7,7 +7,7 @@ import Playerlist from './Playerlist'
 import Callback from './Callback'
 import DashBoard from './DashBoard'
 import Browser from './Browse'
-import TrackInfo from './Track'
+import TrackPager from './TrackPager'
 import { PlaylistInfo } from './Playlist'
 
 
@@ -27,7 +27,7 @@ const routes = [
   },
   {
     path: '/song'
-    , component: TrackInfo
+    , component: TrackPager
   }
   , {
     path: '/playlist'
@@ -68,9 +68,10 @@ class Main extends React.Component<any, undefined> {
               ))
             }
           </Switch>
+          <Player />
+          <Playerlist />
         </div>
-        <Player />
-        <Playerlist />
+
       </div>
     );
   }
