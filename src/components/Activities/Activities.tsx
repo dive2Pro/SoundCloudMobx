@@ -4,7 +4,6 @@ import { observer, inject } from 'mobx-react';
 import { IPlayerStore, IPerformanceStore } from '../../store'
 import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
-
 import { seconds2time } from '../../services/utils'
 import ButtonInline from '../ButtonInline'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
@@ -17,8 +16,8 @@ interface IActivitiesProps {
   isLoading: boolean,
   tracks: ITrack[],
   sortType: string
+  scrollFunc?: () => void
 }
-
 
 interface IndexAndPlayViewProp {
   index: number
@@ -29,8 +28,8 @@ interface IndexAndPlayViewProp {
 }
 
 const IndexAndPlayView =
-  observer(function IndexAndPlayView({ track, index, isPlaying, isHidden, onClick }: IndexAndPlayViewProp)
-    : React.ReactElement<any> {
+  observer(function IndexAndPlayView({ track, index, isPlaying, isHidden, onClick }: IndexAndPlayViewProp):
+    React.ReactElement<any> {
     const { artwork_url } = track
     const imgSize = 50;
     const styleSize = {
@@ -42,7 +41,8 @@ const IndexAndPlayView =
       <div className={divClazz}>
         <ArtWork
           src={artwork_url}
-          size={imgSize} />
+          size={imgSize}
+        />
         <div className={styles.play} style={styleSize}>
           <ButtonInline onClick={onClick}>
             <i className={`fa fa-${(!isHidden && isPlaying) ? 'pause' : 'play '} fa-2x`} />
@@ -66,14 +66,15 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
   const { username } = user
   const configurations = [
     {
-      fn: () => { }, className: "fa fa-share-square-o"
+      fn: () => {/***/ }, className: 'fa fa-share-square-o'
     }, {
-      fn: () => { }, className: 'fa fa-folder-o'
+      fn: () => {/***/ }, className: 'fa fa-folder-o'
     }
   ]
   const handleSectionClick = (e: any) => {
     const name = e.target.className
-    if (name == (styles._song_act_plus) || e.target.tagName == 'A' || e.target.tagName == 'I') {
+    if (name === (styles._song_act_plus) || e.target.tagName === 'A' || e.target.tagName === 'I') {
+      /** */
     } else {
       store.setPlayingTrack(track)
     }
@@ -82,23 +83,28 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
   return (
     <section
       onClick={(e) => handleSectionClick(e)}
-      className={styles._song} >
-      <span className={styles._song_position}
-      >{i}</span>
+      className={styles._song}
+    >
+      <span
+        className={styles._song_position}
+      >{i}
+      </span>
       <span
         onClick={(e: any) => {
           e.preventDefault();
           store.addToPlaylist(track);
         }}
-        className={styles._song_act_plus}>
-        <i className='fa fa-plus'></i>
+        className={styles._song_act_plus}
+      >
+        <i className="fa fa-plus" />
       </span>
       <IndexAndPlayView
         isPlaying={isPlaying}
         isHidden={isHidden}
         track={track}
         onClick={() => store.setPlayingTrack(track)}
-        index={i} />
+        index={i}
+      />
       <div className={styles._song_info}>
 
         <Link
@@ -106,7 +112,8 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
           to={{
             pathname: '/song',
             search: `?id=${id}`
-          }}>
+          }}
+        >
           {title}
         </Link>
 
@@ -115,9 +122,8 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
           to={{
             pathname: '/users'
             , search: `?id=${user.id}`
-          }}>
-          {username}
-
+          }}
+        >  {username}
         </Link>
       </div>
       <div className={styles._song_duration}>
@@ -128,7 +134,8 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
         <div className={styles.actions}>
           <HoverActions
             configurations={configurations}
-            isVisible={true} />
+            isVisible={true}
+          />
         </div>
       </div>
       <span className={styles._song_settings}>
@@ -142,9 +149,6 @@ const SongView = observer(({ track, store, sortType, i }: ISongViewProps) => {
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
   dFunc: any;
-
-
-
   addToTrackList = (track: ITrack) => {
     const { PlayerStore } = this.props
     if (PlayerStore) {
@@ -157,20 +161,25 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (!store || !tracks) {
       return <noscript />
     }
-
+    console.info('isLoading = ' + isLoading)
     return (
       <div className={styles.main}>
         <div className={styles.tracks}>
-          {tracks.map((item, i) =>
+          {tracks.map((item, i) => (
             <SongView
-              key={item.id + "-" + i}
+              key={item.id + '-' + i}
               sortType={sortType}
               track={item}
               i={i + 1}
-              store={store} />)
+              store={store}
+            />))
           }
         </div>
-        <LoadingSpinner isLoading={isLoading} />
+        <LoadingSpinner
+          isLoading={isLoading}
+          isError={true}
+          onErrorHandler={() => this.props.scrollFunc && this.props.scrollFunc()}
+        />
       </div >
     );
   }

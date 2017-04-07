@@ -3,8 +3,8 @@ const styles = require('./dashboard.scss')
 import Profile from '../Profile/Profile';
 import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
-import FollowsPanel, { FollowType } from '../FollowsPanel'
-import Favorites from '../FavoritesPanel';
+import FollowsPanel from '../FollowsPanel'
+import FavoritesPanel from '../FavoritesPanel';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
@@ -118,7 +118,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   FavoView = () => {
     const { userModel } = this.props.UserStore
     const { favorites } = userModel
-    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_ACTIVITIES);
+    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_FAVORITES);
     return () => (
       <div >
         <p className={styles._songs_tag}>FAVORITES SONGS</p>
@@ -286,19 +286,20 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             </Switch>
           </div>
           <aside className={styles._contentBody_community}>
-            <Profile user={userModel.user} />
+            <Profile
+              user={userModel.user} />
 
-            <Favorites
+            <FavoritesPanel
+
               PlayerStore={this.props.PlayerStore}
               UserModel={userModel}
+
             />
             <FollowsPanel
-              type={FollowType.FOLLOWERS}
-              UserModel={userModel}
+              type={fetchTypes.FETCH_FOLLOWERS}
             />
             <FollowsPanel
-              type={FollowType.FOLLOWINGS}
-              UserModel={userModel}
+              type={fetchTypes.FETCH_FOLLOWINGS}
             />
           </aside>
         </div>

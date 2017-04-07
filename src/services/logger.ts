@@ -7,7 +7,7 @@ export function logInfo(title: any, ...messages: any[]) {
   })
 
   console.groupEnd()
-} export function logError(title: any, ...messages: any[]) {
+} export function logError(title: string, ...messages: any[]) {
   title = '😘 ' + title + ' 😘' || '😘'
   console.group(title)
   messages.forEach(m => {

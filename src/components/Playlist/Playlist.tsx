@@ -5,12 +5,12 @@ import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
 import {
   IUserModel,
   IUserStore
-} from "../../store/index";
+} from '../../store/index';
 import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
 import { Link } from 'react-router-dom'
-import { IPlaylist } from "../../interfaces/interface";
+import { IPlaylist } from '../../interfaces/interface';
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
 const qs = require('qs')
@@ -27,7 +27,7 @@ interface IPlaylistProps {
 
 const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist }) {
   const { artwork_url, label_name, id, title } = info
-  const to = { pathname: "/playlist", search: `?id=${id}` }
+  const to = { pathname: '/playlist', search: `?id=${id}` }
   return (
     <div className={styles.itemContainer}>
       <Link to={to}>
@@ -61,7 +61,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
           return (
             <PlaylistItem
               info={item}
-              key={item.id + "-info-" + i}
+              key={item.id + '-info-' + i}
             />
           )
         })}
@@ -79,11 +79,9 @@ interface IPlaylistInfoProp {
   PlayerStore: IPlayerStore
   UserStore: IUserStore
 }
-@inject("TrackStore", 'PlayerStore', 'UserStore')
+@inject('TrackStore', 'PlayerStore', 'UserStore')
 @observer
 export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
-  componentDidMount() {
-  }
 
   handlePlay = () => {
     const { PlayerStore } = this.props

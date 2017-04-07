@@ -20,15 +20,19 @@ interface IDashBorardProps {
   history: any
 }
 
-
 const FlagLink = ({ to, label }: any) => {
-  return <Route path={to} exact={true} children={({ match }: any) => {
-    return (<div className={match ? 'active' : ''}>
-      {match ? <i className="fa fa-flag"></i> : ''}
-      <Link to={to} >{label}</Link>
-    </div>)
-  }}
-  />
+  return (
+    <Route
+      path={to}
+      exact={true}
+      children={({ match }: any) => {
+        return (
+          <div className={match ? 'active' : ''}>
+            {match ? <i className="fa fa-flag" /> : ''}
+            <Link to={to} >{label}</Link>
+          </div>)
+      }}
+    />)
 }
 @inject('TrackStore', 'PerformanceStore')
 @observer
@@ -55,17 +59,20 @@ class Browse extends React.Component<IDashBorardProps, any> {
     }
   }
   render() {
-    // const { } = this.props.location
+
     return (
       <div
         id="Browser"
-        className={styles.container}>
+        className={styles.container}
+      >
         <nav className={styles.nav}>
           {GENRES.map((item, i) => {
-            return (<FlagLink
-              key={i + '-' + item}
-              to={`/main/genre=${item}`}
-              label={item} />)
+            return (
+              <FlagLink
+                key={i + '-' + item}
+                to={`/main/genre=${item}`}
+                label={item}
+              />)
           })}
         </nav>
         <Route

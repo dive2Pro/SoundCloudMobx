@@ -35,8 +35,7 @@ class PlayerStore implements IPlayerStore {
   @observable isShuffleMode: boolean = false;
   @observable isVolumeOpen: boolean = false
   @observable volume: number = 0.25
-  constructor() {
-  }
+
   @action setVolume(v: number) {
     this.volume = v;
   }
@@ -44,9 +43,7 @@ class PlayerStore implements IPlayerStore {
     if (typeof track === 'number') {
       track = this.playList[track];
     }
-    console.log(this.playingTrack === track, track, this.playingTrack)
     if (this.playingTrack === track && this.isPlaying) {
-      console.log('false - ---')
       this.isPlaying = false;
     } else {
       this.playingTrack = track;
@@ -62,29 +59,15 @@ class PlayerStore implements IPlayerStore {
     if (open != null) {
       this.isVolumeOpen = open
     } else {
-      //❤️ 将这里和下面的 listopen 进行代码优化
       this.isVolumeOpen = !this.isVolumeOpen;
     }
   }
+
   @action toggleShuffleMode() {
     this.isShuffleMode = !this.isShuffleMode
   }
 
-  @action private pushToPlayerlist(t: ITrack) {
-    if (this.playList.indexOf(t) === -1) {
-      this.playList.push(t)
-    }
-  }
 
-  addToPlaylist(tracks: ITrack | ITrack[]) {
-    if ('length' in tracks) {
-      (<ITrack[]>tracks).slice().forEach(t => {
-        this.pushToPlayerlist(t)
-      })
-    } else {
-      this.pushToPlayerlist(<ITrack>tracks)
-    }
-  }
   @action clearPlaylist() {
     this.playList = [];
   }
@@ -94,6 +77,7 @@ class PlayerStore implements IPlayerStore {
       this.playList.splice(index, 1)
     })
   }
+
   @action togglePlaylistOpen(open?: boolean) {
     if (open != null) {
       this.isPlaylistOpen = open
@@ -107,12 +91,12 @@ class PlayerStore implements IPlayerStore {
   }
   @computed get playingUrl() {
     if (this.playingTrack) {
-      let url = this.playingTrack.uri + "/stream";
+      let url = this.playingTrack.uri + '/stream';
       url = addAccessToken(url, '?');
-      // console.log(url)
+
       return url
     }
-    return ""
+    return ''
   }
   @action playNextTrack(diff: number): boolean {
     if (this.getPlaylistCount < 1) {
@@ -123,7 +107,8 @@ class PlayerStore implements IPlayerStore {
       const newList = this.playList.slice();
       const deleIndex = newList.indexOf(this.playingTrack)
       newList.splice(deleIndex, 1);
-      nextTrack = newList[parseInt(Math.random() * 10 + "") % newList.length];
+      // tslint:disable-next-line:radix
+      nextTrack = newList[parseInt(Math.random() * 10 + '') % newList.length];
     } else {
       let changedIndex = 0;
       if (this.playingTrack) {
@@ -131,12 +116,28 @@ class PlayerStore implements IPlayerStore {
       }
       nextTrack = this.playList[changedIndex];
     }
-    if (nextTrack == undefined) {
-      debugger;
-    }
-    this.setPlayingTrack(nextTrack);
+    if (nextTrack != null) {
 
-    return true;
+      this.setPlayingTrack(nextTrack);
+    }
+
+    return true
+  }
+
+  addToPlaylist(tracks: ITrack | ITrack[]) {
+    if ('length' in tracks) {
+      (<ITrack[]>tracks).slice().forEach(t => {
+        this.pushToPlayerlist(t)
+      })
+    } else {
+      this.pushToPlayerlist(<ITrack>tracks)
+    }
+  }
+
+  @action private pushToPlayerlist(t: ITrack) {
+    if (this.playList.indexOf(t) === -1) {
+      this.playList.push(t)
+    }
   }
 }
 

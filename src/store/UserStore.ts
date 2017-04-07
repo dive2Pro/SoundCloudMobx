@@ -9,8 +9,12 @@ import {
   ,
 } from 'mobx';
 import {
-  FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES,
-  FETCH_STREAM
+  FETCH_FOLLOWERS
+  , FETCH_FAVORITES
+  , FETCH_FOLLOWINGS
+  , FETCH_ACTIVITIES
+  , FETCH_STREAM
+  , FETCH_USER
 } from '../constants/fetchTypes'
 import {
   IUser
@@ -24,30 +28,37 @@ import {
   ,
 } from '../services/soundcloundApi';
 import { ITrack } from './index';
-import { BaseAct } from './TrackStore';
+import { BaseAct, IBaseActStore } from './TrackStore';
 import PerformanceStore from './PerformanceStore'
 import {
   logError
 
 } from '../services/logger'
+import { RaceFetch as fetch } from '../services/Fetch'
 // import { extendsObservableObjFromJson } from '../services/utils';
 
 interface ICatchErr {
-  err: any
+  err: {
+    type: string,
+    msg: string
+  }
   fetchType?: string;
 }
 const limitPageSize = 20;
 
-export interface IActivitiesStore {
+export interface IActivitiesStore extends IBaseActStore {
+
   fetchNextActivities: (first?: boolean) => void;
   filteredActivities: IActivitiesItem[];
-  isLoading: boolean;
+
   setFilterType: (type: string) => void;
+  setFilterTitle: (type: string) => void
   setSortType: (type: string) => void;
-  setFilterTitle: (type: string) => void;
+
   filterType: string
   sortType: string,
   filteredTracks: ITrack[];
+
 }
 
 class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesStore {
@@ -55,9 +66,7 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
   constructor() {
     super(FETCH_ACTIVITIES)
   }
-  @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(FETCH_ACTIVITIES) || false
-  }
+
 
   @action setNextActivitiesHref(nextHref: string) {
     this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
@@ -122,15 +131,16 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
     try {
       this.setLoadingActivities(true);
       const data: any = await fetch(activitiesUrl)
-        .then(response => response.json());
-      // console.log(data)
+      // const data = await rawData.json();
       runInAction(() => {
         this.setNextActivitiesHref(data.next_href)
         this.filterActivities(data.collection);
         this.setLoadingActivities(false)
-
       })
-    } finally {
+    } catch (err) {
+      this.catchErr(err, this.currentGenre)
+    }
+    finally {
       this.setLoadingActivities(false)
     }
   }
@@ -211,9 +221,11 @@ export class UserStore implements IUserStore {
     }
     const { id, isFollowing } = user
     // const isFollowing = await this.isFollowingUser(id)
-    const raw = await fetch(apiUrl(`me/followings/${id}`, '?'), {
-      method: isFollowing ? 'delete' : 'put'
-    })
+    const raw: any = await fetch(apiUrl(`me/followings/${id}`, '?')
+      // , {
+      // method: isFollowing ? 'delete' : 'put'
+      // }
+    )
     const data = await raw.json()
     if (data) {
       this.operaUserFromFollowings(user, isFollowing)
@@ -247,7 +259,7 @@ export class UserStore implements IUserStore {
 }
 
 // const OPERATION_OK = 'Status(200) - OK'
-//目前不做歌单项目, 只能从用户那里过来
+// 目前不做歌单项目, 只能从用户那里过来
 // class PlaylistStore {
 
 //   优化内存的使用
@@ -267,6 +279,7 @@ export interface IUserModel {
   fetchWithType: (type: string) => void
   fetchCommunityData: () => void
   isLoading: (type: string) => boolean
+  isError: (type: string) => boolean
 }
 
 
@@ -320,6 +333,7 @@ class UserModel implements IUserModel {
   @observable streams: IStream[] = []
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
+  isErrorsMap = new ObservableMap<boolean>()
 
 
   isLoadings = {
@@ -349,10 +363,13 @@ class UserModel implements IUserModel {
 
   // TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
-    logError(err);
+    logError(err.type, err.msg);
+
     if (fetchType) {
       this.resetLoadingState(fetchType)
     }
+
+
     throw err;
   }
 
@@ -366,13 +383,15 @@ class UserModel implements IUserModel {
   async fetchUser() {
     const url = apiUrl(`users/${this.user.userId}`, '?')
     try {
+      this.changeLoadingState(FETCH_USER, true)
       const rawUser: any =
         await fetch(url)
-          .then(data => data.json());
+      // .then(data => data.json()); 
       this.user.updateFromServe(rawUser)
-      // console.log(this.user)
     } catch (err) {
-      this.catchError({ err });
+      this.catchError({ err, fetchType: FETCH_USER });
+    } finally {
+      this.changeLoadingState(FETCH_USER, false)
     }
   }
 
@@ -437,7 +456,8 @@ class UserModel implements IUserModel {
     if (!url) { return }
     try {
       this.changeLoadingState(fetchType, true);
-      const data: any = await fetch(url).then(response => response.json());
+      let data: any = await fetch(url);
+
       if (Array.isArray(data)) {
         this.addData(type, data);
       } else {
@@ -450,7 +470,13 @@ class UserModel implements IUserModel {
       this.changeLoadingState(fetchType, false)
     }
   }
+  isError(genre: string): boolean {
+    return this.isErrorsMap.get(genre) || false
+  }
 
+  protected catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+  }
   private getFetchUrl(fetchType: string, id: number) {
     let url = this.nextHrefs.get(fetchType)
     if (url) {
@@ -468,6 +494,8 @@ class UserModel implements IUserModel {
     }
     return url
   }
+
+
 }
 
 

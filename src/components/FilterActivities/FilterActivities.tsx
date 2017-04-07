@@ -1,11 +1,11 @@
 
 import * as React from 'react'
-import Activities from "../Activities";
-import FilterPanel from "../FilterPanel";
-import SearchPanel from "../SearchPanel";
-import { IActivitiesStore } from "../../store/index";
-import { inject, observer } from "mobx-react";
-import * as sortTypes from "../../constants/sortTypes";
+import Activities from '../Activities';
+import FilterPanel from '../FilterPanel';
+import SearchPanel from '../SearchPanel';
+import { IActivitiesStore } from '../../store/index';
+import { inject, observer } from 'mobx-react';
+import * as sortTypes from '../../constants/sortTypes';
 // import { FETCH_ACTIVITIES } from '../../constants/fetchTypes'
 const styles = require('./filteractivities.scss')
 
@@ -26,9 +26,7 @@ class FilterActivities extends React.Component<any, any> {
     this.actStore = this.props.ActivitiesStore
   }
   handleSearchValue = (value: string) => {
-
     this.props.ActivitiesStore && this.props.ActivitiesStore.setFilterTitle(value);
-
   };
 
   componentDidMount() {
@@ -38,7 +36,8 @@ class FilterActivities extends React.Component<any, any> {
   handleScroll = () => {
 
     const { isLoading } = this.actStore;
-    if (!isLoading) this.actStore.fetchNextActivities();
+    if (!isLoading)
+    { this.actStore.fetchNextActivities(); }
   };
   handleSortType = (type: string) => {
     this.actStore.setSortType(type);
@@ -50,30 +49,30 @@ class FilterActivities extends React.Component<any, any> {
   render() {
     const filterProp = {
       handleClick: this.handleFilterType,
-      tagClass: "fa fa-filter",
+      tagClass: 'fa fa-filter',
       items: [
         {
-          content: "ALL",
-          type: ""
+          content: 'ALL',
+          type: ''
         },
         {
-          content: "Track",
-          type: "track"
+          content: 'Track',
+          type: 'track'
         },
         {
-          content: "Mix",
-          type: "mix"
+          content: 'Mix',
+          type: 'mix'
         }
       ],
       activeType: this.actStore.filterType
     };
     const sortProp = {
       handleClick: this.handleSortType,
-      tagClass: "fa fa-sort",
+      tagClass: 'fa fa-sort',
       items: [
         {
-          content: "NONE",
-          type: ""
+          content: 'NONE',
+          type: ''
         }
       ].concat(sortItems),
       activeType: this.actStore.sortType

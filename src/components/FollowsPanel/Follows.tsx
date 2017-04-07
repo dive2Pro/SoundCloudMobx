@@ -7,21 +7,17 @@ import {
   // FETCH_FOLLOWINGS,
   FETCH_FOLLOWERS
 } from '../../constants/fetchTypes'
-import ButtonMore from '../ButtonMore';
+import LoadingSpinner from '../LoadingSpinner';
 import ViewAll from '../ViewAll';
 import { User } from '../../store/UserStore';
 const styles = require('./followers.scss')
 const debounce = require('lodash/debounce')
 
-export enum FollowType {
-  FOLLOWINGS,
-  FOLLOWERS
-}
+
 
 export interface IFollowersProps {
-  UserModel: IUserModel
+  type: string
   history?: any,
-  type: FollowType
   UserStore?: IUserStore
 }
 @inject('UserStore')
@@ -52,13 +48,18 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
     }
   }
   render() {
-    const { UserModel: um, type: t } = this.props
-    const type = FollowType[t].toLowerCase();
+    const { UserStore, type } = this.props
+    if (!UserStore) {
+      return <noscript />
+    }
+
+    const um = UserStore.userModel;
+
     const { user } = um
     const users = um[type];
     const isLoading = um.isLoading(type)
     const limitUsers = users.slice(0, 3)
-
+    const isError = um.isError(type);
     return (
       <section
         className={styles.base}
@@ -79,7 +80,11 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
               />
             )
           })}
-          <ButtonMore isLoading={isLoading} onClick={() => { }} />
+          <LoadingSpinner
+            isError={isError}
+            isLoading={isLoading}
+            onErrorHandler={() => um.fetchWithType(type)}
+          />
         </div>
       </section>
     )
