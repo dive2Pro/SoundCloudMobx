@@ -41,6 +41,8 @@ $playerDurationHeight:1.768em;
 $_asiderWidth:$_100pxEm*2.5;
 $mainFontColor:#000;
 $seconFontColor:#a9a9a9;
+$streamHoverColor:#4a85e3;
+
 @mixin bottom_border($size,$color){
   @if $size != null
    {

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 import ButtonInline from '../ButtonInline'
 import { observer } from 'mobx-react'
 const styles = require('./hoveractions.scss')
@@ -14,7 +13,7 @@ interface IHoverActionsProp {
   isVisible: boolean;
 }
 
-export const Action = (cfg: IconfiguType) => {
+export const Action = function Action(cfg: IconfiguType) {
   const { fn, className, style, children } = cfg
   return (
     <div
@@ -33,9 +32,9 @@ export const Action = (cfg: IconfiguType) => {
 
 const HoverActions = observer(function HoverActions(prop: IHoverActionsProp) {
   const { isVisible, configurations } = prop;
-  let styleName = isVisible ? "active" : 'normal'
+  let styleName = isVisible ? styles.active : styles.normal
   return (
-    <div styleName={styleName}>
+    <div className={styleName} >
       {configurations.map((cfg, index) => {
         return (
           <Action
@@ -47,4 +46,4 @@ const HoverActions = observer(function HoverActions(prop: IHoverActionsProp) {
   )
 });
 
-export default CSSModule(HoverActions, styles);
+export default HoverActions;

@@ -59,44 +59,52 @@ div .indexPlay{
   padding-left: 25px;
   border-radius: 5px;
   cursor:pointer;
-  &>*{
-    flex: 1;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  & .indexPlay{
-      border-radius: 5px;
-      box-shadow: inherit;
-  }
+      &>*{
+        flex: 1;
+        font-weight: bold;
+        font-size: 16px;
+      }
+      & .indexPlay{
+          border-radius: 5px;
+          box-shadow: inherit;
+      }
 
-  &:hover{
-    background: #4a85e3;
-    box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.48);
-    text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
-    color:white!important;
-    ._stream_duration{
-    color: white;
-    }
-    div.play{
-      display: flex; 
-    }
-    div.actions{ 
-    display: flex;
-    }
-    div.duration{
-      display: none;
+      &:hover{
+        background: $streamHoverColor;
+        box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.48);
+        text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+        color:white!important;
+        ._stream_duration{
+           color: white;
+        }
+        div.play{
+           display: flex; 
+        }
+        div.actions{ 
+            display: flex;
+        }
+        div.duration{
+          display: none;
+        }
     }
 }
-}
-
-._stream_info{
+._stream_main{
+  display: flex;
   flex: 7;
+   &:hover{
+     div.play{
+           display: flex; 
+        }
+   }
+}
+._stream_info{
+  flex: 1;
   padding-left: 20px;
+  margin: auto 0;
    &>a{
     &:hover{
       color: white;
     }
-   
     }
 } 
 ._stream_info_title{
@@ -115,6 +123,7 @@ div .indexPlay{
 }
 ._stream_duration{
   color: #777;
+  margin-right: $padding;
 }
 ._stream_settings{
   color: #bababa;

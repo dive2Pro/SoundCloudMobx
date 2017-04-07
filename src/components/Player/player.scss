@@ -4,8 +4,8 @@
   bottom: 0;
   height: $playerHeight;
   width: $contentMinWidth!important;
-  left:$_asiderWidth;
-  z-index: 3;
+  // left:$_asiderWidth;
+  z-index: 9;
   /*top: 100%;*/
   transition: 0.2s transform ;
   // transform: translateY(90%) ; 
