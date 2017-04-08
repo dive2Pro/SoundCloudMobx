@@ -52,14 +52,13 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
     }
 
     this.handlerObserver = autorun(() => {
-      const ps = this.props.PerformanceStore
+      const { PerformanceStore: ps, src } = this.props
       if (this.img && ps && ps.scrollLimit.length > 0) {
         const [l, h] = ps.scrollLimit
         const y = this.img.y
         const imgHeight = this.img.offsetHeight;
         if ((l === h && y <= l) || (y < l && (y + imgHeight > h))) {
-          console.log(y + " = y ;" + l + " -- " + h)
-          this.caclImg(this.props.src)
+          this.caclImg(src)
         }
       }
     })
@@ -93,7 +92,8 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
   }
   render() {
     const
-      { size
+      {
+         size
         , clazz
         , alt
         , style

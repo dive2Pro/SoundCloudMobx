@@ -26,7 +26,7 @@ const routes = [
     component: DashBoard
   },
   {
-    path: '/song'
+    path: '/stream'
     , component: TrackPager
   }
   , {

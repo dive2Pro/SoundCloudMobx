@@ -30,6 +30,7 @@ interface IDashBorardProps {
   PlayerStore: IPlayerStore
   location?: any
   match: any
+  history: any
 }
 
 export const BlankView = () => {
@@ -82,14 +83,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
         , position: 'absolute'
         , zIndex: '-1'
       }
-    // console.log(this.infoGlassStyle, hi.offsetTop)
     this.forceUpdate()
   }
 
   componentWillMount() {
     const loc = this.props.location
     if (loc) {
-      //todo id undefined redicet to other 
+      // todo id undefined redicet to other 
       const id = +qs.parse(loc.search.substr(1)).id
       this.changeUserId(id)
     }
@@ -103,6 +103,10 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     us.setCurrentUserModel(userModel)
   }
 
+  handleRouteToUserMain = () => {
+    const { history } = this.props
+    history.push(`/users/home?id=${this.id}`);
+  }
 
   componentDidUpdate(prevProps: any, prevState: any) {
     const loc = this.props.location;
@@ -133,7 +137,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     )
   }
   render() {
-    if (Number.isNaN(this.id) || this.id == undefined) {
+    if (Number.isNaN(this.id) || this.id == null) {
       return <Redirect to="/main" />
     }
 
@@ -185,11 +189,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <div
             ref={n => this.headerInfo = n}
             className={styles._contentHeader_info}>
-            <h3 className={styles._contentHeader_genre}>Hip Hop</h3>
+            {/*<h3 className={styles._contentHeader_genre}>Hip Hop</h3>*/}
             <span
+              onClick={this.handleRouteToUserMain}
               style={{
                 fontSize: '36px', color: 'white'
                 , fontWeight: 600
+                , cursor: 'pointer'
               }}
             >
               {user.username}

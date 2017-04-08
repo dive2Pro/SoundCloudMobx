@@ -15,6 +15,7 @@ import {
   , FETCH_ACTIVITIES
   , FETCH_STREAM
   , FETCH_USER
+  , FETCH_PLAYLIST
 } from '../constants/fetchTypes'
 import {
   IUser
@@ -207,9 +208,16 @@ export class UserStore implements IUserStore {
     return this;
   }
 
+
+
   findPlaylistFromCurrentUser(id: number): IPlaylist {
-    return <IPlaylist>this.getLoginUserModel().playlists.find((item) => item.id == id)
+
+    return <IPlaylist>this.userModel.playlists.find((item) => item.id === id)
+
   }
+
+
+
   /**
    * follow用户
    * todo fix 404
