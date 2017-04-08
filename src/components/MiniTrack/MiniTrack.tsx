@@ -41,7 +41,11 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
       {
         fn: () => { PlayerStore.setPlayingTrack(track) },
         className: playClazz,
-        style: { width: '20px', height: '20px' }
+        style: {
+          width: '20px'
+          , height: '20px'
+
+        }
         // + ' fa-2x'
       },
       {

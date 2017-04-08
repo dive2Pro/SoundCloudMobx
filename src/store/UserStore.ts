@@ -464,7 +464,7 @@ class UserModel implements IUserModel {
     return this.isErrorsMap.get(genre) || false
   }
 
-  protected catchErr = (err: any, genre: string) => {
+  @action protected catchErr = (err: any, genre: string) => {
     this.isErrorsMap.set(genre, true);
   }
   private getFetchUrl(fetchType: string, id: number) {

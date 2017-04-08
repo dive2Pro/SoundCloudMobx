@@ -156,7 +156,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     return this.isErrorsMap.get(genre) || false
   }
 
-  protected catchErr = (err: any, genre: string) => {
+  @action protected catchErr = (err: any, genre: string) => {
     this.isErrorsMap.set(genre, true);
 
   }

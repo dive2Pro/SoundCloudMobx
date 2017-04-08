@@ -215,7 +215,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             <ArtWork
               size={50}
               src={avatar_url}
-              alt="user Profile" />
+              alt="user Profile"
+            />
             <span>{user.username}</span>
             <span>
               <i
