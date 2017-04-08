@@ -114,14 +114,15 @@ class PlayerStore implements IPlayerStore {
       if (this.playingTrack) {
         changedIndex = this.playList.indexOf(this.playingTrack) + diff;
       }
+
       nextTrack = this.playList[changedIndex];
     }
     if (nextTrack != null) {
-
       this.setPlayingTrack(nextTrack);
+      return true
     }
 
-    return true
+    return false
   }
 
   addToPlaylist(tracks: ITrack | ITrack[]) {

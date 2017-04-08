@@ -45,6 +45,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     this.setPlayerVisibleFromComponent(true);
   };
+
   mouseOut = (event: any) => {
     if (event.target.className !== 'player__content') {
       return;
@@ -71,6 +72,22 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.volumeContainerStyle = vcStyle
     })
     this.initGlassData();
+    const { PlayerStore } = this.props
+
+    autorun(() => {
+      if (this.processValue == 1
+        && PlayerStore
+        && !PlayerStore.isShuffleMode) {
+        console.log('-----------------')
+        this.setProcessValue(0);
+        const hasPlayed = PlayerStore.playNextTrack(1);
+        if (!hasPlayed) {
+          PlayerStore.togglePlaying();
+          // this.audio.pause()
+        }
+      }
+    })
+
   }
 
   renderPlayerOpearators = (store: IPlayerStore) => {
@@ -80,7 +97,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
     let artworkUrl = '', trackName, username = '';
     if (playingTrack) {
-      //todo es6的对象扩展
+      // todo es6的对象扩展?
       const { artwork_url, title, user: { username: uname } } = playingTrack;
       artworkUrl = artwork_url;
       trackName = title;
@@ -88,11 +105,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     const volumeContainerStyle = {
       ...this.volumeContainerStyle,
-      // display: isVolumeOpen ? "block" : "none"
     }
 
     const shuffleClazz = isShuffleMode && styles.active;
-    // console.log('isPlaying = ' + isPlaying)
     return (
       <div
         className={styles.content}>
@@ -103,6 +118,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
               clazz={styles.content_img}
               size={45}
               src={artworkUrl}
+              live={true}
             />
             {/*live={true}*/}
           </div>
@@ -113,13 +129,17 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         </div>
 
         <div className={styles.content_plays}>
-          <div className={shuffleClazz}>
+          <div
+            alt={'random track'}
+            className={shuffleClazz}>
             <ButtonInline onClick={this.handleShuffleMode}>
               <i className="fa fa-random">&nbsp;</i>
             </ButtonInline>
           </div>
 
-          <div className={styles.content_action}>
+          <div
+            alt={'next Stream'}
+            className={styles.content_action}>
             <ButtonInline onClick={() => this.handlePlayNext(-1)}>
               <i className="fa fa-step-backward">&nbsp;</i>
             </ButtonInline>
@@ -179,23 +199,26 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
   }
   renderPlayerRanges = (store: IPlayerStore) => {
-    // const { playingTrack, isPlaying } = store
+    const { playingTrack
+      // , isPlaying
+    } = store
     const rangeClazz = styles.range;
-    const value = this.file && (this.processValue * this.file.size).toFixed(1)
+    const duration = playingTrack ? playingTrack.duration : 0
 
     return (
       <div>
         <div
-          className={rangeClazz}>
+          className={rangeClazz}
+        >
           <Range
             onDragEnd={this.handleProcessChange}
             onDragIng={this.handleProcessChange}
-            data={this.file && this.file.size}
+            data={playingTrack && playingTrack.duration}
             dotStyle={{ visibility: 'hidden' }}
             contaiStyle={{ height: '4px' }}
             backgroundColor={'#9e9f9f'}
             defaultColor={'#b6bbbb'}
-            value={value} />
+            value={this.processValue * duration} />
         </div>
 
       </div>)
@@ -217,6 +240,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       const glassFrame = this.blurredContentFrame
       // let loadingAllSettle = false
 
+      const resetPositoin = () => {
+        if (node$) {
+          const scrollY = ps.scrollY || 0;
+          style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
+        }
+      }
+
       const resetNode$ = (glassNode: string, n: number) => {
         node$ = document.querySelector(`#${glassNode}`)
         node$ = node$.cloneNode(true);
@@ -229,23 +259,15 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         style.height = node$.offsetHeight + 'px';
         resetPositoin();
       }
-      const resetPositoin = () => {
-        if (node$) {
-          // console.log('node$.offsetWidth = ' + node$.offsetWidth)
-          const scrollY = ps.scrollY || 0;
-          style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
-          // style.left = -(30) + "px"
-          // console.log(style.top, main.offsetTop, node$.offsetTop, scrollY)
-        }
-      }
+
 
       const onceObservser = () => when(
         () => !ps.allLoadingIsSettle,
         () => {
           const handleObservaer = autorun(
             () => {
-              if (ps.allLoadingIsSettle) {//当为true 即更新node //fuck 
-                console.log('ps+ -------------')
+              // 当为true 即更新node //fuck
+              if (ps.allLoadingIsSettle) {
                 resetNode$(ps.glassNode, ps.scrollY)
                 handleObservaer()
                 onceObservser()
@@ -263,7 +285,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
   }
   componentDidUpdate() {
-
     this.playMusic()
   }
 
@@ -273,36 +294,37 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
     const { playingUrl, volume, isPlaying } = this.props.PlayerStore;
     const audio = this.audio
-    if (isPlaying || audio.paused) {
-      if (audio.src != playingUrl && playingUrl)
+    if (isPlaying) {
+      if (audio.src !== (playingUrl)) {
         audio.src = playingUrl;
+      }
       audio.play()
-
-    } else if (!isPlaying) {
-      audio.pause();
+    } else {
+      if (!audio.paused) {
+        audio.pause();
+      }
     }
     audio.volume = volume;
   }
+
   handleOpenPlaylist = () => {
     const playStore = this.props.PlayerStore;
-    if (playStore) playStore.togglePlaylistOpen();
+    if (playStore) { playStore.togglePlaylistOpen(); }
   };
+
   handlePlayNext = (diff: number) => {
     const playStore = this.props.PlayerStore;
-    if (playStore) playStore.playNextTrack(diff);
+    if (playStore) {
+      playStore.playNextTrack(diff);
+    }
   };
+
   handleShuffleMode = () => {
     if (this.props.PlayerStore) {
       this.props.PlayerStore.toggleShuffleMode();
     }
   }
-  // 😱 😱 will be remove  just for test
-  @observable file: any;
-  handleFiles = (e: any) => {
-    runInAction(() => {
-      this.file = (e.target.files[0]);
-    })
-  }
+
   handleProcessChange = (value: string) => {
     // debugger 
     const dru = this.audio.duration || 1;
@@ -317,11 +339,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     const t = e.target;
     const duration = t.duration
     const currentTime = t.currentTime
-    runInAction(() => {
-      this.processValue = currentTime / duration
-
-    })
+    this.setProcessValue(currentTime / duration);
   }
+
+  @action setProcessValue(value: number) {
+    this.processValue = value
+  }
+
   handleVolimeProcessChange = (percent: string) => {
     const p = this.props.PlayerStore
     if (p) {
@@ -332,12 +356,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
     const { PlayerStore } = this.props;
     let clazzName = styles.base;
+
     if (this.isVisible) {
       clazzName = styles.visible;
     }
     if (!PlayerStore) {
       return <noscript />;
     }
+
     return (
       <div
         className={clazzName}

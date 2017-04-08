@@ -40,22 +40,26 @@ class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
   };
 
   render() {
-
     const { TrackStore } = this.props;
     const { currentTracks, isLoading, isError } = TrackStore
-
+    const ie = isError(this.currentGenre);
     return (
-      <div>
+      <div
+        style={{
+          padding: '10px 20px'
+        }}
+      >
         <Activities
           isLoading={isLoading}
           tracks={currentTracks}
           sortType={''}
-          isError={isError(this.currentGenre)}
+          isError={ie}
           scrollFunc={this.handleScroll}
         />
+
         <ButtonMore
           onClick={() => TrackStore.fetchTracks()}
-          isHidden={isLoading || currentTracks.length > 20}
+          isHidden={ie || isLoading || currentTracks.length > 20}
           isLoading={isLoading}
         />
 

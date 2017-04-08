@@ -55,9 +55,9 @@ div .indexPlay{
   display: inline-flex;
   padding: 5px 0 ;
   width: 100%;
-  align-items: center;
-  padding-left: 25px;
+  align-items: center; 
   border-radius: 5px;
+  text-align: center;
   cursor:pointer;
       &>*{
         flex: 1;
@@ -91,7 +91,7 @@ div .indexPlay{
 }
 ._stream_main{
   display: flex;
-  flex: 7;
+  flex: 10;
    &:hover{
      div.play{
            display: flex; 
@@ -102,6 +102,7 @@ div .indexPlay{
   flex: 1;
   padding-left: 20px;
   margin: auto 0;
+  text-align: left;
    &>a{
     &:hover{
       color: white;
@@ -111,7 +112,7 @@ div .indexPlay{
 ._stream_info_title{
   font-weight: bold;
   display: table-cell;  
-  @include ellipsisTexts($_180pxEm);
+  @include ellipsisTexts($_100pxEm*3);
    &:visited{
       color:#333;
      }
@@ -124,8 +125,11 @@ div .indexPlay{
 }
 ._stream_duration{
   color: #777;
-  margin-right: $padding;
+  // margin-right: $padding;
+  flex: 2;
 }
 ._stream_settings{
   color: #bababa;
+  flex: 1;
+  margin-right: $padding/2;
 }
