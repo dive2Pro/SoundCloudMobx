@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { IPlayerStore, ITrack } from '../../store';
 import ButtonInline from '../ButtonInline';
 import HoverActions from '../HoverActions'
-const styles = require('./playlist.scss');
+const styles = require('./playerlist.scss');
 import { StreamMain } from '../Stream'
 interface IPlaylistProp {
   PlayerStore?: IPlayerStore
@@ -53,26 +53,14 @@ const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
 @inject('PlayerStore')
 @observer
 class Playerlist extends React.Component<IPlaylistProp, any> {
-  handlePlay = (track: ITrack | number) => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) { return; }
-    PlayerStore.setPlayingTrack(track);
-  };
-  handleClosePlaylist = () => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) { return; }
-    PlayerStore.togglePlaylistOpen(false);
-  };
+
+
   handleClearlist = () => {
     const PlayerStore = this.props.PlayerStore;
     if (!PlayerStore) { return; }
     PlayerStore.clearPlaylist();
   };
-  handleRemoveFromlist = (track: ITrack) => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) { return; }
-    PlayerStore.removeFromPlaylist(track);
-  }
+
   render() {
     const { PlayerStore } = this.props;
     if (!PlayerStore) { return <noscript />; }

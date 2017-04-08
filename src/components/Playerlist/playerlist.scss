@@ -11,7 +11,6 @@
   overflow-y: hidden;
   font-size: $smallIcon;
   padding: $padding/4;
-   
 }
 
 .top{
@@ -22,10 +21,8 @@
       flex:1;
     }
   }
-}
-.top_right{
+} 
 
-}
 .none{
   display: none;
 }
@@ -35,7 +32,7 @@
   padding: $padding/2;
   font-size: $mediumIcon;
   &:hover{
-    & div{
+    div{
       visibility: visible!important;
     }
   }
@@ -43,5 +40,5 @@
 .playlistitem_hover{
   display: flex;  
   align-items: center;
-  
+
 }

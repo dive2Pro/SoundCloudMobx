@@ -11,6 +11,7 @@ interface IconfiguType {
 interface IHoverActionsProp {
   configurations: IconfiguType[]
   isVisible: boolean;
+  clazz?: string
 }
 
 export const Action = function Action(cfg: IconfiguType) {

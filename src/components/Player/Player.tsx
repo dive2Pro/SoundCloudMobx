@@ -1,14 +1,12 @@
-import * as React from "react";
-
-import { observer, inject } from "mobx-react";
-import ButtonInline from "../ButtonInline";
+import * as React from 'react';
+import { observer, inject } from 'mobx-react';
+import ButtonInline from '../ButtonInline';
 import { IPlayerStore } from '../../store/PlayerStore';
 import ArtWork from '../ArtWork';
 import {
   action, observable, runInAction, autorun
   , when
 } from 'mobx';
-// const mp3 = require('../../../public/assert/music.mp3')
 const styles = require('./player.scss');
 import Range from '../InputRange'
 import { IPerformanceStore } from '../../store/index';
@@ -101,7 +99,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         {/*<input type="file" onChange={this.handleFiles} />*/}
         <div className={styles.content_name}>
           <div >
-            <ArtWork clazz={styles.content_img} size={45} src={artworkUrl} />
+            <ArtWork
+              clazz={styles.content_img}
+              size={45}
+              src={artworkUrl}
+            />
+            {/*live={true}*/}
           </div>
           <div className={styles.content_dur}>
             <span className={styles.trackName}>{trackName}</span>

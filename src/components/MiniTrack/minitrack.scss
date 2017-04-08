@@ -4,9 +4,13 @@
   align-content: center;
   width: inherit;
   margin: 1.429em 0;
+  position: relative;
   &:hover{
     .actions{
        opacity:1;
+       div{
+         visibility: visible;
+       }
     }
   }
 }
@@ -25,14 +29,18 @@
   transition: opacity 0.2s ease;
   opacity: 0;
   position: absolute;
-  right: 0;
-  padding: $padding;
+  right: 0; 
   z-index: 2;
   display: flex;
   justify-content: space-between;
   background: $white;
+  height: 100%;
+  align-items: center;
 }
+
 .visibleActions{
   composes:actions;
   opacity:1;
+  visibility: visible;
+  color: $streamHoverColor;
 }
