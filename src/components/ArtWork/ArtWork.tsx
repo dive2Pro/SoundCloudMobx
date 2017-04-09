@@ -61,7 +61,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         if ((l === h && y <= l) || (y < l && (y + imgHeight > h))) {
           this.caclImg(src)
         }
-      } else if (!!src === false) {
+      } else if (this.img && !!src === false) {
         this.img.src = preImage
       }
     })

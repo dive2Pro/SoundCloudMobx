@@ -24,7 +24,8 @@ const ViewALL = (prop: IViewALLProp) => {
         <Link
           path={prop.path}
           id={prop.id}
-        > View all
+        >
+          View all
         </Link>
       </span>
     </div >

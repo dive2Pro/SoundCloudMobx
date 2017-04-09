@@ -164,7 +164,7 @@ export class UserStore implements IUserStore {
   // 当前的登录用户
   loginModel: IUserModel
   @observable userModel: IUserModel
-  loginedUserId: number | undefined
+  @observable loginedUserId: number | undefined
 
   initUser(obj: number | IUser): IUserModel {
     const isNumber = typeof obj === 'number'
@@ -183,8 +183,10 @@ export class UserStore implements IUserStore {
   }
 
   @computed get isLoginUser() {
-    if (!this.loginedUserId) { return false }
+
+    if (this.loginedUserId == null) { return false }
     const lum = this.getLoginUserModel();
+
     return this.loginedUserId === (lum.user && lum.user.userId)
   }
 
@@ -192,7 +194,13 @@ export class UserStore implements IUserStore {
     return this.loginedUserId != null
   }
 
-  setLoginUserModel(userId: number | undefined) {
+  @action setLoginUserModel(userId: number | undefined) {
+
+    if (userId === undefined) {
+      this.userModels.delete(this.loginedUserId + '')
+      let um: any = this.userModel
+      um = null;
+    }
     this.loginedUserId = userId
   }
   getLoginUserModel(): IUserModel {
@@ -232,12 +240,12 @@ export class UserStore implements IUserStore {
     }
     const { id, isFollowing } = user
     // const isFollowing = await this.isFollowingUser(id)
-    const raw: any = await fetch(apiUrl(`me/followings/${id}`, '?')
-      // , {
-      // method: isFollowing ? 'delete' : 'put'
-      // }
+    const data: any = await fetch(
+      apiUrl(`me/followings/${id}`, '?'),
+      {
+        method: isFollowing ? 'delete' : 'put'
+      }
     )
-    const data = await raw.json()
     if (data) {
       this.operaUserFromFollowings(user, isFollowing)
     }
@@ -347,6 +355,7 @@ class UserModel implements IUserModel {
   isErrorsMap = new ObservableMap<boolean>()
 
 
+
   isLoadings = {
     get: PerformanceStore.getLoadingStateWidthKey,
     set: PerformanceStore.setLoadingStateWithKey
@@ -430,6 +439,7 @@ class UserModel implements IUserModel {
         user = new User(data)
         targetArr.push(user)
         if (this.userStore.isLogined) {
+          // console.log('------------')
           user.isFollowing = this.userStore.isFollowingUser(user.id);
         }
       })
