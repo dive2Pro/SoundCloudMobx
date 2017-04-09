@@ -2,25 +2,22 @@ import {
   observable, action
 } from 'mobx';
 import {
-  CLIENT_ID,
   REDIRECT_URI,
   OAUTH_TOKEN,
   MY_CLIENT_ID
 } from '../constants/authentification';
 import {
-  ISession, IUser
+  ISession
 } from '../interfaces/interface';
-// import TrackStore from './TrackStore'
 import UserList from './UserStore'
 import { apiUrl } from '../services/soundcloundApi';
 const SC = require('soundcloud');
 const Cookies = require('js-cookie')
+import { User } from './UserStore'
 
-// const Remotedev = require("mobx-remotedev");
-// @Remotedev({ name: "SessionStore" })
 export interface ISessionStore {
   session: string
-  user: IUser | undefined;
+  user: User | undefined;
   login: () => void;
   loadDataFromCookie: () => void;
   loginout: () => void
@@ -35,7 +32,7 @@ interface ICatchErr {
  */
 class SessionStore implements ISessionStore {
   @observable session: any;
-  @observable user: IUser | undefined;
+  @observable user: User | undefined;
   oauth_token: string;
 
   loadDataFromCookie() {
@@ -88,7 +85,7 @@ class SessionStore implements ISessionStore {
       })
   }
 
-  @action setUser(user: IUser) {
+  @action setUser(user: User) {
     this.user = user;
   }
 }

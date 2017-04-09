@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react'
-import { IUser } from '../../interfaces/interface'
+import { User } from '../../store'
 import UserItemContainer from '../MiniUser'
-import { IUserModel, IUserStore } from '../../store'
 import {
   // FETCH_FOLLOWINGS,
   FETCH_FOLLOWERS
 } from '../../constants/fetchTypes'
 import LoadingSpinner from '../LoadingSpinner';
 import ViewAll from '../ViewAll';
-import { User } from '../../store/UserStore';
+import { UserStore } from '../../store/UserStore';
 const styles = require('./followers.scss')
 const debounce = require('lodash/debounce')
 
@@ -18,7 +17,7 @@ const debounce = require('lodash/debounce')
 export interface IFollowersProps {
   type: string
   history?: any,
-  UserStore?: IUserStore
+  UserStore?: UserStore
 }
 @inject('UserStore')
 @observer
@@ -36,7 +35,7 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
     }
   }
 
-  handleFollowUser = (user: IUser) => {
+  handleFollowUser = (user: User) => {
     const { UserStore } = this.props
     const debounceFunc = debounce(
       () => {
@@ -74,7 +73,7 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
         <div
           className={styles.main}>
           {
-            limitUsers.map((user: IUser, i: number) => {
+            limitUsers.map((user: User, i: number) => {
               return (
                 <UserItemContainer
                   key={i + '-' + user.id + '-panel'}

@@ -11,15 +11,15 @@ import { ISessionStore, SessionStore as SS } from '../../store/index';
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
-import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
-import { IUserStore } from '../../store/UserStore';
+import { UserStore } from '../../store/UserStore';
+
 interface IHeaderProp {
   SessionStore: ISessionStore
-  UserStore: IUserStore
+  UserStore: UserStore
 }
 
 
-class widhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, children?: any }, any> {
+class WidhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, children?: any }, any> {
   render() {
     const { to, ...rest } = this.props
     return (
@@ -35,7 +35,7 @@ class widhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, c
 }
 const StyleButton =
   // widhtRouterStyleLink
-  withRouter(widhtRouterStyleLink);
+  withRouter(WidhtRouterStyleLink);
 
 
 interface IDropDownProps {
@@ -144,7 +144,8 @@ class Header extends React.Component<IHeaderProp, undefined> {
                   <StyleButton
                     exact
                     to={{ pathname: `/playlist`, search: `?id=${item.id}` }}>
-                    <i>🎶</i> {item.title || item.label_name}</StyleButton>
+                    <i>🎶</i> {item.title || item.label_name}
+                  </StyleButton>
                 </li>)
             })
           }
@@ -153,9 +154,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
       </div>
     )
   }
-  componentDidUpdate() {
-    console.log('header update')
-  }
+
   loginIn = () => {
     const { SessionStore } = this.props;
     SessionStore.login();

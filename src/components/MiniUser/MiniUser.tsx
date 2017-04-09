@@ -2,13 +2,13 @@ import * as React from 'react'
 import ArtWork from '../ArtWork';
 import Permalink from '../Permalink/Permalink'
 import InfoList from '../InfoList'
-import { IUser } from '../../interfaces/interface'
+import { User } from '../../store'
 import ButtonGhost from '../ButtonGhost'
 import { observer } from 'mobx-react'
 // import { IUserModel } from "../../store/index";
 const styles = require('./user.scss')
 export interface IUserContainerProps {
-  user: IUser
+  user: User
   onClick: () => void
 }
 

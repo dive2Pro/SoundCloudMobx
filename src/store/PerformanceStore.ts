@@ -16,6 +16,7 @@ export interface IPerformanceStore {
   setCurrentGenre: (genre: string) => void
   setCurrentGlassNodeId: (id: string) => void
   allLoadingIsSettle: boolean
+  getLoadingState: (type: string) => boolean
 }
 
 
@@ -44,6 +45,9 @@ class PerformanceStore implements IPerformanceStore {
     }
   }
 
+  getLoadingState(type: string): boolean {
+    return this.isLoadingsByKey.get(type) || false
+  }
   @action setScrollLimit(...limit: number[]) {
     const map = this.scrollLimitByGenre.get(this.genre);
     if (map) {

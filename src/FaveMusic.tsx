@@ -3,7 +3,15 @@ import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
-import { UserStore, TrackStore, PlayerStore, SessionStore, ActivitiesStore, CommentStore, PerformanceStore } from './store';
+import {
+    UserStore
+    , TrackStore
+    , PlayerStore
+    , SessionStore
+    , ActivitiesStore
+    , CommentStore
+    , PerformanceStore
+} from './store';
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
 import { BrowserRouter as Router } from 'react-router-dom'
