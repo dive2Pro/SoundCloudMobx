@@ -191,7 +191,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (Object.keys(this.glassStyle).length > 0) {
       backgroundImageUrl = avatar_url && getSpecPicPath(avatar_url, PicSize.MASTER);
     }
-    console.info('us.isLoginUser = ' + us.isLoginUser)
+
     return (
       <div
         id="DashBoard"

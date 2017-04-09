@@ -4,8 +4,8 @@ import ArtWork from '../ArtWork'
 import ButtonInline from '../ButtonInline'
 import { observer, inject } from 'mobx-react'
 import Permalink from '../Permalink'
-import { ITrack, IPlayerStore } from "../../store/index";
-import { IPlaylist } from "../../interfaces/interface";
+import { ITrack, IPlayerStore } from '../../store/index';
+import { IPlaylist } from '../../interfaces/interface';
 
 const styles = require('./trackprofile.scss')
 interface ITrackProfileProps {
@@ -18,7 +18,7 @@ interface ITrackProfileProps {
   PlayerStore?: IPlayerStore
 }
 
-@inject("PlayerStore")
+@inject('PlayerStore')
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
   isTrack: boolean
@@ -78,17 +78,17 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
               <ButtonInline onClick={this.handleAddToPlaylist}><i>＋</i></ButtonInline>
             </div>
             <ButtonInline>
-              <i className='fa fa-save' />
+              <i className="fa fa-save" />
               收藏
               </ButtonInline>
             <ButtonInline>
-              <i className='fa fa-share-square-o' />
+              <i className="fa fa-share-square-o" />
               分享</ButtonInline>
             {
               !isList &&
-              <ButtonInline>
-                <i className='fa fa-comments' />
-                评论</ButtonInline>
+              (<ButtonInline>
+                <i className="fa fa-comments" />
+                评论</ButtonInline>)
             }
           </div>
         </div>

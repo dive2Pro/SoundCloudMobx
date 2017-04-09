@@ -11,21 +11,23 @@ import { ISessionStore, SessionStore as SS } from '../../store/index';
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
-import { IUser } from '../../interfaces/interface';
+import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
 import { IUserStore } from '../../store/UserStore';
 interface IHeaderProp {
   SessionStore: ISessionStore
+  UserStore: IUserStore
 }
 
 
 class widhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, children?: any }, any> {
   render() {
-    const { to } = this.props
+    const { to, ...rest } = this.props
     return (
       <Link
         to={to || 'abondan'}
         activeClassName={styles.aside_hover}
         exact={to == '/'}
+        {...rest}
       >
         {this.props.children}
       </Link>)
@@ -115,10 +117,45 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
   }
 }
 
-@inject('SessionStore')
+@inject('SessionStore', 'UserStore')
 @observer
 class Header extends React.Component<IHeaderProp, undefined> {
+  renderMyPlaylist = () => {
+    const { UserStore } = this.props
+    const loginModel = UserStore.getLoginUserModel()
 
+    if (!loginModel) {
+      return (
+        <noscript />
+      )
+    }
+
+    return (
+      <div className={styles._aside_playlist}>
+        <div className={styles._aside_title}>
+          <span> MY PLAYLIST </span> <i className="fa fa-plus " />
+        </div>
+
+        <ul className={styles._aside_header_ul}>
+          {
+            loginModel.playlists.map((item, i) => {
+              return (
+                <li key={`${item.id}- playlist -` + i}>
+                  <StyleButton
+                    exact
+                    to={{ pathname: `/playlist`, search: `?id=${item.id}` }}>
+                    <i>🎶</i> {item.title || item.label_name}</StyleButton>
+                </li>)
+            })
+          }
+
+        </ul>
+      </div>
+    )
+  }
+  componentDidUpdate() {
+    console.log('header update')
+  }
   loginIn = () => {
     const { SessionStore } = this.props;
     SessionStore.login();
@@ -177,17 +214,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
             <li><StyleButton> <i>o</i> Arists</StyleButton> </li>*/}
           </ul>
         </div>
-        <div className={styles._aside_playlist}>
-          <div className={styles._aside_title}>
-            <span> MY PLAYLIST </span> <i className="fa fa-plus " />
-          </div>
-          <ul className={styles._aside_header_ul}>
-            <li><StyleButton> <i>🎶</i> Recent</StyleButton> </li>
-            <li><StyleButton> <i>🎶</i> Local </StyleButton> </li>
-            <li><StyleButton> <i>🎶</i> Albums</StyleButton> </li>
-            <li><StyleButton> <i>🎶</i> Arists</StyleButton> </li>
-          </ul>
-        </div>
+        {this.renderMyPlaylist()}
         <DevTool />
       </section>
     );
