@@ -18,25 +18,25 @@ import {
   , FETCH_PLAYLIST
 } from '../constants/fetchTypes'
 import {
-  IUser
-  , IActivitiesItem,
+  IActivitiesItem,
   IPlaylist,
   IStream
 } from '../interfaces/interface';
 import {
   addAccessToken, apiUrl,
   unauthApiUrlV2
-  ,
 } from '../services/soundcloundApi';
 import { ITrack } from './index';
 import { BaseAct, IBaseActStore } from './TrackStore';
 import PerformanceStore from './PerformanceStore'
 import {
   logError
-
 } from '../services/logger'
 import { RaceFetch as fetch } from '../services/Fetch'
-// import { extendsObservableObjFromJson } from '../services/utils';
+
+
+import * as _ from 'lodash'
+
 
 interface ICatchErr {
   err: {
@@ -147,40 +147,32 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
   }
 }
 
-export interface IUserStore {
-  initUser: (id: number | IUser) => IUserModel
-  findPlaylistFromCurrentUser: (id: number) => void
-  setCurrentUserModel: (user: IUserModel) => void
-  followUser: (user: IUser) => void
-  fetchUserData: (id: number) => void;
-  userModel: IUserModel
-  isLoginUser: boolean
-  getLoginUserModel: () => IUserModel
-  fetchedPlaylist: IPlaylist | null
-  fetchPlaylistData: (id: number) => void
-}
 
-export class UserStore implements IUserStore {
+export class UserStore {
   @observable fetchedPlaylist: IPlaylist | null
-
-  userModels = new ObservableMap<UserModel>()
-  // 当前的登录用户
-  loginModel: IUserModel
   @observable userModel: IUserModel
-  @observable loginedUserId: number | undefined
 
-  initUser(obj: number | IUser): IUserModel {
+  private userModels = new ObservableMap<UserModel>()
+  // 当前的登录用户
+  private loginModel: IUserModel
+  @observable private loginedUserId: number | undefined
+
+  initUser(obj: number | User): IUserModel {
     const isNumber = typeof obj === 'number'
-    let id = isNumber ? obj : ((<IUser>obj).id)
+    let id = isNumber ? obj : ((<User>obj).id)
     let userModel = this.userModels.get(id + '')
+
     if (!userModel) {
       userModel = new UserModel(this, obj)
+      userModel.fetchCommunityData()
       this.userModels.set(id + '', userModel)
     } else if (!isNumber) {
-      userModel.setUser(<IUser>obj)
+      userModel.setUser(<User>obj)
     }
+
     return userModel;
   }
+
   @action setCurrentUserModel(model: IUserModel) {
     this.userModel = model
   }
@@ -188,7 +180,7 @@ export class UserStore implements IUserStore {
   @computed get isLoginUser() {
 
     if (this.loginedUserId == null) { return false }
-    const lum = this.getLoginUserModel();
+    const lum = this.userModel;
 
     return this.loginedUserId === (lum.user && lum.user.userId)
   }
@@ -229,15 +221,17 @@ export class UserStore implements IUserStore {
     }
     return this;
   }
+
   @action setFetchedPlaylistInfo = (data: IPlaylist | null) => {
     this.fetchedPlaylist = data
   }
+
   async fetchPlaylistData(id: number) {
     try {
       const data = await fetch(apiUrl(`playlists/${id}`, '?'))
       this.setFetchedPlaylistInfo(<IPlaylist>data)
     } catch (err) {
-      console.error(err)
+      // console.error(err)
     }
   }
 
@@ -256,18 +250,17 @@ export class UserStore implements IUserStore {
     }
   }
 
-
-
   /**
    * follow用户
    * todo fix 404
    */
-  async followUser(user: IUser) {
-    // todo 添加modal
+  async followUser(user: User) {
+    // todo 添加modal?
     if (!this.getLoginUserModel()) {
       return
     }
     const { id, isFollowing } = user
+
     // const isFollowing = await this.isFollowingUser(id)
     const data: any = await fetch(
       apiUrl(`me/followings/${id}`, '?'),
@@ -294,7 +287,7 @@ export class UserStore implements IUserStore {
     return tracks;
   }
 
-  @action operaUserFromFollowings(user: IUser, followed: boolean) {
+  @action operaUserFromFollowings(user: User, followed: boolean) {
     const lum = this.getLoginUserModel()
     if (followed) {
       user.isFollowing = false
@@ -317,8 +310,8 @@ export class UserStore implements IUserStore {
 
 export interface IUserModel {
   user: User;
-  followers: IUser[];
-  followings: IUser[];
+  followers: User[];
+  followings: User[];
   favorites: ITrack[];
   streams: IStream[]
   getAllTrackFromStreams: () => ITrack[]
@@ -341,9 +334,35 @@ export class User {
   userId: number
   description: string
   objMap = new ObservableMap<any>()
-  @observable isFollowing: boolean = false
-
-  constructor(obj: IUser | number) {
+  isFollowing: boolean = false
+  @observable id: number;
+  permalink: string
+  username: string
+  uri: string
+  permalink_url: string
+  avatar_url: string
+  country: string
+  full_name: string
+  city: string
+  // description: string
+  discogs_name: string
+  comments_count: number
+  myspace_name: string
+  website: string
+  website_title: string
+  online: boolean
+  track_count: number
+  playlist_count: number
+  followers_count: number
+  followings_count: number
+  public_favorites_count: number
+  plan: string
+  private_tracks_count: number
+  private_playlists_count: number
+  primary_email_confirmed: number
+  // custom perpoty 
+  // isFollowing: boolean
+  constructor(obj: User | number) {
     if (typeof obj === 'number') {
       this.userId = obj
       return this;
@@ -351,22 +370,11 @@ export class User {
       this.userId = obj.id
       this.updateFromServe(obj);
     }
+
   }
 
-  @action updateFromServe = (rawUser: IUser) => {
-    // extendsObservableObjFromJson(this, rawUser);
-    // _.assignInWith(this, _.cloneDeep(rawUser))
-    for (let p in rawUser) {
-      if (!isObservable(this[p])) {
-        this.objMap.set(p, rawUser[p]);
-        Object.defineProperty(this, p, {
-          get: () => {
-            return this.objMap.get(p);
-          }
-        })
-      }
-    }
-
+  @action updateFromServe = (rawUser: User) => {
+    extendObservable(this, rawUser);
   }
 
   @action setFollowingState(following: boolean) {
@@ -376,8 +384,8 @@ export class User {
 class UserModel implements IUserModel {
   @observable user: User;
   // TODO change to ObservableMap  
-  @observable followers: IUser[] = [];
-  @observable followings: IUser[] = [];
+  @observable followers: User[] = [];
+  @observable followings: User[] = [];
   @observable streams: IStream[] = []
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
@@ -396,7 +404,7 @@ class UserModel implements IUserModel {
   /**
    * @param obj 如果传入的是一个Iuser对象,直接去获取数据
    */
-  constructor(userStore: UserStore, obj: number | IUser) {
+  constructor(userStore: UserStore, obj: number | User) {
     this.userStore = userStore
     if (typeof obj == 'number') {
       this.user = new User(obj)
@@ -413,6 +421,8 @@ class UserModel implements IUserModel {
 
 
   @action fetchCommunityData() {
+
+
     this.fetchWithType(FETCH_FOLLOWERS);
     this.fetchWithType(FETCH_FOLLOWINGS);
     this.fetchWithType(FETCH_FAVORITES);
@@ -434,7 +444,7 @@ class UserModel implements IUserModel {
     }
   }
 
-  @action setUser(rawUser: IUser) {
+  @action setUser(rawUser: User) {
     this.user = new User(rawUser)
   }
 
@@ -454,7 +464,7 @@ class UserModel implements IUserModel {
   }
 
 
-  @action addData(type: string, fs: IUser[]) {
+  @action addData(type: string, fs: User[]) {
     const targetArr = this[type]
     if (!targetArr) {
       extendObservable(this[type], []);
@@ -506,7 +516,7 @@ class UserModel implements IUserModel {
         this.changeNextHrefs(fetchType, data.next_href);
       }
     } catch (err) {
-
+      console.error(err)
       this.catchErr({ err, fetchType }, fetchType)
     } finally {
       this.changeLoadingState(fetchType, false)

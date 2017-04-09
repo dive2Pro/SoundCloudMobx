@@ -1,5 +1,4 @@
 import * as React from 'react'
-// import { IUser } from "../../interfaces/interface";
 import ArtWork from '../ArtWork'
 import ButtonInline from '../ButtonInline'
 import { observer, inject } from 'mobx-react'

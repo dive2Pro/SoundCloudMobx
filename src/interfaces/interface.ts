@@ -38,7 +38,6 @@ export interface IUser {
     private_tracks_count: number
     private_playlists_count: number
     primary_email_confirmed: number
-
     // custom perpoty 
     isFollowing: boolean
 }

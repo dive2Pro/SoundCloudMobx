@@ -100,7 +100,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         , clazz
         , alt
         , style
-        , src, ...rest } = this.props
+        , src, onClick } = this.props
     return (
       <img
         ref={n => this.img = n}
@@ -110,7 +110,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         height={size}
         alt={alt}
         style={style}
-        {...rest}
+        onClick={onClick}
       />
     )
   }

@@ -11,20 +11,18 @@ import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
 import Playlist from '../Playlist'
 import ArtWork from '../ArtWork'
-// import { findRootParentOffSet as findRootParentOffSet$ } from '../../services/utils'
-
 import {
-  IActivitiesStore, IPlayerStore, IUserStore, IPerformanceStore
+  IActivitiesStore, IPlayerStore,
+  IPerformanceStore, PerformanceStore
 } from '../../store';
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
-// import StreamContainer from "../Stream";
-// import { IUser } from '../../interfaces/interface'
+import { UserStore } from "../../store/UserStore";
 const qs = require('qs')
 
 interface IDashBorardProps {
-  UserStore: IUserStore
+  UserStore: UserStore
   ActivitiesStore: IActivitiesStore
   PerformanceStore: IPerformanceStore
   PlayerStore: IPlayerStore
@@ -50,10 +48,28 @@ const profile$: any = {
   overflow: 'hidden',
   display: 'inline-flex'
   , alignItems: 'center'
-  // , justifyContent: 'center'
-  // , width: '180px'
 }
 
+
+const FavoView = observer((props: any) => {
+  const { PerformanceStore, UserStore } = props
+  const { userModel } = UserStore
+  const { favorites, isError } = userModel
+  const isloadingFavorites = PerformanceStore.getLoadingState(fetchTypes.FETCH_FAVORITES);
+  return (
+    <div >
+      <p className={styles._songs_tag}>FAVORITES SONGS</p>
+      <Activities
+        sortType={''}
+        isError={isError(fetchTypes.FETCH_FAVORITES)}
+        isLoading={isloadingFavorites}
+        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
+        tracks={favorites}
+      />
+    </div>
+  )
+}
+)
 /**
  * 用户界面
  */
@@ -63,7 +79,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   headerInfo: any;
   handlePlayAll: any;
-  handleFollow: any;
+
   headerImg: any;
   profile: any;
   id: number
@@ -91,8 +107,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
     )
   }
+
+  handleFollow = () => {
+    const { UserStore: us } = this.props
+    us.followUser(us.userModel.user)
+  }
+
   componentDidMount() {
-    this.props.UserStore.userModel.fetchCommunityData();
     this.props.PerformanceStore.setCurrentGlassNodeId('DashBoard')
     const p = this.profile
     const hi = this.headerInfo
@@ -132,7 +153,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     this.id = id;
     const us = this.props.UserStore
     const userModel = us.initUser(this.id)
-    userModel.fetchCommunityData();
     us.setCurrentUserModel(userModel)
   }
 
@@ -152,23 +172,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   }
 
-  FavoView = () => {
-    const { userModel, } = this.props.UserStore
-    const { favorites, isError } = userModel
-    const isloadingFavorites = userModel.isLoading(fetchTypes.FETCH_FAVORITES);
-    return () => (
-      <div >
-        <p className={styles._songs_tag}>FAVORITES SONGS</p>
-        <Activities
-          sortType={''}
-          isError={isError(fetchTypes.FETCH_FAVORITES)}
-          isLoading={isloadingFavorites}
-          scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-          tracks={favorites}
-        />
-      </div>
-    )
-  }
+
   render() {
     if (Number.isNaN(this.id) || this.id == null) {
       return <Redirect to="/main" />
@@ -179,13 +183,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       return <LoadingSpinner isLoading={true} />
     }
 
-    const {
-       followers
-      , followings
-    } = userModel;
     const user: any = userModel.user;
     const { match: { url } } = this.props
-    const FV = this.FavoView()
     const avatar_url = user.avatar_url
     let backgroundImageUrl = 'preImage'
     if (Object.keys(this.glassStyle).length > 0) {
@@ -208,7 +207,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <div
             ref={n => this.headerInfo = n}
             className={styles._contentHeader_info}>
-            {/*<h3 className={styles._contentHeader_genre}>Hip Hop</h3>*/}
             <span
               onClick={this.handleRouteToUserMain}
               style={{
@@ -275,7 +273,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
               <Route
                 path={`${url}/favorites`}
-                component={FV}
+                component={FavoView}
               />
               <Route
                 path={`${url}/playlist`}
@@ -293,15 +291,19 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 render={() => {
                   return us.isLoginUser ?
                     <FilterActivities />
-                    : <FV />
+                    : (
+                      <FavoView
+                        UserStore={this.props.UserStore}
+                        PerformanceStore={PerformanceStore}
+                      />)
                 }}
               />
-              {/*<StreamContainer userModel={userModel} />*/}
             </Switch>
           </div>
           <aside className={styles._contentBody_community}>
             <Profile
-              user={userModel.user} />
+              user={userModel.user}
+            />
 
             <FavoritesPanel
               PlayerStore={this.props.PlayerStore}

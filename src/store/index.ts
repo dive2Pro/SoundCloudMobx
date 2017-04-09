@@ -1,5 +1,5 @@
 
-import UserStore, { IUserStore, IUserModel, IActivitiesStore, ActivitiesStore } from './UserStore';
+import UserStore, { User, IUserModel, IActivitiesStore, ActivitiesStore } from './UserStore';
 import TrackStore, { ITrack, ITrackStore } from './TrackStore';
 import PlayerStore, { IPlayerStore } from './PlayerStore';
 import SessionStore, { ISessionStore } from './SessionStore';
@@ -8,7 +8,6 @@ import CommentStore, { IComment, ICommentStore } from './CommentStore';
 
 export {
   UserStore,
-  IUserStore,
   SessionStore,
   ISessionStore,
   IUserModel,
@@ -23,5 +22,6 @@ export {
   ICommentStore,
   IComment,
   PerformanceStore,
-  IPerformanceStore
+  IPerformanceStore,
+  User
 }

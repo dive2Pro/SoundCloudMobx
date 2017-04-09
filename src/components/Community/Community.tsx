@@ -1,21 +1,23 @@
 import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import LoadingSpinner from '../LoadingSpinner'
-import { IUser } from '../../interfaces/interface';
+import { User } from '../../store';
 import ArtWork from '../ArtWork'
 import ButtonGhost from '../ButtonGhost'
 const styles = require('./community.scss')
 import { Link, withRouter } from 'react-router-dom'
 import { observer, inject } from 'mobx-react';
-import { IUserStore } from '../../store/index';
+import { UserStore } from "../../store/UserStore";
+
+
 interface ICommunityProps {
-  UserStore?: IUserStore,
+  UserStore?: UserStore
   path: string
   scrollFunc?: () => void
 }
 
 const BigUserPic = observer(({ user, handleFollow }: {
-  user: IUser
+  user: User
   , handleFollow: (id: number) => void
 }) => {
   const { isFollowing, username, avatar_url, id } = user;
@@ -64,7 +66,7 @@ export class EmptyView extends React.Component<any, any> {
 @observer
 class Community extends React.Component<ICommunityProps, any> {
 
-  handleFollow = (user: IUser) => {
+  handleFollow = (user: User) => {
     // TODO
     // console.log('Todo : toggleFollowing')
     const us = this.props.UserStore
@@ -80,7 +82,7 @@ class Community extends React.Component<ICommunityProps, any> {
     }
 
     const { isError } = us.userModel
-    const users: IUser[] = us.userModel[path]
+    const users: User[] = us.userModel[path]
     const isLoading = us.userModel.isLoading(path);
     return (
       <div className={styles.main}>
