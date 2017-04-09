@@ -248,6 +248,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
       const resetNode$ = (glassNode: string, n: number) => {
         node$ = document.querySelector(`#${glassNode}`)
+        if (!node$) { return }
         node$ = node$.cloneNode(true);
         // main.style.left = -node$.offsetLeft + "px"
         glass.innerHTML = '';

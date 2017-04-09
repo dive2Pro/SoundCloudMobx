@@ -149,16 +149,19 @@ class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesSto
 
 export interface IUserStore {
   initUser: (id: number | IUser) => IUserModel
-  findPlaylistFromCurrentUser: (id: number) => IPlaylist
+  findPlaylistFromCurrentUser: (id: number) => void
   setCurrentUserModel: (user: IUserModel) => void
   followUser: (user: IUser) => void
   fetchUserData: (id: number) => void;
   userModel: IUserModel
   isLoginUser: boolean
   getLoginUserModel: () => IUserModel
+  fetchedPlaylist: IPlaylist | null
+  fetchPlaylistData: (id: number) => void
 }
 
 export class UserStore implements IUserStore {
+  @observable fetchedPlaylist: IPlaylist | null
 
   userModels = new ObservableMap<UserModel>()
   // 当前的登录用户
@@ -201,7 +204,15 @@ export class UserStore implements IUserStore {
       let um: any = this.userModel
       um = null;
     }
+
+
     this.loginedUserId = userId
+    if (userId !== undefined) {
+      const um = this.getLoginUserModel()
+      if (um.playlists.length < 1) {
+        um.fetchWithType(FETCH_PLAYLIST);
+      }
+    }
   }
   getLoginUserModel(): IUserModel {
     if (!this.loginModel) {
@@ -218,13 +229,31 @@ export class UserStore implements IUserStore {
     }
     return this;
   }
+  @action setFetchedPlaylistInfo = (data: IPlaylist | null) => {
+    this.fetchedPlaylist = data
+  }
+  async fetchPlaylistData(id: number) {
+    try {
+      const data = await fetch(apiUrl(`playlists/${id}`, '?'))
+      this.setFetchedPlaylistInfo(<IPlaylist>data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
+  @action findPlaylistFromCurrentUser = (id: number) => {
+    const um = this.userModel
+    let p = undefined
+    if (um) {
+      p = <IPlaylist>this.userModel.playlists.find((item) => item.id === id)
+    }
 
+    if (p == null) {
+      this.fetchPlaylistData(id)
+    } else {
+      this.setFetchedPlaylistInfo(p)
 
-  findPlaylistFromCurrentUser(id: number): IPlaylist {
-
-    return <IPlaylist>this.userModel.playlists.find((item) => item.id === id)
-
+    }
   }
 
 
@@ -465,17 +494,19 @@ class UserModel implements IUserModel {
     const fetchType = type
     let url = this.getFetchUrl(fetchType, id)
     if (!url) { return }
+
     try {
       this.changeLoadingState(fetchType, true);
       let data: any = await fetch(url);
 
       if (Array.isArray(data)) {
-        this.addData(type, data);
+        this.addData(fetchType, data);
       } else {
-        this.addData(type, data.collection);
+        this.addData(fetchType, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
       }
     } catch (err) {
+
       this.catchErr({ err, fetchType }, fetchType)
     } finally {
       this.changeLoadingState(fetchType, false)
@@ -488,6 +519,7 @@ class UserModel implements IUserModel {
   @action protected catchErr = (err: any, genre: string) => {
     this.isErrorsMap.set(genre, true);
   }
+
   private getFetchUrl(fetchType: string, id: number) {
     let url = this.nextHrefs.get(fetchType)
     if (url) {

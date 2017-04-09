@@ -79,9 +79,10 @@ interface IPlaylistInfoProp {
   PlayerStore: IPlayerStore
   UserStore: IUserStore
 }
+
 @inject('TrackStore', 'PlayerStore', 'UserStore')
 @observer
-export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
+export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
   handlePlay = () => {
     const { PlayerStore } = this.props
@@ -89,12 +90,29 @@ export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
       return;
     }
   }
+  componentDidMount() {
+    this.handleLocationChange()
 
+  }
   handleAddToPlaylist = () => {
     const { PlayerStore } = this.props
     if (!PlayerStore) {
       return;
     }
+  }
+  handleLocationChange = () => {
+    const {
+      UserStore, location: { search }
+    } = this.props
+    console.log('update')
+    const id = qs.parse(search.substr(1)).id
+    const playlist = UserStore.fetchedPlaylist;
+    if (!playlist || playlist.id != id) {
+      UserStore.fetchPlaylistData(id);
+    }
+  }
+  componentDidUpdate() {
+    this.handleLocationChange()
   }
 
   render() {
@@ -103,14 +121,18 @@ export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
     } = this.props
     // debugger
     const id = qs.parse(search.substr(1)).id
-
-    const playlist = UserStore.findPlaylistFromCurrentUser(id);
-    if (!playlist) {
-      return <noscript />
+    console.log(id, UserStore.fetchedPlaylist)
+    if (!UserStore.fetchedPlaylist || UserStore.fetchedPlaylist.id != id) {
+      return <LoadingSpinner isLoading={true} />
     }
+
+    const playlist = UserStore.fetchedPlaylist;
+
     const { label_name, artwork_url, user, tracks } = playlist
     return (
-      <div className={styles.playlistInfo}>
+      <div
+
+        className={styles.playlistInfo}>
         <TrackProfile
           label_name={label_name}
           type="list"
