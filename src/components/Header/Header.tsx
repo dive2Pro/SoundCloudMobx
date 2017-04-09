@@ -7,15 +7,16 @@ import ButtonInline from '../ButtonInline'
 import {
   withRouter
 } from 'react-router-dom'
-import { ISessionStore, SessionStore as SS } from '../../store/index';
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
 import { UserStore } from '../../store/UserStore';
+import { SessionStore } from '../../store/SessionStore';
+import { SESSION_STORE, USER_STORE } from '../../constants/storeTypes'
 
 interface IHeaderProp {
-  SessionStore: ISessionStore
-  UserStore: UserStore
+  sessionStore: SessionStore
+  userStore: UserStore
 }
 
 
@@ -39,7 +40,7 @@ const StyleButton =
 
 
 interface IDropDownProps {
-  store: ISessionStore
+  store: SessionStore
 }
 
 @observer
@@ -117,12 +118,12 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
   }
 }
 
-@inject('SessionStore', 'UserStore')
+@inject(SESSION_STORE, USER_STORE)
 @observer
 class Header extends React.Component<IHeaderProp, undefined> {
   renderMyPlaylist = () => {
-    const { UserStore } = this.props
-    const loginModel = UserStore.getLoginUserModel()
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel()
 
     if (!loginModel) {
       return (
@@ -156,15 +157,15 @@ class Header extends React.Component<IHeaderProp, undefined> {
   }
 
   loginIn = () => {
-    const { SessionStore } = this.props;
-    SessionStore.login();
+    const { sessionStore } = this.props;
+    sessionStore.login();
   };
   componentDidMount() {
-    this.props.SessionStore.loadDataFromCookie();
+    this.props.sessionStore.loadDataFromCookie();
   }
   render() {
 
-    const { user } = this.props.SessionStore;
+    const { user } = this.props.sessionStore;
     return (
       <section className={styles._aside}>
         <div className={styles._aside_header}>
@@ -173,7 +174,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
             className={styles._aside_header_img}>
 
             <DropDown
-              store={this.props.SessionStore}
+              store={this.props.sessionStore}
             />
           </div>
           <ul className={styles._aside_header_ul}>

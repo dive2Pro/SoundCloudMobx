@@ -15,13 +15,6 @@ const SC = require('soundcloud');
 const Cookies = require('js-cookie')
 import { User } from './UserStore'
 
-export interface ISessionStore {
-  session: string
-  user: User | undefined;
-  login: () => void;
-  loadDataFromCookie: () => void;
-  loginout: () => void
-}
 
 interface ICatchErr {
   err: any
@@ -30,7 +23,7 @@ interface ICatchErr {
 /**
  * 
  */
-class SessionStore implements ISessionStore {
+export class SessionStore {
   @observable session: any;
   @observable user: User | undefined;
   oauth_token: string;

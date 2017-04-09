@@ -4,13 +4,14 @@ import { observer, inject } from 'mobx-react'
 import { ITrackStore } from '../../store/TrackStore'
 import { IPlayerStore } from '../../store/PlayerStore'
 import {
-  ICommentStore,
   ITrack
 } from '../../store/index';
 import LoadingSpinner from '../LoadingSpinner'
 
 import CommentsContainer from '../Comments'
 import { FETCH_TRACK } from '../../constants/fetchTypes';
+import { CommentStore } from '../../store/CommentStore';
+import { COMMENT_STORE } from '../../constants/storeTypes'
 const qs = require('qs')
 const styles = require('./track.scss');
 
@@ -18,13 +19,13 @@ const styles = require('./track.scss');
 interface ITracklistinfoViewProps {
   TrackStore: ITrackStore
   PlayerStore: IPlayerStore
-  CommentStore: ICommentStore
+  commentStore: CommentStore
   match: any
   location: any
 }
 
 
-@inject('TrackStore', 'PlayerStore', 'CommentStore')
+@inject('TrackStore', 'PlayerStore', COMMENT_STORE)
 @observer
 class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
@@ -54,14 +55,14 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
   }
   handleFetchMoreComments = () => {
-    this.props.CommentStore.fetchMoreComments();
+    this.props.commentStore.fetchMoreComments();
   }
   renderContent = (currentTrack: ITrack) => {
     const { label_name
       // , release_day
       , user, artwork_url } = currentTrack
     // const { username, id, avatar_url } = user;
-    const { commentsCount } = this.props.CommentStore
+    const { commentsCount } = this.props.commentStore
     return (
       <div>
         <TrackProfile
@@ -78,7 +79,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
           </div>
 
           <CommentsContainer
-            CommentStore={this.props.CommentStore}
+            commentStore={this.props.commentStore}
             track={currentTrack}
             scrollFunc={this.handleFetchMoreComments}
           />

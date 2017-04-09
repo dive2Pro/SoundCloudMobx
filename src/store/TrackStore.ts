@@ -12,9 +12,10 @@ import {
   unauthApiUrl,
   apiUrl
 } from '../services/soundcloundApi'
-import UserStore, { ActivitiesStore } from './UserStore'
+import UserStore from './UserStore'
 import PerformanceStore from './PerformanceStore';
 import { RaceFetch as fetch } from '../services/Fetch'
+import activitiesStore from "./ActivitiesStore";
 // import { FETCH_TRACK } from "../constants/fetchTypes";
 
 
@@ -223,7 +224,7 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
       return preEntrey.concat(currentEntry)
     }) : []
-    return ActivitiesStore.tracks
+    return activitiesStore.tracks
       .concat(tracks, UserStore.AllUsersFavorities());
   }
 

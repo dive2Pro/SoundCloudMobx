@@ -4,31 +4,30 @@ import { useStrict } from 'mobx'
 import "./styles/index.scss";
 import { Provider } from 'mobx-react';
 import {
-    UserStore
+    userStore
     , TrackStore
     , PlayerStore
-    , SessionStore
-    , ActivitiesStore
-    , CommentStore
+    , sessionStore
+    , activitiesStore
+    , commentStore
     , PerformanceStore
 } from './store';
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './components'
-// const stores = [ActivitiesStore, UserStore, TrackStore, PlayerStore]
-
-
+// const stores = [ActivitiesStore, userStore, TrackStore, PlayerStore]
 
 const render = () => (
     <Router>
         <Provider
-            ActivitiesStore={ActivitiesStore}
-            UserStore={UserStore}
+            activitiesStore={activitiesStore}
+            sessionStore={sessionStore}
+            commentStore={commentStore}
+            userStore={userStore}
+
             TrackStore={TrackStore}
-            SessionStore={SessionStore}
             PlayerStore={PlayerStore}
-            CommentStore={CommentStore}
             PerformanceStore={PerformanceStore}
         >
             <App />

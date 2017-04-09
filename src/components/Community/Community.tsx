@@ -1,17 +1,18 @@
 import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import LoadingSpinner from '../LoadingSpinner'
-import { User } from '../../store';
+
 import ArtWork from '../ArtWork'
 import ButtonGhost from '../ButtonGhost'
 const styles = require('./community.scss')
 import { Link, withRouter } from 'react-router-dom'
 import { observer, inject } from 'mobx-react';
-import { UserStore } from "../../store/UserStore";
+import { UserStore, User } from "../../store/UserStore";
+import { USER_STORE } from "../../constants/storeTypes";
 
 
 interface ICommunityProps {
-  UserStore?: UserStore
+  userStore?: UserStore
   path: string
   scrollFunc?: () => void
 }
@@ -62,21 +63,21 @@ export class EmptyView extends React.Component<any, any> {
   }
 }
 
-@inject('UserStore')
+@inject(USER_STORE)
 @observer
 class Community extends React.Component<ICommunityProps, any> {
 
   handleFollow = (user: User) => {
     // TODO
     // console.log('Todo : toggleFollowing')
-    const us = this.props.UserStore
+    const us = this.props.userStore
     if (us) {
       us.followUser(user)
     }
   }
 
   render() {
-    const { UserStore: us, path, scrollFunc } = this.props
+    const { userStore: us, path, scrollFunc } = this.props
     if (!us || !path || !scrollFunc) {
       return (<noscript />)
     }
