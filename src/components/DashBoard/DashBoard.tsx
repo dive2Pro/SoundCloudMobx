@@ -12,18 +12,21 @@ import Activities from '../Activities'
 import Playlist from '../Playlist'
 import ArtWork from '../ArtWork'
 import {
-  IActivitiesStore, IPlayerStore,
+  IPlayerStore,
   IPerformanceStore, PerformanceStore
 } from '../../store';
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
-import { UserStore } from "../../store/UserStore";
+import { UserStore } from '../../store/UserStore';
+import { ActivitiesStore } from '../../store/ActivitiesStore';
+import * as storeTypes from '../../constants/storeTypes'
+import { USER_STORE } from '../../constants/storeTypes';
 const qs = require('qs')
 
 interface IDashBorardProps {
-  UserStore: UserStore
-  ActivitiesStore: IActivitiesStore
+  userStore: UserStore
+  activitiesStore: ActivitiesStore
   PerformanceStore: IPerformanceStore
   PlayerStore: IPlayerStore
   location?: any
@@ -52,8 +55,8 @@ const profile$: any = {
 
 
 const FavoView = observer((props: any) => {
-  const { PerformanceStore, UserStore } = props
-  const { userModel } = UserStore
+  const { PerformanceStore, userStore } = props
+  const { userModel } = userStore
   const { favorites, isError } = userModel
   const isloadingFavorites = PerformanceStore.getLoadingState(fetchTypes.FETCH_FAVORITES);
   return (
@@ -73,7 +76,11 @@ const FavoView = observer((props: any) => {
 /**
  * 用户界面
  */
-@inject('UserStore', 'ActivitiesStore', 'PlayerStore', 'PerformanceStore')
+@inject(
+  USER_STORE
+  , storeTypes.ACTIVITIES_STORE
+  , 'PlayerStore'
+  , 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
 
@@ -86,7 +93,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   glassStyle: any = {}
   infoGlassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
-    this.props.UserStore.userModel.fetchWithType(type);
+    this.props.userStore.userModel.fetchWithType(type);
   }
 
   renderCommunityContainer = (url: string, path: string) => {
@@ -109,7 +116,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   handleFollow = () => {
-    const { UserStore: us } = this.props
+    const { userStore: us } = this.props
     us.followUser(us.userModel.user)
   }
 
@@ -151,7 +158,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   changeUserId(id: number) {
     this.id = id;
-    const us = this.props.UserStore
+    const us = this.props.userStore
     const userModel = us.initUser(this.id)
     us.setCurrentUserModel(userModel)
   }
@@ -177,7 +184,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (Number.isNaN(this.id) || this.id == null) {
       return <Redirect to="/main" />
     }
-    const { UserStore: us } = this.props
+    const { userStore: us } = this.props
     const { userModel } = us
     if (!userModel) {
       return <LoadingSpinner isLoading={true} />
@@ -293,7 +300,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                     <FilterActivities />
                     : (
                       <FavoView
-                        UserStore={this.props.UserStore}
+                        userStore={this.props.userStore}
                         PerformanceStore={PerformanceStore}
                       />)
                 }}

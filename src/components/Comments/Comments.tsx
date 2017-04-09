@@ -2,14 +2,15 @@ import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
-import { ICommentStore, IComment, ITrack } from "../../store/index";
+import { ITrack } from "../../store/index";
 import ArtWork from '../ArtWork'
 import Permalink from '../Permalink'
+import { CommentStore, IComment } from "../../store/CommentStore";
 const styles = require('./comments.scss')
 
 
 interface ICommentsProps {
-  CommentStore: ICommentStore
+  commentStore: CommentStore
   track: ITrack
 }
 
@@ -40,21 +41,21 @@ const CommentView = ({ comment }: { comment: IComment }) => {
   )
 }
 
-@inject("TrackStore")
+@inject('TrackStore')
 @observer
 class Comments extends React.Component<ICommentsProps, any> {
 
   componentDidMount() {
 
-    const { track, CommentStore } = this.props
+    const { track, commentStore } = this.props
     // const { id } = track
-    CommentStore.setCurrentTrack(track);
+    commentStore.setCurrentTrack(track);
   }
 
   render() {
     const { currentTrackComments: comments
       , isLoading
-    } = this.props.CommentStore
+    } = this.props.commentStore
     return (
       <div>
         {

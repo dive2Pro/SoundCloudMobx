@@ -2,10 +2,11 @@ import * as React from 'react'
 import ViewAll from '../ViewAll';
 import MiniTrack from '../MiniTrack'
 import { IPlayerStore, ITrack } from '../../store/index';
-import { IUserModel } from '../../store';
+
 import LoadingSpinner from '../LoadingSpinner'
 import { observer } from 'mobx-react'
 import { FETCH_FAVORITES } from '../../constants/fetchTypes'
+import { IUserModel } from "../../store/UserStore";
 
 const styles = require('./favorites.scss')
 

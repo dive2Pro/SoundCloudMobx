@@ -3,10 +3,11 @@ import * as React from 'react'
 import Activities from '../Activities';
 import FilterPanel from '../FilterPanel';
 import SearchPanel from '../SearchPanel';
-import { IActivitiesStore } from '../../store/index';
+
 import { inject, observer } from 'mobx-react';
 import * as sortTypes from '../../constants/sortTypes';
-// import { FETCH_ACTIVITIES } from '../../constants/fetchTypes'
+import { ActivitiesStore } from "../../store/ActivitiesStore";
+import { ACTIVITIES_STORE } from '../../constants/storeTypes'
 const styles = require('./filteractivities.scss')
 
 
@@ -18,12 +19,13 @@ const sortItems = sortTypes.sortObjs.map(item => {
     content: item[key]
   };
 });
-@inject('ActivitiesStore')
+
+@inject(ACTIVITIES_STORE)
 @observer
 class FilterActivities extends React.Component<any, any> {
-  actStore: IActivitiesStore
+  actStore: ActivitiesStore
   componentWillMount() {
-    this.actStore = this.props.ActivitiesStore
+    this.actStore = this.props[ACTIVITIES_STORE]
   }
   handleSearchValue = (value: string) => {
     this.props.ActivitiesStore && this.props.ActivitiesStore.setFilterTitle(value);

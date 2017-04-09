@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react'
-import { User } from '../../store'
+
 import UserItemContainer from '../MiniUser'
 import {
   // FETCH_FOLLOWINGS,
@@ -8,7 +8,8 @@ import {
 } from '../../constants/fetchTypes'
 import LoadingSpinner from '../LoadingSpinner';
 import ViewAll from '../ViewAll';
-import { UserStore } from '../../store/UserStore';
+import { UserStore, User } from '../../store/UserStore';
+import { USER_STORE } from "../../constants/storeTypes";
 const styles = require('./followers.scss')
 const debounce = require('lodash/debounce')
 
@@ -17,9 +18,9 @@ const debounce = require('lodash/debounce')
 export interface IFollowersProps {
   type: string
   history?: any,
-  UserStore?: UserStore
+  userStore?: UserStore
 }
-@inject('UserStore')
+@inject(USER_STORE)
 @observer
 class Followers extends React.PureComponent<IFollowersProps, {}> {
   debounceFunc: {};
@@ -36,11 +37,11 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
   }
 
   handleFollowUser = (user: User) => {
-    const { UserStore } = this.props
+    const { userStore } = this.props
     const debounceFunc = debounce(
       () => {
-        if (UserStore) {
-          UserStore.followUser(user);
+        if (userStore) {
+          userStore.followUser(user);
         }
       }, 500)
     return () => {
@@ -49,12 +50,12 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
   }
 
   render() {
-    const { UserStore, type } = this.props
-    if (!UserStore) {
+    const { userStore, type } = this.props
+    if (!userStore) {
       return <noscript />
     }
 
-    const um = UserStore.userModel;
+    const um = userStore.userModel;
 
     const { user } = um
     const users = um[type];

@@ -2,9 +2,6 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { ITrackStore, IPlayerStore } from '../../store'
 import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
-import {
-  IUserModel
-} from '../../store/index';
 import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
@@ -12,7 +9,8 @@ import { Link } from 'react-router-dom'
 import { IPlaylist } from '../../interfaces/interface';
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
-import { UserStore } from "../../store/UserStore";
+import { UserStore, IUserModel } from "../../store/UserStore";
+import { USER_STORE } from "../../constants/storeTypes";
 const qs = require('qs')
 
 const styles = require('./playlist.scss')
@@ -77,10 +75,10 @@ interface IPlaylistInfoProp {
   // userModel: IUserModel
   location: any
   PlayerStore: IPlayerStore
-  UserStore: UserStore
+  userStore: UserStore
 }
 
-@inject('TrackStore', 'PlayerStore', 'UserStore')
+@inject('TrackStore', 'PlayerStore', USER_STORE)
 @observer
 export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
@@ -102,12 +100,12 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
   }
   handleLocationChange = () => {
     const {
-      UserStore, location: { search }
+      userStore, location: { search }
     } = this.props
     const id = qs.parse(search.substr(1)).id
-    const playlist = UserStore.fetchedPlaylist;
+    const playlist = userStore.fetchedPlaylist;
     if (!playlist || playlist.id != id) {
-      UserStore.fetchPlaylistData(id);
+      userStore.fetchPlaylistData(id);
     }
   }
   componentDidUpdate() {
@@ -116,14 +114,14 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
   render() {
     const {
-      UserStore, location: { search }
+      userStore, location: { search }
     } = this.props
     const id = qs.parse(search.substr(1)).id
-    if (!UserStore.fetchedPlaylist || UserStore.fetchedPlaylist.id != id) {
+    if (!userStore.fetchedPlaylist || userStore.fetchedPlaylist.id != id) {
       return <LoadingSpinner isLoading={true} />
     }
 
-    const playlist = UserStore.fetchedPlaylist;
+    const playlist = userStore.fetchedPlaylist;
 
     const { label_name, artwork_url, user, tracks } = playlist
     return (
