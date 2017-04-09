@@ -35,6 +35,7 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
       id: user && user.userId
     }
   }
+
   handleFollowUser = (user: IUser) => {
     const { UserStore } = this.props
     const debounceFunc = debounce(
@@ -47,6 +48,7 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
       debounceFunc();
     }
   }
+
   render() {
     const { UserStore, type } = this.props
     if (!UserStore) {
@@ -71,15 +73,16 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
         </div>
         <div
           className={styles.main}>
-          {limitUsers.map((user: IUser, i: number) => {
-            return (
-              <UserItemContainer
-                key={i + '-' + user.id + '-panel'}
-                onClick={this.handleFollowUser(user)}
-                user={user}
-              />
-            )
-          })}
+          {
+            limitUsers.map((user: IUser, i: number) => {
+              return (
+                <UserItemContainer
+                  key={i + '-' + user.id + '-panel'}
+                  onClick={this.handleFollowUser(user)}
+                  user={user}
+                />
+              )
+            })}
           <LoadingSpinner
             isError={isError}
             isLoading={isLoading}

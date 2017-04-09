@@ -40,12 +40,27 @@ export const BlankView = () => {
     </div>
   )
 }
+
+const profile$: any = {
+  position: 'absolute',
+  right: '5%',
+  top: '5%',
+  zIndex: '2',
+  background: 'hsla(0, 0, 100 % ,0.3)',
+  overflow: 'hidden',
+  display: 'inline-flex'
+  , alignItems: 'center'
+  // , justifyContent: 'center'
+  // , width: '180px'
+}
+
 /**
  * 用户界面
  */
 @inject('UserStore', 'ActivitiesStore', 'PlayerStore', 'PerformanceStore')
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
+
   headerInfo: any;
   handlePlayAll: any;
   handleFollow: any;
@@ -58,6 +73,24 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     this.props.UserStore.userModel.fetchWithType(type);
   }
 
+  renderCommunityContainer = (url: string, path: string) => {
+    return (
+      <Route
+        path={`${url}/${path}`}
+        render={() => {
+          {/*const commuUrl = url.substr(url.lastIndexOf('/') + 1)*/ }
+          return (
+            <CommunityContainer
+              path={path}
+              scrollFunc={() =>
+                this.handlerFetchMoreContacts(path)}
+            />
+          )
+        }}
+      />
+
+    )
+  }
   componentDidMount() {
     this.props.UserStore.userModel.fetchCommunityData();
     this.props.PerformanceStore.setCurrentGlassNodeId('DashBoard')
@@ -140,8 +173,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (Number.isNaN(this.id) || this.id == null) {
       return <Redirect to="/main" />
     }
-
-    const { userModel, isLoginUser } = this.props.UserStore
+    const { UserStore: us } = this.props
+    const { userModel } = us
     if (!userModel) {
       return <LoadingSpinner isLoading={true} />
     }
@@ -151,9 +184,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , followings
     } = userModel;
     const user: any = userModel.user;
-
-    const isloadingFollowers = userModel.isLoading(fetchTypes.FETCH_FOLLOWERS)
-    const isloadingFollowings = userModel.isLoading(fetchTypes.FETCH_FOLLOWINGS)
     const { match: { url } } = this.props
     const FV = this.FavoView()
     const avatar_url = user.avatar_url
@@ -161,18 +191,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     if (Object.keys(this.glassStyle).length > 0) {
       backgroundImageUrl = avatar_url && getSpecPicPath(avatar_url, PicSize.MASTER);
     }
-    const profile$: any = {
-      position: 'absolute',
-      right: '5%',
-      top: '5%',
-      zIndex: '2',
-      background: 'hsla(0, 0, 100 % ,0.3)',
-      overflow: 'hidden',
-      display: 'inline-flex'
-      , alignItems: 'center'
-      // , justifyContent: 'center'
-      // , width: '180px'
-    }
+    console.info('us.isLoginUser = ' + us.isLoginUser)
     return (
       <div
         id="DashBoard"
@@ -202,7 +221,18 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             </span>
             <div className={styles._contentHeader_actions}>
               <button onClick={this.handlePlayAll}>PLAY</button>
-              <button onClick={this.handleFollow}>{user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}</button>
+              {
+
+                us.isLoginUser ?
+                  ''
+                  : (
+                    <button
+                      onClick={this.handleFollow}
+                    >
+                      {user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}
+                    </button>
+                  )
+              }
             </div>
 
             <Blur
@@ -241,32 +271,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
           <div className={styles._contentBody_main}>
             <Switch>
-              <Route
-                path={`${url}/followers`}
-                render={() => {
-                  return (
-                    <CommunityContainer
-                      isLoading={isloadingFollowers}
-                      scrollFunc={() =>
-                        this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWERS)}
-                      users={followers}
-                    />
-                  )
-                }}
-              />
-              <Route
-                path={`${url}/followings`}
-                render={() => {
-                  return (
-                    <CommunityContainer
-                      isLoading={isloadingFollowings}
-                      scrollFunc={() =>
-                        this.handlerFetchMoreContacts(fetchTypes.FETCH_FOLLOWINGS)}
-                      users={followings}
-                    />
-                  )
-                }}
-              />
+              {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
+              {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
               <Route
                 path={`${url}/favorites`}
                 component={FV}
@@ -285,7 +291,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               <Route
                 path="/"
                 render={() => {
-                  return isLoginUser ?
+                  return us.isLoginUser ?
                     <FilterActivities />
                     : <FV />
                 }}
@@ -298,10 +304,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               user={userModel.user} />
 
             <FavoritesPanel
-
               PlayerStore={this.props.PlayerStore}
               UserModel={userModel}
-
             />
             <FollowsPanel
               type={fetchTypes.FETCH_FOLLOWERS}

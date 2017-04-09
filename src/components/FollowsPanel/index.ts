@@ -1,2 +1,2 @@
-import F from './Follows';
+import F from './FollowsPanel';
 export { F as default }

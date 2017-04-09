@@ -1,4 +1,4 @@
-export const RaceFetch = (p: string, time?: number) => {
+export const RaceFetch = (p: string, method?: object, time?: number) => {
 
   return new Promise((res, rej) => {
     const timeoutPromise = new Promise((timeRes, timeRej) => {
@@ -11,7 +11,7 @@ export const RaceFetch = (p: string, time?: number) => {
         },
         time || 1000 * 5)
     })
-    const pfetch = fetch(p)
+    const pfetch = fetch(p, method)
     Promise.race([pfetch, timeoutPromise])
       .then(
       (data: any) => {

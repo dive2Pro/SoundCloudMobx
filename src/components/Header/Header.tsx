@@ -52,6 +52,7 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
     } else {
       store.loginout()
     }
+    this.toggleDropdowning();
   }
 
   @action toggleDropdowning = () => {
