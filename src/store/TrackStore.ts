@@ -158,7 +158,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
 
   @action protected catchErr = (err: any, genre: string) => {
     this.isErrorsMap.set(genre, true);
-
+    console.error(err)
   }
 }
 

@@ -1,19 +1,118 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom'
 import { observer, inject } from 'mobx-react';
 import DevTool from 'mobx-react-devtools'
 import Link from '../StyleLink'
+import ButtonInline from '../ButtonInline'
 import {
   withRouter
 } from 'react-router-dom'
-import { ISessionStore } from '../../store/index';
+import { ISessionStore, SessionStore as SS } from '../../store/index';
 const styles = require('./header.scss');
-
+import ArtWork from '../ArtWork'
+import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
+import { IUser } from '../../interfaces/interface';
+import { IUserStore } from '../../store/UserStore';
 interface IHeaderProp {
   SessionStore: ISessionStore
 }
-const StyleButton = (props: any) => {
-  return <button type="button">{props.children} </button>;
-};
+
+
+class widhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, children?: any }, any> {
+  render() {
+    const { to } = this.props
+    return (
+      <Link
+        to={to || 'abondan'}
+        activeClassName={styles.aside_hover}
+        exact={to == '/'}
+      >
+        {this.props.children}
+      </Link>)
+  }
+}
+const StyleButton =
+  // widhtRouterStyleLink
+  withRouter(widhtRouterStyleLink);
+
+
+interface IDropDownProps {
+  store: ISessionStore
+}
+
+@observer
+class DropDown extends React.PureComponent<IDropDownProps, any>{
+  dropdownContent: any;
+  @observable dropdowning: boolean = false
+
+  handleSign = () => {
+    const { store } = this.props
+    if (!store.user) {
+      store.login()
+    } else {
+      store.loginout()
+    }
+  }
+
+  @action toggleDropdowning = () => {
+    this.dropdowning = !this.dropdowning;
+  }
+
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.onOutsideClick);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.onOutsideClick);
+  }
+
+  @action onOutsideClick = (e: any) => {
+
+    if (!this.dropdowning) {
+      return;
+    }
+
+    e.stopPropagation();
+    const localNode = ReactDOM.findDOMNode(this);
+    let source = e.target;
+
+    while (source.parentNode) {
+      if (source === localNode) {
+        return;
+      }
+      source = source.parentNode;
+    }
+    this.toggleDropdowning()
+  }
+
+  render() {
+    const clazz = this.dropdowning ? styles.dropdown_content_visible : styles.dropdown_content;
+    const { user } = this.props.store
+
+    const aturl = user && user.avatar_url || ''
+    return (
+      <div className={styles.dropdown}>
+        <ArtWork
+          onClick={this.toggleDropdowning}
+          style={{
+            width: '50px',
+            height: '50px'
+          }}
+          src={aturl}
+          live={true}
+        />
+        <div
+          className={clazz}
+        >
+          <ButtonInline onClick={this.handleSign}>
+            {!user ? 'Sign into SoundCloud' : 'Sign out'}
+          </ButtonInline>
+        </div>
+      </div >
+    )
+  }
+}
 
 @inject('SessionStore')
 @observer
@@ -32,34 +131,32 @@ class Header extends React.Component<IHeaderProp, undefined> {
     return (
       <section className={styles._aside}>
         <div className={styles._aside_header}>
-          <div className={styles._aside_header_img}>
-            <img
-              alt="#"
-              style={{
-                width: '50px',
-                height: '50px'
-              }}
+          {/*onClick={}*/}
+          <div
+            className={styles._aside_header_img}>
+
+            <DropDown
+              store={this.props.SessionStore}
             />
           </div>
           <ul className={styles._aside_header_ul}>
-            <li><StyleButton>Library</StyleButton></li>
             <li>
-              <Link to="/"><StyleButton>Browse</StyleButton>
-              </Link>
+              <StyleButton>Library</StyleButton>
             </li>
             <li>
-              <Link to="/ssr"><StyleButton>Radio</StyleButton>
-              </Link>
+              <StyleButton to="/main">Browse</StyleButton>
             </li>
             <li>
-              <Link
+              <StyleButton to="/ssr">Radio</StyleButton>
+            </li>
+            <li>
+              <StyleButton
                 to={{
-                  pathname: '/users/home',
+                  pathname: '/users',
                   search: `?id=${user && user.id}`
                 }}
-              >
-                <StyleButton>home</StyleButton>
-              </Link>
+              >home
+              </StyleButton>
             </li>
           </ul>
         </div>
@@ -90,9 +187,6 @@ class Header extends React.Component<IHeaderProp, undefined> {
             <li><StyleButton> <i>🎶</i> Arists</StyleButton> </li>
           </ul>
         </div>
-        {/*{
-          <button onClick={this.loginIn}>{user ? "Loginout" : 'Login'}</button>
-        }*/}
         <DevTool />
       </section>
     );

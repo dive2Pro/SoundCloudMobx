@@ -17,6 +17,7 @@ export interface IArtWorkProps {
   style?: { width?: any, height?: any }
   PerformanceStore?: IPerformanceStore
   live?: boolean
+  onClick?: (e: any) => void
 }
 
 @inject('PerformanceStore')
@@ -53,13 +54,15 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
 
     this.handlerObserver = autorun(() => {
       const { PerformanceStore: ps, src } = this.props
-      if (this.img && ps && ps.scrollLimit.length > 0) {
+      if (this.img && ps && ps.scrollLimit.length > 0 && src) {
         const [l, h] = ps.scrollLimit
         const y = this.img.y
         const imgHeight = this.img.offsetHeight;
         if ((l === h && y <= l) || (y < l && (y + imgHeight > h))) {
           this.caclImg(src)
         }
+      } else if (!!src === false) {
+        this.img.src = preImage
       }
     })
   }
@@ -97,7 +100,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         , clazz
         , alt
         , style
-        , src } = this.props
+        , src, ...rest } = this.props
     return (
       <img
         ref={n => this.img = n}
@@ -107,6 +110,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
         height={size}
         alt={alt}
         style={style}
+        {...rest}
       />
     )
   }

@@ -20,7 +20,7 @@ const StyleLink = (function StyleLink(prop: IStyleLinkProp) {
   return (
     <NavLink
       to={to}
-      activeClassName={styles.activeClass}
+      activeClassName={activeClassName || styles.activeClass}
       {...rest}
     >
       {children}

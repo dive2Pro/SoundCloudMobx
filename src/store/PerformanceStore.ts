@@ -78,8 +78,6 @@ class PerformanceStore implements IPerformanceStore {
     return allSettle
   }
 
-
-
 }
 
 export default new PerformanceStore()

@@ -155,6 +155,7 @@ export interface IUserStore {
   fetchUserData: (id: number) => void;
   userModel: IUserModel
   isLoginUser: boolean
+  getLoginUserModel: () => IUserModel
 }
 
 export class UserStore implements IUserStore {
@@ -163,7 +164,7 @@ export class UserStore implements IUserStore {
   // 当前的登录用户
   loginModel: IUserModel
   @observable userModel: IUserModel
-  loginedUserId: number
+  loginedUserId: number | undefined
 
   initUser(obj: number | IUser): IUserModel {
     const isNumber = typeof obj === 'number'
@@ -186,13 +187,15 @@ export class UserStore implements IUserStore {
     const lum = this.getLoginUserModel();
     return this.loginedUserId === (lum.user && lum.user.userId)
   }
+
   @computed get isLogined() {
     return this.loginedUserId != null
   }
-  setLoginUserModel(userId: number) {
+
+  setLoginUserModel(userId: number | undefined) {
     this.loginedUserId = userId
   }
-  getLoginUserModel() {
+  getLoginUserModel(): IUserModel {
     if (!this.loginModel) {
       this.loginModel = <IUserModel>this.userModels.get(this.loginedUserId + '')
     }

@@ -11,9 +11,7 @@
   font-weight: bold!important;
 }
 
-._aside_playlist{
-  /*position: absolute;*/
-  /*bottom: 0;*/
+._aside_playlist{ 
 
 }
 ._aside_header_img{
@@ -33,7 +31,7 @@
   font-size: $mediumIcon;
 }
 
-._aside_header_ul li button{
+._aside_header_ul li a{
   font-weight: bold;
   border: none;
   background: inherit;
@@ -41,17 +39,91 @@
   width: 100%;
   text-align: inherit;
   color: $nav;  
+  display: block;
   &>i{
        width: 25px;
        display: inline-block;
   }
 }
 
-._aside button:hover{
+ .aside_hover{
+  background: #f55874!important;
+  color: #FBFBFB!important;
+  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
+  text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+  border-radius: 5px;
+
+}
+
+._aside a:hover{
+  // composes:aside_hover;
   background: #f55874;
   color: #FBFBFB;
   box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
   text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
   border-radius: 5px;
-  
+}
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_content {
+    display: none; 
+    background-color: #f9f9f9;
+    min-width: 160px; 
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top:$padding*0.75;
+    position:absolute; 
+    padding:10px;
+    color:#f9f9f9;
+}
+.dropdown_content_visible{
+  display: block;
+  composes:dropdown_content;
+  position: absolute;
+  filter: drop-shadow(0 0 6px #bababa);
+  top: calc(100% + 10px);
+  left: calc(-100% );
+  & button{
+      background: $soundcloudColor;
+      padding: $padding/2 $padding;
+      font-size: $smallIcon;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+  } 
+  &:focus{
+    background: red;
+  }
+  &::before{
+    position:absolute;
+    content:"";
+    right:50%;
+    top:-6px;
+    height:15px; 
+    width:15px;
+    background:currentColor;
+    z-index:-1;
+    transform:rotateZ(45deg);
+  } 
+}
+
+.dropdown_content:focus{
+
 }

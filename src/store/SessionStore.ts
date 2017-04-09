@@ -4,7 +4,8 @@ import {
 import {
   CLIENT_ID,
   REDIRECT_URI,
-  OAUTH_TOKEN
+  OAUTH_TOKEN,
+  MY_CLIENT_ID
 } from '../constants/authentification';
 import {
   ISession, IUser
@@ -19,9 +20,10 @@ const Cookies = require('js-cookie')
 // @Remotedev({ name: "SessionStore" })
 export interface ISessionStore {
   session: string
-  user: IUser;
+  user: IUser | undefined;
   login: () => void;
   loadDataFromCookie: () => void;
+  loginout: () => void
 }
 
 interface ICatchErr {
@@ -33,12 +35,13 @@ interface ICatchErr {
  */
 class SessionStore implements ISessionStore {
   @observable session: any;
-  @observable user: IUser;
+  @observable user: IUser | undefined;
   oauth_token: string;
 
   loadDataFromCookie() {
     const oauth_token = Cookies.get(OAUTH_TOKEN);
-    if (oauth_token) {
+
+    if (oauth_token && oauth_token != 'null') {
       this.fetchUser(oauth_token);
       this.oauth_token = oauth_token;
       return true
@@ -53,7 +56,7 @@ class SessionStore implements ISessionStore {
   }
   @action login() {
     if (this.loadDataFromCookie()) { return }
-    SC.initialize({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI });
+    SC.initialize({ client_id: MY_CLIENT_ID, redirect_uri: REDIRECT_URI });
     SC.connect().then((session: ISession) => {
       Cookies.set(OAUTH_TOKEN, session.oauth_token);
       this.oauth_token = session.oauth_token;
@@ -63,7 +66,13 @@ class SessionStore implements ISessionStore {
       this.catchError(err);
     });
   }
-
+  @action loginout() {
+    this.oauth_token = '';
+    this.session = null;
+    Cookies.set(OAUTH_TOKEN, null);
+    this.user = undefined
+    UserList.setLoginUserModel(undefined)
+  }
   // tslint:disable-next-line:variable-name
   @action fetchUser(oauth_token: string) {
     const url = apiUrl(`me`, '?')

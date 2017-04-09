@@ -68,6 +68,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     const vcStyle = {
       left: vol - vc.offsetWidth / 2
     }
+
     runInAction(() => {
       this.volumeContainerStyle = vcStyle
     })
@@ -78,12 +79,10 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       if (this.processValue == 1
         && PlayerStore
         && !PlayerStore.isShuffleMode) {
-        console.log('-----------------')
         this.setProcessValue(0);
         const hasPlayed = PlayerStore.playNextTrack(1);
         if (!hasPlayed) {
           PlayerStore.togglePlaying();
-          // this.audio.pause()
         }
       }
     })
