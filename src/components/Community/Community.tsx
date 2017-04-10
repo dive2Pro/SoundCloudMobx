@@ -72,13 +72,13 @@ class Community extends React.Component<ICommunityProps, any> {
     // console.log('Todo : toggleFollowing')
     const us = this.props.userStore
     if (us) {
-      us.followUser(user)
+      us.debouncedRequestFollowUser(user)
     }
   }
 
   render() {
     const { userStore: us, path, scrollFunc } = this.props
-    if (!us || !path || !scrollFunc) {
+    if (!us || !path || !scrollFunc || !us.userModel) {
       return (<noscript />)
     }
 

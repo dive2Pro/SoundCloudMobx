@@ -14,7 +14,7 @@ interface IStyleLinkProp {
 
 // const defaultStyle
 const StyleLink = (function StyleLink(prop: IStyleLinkProp) {
-  let { to, activeClassName, activeStyle, children, exact } = prop
+  let { to, activeClassName, activeStyle, children, exact, ...rest } = prop
 
   // activeStyle={activeStyle}
   return (
@@ -22,6 +22,7 @@ const StyleLink = (function StyleLink(prop: IStyleLinkProp) {
       to={to}
       activeClassName={activeClassName || styles.activeClass}
       exact={exact}
+      {...rest}
     >
       {children}
     </NavLink >

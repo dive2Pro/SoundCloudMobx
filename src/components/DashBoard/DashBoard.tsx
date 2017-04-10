@@ -14,11 +14,13 @@ import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
-import { UserStore } from '../../store/UserStore';
+import { UserStore, User, UserModel } from '../../store/UserStore';
 import { ActivitiesStore } from '../../store/ActivitiesStore';
 import { USER_STORE, ACTIVITIES_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from "../../store/PlayerStore";
 import { PerformanceStore } from "../../store/PerformanceStore";
+import { isObservable } from "._mobx@3.1.8@mobx/lib/mobx";
+const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 
 interface IDashBorardProps {
@@ -80,6 +82,134 @@ const FavoView = observer((props: any) => {
   , PERFORMANCE_STORE)
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
+  renderContentBodyMain = (us: UserStore, performanceStore: PerformanceStore) => {
+    const { match: { url } } = this.props
+    const { userModel } = us
+    return (
+      <div className={styles._contentBody_main}>
+        <Switch>
+          {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
+          {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
+          <Route
+            path={`${url}/favorites`}
+            render={() => {
+              return (
+                <FavoView
+                  userStore={us}
+                  performanceStore={performanceStore}
+                />)
+            }}
+          />
+          <Route
+            path={`${url}/playlist`}
+            render={(match: any) => {
+
+              return userModel ? (
+                <Playlist
+                  scrollFunc={this.handleFetchMorePlaylist}
+                  userModel={userModel}
+                />
+              ) : <LoadingSpinner isLoading={true} />
+            }}
+          />
+          <Route
+            render={() => {
+              return us.isLoginUser ?
+                <FilterActivities />
+                : (
+                  <FavoView
+                    userStore={us}
+                    performanceStore={performanceStore}
+                  />)
+            }}
+          />
+        </Switch>
+      </div>
+    )
+  }
+  renderContentHeader = (user: User, isLoginUser: boolean) => {
+    // const user = model.user;
+    const avatar_url = user.avatar_url
+    const is = isObservable(avatar_url)
+    let backgroundImageUrl = preload
+    if (Object.keys(this.glassStyle).length > 0) {
+      backgroundImageUrl = avatar_url ?
+        getSpecPicPath(avatar_url, PicSize.MASTER) : backgroundImageUrl;
+    }
+    console.log(is, user, isObservable(user), user.avatar_url)
+
+    return (
+      <div className={styles._contentHeader}>
+        <div
+          ref={n => this.headerImg = n}
+          className={styles._contentHeader_img}
+          style={{
+            backgroundImage: `url(${backgroundImageUrl})`
+            , width: '1248px', height: '300px'
+          }}
+        />
+        <div
+          ref={n => this.headerInfo = n}
+          className={styles._contentHeader_info}>
+          <span
+            onClick={this.handleRouteToUserMain}
+            style={{
+              fontSize: '36px', color: 'white'
+              , fontWeight: 600
+              , cursor: 'pointer'
+            }}
+          >
+            {user.username}
+          </span>
+          <div className={styles._contentHeader_actions}>
+            <button onClick={this.handlePlayAll}>PLAY</button>
+            {
+              isLoginUser ?
+                ''
+                : (
+                  <button
+                    onClick={this.handleFollow}
+                  >
+                    {user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}
+                  </button>
+                )
+            }
+          </div>
+
+          <Blur
+            img={backgroundImageUrl}
+            blurRadius={5}
+            style={this.infoGlassStyle}
+          />
+
+        </div>
+        <div
+          ref={n => this.profile = n}
+          style={profile$}
+          className={styles._contentHeader_profile}
+        >
+
+          <ArtWork
+            size={50}
+            src={avatar_url}
+            alt="user Profile"
+          />
+          <span>{user.username}</span>
+          <span>
+            <i
+              className="fa fa-angle-down"
+            />
+          </span>
+          <Blur
+            img={backgroundImageUrl}
+            blurRadius={10}
+            style={this.glassStyle}
+          />
+
+        </div>
+      </div>
+    )
+  }
 
   headerInfo: any;
   handlePlayAll: any;
@@ -90,7 +220,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   glassStyle: any = {}
   infoGlassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
-    this.props.userStore.userModel.fetchWithType(type);
+    const um = this.props.userStore.userModel
+    um && um.fetchWithType(type);
   }
 
   renderCommunityContainer = (url: string, path: string) => {
@@ -114,7 +245,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   handleFollow = () => {
     const { userStore: us } = this.props
-    us.followUser(us.userModel.user)
+    if (us.userModel)
+    { us.debouncedRequestFollowUser(us.userModel.user) }
   }
 
   componentDidMount() {
@@ -179,131 +311,22 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   render() {
     if (Number.isNaN(this.id) || this.id == null) {
-      return <Redirect to="/main" />
+      // return <Redirect to="/main" />
     }
     const { userStore: us, performanceStore } = this.props
     const { userModel } = us
-    if (!userModel) {
+    if (!userModel || !userModel.user) {
       return <LoadingSpinner isLoading={true} />
-    }
-
-    const user: any = userModel.user;
-    const { match: { url } } = this.props
-    const avatar_url = user.avatar_url
-    let backgroundImageUrl = 'preImage'
-    if (Object.keys(this.glassStyle).length > 0) {
-      backgroundImageUrl = avatar_url && getSpecPicPath(avatar_url, PicSize.MASTER);
     }
 
     return (
       <div
         id="DashBoard"
-        className={styles.container}>
-        <div className={styles._contentHeader}>
-          <div
-            ref={n => this.headerImg = n}
-            className={styles._contentHeader_img}
-            style={{
-              backgroundImage: `url(${backgroundImageUrl})`
-              , width: '1248px', height: '300px'
-            }}
-          />
-          <div
-            ref={n => this.headerInfo = n}
-            className={styles._contentHeader_info}>
-            <span
-              onClick={this.handleRouteToUserMain}
-              style={{
-                fontSize: '36px', color: 'white'
-                , fontWeight: 600
-                , cursor: 'pointer'
-              }}
-            >
-              {user.username}
-            </span>
-            <div className={styles._contentHeader_actions}>
-              <button onClick={this.handlePlayAll}>PLAY</button>
-              {
-
-                us.isLoginUser ?
-                  ''
-                  : (
-                    <button
-                      onClick={this.handleFollow}
-                    >
-                      {user.isFollowing ? 'UNFOLLOW' : 'FOLLOW'}
-                    </button>
-                  )
-              }
-            </div>
-
-            <Blur
-              img={backgroundImageUrl}
-              blurRadius={5}
-              style={this.infoGlassStyle}
-            />
-
-          </div>
-          <div
-            ref={n => this.profile = n}
-            style={profile$}
-            className={styles._contentHeader_profile}
-          >
-
-            <ArtWork
-              size={50}
-              src={avatar_url}
-              alt="user Profile"
-            />
-            <span>{user.username}</span>
-            <span>
-              <i
-                className="fa fa-angle-down"
-              />
-            </span>
-            <Blur
-              img={backgroundImageUrl}
-              blurRadius={10}
-              style={this.glassStyle}
-            />
-
-          </div>
-        </div>
+        className={styles.container}
+      >
+        {this.renderContentHeader(userModel.user, us.isLoginUser)}
         <div className={styles._contentBody}>
-
-          <div className={styles._contentBody_main}>
-            <Switch>
-              {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
-              {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
-              <Route
-                path={`${url}/favorites`}
-                component={FavoView}
-              />
-              <Route
-                path={`${url}/playlist`}
-                render={(match: any) => {
-                  return (
-                    <Playlist
-                      scrollFunc={this.handleFetchMorePlaylist}
-                      userModel={userModel}
-                    />
-                  )
-                }}
-              />
-              <Route
-                path="/"
-                render={() => {
-                  return us.isLoginUser ?
-                    <FilterActivities />
-                    : (
-                      <FavoView
-                        userStore={this.props.userStore}
-                        performanceStore={performanceStore}
-                      />)
-                }}
-              />
-            </Switch>
-          </div>
+          {this.renderContentBodyMain(us, performanceStore)}
           <aside className={styles._contentBody_community}>
             <Profile
               user={userModel.user}

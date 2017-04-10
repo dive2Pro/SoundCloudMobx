@@ -36,10 +36,13 @@ const routes = [
   , {
     path: '/callback(:*)',
     component: Callback
-  }, {
-    path: '/ssr',
+  },
+  {
     render: (match: any) => {
-      return (<div style={{ height: '100vh', background: 'purple' }}>Hallo</div>)
+      return (
+        <div style={{ minWidth: '89.143em', height: '100vh', background: 'purple' }}>
+          Hallo
+          </div>)
     }
   }
 ]

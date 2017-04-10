@@ -11,31 +11,35 @@ export function seconds2time(seconds: number): string {
 
   let minutes = Math.floor((seconds - (hours * 3600) - delDaysSeconds) / 60);
   let nowSeconds = seconds - delDaysSeconds - (hours * 3600) - (minutes * 60);
-  let time = "";
+  let time = '';
   if (days != 0) {
-    time = days + ":"
+    time = days + ':'
   }
   if (hours != 0) {
-    time = hours + ":";
+    time = hours + ':';
   }
-  let cacuMinutes = ""
-  if (minutes != 0 || time !== "") {
-    cacuMinutes = (minutes < 10 && time !== "") ? "0" + minutes : String(minutes);
-    time += cacuMinutes + ":";
+  let cacuMinutes = ''
+  if (minutes != 0 || time !== '') {
+    cacuMinutes = (minutes < 10 && time !== '') ? '0' + minutes : String(minutes);
+    time += cacuMinutes + ':';
   }
-  if (time === "") {
-    time = nowSeconds + "s";
-  }
-  else {
-    time += (nowSeconds < 10) ? "0" + nowSeconds : String(nowSeconds);
+  if (time === '') {
+    time = nowSeconds + 's';
+  } else {
+    time += (nowSeconds < 10) ? '0' + nowSeconds : String(nowSeconds);
   }
   return time;
 }
 
 export function transBigMath(value: number): string {
   if (value < 1000) {
-    return value + "";
+    return value + '';
   }
+  if (value < 1000000) {
+    let v = (value / 1000).toFixed(0)
+    return v + 'k'
+  }
+
   let v = +(value / 1000000).toFixed(2)
   if (v >= 1) {
     return v + 'm'

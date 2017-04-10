@@ -24,14 +24,8 @@ import {
 } from '../services/soundcloundApi';
 
 import { performanceStore } from './index'
-import {
-  logError
-} from '../services/logger'
 import { RaceFetch as fetch } from '../services/Fetch'
-
-
-import * as _ from 'lodash'
-
+const debounce = require('lodash/debounce')
 
 interface ICatchErr {
   err: {
@@ -42,16 +36,18 @@ interface ICatchErr {
 }
 const limitPageSize = 20;
 
-
 export class UserStore {
-
+  debouncedRequestFollowUser: any;
   @observable fetchedPlaylist: IPlaylist | null
-  @observable userModel: UserModel
+  @observable userModel: UserModel | undefined
 
   private userModels = new ObservableMap<UserModel>()
   // 当前的登录用户
-  private loginModel: UserModel
   @observable private loginedUserId: number | undefined
+
+  constructor() {
+    this.debouncedRequestFollowUser = debounce(this.followUser, 500)
+  }
 
   initUser(obj: number | User): UserModel {
     const isNumber = typeof obj === 'number'
@@ -78,7 +74,7 @@ export class UserStore {
     if (this.loginedUserId == null) { return false }
     const lum = this.userModel;
 
-    return this.loginedUserId === (lum.user && lum.user.userId)
+    return this.loginedUserId === (lum && lum.user && lum.user.userId)
   }
 
   @computed get isLogined() {
@@ -89,24 +85,22 @@ export class UserStore {
 
     if (userId === undefined) {
       this.userModels.delete(this.loginedUserId + '')
-      let um: any = this.userModel
-      um = null;
+      this.userModel = undefined
     }
 
 
     this.loginedUserId = userId
     if (userId !== undefined) {
-      const um = this.getLoginUserModel()
-      if (um.playlists.length < 1) {
+      const um = this.getLoginUserModel
+
+      if (um && um.playlists.length < 1) {
         um.fetchWithType(FETCH_PLAYLIST);
       }
     }
   }
-  getLoginUserModel(): UserModel {
-    if (!this.loginModel) {
-      this.loginModel = <UserModel>this.userModels.get(this.loginedUserId + '')
-    }
-    return this.loginModel
+
+  @computed get getLoginUserModel(): UserModel | undefined {
+    return this.userModels.get(this.loginedUserId + '')
   }
 
   fetchUserData(id: number) {
@@ -135,7 +129,7 @@ export class UserStore {
     const um = this.userModel
     let p = undefined
     if (um) {
-      p = <IPlaylist>this.userModel.playlists.find((item) => item.id === id)
+      p = <IPlaylist>um.playlists.find((item) => item.id === id)
     }
 
     if (p == null) {
@@ -146,35 +140,11 @@ export class UserStore {
     }
   }
 
-  /**
-   * follow用户
-   * todo fix 404
-   */
-  async followUser(user: User) {
-    // todo 添加modal?
-    if (!this.getLoginUserModel()) {
-      return
-    }
-    const { id, isFollowing } = user
-
-    // const isFollowing = await this.isFollowingUser(id)
-    const data: any = await fetch(
-      apiUrl(`me/followings/${id}`, '?'),
-      {
-        method: isFollowing ? 'delete' : 'put'
-      }
-    )
-    if (data) {
-      this.operaUserFromFollowings(user, isFollowing)
-    }
-  }
-
   isFollowingUser(id: number): boolean {
-    const lm = this.getLoginUserModel()
+    const lm = this.getLoginUserModel
     if (!lm) { return false }
     return lm.followings.find(u => u.id === id) != null
   }
-
   AllUsersFavorities(): ITrack[] {
     const tracks: ITrack[] = []
     this.userModels.values().forEach((model) => {
@@ -182,9 +152,35 @@ export class UserStore {
     })
     return tracks;
   }
+  /**
+   * follow用户
+   * todo fix 404
+   */
+  private async  followUser(user: User) {
+    // todo 添加modal?
+    if (!this.getLoginUserModel) {
+      return
+    }
+    const { id, isFollowing } = user
+    // const isFollowing = await this.isFollowingUser(id)
+    const data: any = await fetch(
+      apiUrl(`me/followings/${id}`, '?'),
+      {
+        method: isFollowing ? 'delete' : 'put'
+      }
+    )
 
-  @action operaUserFromFollowings(user: User, followed: boolean) {
-    const lum = this.getLoginUserModel()
+    if (data) {
+      this.operaUserFromFollowings(user, isFollowing)
+    }
+  }
+
+
+
+
+  @action private operaUserFromFollowings(user: User, followed: boolean) {
+    const lum = this.getLoginUserModel
+    if (!lum) return
     if (followed) {
       user.isFollowing = false
       lum.followings.splice(lum.followings.indexOf(user), 1)
@@ -193,37 +189,19 @@ export class UserStore {
       lum.followings.unshift(user)
     }
   }
+
 }
-
-// const OPERATION_OK = 'Status(200) - OK'
-// 目前不做歌单项目, 只能从用户那里过来
-// class PlaylistStore {
-
-//   优化内存的使用
-//   combineUserPlaylist() {
-
-//   }
-
-
-
-
-// }
-/**
- * 以 用户id为key,保存数据
- */
-
 
 export class User {
   userId: number
   description: string
-  objMap = new ObservableMap<any>()
-  isFollowing: boolean = false
+  @observable isFollowing: boolean = false
   @observable id: number;
   permalink: string
   username: string
   uri: string
   permalink_url: string
-  avatar_url: string
+  @observable avatar_url: string
   country: string
   full_name: string
   city: string
@@ -243,8 +221,6 @@ export class User {
   private_tracks_count: number
   private_playlists_count: number
   primary_email_confirmed: number
-  // custom perpoty 
-  // isFollowing: boolean
   constructor(obj: User | number) {
     if (typeof obj === 'number') {
       this.userId = obj
@@ -272,6 +248,7 @@ export class UserModel {
   @observable streams: IStream[] = []
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
+
   isErrorsMap = new ObservableMap<boolean>()
 
 
@@ -291,7 +268,7 @@ export class UserModel {
     this.userStore = userStore
     if (typeof obj == 'number') {
       this.user = new User(obj)
-      observable.struct(this.user);
+      // this.user = observable.struct(user);
       this.fetchUser()
     } else {
       this.setUser(obj)

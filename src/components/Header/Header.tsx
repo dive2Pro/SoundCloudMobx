@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom'
 import { observer, inject } from 'mobx-react';
 import DevTool from 'mobx-react-devtools'
-import Link from '../StyleLink'
+import { NavLink } from 'react-router-dom'
 import ButtonInline from '../ButtonInline'
 import {
   withRouter
@@ -18,24 +18,27 @@ interface IHeaderProp {
   sessionStore: SessionStore
   userStore: UserStore
 }
-
-
-class WidhtRouterStyleLink extends React.PureComponent<{ to?: string | Object, children?: any }, any> {
+interface IWidhtRouterStyleLinkProps {
+  to?: string | Object
+  isActive?: (match: any, location: any) => boolean
+}
+class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProps, any> {
   render() {
-    const { to, ...rest } = this.props
+    const { to, isActive } = this.props
     return (
-      <Link
+      <NavLink
         to={to || 'abondan'}
         activeClassName={styles.aside_hover}
-        exact={to == '/'}
-        {...rest}
+        exact={to === '/'}
+        isActive={isActive}
       >
         {this.props.children}
-      </Link>)
+      </NavLink>)
   }
 }
-const StyleButton =
-  // widhtRouterStyleLink
+
+const StyleLink =
+  // WidhtRouterStyleLink
   withRouter(WidhtRouterStyleLink);
 
 
@@ -93,7 +96,6 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
   render() {
     const clazz = this.dropdowning ? styles.dropdown_content_visible : styles.dropdown_content;
     const { user } = this.props.store
-
     const aturl = user && user.avatar_url || ''
     return (
       <div className={styles.dropdown}>
@@ -121,9 +123,48 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
 @inject(SESSION_STORE, USER_STORE)
 @observer
 class Header extends React.Component<IHeaderProp, undefined> {
+  renderTop = () => {
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel
+    return (
+      <div className={styles._aside_header}>
+        {/*onClick={}*/}
+        <div
+          className={styles._aside_header_img}>
+
+          <DropDown
+            store={this.props.sessionStore}
+          />
+        </div>
+        <ul className={styles._aside_header_ul}>
+          <li>
+            <StyleLink>Library</StyleLink>
+          </li>
+          <li>
+            <StyleLink to="/main">Browse</StyleLink>
+          </li>
+          <li>
+            <StyleLink to="/ssr">Radio</StyleLink>
+          </li>
+          <li>
+            {loginModel ?
+              (
+                <StyleLink
+                  to={{
+                    pathname: '/users',
+                    search: `?id=${loginModel.user && loginModel.user.id}`
+                  }}
+                >home
+                </StyleLink>
+              ) : ''}
+          </li>
+        </ul>
+      </div>
+    )
+  }
   renderMyPlaylist = () => {
     const { userStore } = this.props
-    const loginModel = userStore.getLoginUserModel()
+    const loginModel = userStore.getLoginUserModel
 
     if (!loginModel) {
       return (
@@ -142,11 +183,21 @@ class Header extends React.Component<IHeaderProp, undefined> {
             loginModel.playlists.map((item, i) => {
               return (
                 <li key={`${item.id}- playlist -` + i}>
-                  <StyleButton
-                    exact
-                    to={{ pathname: `/playlist`, search: `?id=${item.id}` }}>
+                  <StyleLink
+                    isActive={(match: any, location: any) => {
+                      if (match) {
+                        return item.id == location.search.substr(4)
+                      }
+
+                      return false
+                    }}
+                    to={{
+                      pathname: `/playlist`
+                      , search: `?id=${item.id}`
+                    }}
+                  >
                     <i>🎶</i> {item.title || item.label_name}
-                  </StyleButton>
+                  </StyleLink>
                 </li>)
             })
           }
@@ -155,7 +206,60 @@ class Header extends React.Component<IHeaderProp, undefined> {
       </div>
     )
   }
+  renderMyCommuPaner = () => {
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel
 
+    if (!loginModel) {
+      return (
+        <noscript />
+      )
+    }
+    const { user } = loginModel
+    return (
+      <div className={styles._aside_mymusic}>
+        <div className={styles._aside_title}>
+          MY Music
+            </div>
+        <ul className={styles._aside_header_ul}>
+          <li>
+            <StyleLink
+              to={{
+                pathname: `/users/favorites`,
+                search: `?id=${user && user.id}`
+              }}
+            > <i className="fa fa-star" /> likes
+            </StyleLink>
+          </li>
+          <li>
+            <StyleLink >
+              <i className="fa fa-music" /> Tracks </StyleLink> </li>
+          <li>
+            <StyleLink
+              to={{
+                pathname: `/users/followings`,
+                search: `?id=${user && user.id}`
+              }}
+            >
+              <i className="fa fa-users" /> Followings
+            </StyleLink> </li>
+          <li>
+            <StyleLink
+              to={{
+                pathname: `/users/followers`,
+                search: `?id=${user && user.id}`
+              }}
+            > <i className="fa fa-user" /> Followers
+            </StyleLink> </li>
+          {/*wating*/}
+          {/*<li><StyleLink> <i>o</i> Albums</StyleLink> </li>
+            <li><StyleLink> <i>o</i> Recent</StyleLink> </li>
+            <li><StyleLink> <i>o</i> Local </StyleLink> </li>
+            <li><StyleLink> <i>o</i> Arists</StyleLink> </li>*/}
+        </ul>
+      </div>
+    )
+  }
   loginIn = () => {
     const { sessionStore } = this.props;
     sessionStore.login();
@@ -165,55 +269,10 @@ class Header extends React.Component<IHeaderProp, undefined> {
   }
   render() {
 
-    const { user } = this.props.sessionStore;
     return (
       <section className={styles._aside}>
-        <div className={styles._aside_header}>
-          {/*onClick={}*/}
-          <div
-            className={styles._aside_header_img}>
-
-            <DropDown
-              store={this.props.sessionStore}
-            />
-          </div>
-          <ul className={styles._aside_header_ul}>
-            <li>
-              <StyleButton>Library</StyleButton>
-            </li>
-            <li>
-              <StyleButton to="/main">Browse</StyleButton>
-            </li>
-            <li>
-              <StyleButton to="/ssr">Radio</StyleButton>
-            </li>
-            <li>
-              <StyleButton
-                to={{
-                  pathname: '/users',
-                  search: `?id=${user && user.id}`
-                }}
-              >home
-              </StyleButton>
-            </li>
-          </ul>
-        </div>
-        <div className={styles._aside_mymusic}>
-          <div className={styles._aside_title}>
-            MY Music
-            </div>
-          <ul className={styles._aside_header_ul}>
-            <li><StyleButton> <i className="fa fa-star" /> likes </StyleButton> </li>
-            <li><StyleButton> <i className="fa fa-music" /> Tracks </StyleButton> </li>
-            <li><StyleButton> <i className="fa fa-users" /> Followings</StyleButton> </li>
-            <li><StyleButton> <i className="fa fa-user" /> Followers</StyleButton> </li>
-            {/*wating*/}
-            {/*<li><StyleButton> <i>o</i> Albums</StyleButton> </li>
-            <li><StyleButton> <i>o</i> Recent</StyleButton> </li>
-            <li><StyleButton> <i>o</i> Local </StyleButton> </li>
-            <li><StyleButton> <i>o</i> Arists</StyleButton> </li>*/}
-          </ul>
-        </div>
+        {this.renderTop()}
+        {this.renderMyCommuPaner()}
         {this.renderMyPlaylist()}
         <DevTool />
       </section>

@@ -20,6 +20,9 @@ interface IPlayerState {
   visible: boolean
 }
 
+const once = () => {
+
+}
 @inject(PLAYER_STORE, PERFORMANCE_STORE)
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
@@ -74,9 +77,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.volumeContainerStyle = vcStyle
     })
     this.initGlassData();
+    this.playNextTrack()
+    this.updateWithVolumeAndPlay()
+  }
+  playNextTrack = () => {
     const { playerStore } = this.props
 
-    autorun(() => {
+    this.playNextTrack = autorun(() => {
+
       if (this.processValue == 1
         && playerStore
         && !playerStore.isShuffleMode) {
@@ -89,7 +97,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     })
 
   }
-
   renderPlayerOpearators = (store: PlayerStore) => {
     const { isPlaying, playingTrack, isShuffleMode
       , volume
@@ -276,7 +283,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             })
         })
       onceObservser();
-      autorun(() => {
+      this.initGlassData = autorun(() => {
         const { glassNode } = ps
         if (!node$ || node$.id !== glassNode) {
           resetNode$(glassNode, ps.scrollY)
@@ -285,27 +292,33 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       })
     }
   }
-  componentDidUpdate() {
-    this.playMusic()
-  }
 
-  playMusic() {
-    if (!this.props.playerStore) {
-      return;
-    }
-    const { playingUrl, volume, isPlaying } = this.props.playerStore;
-    const audio = this.audio
-    if (isPlaying) {
-      if (audio.src !== (playingUrl)) {
-        audio.src = playingUrl;
+  // 取消autoruns  
+  componentWillUnMount() {
+    this.initGlassData();
+    this.playNextTrack()
+    this.updateWithVolumeAndPlay()
+  }
+  updateWithVolumeAndPlay() {
+    this.updateWithVolumeAndPlay = autorun(() => {
+      if (!this.props.playerStore) {
+        return;
       }
-      audio.play()
-    } else {
-      if (!audio.paused) {
-        audio.pause();
+      const { volume, isPlaying } = this.props.playerStore;
+      const audio = this.audio
+      if (isPlaying) {
+        const { playingUrl } = this.props.playerStore
+        if (audio.src !== (playingUrl)) {
+          audio.src = playingUrl;
+        }
+        audio.play()
+      } else {
+        if (!audio.paused) {
+          audio.pause();
+        }
       }
-    }
-    audio.volume = volume;
+      audio.volume = volume;
+    })
   }
 
   handleOpenPlaylist = () => {

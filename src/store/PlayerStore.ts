@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx';
-import { addAccessToken } from '../services/soundcloundApi'
-import { ITrack } from "../interfaces/interface";
+import { addClientId } from '../services/soundcloundApi'
+import { ITrack } from '../interfaces/interface';
 
 export class PlayerStore {
   @observable playingTrack: ITrack
@@ -67,7 +67,7 @@ export class PlayerStore {
   @computed get playingUrl() {
     if (this.playingTrack) {
       let url = this.playingTrack.uri + '/stream';
-      url = addAccessToken(url, '?');
+      url = addClientId(url, '?');
 
       return url
     }

@@ -10,7 +10,7 @@ export const unauthApiUrlV2 = (url: string, plus: string) => {
 }
 export const apiUrl = (url: string, symbol: string) => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
-  if (!accessToken && accessToken != 'null') {
+  if (!accessToken || accessToken == 'null') {
     return unauthApiUrl(url, symbol);
   }
   return `//api.soundcloud.com/${url}${symbol}oauth_token=${accessToken}`;
@@ -23,15 +23,19 @@ export const apiUrlV2 = (url: string, symbol: string) => {
   }
   return `//api-v2.soundcloud.com/${url}${symbol}client_id=${accessToken}`;
 }
+export const addClientId = (url: string, symbol: string): string => {
 
-export const addAccessToken = (url: string, symbol: string): string => {
-  const accessToken = Cookies.get(OAUTH_TOKEN);
-  if (accessToken) {
-    return `${url}${symbol}oauth_token=${accessToken}`
-  }
   return `${url}${symbol}client_id=${CLIENT_ID}`
 }
 
+export const addAccessToken = (url: string, symbol: string): string => {
+  // const accessToken = Cookies.get(OAUTH_TOKEN);
+  // console.log(accessToken)
+  // if (accessToken && accessToken != 'null') {
+  //   return `${url}${symbol}oauth_token=${accessToken}`
+  // }
+  return addClientId(url, symbol)
+}
 export enum PicSize {
   NORMAL, SMALL, BIG, CROP, MASTER, X67, BADGE, TINY, MINI
 }
