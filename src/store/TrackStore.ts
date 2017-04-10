@@ -16,16 +16,6 @@ import performanceStore from './PerformanceStore';
 import { RaceFetch as fetch } from '../services/Fetch'
 import activitiesStore from './ActivitiesStore';
 
-
-export class Track {
-
-  @action updateFromJson(data: any) {
-    // extendsObjFromJson(this, data)
-  }
-}
-
-
-
 export interface IBaseActStore {
   isLoading: boolean;
   currentGenre: string

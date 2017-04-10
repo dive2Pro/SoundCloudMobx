@@ -11,7 +11,6 @@ import ViewAll from '../ViewAll';
 import { UserStore, User } from '../../store/UserStore';
 import { USER_STORE } from "../../constants/storeTypes";
 const styles = require('./followers.scss')
-const debounce = require('lodash/debounce')
 
 
 
@@ -38,20 +37,17 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
 
   handleFollowUser = (user: User) => {
     const { userStore } = this.props
-    const debounceFunc = debounce(
-      () => {
-        if (userStore) {
-          userStore.followUser(user);
-        }
-      }, 500)
-    return () => {
-      debounceFunc();
+
+    if (userStore) {
+      return () => userStore.debouncedRequestFollowUser(user);
+    } else {
+      return () => { /***/ }
     }
   }
 
   render() {
     const { userStore, type } = this.props
-    if (!userStore) {
+    if (!userStore || !userStore.userModel) {
       return <noscript />
     }
 

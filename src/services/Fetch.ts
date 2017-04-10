@@ -9,7 +9,7 @@ export const RaceFetch = (p: string, method?: object, time?: number) => {
             msg: '请求超时'
           })
         },
-        time || 1000 * 5)
+        time || 1000 * 20)
     })
     const pfetch = fetch(p, method)
     Promise.race([pfetch, timeoutPromise])

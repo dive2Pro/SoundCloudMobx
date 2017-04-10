@@ -38,6 +38,7 @@ const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist 
   )
 })
 
+
 @observer
 class Playlist extends React.Component<IPlaylistProps, any>{
 
@@ -116,16 +117,17 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
     } = this.props
     const id = qs.parse(search.substr(1)).id
     if (!userStore.fetchedPlaylist || userStore.fetchedPlaylist.id != id) {
-      return <LoadingSpinner isLoading={true} />
+      return (
+        <div className={styles.playlistInfo}>
+          <LoadingSpinner isLoading={true} />
+        </div>)
     }
 
     const playlist = userStore.fetchedPlaylist;
 
     const { label_name, artwork_url, user, tracks } = playlist
     return (
-      <div
-
-        className={styles.playlistInfo}>
+      <div className={styles.playlistInfo}>
         <TrackProfile
           label_name={label_name}
           type="list"

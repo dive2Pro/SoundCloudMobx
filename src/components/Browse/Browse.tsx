@@ -10,9 +10,10 @@ import {
   // , Redirect
 } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
-import { TrackStore } from "../../store/TrackStore";
-import { TRACK_STORE, PERFORMANCE_STORE } from "../../constants/storeTypes";
-import { PerformanceStore } from "../../store/PerformanceStore";
+import { TrackStore } from '../../store/TrackStore';
+import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
+import { PerformanceStore } from '../../store/PerformanceStore';
+
 interface IDashBorardProps {
   location?: any,
   genre?: string
@@ -45,15 +46,17 @@ class Browse extends React.Component<IDashBorardProps, any> {
     this.props.performanceStore.setCurrentGlassNodeId('Browser')
     this.setCurrentGenreView()
   }
+
   setCurrentGenreView() {
     const { trackStore, history } = this.props
     const genre = trackStore.currentGenre || Browse.defaultProps.genre
     if (genre) {
       history.push(`/main/genre=${genre}`)
+      console.log('genre = ' + genre)
     }
   }
+
   componentWillReceiveProps(nextProps: any) {
-    // console.info('componentWillReceiveProps', nextProps)
     const { match: { isExact } } = nextProps
     if (isExact) {
       this.setCurrentGenreView()

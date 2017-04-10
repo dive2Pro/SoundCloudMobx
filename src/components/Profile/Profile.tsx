@@ -9,10 +9,7 @@ import {
 } from 'mobx';
 import { User } from "../../store/UserStore";
 const styles = require('./profile.scss');
-
-export interface IProfileProps {
-  user: User | any
-}
+import { transBigMath } from '../../services/utils'
 
 
 const MiniCountPanel = observer((props: IProfileProps) => {
@@ -25,7 +22,7 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           id={id}
         ><i>PlayList</i>
           <span>
-            {playlist_count}
+            {transBigMath(playlist_count)}
           </span>
         </Link>
       </li>
@@ -35,7 +32,7 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           id={id}
         ><i>Followings</i>
           <span>
-            {followings_count + ''}
+            {transBigMath(followings_count)}
           </span>
         </Link>
       </li>
@@ -45,16 +42,16 @@ const MiniCountPanel = observer((props: IProfileProps) => {
           id={id}
         >
           <i>Followers</i>
-          <span>{followers_count + ''}</span>
+          <span>{transBigMath(followers_count)}</span>
         </Link>
       </li>
     </ul>
   );
 })
 
-
-
-
+export interface IProfileProps {
+  user: User | any
+}
 
 @observer
 class Profile extends React.PureComponent<IProfileProps, any>  {
@@ -65,6 +62,7 @@ class Profile extends React.PureComponent<IProfileProps, any>  {
   render() {
 
     const user: User = this.props.user
+
     if (!user || !user.id) {
       return <LoadingSpinner isLoading={true} />;
     }

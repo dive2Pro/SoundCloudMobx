@@ -29,11 +29,10 @@ export class SessionStore {
   oauth_token: string;
 
   loadDataFromCookie() {
-    const oauth_token = Cookies.get(OAUTH_TOKEN);
-
-    if (oauth_token && oauth_token != 'null') {
-      this.fetchUser(oauth_token);
-      this.oauth_token = oauth_token;
+    const token = Cookies.get(OAUTH_TOKEN);
+    if (token && token !== 'null') {
+      this.fetchUser(token);
+      this.oauth_token = token;
       return true
     }
     return false;
