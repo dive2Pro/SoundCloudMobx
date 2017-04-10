@@ -4,7 +4,6 @@ import {
   , ObservableMap
   , extendObservable
   , computed
-  ,
 } from 'mobx';
 import {
   FETCH_FOLLOWERS
@@ -16,14 +15,15 @@ import {
 } from '../constants/fetchTypes'
 import {
   IPlaylist,
-  IStream
+  IStream,
+  ITrack
 } from '../interfaces/interface';
 import {
   addAccessToken, apiUrl,
   unauthApiUrlV2
 } from '../services/soundcloundApi';
-import { ITrack } from './index';
-import PerformanceStore from './PerformanceStore'
+
+import { performanceStore } from './index'
 import {
   logError
 } from '../services/logger'
@@ -44,15 +44,16 @@ const limitPageSize = 20;
 
 
 export class UserStore {
+
   @observable fetchedPlaylist: IPlaylist | null
-  @observable userModel: IUserModel
+  @observable userModel: UserModel
 
   private userModels = new ObservableMap<UserModel>()
   // 当前的登录用户
-  private loginModel: IUserModel
+  private loginModel: UserModel
   @observable private loginedUserId: number | undefined
 
-  initUser(obj: number | User): IUserModel {
+  initUser(obj: number | User): UserModel {
     const isNumber = typeof obj === 'number'
     let id = isNumber ? obj : ((<User>obj).id)
     let userModel = this.userModels.get(id + '')
@@ -68,7 +69,7 @@ export class UserStore {
     return userModel;
   }
 
-  @action setCurrentUserModel(model: IUserModel) {
+  @action setCurrentUserModel(model: UserModel) {
     this.userModel = model
   }
 
@@ -101,9 +102,9 @@ export class UserStore {
       }
     }
   }
-  getLoginUserModel(): IUserModel {
+  getLoginUserModel(): UserModel {
     if (!this.loginModel) {
-      this.loginModel = <IUserModel>this.userModels.get(this.loginedUserId + '')
+      this.loginModel = <UserModel>this.userModels.get(this.loginedUserId + '')
     }
     return this.loginModel
   }
@@ -203,20 +204,7 @@ export class UserStore {
 
 //   }
 
-export interface IUserModel {
-  user: User;
-  followers: User[];
-  followings: User[];
-  favorites: ITrack[];
-  streams: IStream[]
-  getAllTrackFromStreams: () => ITrack[]
-  playlists: IPlaylist[];
-  nextHrefs: {}
-  fetchWithType: (type: string) => void
-  fetchCommunityData: () => void
-  isLoading: (type: string) => boolean
-  isError: (type: string) => boolean
-}
+
 
 
 // }
@@ -276,7 +264,7 @@ export class User {
     this.isFollowing = following
   }
 }
-class UserModel implements IUserModel {
+export class UserModel {
   @observable user: User;
   // TODO change to ObservableMap  
   @observable followers: User[] = [];
@@ -289,8 +277,8 @@ class UserModel implements IUserModel {
 
 
   isLoadings = {
-    get: PerformanceStore.getLoadingStateWidthKey,
-    set: PerformanceStore.setLoadingStateWithKey
+    get: performanceStore.getLoadingStateWidthKey,
+    set: performanceStore.setLoadingStateWithKey
   };
 
   nextHrefs = new ObservableMap<string>();

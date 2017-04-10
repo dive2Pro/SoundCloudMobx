@@ -4,14 +4,14 @@ import {
   observer
 } from 'mobx-react';
 import { ITrack } from '../../interfaces/interface';
-import { IPlayerStore } from '../../store'
 const styles = require('./stream.scss')
 import StreamExtends from './StreamExtends'
 import StreamMain from './StreamMain'
+import { PlayerStore } from "../../store/PlayerStore";
 
 
 interface IStreamProps {
-  track: ITrack, store: IPlayerStore, sortType: string, i: number,
+  track: ITrack, store: PlayerStore, sortType: string, i: number,
 }
 
 
@@ -36,6 +36,7 @@ const Stream = observer(({ track, store, sortType, i }: IStreamProps) => {
       store.setPlayingTrack(track)
     }
   }
+
   return (
     <section
       onClick={(e) => handleSectionClick(e)}

@@ -2,10 +2,12 @@ import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
-import { ITrack } from "../../store/index";
+
 import ArtWork from '../ArtWork'
 import Permalink from '../Permalink'
 import { CommentStore, IComment } from "../../store/CommentStore";
+import { TRACK_STORE } from "../../constants/storeTypes";
+import { ITrack } from "../../interfaces/interface";
 const styles = require('./comments.scss')
 
 
@@ -41,7 +43,7 @@ const CommentView = ({ comment }: { comment: IComment }) => {
   )
 }
 
-@inject('TrackStore')
+@inject(TRACK_STORE)
 @observer
 class Comments extends React.Component<ICommentsProps, any> {
 

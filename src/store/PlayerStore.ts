@@ -1,33 +1,8 @@
 import { observable, action, computed } from 'mobx';
-import { ITrack } from './TrackStore'
 import { addAccessToken } from '../services/soundcloundApi'
-interface Lambda {
-  (): void;
-}
-export interface IPlayerStore {
-  isPlaying: boolean
-  playingTrack: ITrack
-  playList: ITrack[]
-  setPlayingTrack: (track: ITrack | number) => void;
-  togglePlaying: Lambda;
-  addToPlaylist: (track: ITrack | ITrack[]) => void;
-  playingUrl: string
-  playNextTrack: (diff: number) => boolean
-  isPlaylistOpen: boolean
-  togglePlaylistOpen: (open?: boolean) => void;
-  toggleVolumeOpen: (open?: boolean) => void;
-  removeFromPlaylist: (...args: ITrack[]) => void;
-  clearPlaylist: Lambda;
-  toggleShuffleMode: Lambda;
-  isShuffleMode: boolean
-  isVolumeOpen: boolean
-  volume: number
+import { ITrack } from "../interfaces/interface";
 
-  setVolume: (n: number) => void
-}
-
-
-class PlayerStore implements IPlayerStore {
+export class PlayerStore {
   @observable playingTrack: ITrack
   @observable isPlaying: boolean = false;
   @observable playList: ITrack[] = [];

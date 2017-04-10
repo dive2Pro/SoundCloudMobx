@@ -10,7 +10,7 @@ export const unauthApiUrlV2 = (url: string, plus: string) => {
 }
 export const apiUrl = (url: string, symbol: string) => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
-  if (!accessToken) {
+  if (!accessToken && accessToken != 'null') {
     return unauthApiUrl(url, symbol);
   }
   return `//api.soundcloud.com/${url}${symbol}oauth_token=${accessToken}`;

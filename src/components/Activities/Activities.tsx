@@ -1,14 +1,14 @@
 import * as React from 'react'
 const styles = require('./activities.scss')
 import { observer, inject } from 'mobx-react';
-import { IPlayerStore, IPerformanceStore } from '../../store'
 import { ITrack } from '../../interfaces/interface';
 import LoadingSpinner from '../LoadingSpinner'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import Stream from '../Stream'
+import { PlayerStore } from "../../store/PlayerStore";
+import { PLAYER_STORE } from '../../constants/storeTypes';
 interface IActivitiesProps {
-  PlayerStore?: IPlayerStore
-  PerformanceStore?: IPerformanceStore
+  playerStore?: PlayerStore
   isLoading: boolean,
   tracks: ITrack[],
   sortType: string
@@ -16,13 +16,13 @@ interface IActivitiesProps {
   isError?: boolean
 }
 
-@inject('PlayerStore', 'PerformanceStore')
+@inject(PLAYER_STORE)
 @observer
 class Activities extends React.Component<IActivitiesProps, any> {
   addToTrackList = (track: ITrack) => {
-    const { PlayerStore } = this.props
-    if (PlayerStore) {
-      PlayerStore.addToPlaylist(track);
+    const { playerStore } = this.props
+    if (playerStore) {
+      playerStore.addToPlaylist(track);
     }
   }
   render() {
@@ -31,7 +31,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       tracks,
       sortType,
       isError,
-      PlayerStore: store } = this.props;
+      playerStore: store } = this.props;
 
     if (!store || !tracks) {
       return <noscript />

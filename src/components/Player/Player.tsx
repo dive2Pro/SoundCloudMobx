@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import ButtonInline from '../ButtonInline';
-import { IPlayerStore } from '../../store/PlayerStore';
+import { PlayerStore } from '../../store/PlayerStore';
 import ArtWork from '../ArtWork';
 import {
   action, observable, runInAction, autorun
@@ -9,17 +9,18 @@ import {
 } from 'mobx';
 const styles = require('./player.scss');
 import Range from '../InputRange'
-import { IPerformanceStore } from '../../store/index';
+import { PLAYER_STORE, PERFORMANCE_STORE } from "../../constants/storeTypes";
+import { PerformanceStore } from "../../store/PerformanceStore";
 
 interface IPlayerProps {
-  PlayerStore?: IPlayerStore
-  PerformanceStore?: IPerformanceStore
+  playerStore?: PlayerStore
+  performanceStore?: PerformanceStore
 }
 interface IPlayerState {
   visible: boolean
 }
 
-@inject('PlayerStore', 'PerformanceStore')
+@inject(PLAYER_STORE, PERFORMANCE_STORE)
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
   blurredContentFrame: HTMLDivElement;
@@ -73,23 +74,23 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       this.volumeContainerStyle = vcStyle
     })
     this.initGlassData();
-    const { PlayerStore } = this.props
+    const { playerStore } = this.props
 
     autorun(() => {
       if (this.processValue == 1
-        && PlayerStore
-        && !PlayerStore.isShuffleMode) {
+        && playerStore
+        && !playerStore.isShuffleMode) {
         this.setProcessValue(0);
-        const hasPlayed = PlayerStore.playNextTrack(1);
+        const hasPlayed = playerStore.playNextTrack(1);
         if (!hasPlayed) {
-          PlayerStore.togglePlaying();
+          playerStore.togglePlaying();
         }
       }
     })
 
   }
 
-  renderPlayerOpearators = (store: IPlayerStore) => {
+  renderPlayerOpearators = (store: PlayerStore) => {
     const { isPlaying, playingTrack, isShuffleMode
       , volume
     } = store;
@@ -197,7 +198,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     )
 
   }
-  renderPlayerRanges = (store: IPlayerStore) => {
+  renderPlayerRanges = (store: PlayerStore) => {
     const { playingTrack
       // , isPlaying
     } = store
@@ -230,7 +231,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (0 == 0) {
       // return
     }
-    const ps = this.props.PerformanceStore
+    const ps = this.props.performanceStore
     if (ps) {
       let node$: any;
       const main = this.main
@@ -289,10 +290,10 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
 
   playMusic() {
-    if (!this.props.PlayerStore) {
+    if (!this.props.playerStore) {
       return;
     }
-    const { playingUrl, volume, isPlaying } = this.props.PlayerStore;
+    const { playingUrl, volume, isPlaying } = this.props.playerStore;
     const audio = this.audio
     if (isPlaying) {
       if (audio.src !== (playingUrl)) {
@@ -308,20 +309,20 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
 
   handleOpenPlaylist = () => {
-    const playStore = this.props.PlayerStore;
+    const playStore = this.props.playerStore;
     if (playStore) { playStore.togglePlaylistOpen(); }
   };
 
   handlePlayNext = (diff: number) => {
-    const playStore = this.props.PlayerStore;
+    const playStore = this.props.playerStore;
     if (playStore) {
       playStore.playNextTrack(diff);
     }
   };
 
   handleShuffleMode = () => {
-    if (this.props.PlayerStore) {
-      this.props.PlayerStore.toggleShuffleMode();
+    if (this.props.playerStore) {
+      this.props.playerStore.toggleShuffleMode();
     }
   }
 
@@ -347,20 +348,20 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
 
   handleVolimeProcessChange = (percent: string) => {
-    const p = this.props.PlayerStore
+    const p = this.props.playerStore
     if (p) {
       p.setVolume(+percent)
     }
   }
   render() {
 
-    const { PlayerStore } = this.props;
+    const { playerStore } = this.props;
     let clazzName = styles.base;
 
     if (this.isVisible) {
       clazzName = styles.visible;
     }
-    if (!PlayerStore) {
+    if (!playerStore) {
       return <noscript />;
     }
 
@@ -380,8 +381,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             className={styles.fronsted_glass}
           />
         </div>
-        {this.renderPlayerRanges(PlayerStore)}
-        {this.renderPlayerOpearators(PlayerStore)}
+        {this.renderPlayerRanges(playerStore)}
+        {this.renderPlayerOpearators(playerStore)}
         <audio
           onTimeUpdate={this.handleAudioUpdate}
           ref={(audio: HTMLAudioElement) => {

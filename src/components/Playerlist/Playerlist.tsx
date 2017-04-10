@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { IPlayerStore, ITrack } from '../../store';
 import ButtonInline from '../ButtonInline';
 import HoverActions from '../HoverActions'
 const styles = require('./playerlist.scss');
 import { StreamMain } from '../Stream'
+import { ITrack } from "../../interfaces/interface";
+import { PlayerStore } from "../../store/PlayerStore";
+import { PLAYER_STORE } from "../../constants/storeTypes";
 interface IPlaylistProp {
-  PlayerStore?: IPlayerStore
+  playerStore?: PlayerStore
 }
 interface IPlaylistItemProp {
   track: ITrack
-  store: IPlayerStore
+  store: PlayerStore
 }
 
 const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
@@ -50,22 +52,22 @@ const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
 })
 
 
-@inject('PlayerStore')
+@inject(PLAYER_STORE)
 @observer
 class Playerlist extends React.Component<IPlaylistProp, any> {
 
 
   handleClearlist = () => {
-    const PlayerStore = this.props.PlayerStore;
-    if (!PlayerStore) { return; }
-    PlayerStore.clearPlaylist();
+    const playerStore = this.props.playerStore;
+    if (!playerStore) { return; }
+    playerStore.clearPlaylist();
   };
 
   render() {
-    const { PlayerStore } = this.props;
-    if (!PlayerStore) { return <noscript />; }
+    const { playerStore } = this.props;
+    if (!playerStore) { return <noscript />; }
 
-    const { playList, isPlaylistOpen } = PlayerStore;
+    const { playList, isPlaylistOpen } = playerStore;
     const mainClass = isPlaylistOpen ? styles.main : styles.none;
 
     return (
@@ -83,7 +85,7 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
           playList.map((item, i) => {
             return (
               <PlaylistItem
-                store={PlayerStore}
+                store={playerStore}
                 track={item}
                 key={i + ' playlist item'}
               />

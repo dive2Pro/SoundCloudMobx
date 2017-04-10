@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Action } from '../HoverActions'
-import { ITrack } from '../../store/index';
+
 import { Link } from 'react-router-dom'
 const styles = require('./ttview.scss');
 import * as sortTypes from '../../constants/sortTypes'
+import { ITrack } from "../../interfaces/interface";
 
 interface TdTrackTitleViewProp {
   track: ITrack

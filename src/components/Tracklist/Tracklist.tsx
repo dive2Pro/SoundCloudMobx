@@ -3,7 +3,8 @@ import Activities from '../Activities'
 
 import ButtonMore from '../ButtonMore'
 import { observer, inject } from 'mobx-react'
-import { ITrackStore } from "../../store/index";
+import { TrackStore } from "../../store/TrackStore";
+import { TRACK_STORE } from "../../constants/storeTypes";
 
 export function getGenreFromPathname(pathname: string) {
   const reg = /=\w{2,8}/g;
@@ -12,9 +13,9 @@ export function getGenreFromPathname(pathname: string) {
   return genre;
 }
 
-@inject('TrackStore')
+@inject(TRACK_STORE)
 @observer
-class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
+class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
   currentGenre = ''
   componentDidMount() {
     this.setCurrentGenre(this.props);
@@ -24,8 +25,8 @@ class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
     genre = genre.genre || 'Country';
 
     if (genre !== this.currentGenre) {
-      let { TrackStore } = this.props
-      TrackStore.setGenre(genre);
+      let { trackStore } = this.props
+      trackStore.setGenre(genre);
     }
     this.currentGenre = genre;
   }
@@ -34,14 +35,14 @@ class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
   }
 
   handleScroll = () => {
-    const trackStore = this.props.TrackStore;
+    const trackStore = this.props.trackStore;
     const { isLoading } = trackStore;
     if (!isLoading) { trackStore.fetchTracks(); }
   };
 
   render() {
-    const { TrackStore } = this.props;
-    const { currentTracks, isLoading, isError } = TrackStore
+    const { trackStore } = this.props;
+    const { currentTracks, isLoading, isError } = trackStore
     const ie = isError(this.currentGenre);
     return (
       <div
@@ -58,7 +59,7 @@ class Tracklist extends React.Component<{ TrackStore: ITrackStore }, any> {
         />
 
         <ButtonMore
-          onClick={() => TrackStore.fetchTracks()}
+          onClick={() => trackStore.fetchTracks()}
           isHidden={ie || isLoading || currentTracks.length > 20}
           isLoading={isLoading}
         />

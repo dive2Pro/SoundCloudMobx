@@ -1,57 +1,55 @@
 import * as React from 'react'
 import TrackProfile from '../TrackProfile'
 import { observer, inject } from 'mobx-react'
-import { ITrackStore } from '../../store/TrackStore'
-import { IPlayerStore } from '../../store/PlayerStore'
-import {
-  ITrack
-} from '../../store/index';
+import { TrackStore } from '../../store/TrackStore'
 import LoadingSpinner from '../LoadingSpinner'
 
 import CommentsContainer from '../Comments'
 import { FETCH_TRACK } from '../../constants/fetchTypes';
 import { CommentStore } from '../../store/CommentStore';
-import { COMMENT_STORE } from '../../constants/storeTypes'
+import { COMMENT_STORE, TRACK_STORE, PLAYER_STORE } from '../../constants/storeTypes'
+import { ITrack } from '../../interfaces/interface';
+import { PlayerStore } from "../../store/PlayerStore";
 const qs = require('qs')
 const styles = require('./track.scss');
 
 
 interface ITracklistinfoViewProps {
-  TrackStore: ITrackStore
-  PlayerStore: IPlayerStore
+  trackStore: TrackStore
+  playerStore: PlayerStore
   commentStore: CommentStore
   match: any
   location: any
 }
 
 
-@inject('TrackStore', 'PlayerStore', COMMENT_STORE)
+@inject(TRACK_STORE, PLAYER_STORE, COMMENT_STORE)
 @observer
 class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
 
   componentDidMount() {
-    const { location: { search }, TrackStore } = this.props
+    const { location: { search }, trackStore } = this.props
     if (search) {
       const id = qs.parse(search.substr(1)).id
-      TrackStore.setGenre(FETCH_TRACK)
-      TrackStore.setTrackId(id)
+      trackStore.setGenre(FETCH_TRACK)
+      trackStore.setTrackId(id)
     }
   }
 
   handlePlay = () => {
-    const { PlayerStore, TrackStore } = this.props
-    if (!PlayerStore || !TrackStore) {
+    const { playerStore, trackStore } = this.props
+    if (!playerStore || !trackStore) {
       return;
     }
-    PlayerStore.setPlayingTrack(TrackStore.currentTrack)
+    playerStore.setPlayingTrack(trackStore.currentTrack)
   }
 
   handleAddToPlaylist = () => {
-    const { PlayerStore, TrackStore } = this.props
-    if (!PlayerStore || !TrackStore) {
+    const { playerStore, trackStore } = this.props
+    if (!playerStore || !trackStore) {
       return;
     }
-    PlayerStore.addToPlaylist(TrackStore.currentTrack)
+    playerStore.addToPlaylist(trackStore.currentTrack)
 
   }
   handleFetchMoreComments = () => {
@@ -90,7 +88,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     const {
        currentTrack,
       isLoading
-     } = this.props.TrackStore
+     } = this.props.trackStore
 
     return (
       <div className={styles.main}>
