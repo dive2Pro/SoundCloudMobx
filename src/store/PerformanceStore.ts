@@ -8,19 +8,7 @@ import {
   // , when
 } from 'mobx'
 
-export interface IPerformanceStore {
-  scrollLimit: number[]
-  glassNode: string
-  scrollY: number
-  setScrollLimit: (...limit: number[]) => void
-  setCurrentGenre: (genre: string) => void
-  setCurrentGlassNodeId: (id: string) => void
-  allLoadingIsSettle: boolean
-  getLoadingState: (type: string) => boolean
-}
-
-
-class PerformanceStore implements IPerformanceStore {
+export class PerformanceStore {
   onceLoadingIsAllSettle: boolean;
 
   scrollLimitByGenre = new ObservableMap<number[]>()

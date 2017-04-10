@@ -2,8 +2,9 @@ import {
   ObservableMap, observable, computed, action, runInAction
   // , createTransformer
 } from 'mobx'
-import { ITrack } from './index';
 import { apiUrl } from '../services/soundcloundApi'
+import { ITrack } from "../interfaces/interface";
+
 export interface IComment {
   id: number,
   created_at: string,

@@ -3,7 +3,6 @@ import * as CSSModule from 'react-css-modules'
 const styles = require('./filterpanel.scss')
 import { observer } from 'mobx-react';
 import ButtonInline from '../ButtonInline'
-// import { ITrackStore } from "../../store/TrackStore";
 interface IFilterPanelProp {
   handleClick: (type: string) => void
   tagClass: string

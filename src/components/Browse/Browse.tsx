@@ -10,13 +10,14 @@ import {
   // , Redirect
 } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
-import { ITrackStore } from '../../store/index';
-import { IPerformanceStore } from '../../store/PerformanceStore';
+import { TrackStore } from "../../store/TrackStore";
+import { TRACK_STORE, PERFORMANCE_STORE } from "../../constants/storeTypes";
+import { PerformanceStore } from "../../store/PerformanceStore";
 interface IDashBorardProps {
   location?: any,
   genre?: string
-  TrackStore: ITrackStore
-  PerformanceStore: IPerformanceStore
+  trackStore: TrackStore
+  performanceStore: PerformanceStore
   history: any
 }
 
@@ -34,19 +35,19 @@ const FlagLink = ({ to, label }: any) => {
       }}
     />)
 }
-@inject('TrackStore', 'PerformanceStore')
+@inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
   componentDidMount() {
-    this.props.PerformanceStore.setCurrentGlassNodeId('Browser')
+    this.props.performanceStore.setCurrentGlassNodeId('Browser')
     this.setCurrentGenreView()
   }
   setCurrentGenreView() {
-    const { TrackStore, history } = this.props
-    const genre = TrackStore.currentGenre || Browse.defaultProps.genre
+    const { trackStore, history } = this.props
+    const genre = trackStore.currentGenre || Browse.defaultProps.genre
     if (genre) {
       history.push(`/main/genre=${genre}`)
     }

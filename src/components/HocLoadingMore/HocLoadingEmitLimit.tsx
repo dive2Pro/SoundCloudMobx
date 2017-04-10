@@ -1,16 +1,17 @@
 import * as React from 'react'
 import HocLoadingMore from './HocLoadingMore'
 import { inject } from 'mobx-react'
+import { PerformanceStore } from "../../store/PerformanceStore";
+import { PERFORMANCE_STORE } from "../../constants/storeTypes";
 const debounce = require('lodash/debounce')
-import { IPerformanceStore } from "../../store/index";
 
 interface IE {
-  PerformanceStore?: IPerformanceStore
+  performanceStore?: PerformanceStore
 }
 export default function HocLoadingEmitLimit<Props, ComponentState>(
   Comp: new () => React.Component<Props, ComponentState>, type?: string
 ) {
-  @inject('PerformanceStore')
+  @inject(PERFORMANCE_STORE)
   class HocWrapper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
     debounceFun: any;
     constructor() {
@@ -21,13 +22,13 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
     componentDidMount() {
       super.componentDidMount()
       if (type) {
-        const ps: any = this.props.PerformanceStore
+        const ps: any = this.props.performanceStore
         ps.setCurrentGenre(type);
       }
     }
 
     handleEmit = () => {
-      const ps: any = this.props.PerformanceStore
+      const ps: any = this.props.performanceStore
 
       if (ps) {
         const l = window.innerHeight + window.scrollY
@@ -36,7 +37,7 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
       }
     }
     emitScrollY = () => {
-      const ps: any = this.props.PerformanceStore
+      const ps: any = this.props.performanceStore
 
       if (ps) {
         ps.setScrollY(window.scrollY);

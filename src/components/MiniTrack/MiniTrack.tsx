@@ -4,11 +4,12 @@ import { createTransformer } from 'mobx'
 import TrackTitleView from '../TrackTitleView';
 import HoverActions from '../HoverActions'
 import { observer } from 'mobx-react'
-import { ITrack, IPlayerStore } from '../../store/index';
 import { transBigMath } from '../../services/utils'
+import { ITrack } from '../../interfaces/interface';
+import { PlayerStore } from "../../store/PlayerStore";
 const styles = require('./minitrack.scss')
 interface IMiniTrackProps {
-  PlayerStore: IPlayerStore
+  playerStore: PlayerStore
   track: ITrack
 }
 @observer
@@ -30,8 +31,8 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
       })(track)
   }
   render() {
-    const { track, PlayerStore } = this.props
-    const { isPlaying, playingTrack } = PlayerStore
+    const { track, playerStore } = this.props
+    const { isPlaying, playingTrack } = playerStore
     const { artwork_url } = track
     const isPlayingTrack = playingTrack === track
     const isTrackPlaying = isPlayingTrack && isPlaying
@@ -39,7 +40,7 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
 
     const configurations = [
       {
-        fn: () => { PlayerStore.setPlayingTrack(track) },
+        fn: () => { playerStore.setPlayingTrack(track) },
         className: playClazz,
         style: {
           width: '20px'
@@ -49,7 +50,7 @@ class MiniTrack extends React.Component<IMiniTrackProps, any> {
         // + ' fa-2x'
       },
       {
-        fn: () => { PlayerStore.addToPlaylist(track) },
+        fn: () => { playerStore.addToPlaylist(track) },
         className: 'fa fa-plus',
         style: { width: '20px', height: '20px' }
         // +'fa - 2x'

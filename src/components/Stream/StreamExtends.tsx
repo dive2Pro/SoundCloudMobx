@@ -2,13 +2,13 @@ import * as React from 'react'
 
 import HoverActions from '../HoverActions'
 import { ITrack } from '../../interfaces/interface';
-import { IPlayerStore } from '../../store'
 const styles = require('./stream.scss')
 import { seconds2time } from '../../services/utils'
+import { PlayerStore } from "../../store/PlayerStore";
 
 interface IStreamExtends {
   track: ITrack
-  , store: IPlayerStore
+  , store: PlayerStore
 }
 
 

@@ -3,8 +3,9 @@ import ArtWork from '../ArtWork'
 import ButtonInline from '../ButtonInline'
 import { observer, inject } from 'mobx-react'
 import Permalink from '../Permalink'
-import { ITrack, IPlayerStore } from '../../store/index';
-import { IPlaylist } from '../../interfaces/interface';
+import { IPlaylist, ITrack } from '../../interfaces/interface';
+import { PlayerStore } from '../../store/PlayerStore';
+import { PLAYER_STORE } from '../../constants/storeTypes';
 
 const styles = require('./trackprofile.scss')
 interface ITrackProfileProps {
@@ -14,10 +15,10 @@ interface ITrackProfileProps {
   user: any
   track?: ITrack
   playlist?: IPlaylist
-  PlayerStore?: IPlayerStore
+  playerStore?: PlayerStore
 }
 
-@inject('PlayerStore')
+@inject(PLAYER_STORE)
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
   isTrack: boolean
@@ -27,24 +28,24 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
   }
   handlePlay = () => {
     //  根据type
-    const { track, playlist, PlayerStore } = this.props
-    if (!PlayerStore) return
+    const { track, playlist, playerStore } = this.props
+    if (!playerStore) return
     if (this.isTrack && track) {
-      PlayerStore.setPlayingTrack(track)
+      playerStore.setPlayingTrack(track)
     } else if (playlist) {
-      PlayerStore.addToPlaylist(playlist.tracks)
-      PlayerStore.setPlayingTrack(playlist.tracks[0])
+      playerStore.addToPlaylist(playlist.tracks)
+      playerStore.setPlayingTrack(playlist.tracks[0])
     }
 
   }
 
   handleAddToPlaylist = () => {
-    const { track, playlist, PlayerStore } = this.props
-    if (!PlayerStore) return
+    const { track, playlist, playerStore } = this.props
+    if (!playerStore) return
     if (this.isTrack && track) {
-      PlayerStore.addToPlaylist(track)
+      playerStore.addToPlaylist(track)
     } else if (playlist) {
-      PlayerStore.addToPlaylist(playlist.tracks)
+      playerStore.addToPlaylist(playlist.tracks)
     }
 
   }

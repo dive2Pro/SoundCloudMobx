@@ -7,7 +7,8 @@ import {
   observer
   , inject
 } from 'mobx-react'
-import { IPerformanceStore } from '../../store/index';
+import { PerformanceStore } from "../../store/PerformanceStore";
+import { PERFORMANCE_STORE } from "../../constants/storeTypes";
 export interface IArtWorkProps {
   size?: number
   alt?: string
@@ -15,12 +16,12 @@ export interface IArtWorkProps {
   optionalImg?: string,
   clazz?: string
   style?: { width?: any, height?: any }
-  PerformanceStore?: IPerformanceStore
+  performanceStore?: PerformanceStore
   live?: boolean
   onClick?: (e: any) => void
 }
 
-@inject('PerformanceStore')
+@inject(PERFORMANCE_STORE)
 @observer
 class ArtWork extends React.Component<IArtWorkProps, any> {
   loadImage: any;
@@ -53,7 +54,7 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
     }
 
     this.handlerObserver = autorun(() => {
-      const { PerformanceStore: ps, src } = this.props
+      const { performanceStore: ps, src } = this.props
       if (this.img && ps && ps.scrollLimit.length > 0 && src) {
         const [l, h] = ps.scrollLimit
         const y = this.img.y

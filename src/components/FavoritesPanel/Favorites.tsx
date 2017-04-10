@@ -1,22 +1,22 @@
 import * as React from 'react'
 import ViewAll from '../ViewAll';
 import MiniTrack from '../MiniTrack'
-import { IPlayerStore, ITrack } from '../../store/index';
-
 import LoadingSpinner from '../LoadingSpinner'
 import { observer } from 'mobx-react'
 import { FETCH_FAVORITES } from '../../constants/fetchTypes'
-import { IUserModel } from "../../store/UserStore";
+import { UserModel } from '../../store/UserStore';
+import { ITrack } from '../../interfaces/interface';
+import { PlayerStore } from '../../store/PlayerStore';
 
 const styles = require('./favorites.scss')
 
 interface IFavoritesProp {
-  PlayerStore: IPlayerStore
-  UserModel: IUserModel
+  playerStore: PlayerStore
+  UserModel: UserModel
 }
 
 const Favorites = observer((prop: IFavoritesProp) => {
-  const { PlayerStore, UserModel } = prop
+  const { playerStore, UserModel } = prop
   const { favorites } = UserModel
   const isLoading = UserModel.isLoading(FETCH_FAVORITES)
   const isError = UserModel.isError(FETCH_FAVORITES);
@@ -37,7 +37,7 @@ const Favorites = observer((prop: IFavoritesProp) => {
         {favorites.slice(0, 3).map((track: ITrack) => {
           return (
             <MiniTrack
-              PlayerStore={PlayerStore}
+              playerStore={playerStore}
               key={track.id + ' - ' + obj.path}
               track={track}
             />)

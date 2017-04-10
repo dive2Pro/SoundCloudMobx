@@ -6,7 +6,6 @@ import InfoList from '../InfoList'
 import ButtonGhost from '../ButtonGhost'
 import { observer } from 'mobx-react'
 import { User } from "../../store/UserStore";
-// import { IUserModel } from "../../store/index";
 const styles = require('./user.scss')
 export interface IUserContainerProps {
   user: User

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { ITrackStore, IPlayerStore } from '../../store'
 import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
 import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
@@ -9,17 +8,17 @@ import { Link } from 'react-router-dom'
 import { IPlaylist } from '../../interfaces/interface';
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
-import { UserStore, IUserModel } from "../../store/UserStore";
-import { USER_STORE } from "../../constants/storeTypes";
+import { UserStore, UserModel } from '../../store/UserStore';
+import { USER_STORE, TRACK_STORE, PLAYER_STORE } from '../../constants/storeTypes';
+import { PlayerStore } from "../../store/PlayerStore";
 const qs = require('qs')
 
 const styles = require('./playlist.scss')
 
 
 interface IPlaylistProps {
-  TrackStore?: ITrackStore
-  PlayerStore?: IPlayerStore
-  userModel: IUserModel
+  playerStore?: PlayerStore
+  userModel: UserModel
   match?: any
 }
 
@@ -72,19 +71,18 @@ class Playlist extends React.Component<IPlaylistProps, any>{
 export default HocLoadingMore<IPlaylistProps, any>(Playlist)
 
 interface IPlaylistInfoProp {
-  // userModel: IUserModel
   location: any
-  PlayerStore: IPlayerStore
+  playerStore: PlayerStore
   userStore: UserStore
 }
 
-@inject('TrackStore', 'PlayerStore', USER_STORE)
+@inject(TRACK_STORE, PLAYER_STORE, USER_STORE)
 @observer
 export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
   handlePlay = () => {
-    const { PlayerStore } = this.props
-    if (!PlayerStore) {
+    const { playerStore } = this.props
+    if (!playerStore) {
       return;
     }
   }
@@ -93,8 +91,8 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
   }
   handleAddToPlaylist = () => {
-    const { PlayerStore } = this.props
-    if (!PlayerStore) {
+    const { playerStore } = this.props
+    if (!playerStore) {
       return;
     }
   }

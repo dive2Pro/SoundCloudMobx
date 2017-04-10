@@ -2,17 +2,17 @@ import * as React from 'react'
 const styles = require('./stream.scss')
 import { Link } from 'react-router-dom'
 import { ITrack } from '../../interfaces/interface';
-import { IPlayerStore } from '../../store'
 
 import ButtonInline from '../ButtonInline'
 import ArtWork from '../ArtWork';
 import {
   observer
 } from 'mobx-react';
+import { PlayerStore } from "../../store/PlayerStore";
 
 interface IStreamMainProp {
   track: ITrack
-  , store: IPlayerStore
+  , store: PlayerStore
 }
 
 interface IndexAndPlayViewProp {

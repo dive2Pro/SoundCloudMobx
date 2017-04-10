@@ -1,10 +1,10 @@
 import { observable, action, computed, runInAction } from 'mobx'
-import { BaseAct, ITrack } from './TrackStore';
-import { IActivitiesItem } from '../interfaces/interface';
+import { BaseAct } from './TrackStore';
+import { IActivitiesItem, ITrack } from '../interfaces/interface';
 import { FETCH_ACTIVITIES } from '../constants/fetchTypes';
-import { PerformanceStore } from './index';
+import { performanceStore } from './index';
 import { addAccessToken, apiUrl } from '../services/soundcloundApi';
-
+import { RaceFetch as fetch } from '../services/Fetch'
 export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
 
   @observable filteredActivities: IActivitiesItem[];
@@ -45,17 +45,16 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
     }
     return temp;
   }
-  filterActivities(arr: IActivitiesItem[]) {
-    Promise.resolve(arr)
-      .then(data => {
-        const filterArr = data.filter(item => {
-          const b =
-            this.currentItems.some(active =>
-              active.created_at === item.created_at)
-          return !b;
-        })
-        this.addActivities(filterArr);
-      })
+  async filterActivities(arr: IActivitiesItem[]) {
+    if (!arr) { return }
+    const filterArr = await arr.filter(item => {
+      const b = this.currentItems.some(active =>
+        active.created_at === item.created_at)
+      return !b;
+    })
+
+    this.addActivities(filterArr);
+
   }
 
   @action setLoadingActivities(b: boolean) {
@@ -63,7 +62,7 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
   }
 
   @action fetchNextActivities(first?: boolean) {
-    PerformanceStore.setCurrentGenre(this.currentGenre)
+    performanceStore.setCurrentGenre(this.currentGenre)
     if (first && this.currentItems.length > 0) {
       return
     }
@@ -77,7 +76,6 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
     try {
       this.setLoadingActivities(true);
       const data: any = await fetch(activitiesUrl)
-      // const data = await rawData.json();
       runInAction(() => {
         this.setNextActivitiesHref(data.next_href)
         this.filterActivities(data.collection);
