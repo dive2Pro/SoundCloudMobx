@@ -4,24 +4,18 @@ import { NavLink } from 'react-router-dom'
 const styles = require('./stylelink.scss')
 
 interface IStyleLinkProp {
-  to: string | {},
-  activeClassName?: string | {}
-  activeStyle?: {}
+  id: string | {},
   children?: any
-  render?: () => any
-  exact?: boolean
 }
 
 // const defaultStyle
 const StyleLink = (function StyleLink(prop: IStyleLinkProp) {
-  let { to, activeClassName, activeStyle, children, exact, ...rest } = prop
+  let { id, children, ...rest } = prop
 
   // activeStyle={activeStyle}
   return (
     <NavLink
-      to={to}
-      activeClassName={activeClassName || styles.activeClass}
-      exact={exact}
+      to={{ pathname: '/playlist', search: `?id=${id}` }}
       {...rest}
     >
       {children}

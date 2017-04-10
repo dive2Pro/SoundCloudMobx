@@ -3,7 +3,7 @@ import {
   observer
 } from 'mobx-react';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import Link from '../RouterLink'
+import { UserLink as Link } from '../Links'
 import {
   observable, action
 } from 'mobx';

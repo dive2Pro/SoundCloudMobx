@@ -12,10 +12,11 @@ interface IRouterLinkProp {
 const RouterLink = (prop: IRouterLinkProp) => {
 
   return (
-    <Link to={{
-      pathname: `/users/${prop.path}`,
-      search: `?id=${prop.id}`
-    }}
+    <Link
+      to={{
+        pathname: `/users/${prop.path}`,
+        search: `?id=${prop.id}`
+      }}
     >
       {prop.children}
     </Link>
