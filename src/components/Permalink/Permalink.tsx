@@ -10,11 +10,12 @@ export interface IPermalinkProp {
 
 const Permalink = ({ id, clazz, fullname }: IPermalinkProp) => {
   clazz = styles[clazz || 0]
-  return <Link
-    className={clazz}
-    to={{ pathname: '/users/home', search: `?id=${id}` }}
-  >{fullname}</Link>
+  return (
+    <Link
+      className={clazz}
+      to={{ pathname: '/users/home', search: `?id=${id}` }}
+    >{fullname}
+    </Link>)
 }
-
 
 export default (Permalink);
