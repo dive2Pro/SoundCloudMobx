@@ -32,14 +32,13 @@ class FilterActivities extends React.Component<any, any> {
   };
 
   componentDidMount() {
+    console.log(' FilterActivities did mount')
     this.actStore.fetchNextActivities(true);
   }
 
   handleScroll = () => {
-
-    const { isLoading } = this.actStore;
-    if (!isLoading)
-    { this.actStore.fetchNextActivities(); }
+    console.log('scroll    ---')
+    this.actStore.fetchNextActivities();
   };
   handleSortType = (type: string) => {
     this.actStore.setSortType(type);
@@ -48,6 +47,10 @@ class FilterActivities extends React.Component<any, any> {
   handleFilterType = (type: string) => {
     this.actStore.setFilterType(type);
   };
+  componentWillUnmount() {
+    console.log(' FilterActivities will Unmount')
+
+  }
   render() {
     const filterProp = {
       handleClick: this.handleFilterType,

@@ -3,7 +3,9 @@ import {
   , action
   , ObservableMap
   , extendObservable
-  , computed
+  , computed,
+  autorun,
+  whyRun
 } from 'mobx';
 import {
   FETCH_FOLLOWERS
@@ -203,7 +205,7 @@ export class User {
   permalink_url: string
   @observable avatar_url: string
   country: string
-  full_name: string
+  @observable full_name: string
   city: string
   // description: string
   discogs_name: string
@@ -212,11 +214,11 @@ export class User {
   website: string
   website_title: string
   online: boolean
-  track_count: number
+  @observable track_count: number
   playlist_count: number
-  followers_count: number
-  followings_count: number
-  public_favorites_count: number
+  @observable followers_count: number
+  @observable followings_count: number
+  @observable public_favorites_count: number
   plan: string
   private_tracks_count: number
   private_playlists_count: number
@@ -273,6 +275,8 @@ export class UserModel {
     } else {
       this.setUser(obj)
     }
+    autorun(() => this.followingFilterByLogin(userStore.isLogined), this)
+    // whyRun(() => this.followingFilterByLogin())
   }
   getAllTrackFromStreams(): ITrack[] {
     return this.streams.filter(stream => stream.track != null).map(s => s.track);
@@ -282,20 +286,17 @@ export class UserModel {
 
   @action fetchCommunityData() {
 
-
     this.fetchWithType(FETCH_FOLLOWERS);
     this.fetchWithType(FETCH_FOLLOWINGS);
     this.fetchWithType(FETCH_FAVORITES);
-    // this.fetchWithType(FETCH_STREAM);
+
   }
 
   async fetchUser() {
     const url = apiUrl(`users/${this.user.userId}`, '?')
     try {
       this.changeLoadingState(FETCH_USER, true)
-      const rawUser: any =
-        await fetch(url)
-      // .then(data => data.json()); 
+      const rawUser: any = await fetch(url)
       this.user.updateFromServe(rawUser)
     } catch (err) {
       this.catchErr(err, FETCH_USER);
@@ -332,14 +333,12 @@ export class UserModel {
 
     let user: any = {}
     // 除了是登录用户外,
-
     if (type === FETCH_FOLLOWERS || type === FETCH_FOLLOWINGS) {
       fs.forEach(data => {
         user = new User(data)
         targetArr.push(user)
         if (this.userStore.isLogined) {
-          // console.log('------------')
-          user.isFollowing = this.userStore.isFollowingUser(user.id);
+          user.isFollowing = this.userStore.isFollowingUser(user.id)
         }
       })
     } else {
@@ -347,11 +346,21 @@ export class UserModel {
     }
   }
 
+  @action followingFilterByLogin(isLogined: boolean) {
+
+    if (isLogined) {
+      this.followers.forEach(user =>
+        user.isFollowing = this.userStore.isFollowingUser(user.id)
+      )
+      this.followings.forEach(user =>
+        user.isFollowing = this.userStore.isFollowingUser(user.id)
+      )
+    }
+  }
+
   apiStream(id: number) {
     return unauthApiUrlV2(`stream/users/${id}`, `limit=15&offset=0&linked_partitioning=1`)
   }
-
-
 
   @action async fetchWithType(type: string) {
     if (this.isLoadings.get(type) === true) {
