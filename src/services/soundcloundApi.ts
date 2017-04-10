@@ -29,11 +29,10 @@ export const addClientId = (url: string, symbol: string): string => {
 }
 
 export const addAccessToken = (url: string, symbol: string): string => {
-  // const accessToken = Cookies.get(OAUTH_TOKEN);
-  // console.log(accessToken)
-  // if (accessToken && accessToken != 'null') {
-  //   return `${url}${symbol}oauth_token=${accessToken}`
-  // }
+  const accessToken = Cookies.get(OAUTH_TOKEN);
+  if (accessToken && accessToken != 'null') {
+    return `${url}${symbol}oauth_token=${accessToken}`
+  }
   return addClientId(url, symbol)
 }
 export enum PicSize {

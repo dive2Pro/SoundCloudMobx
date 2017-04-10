@@ -62,6 +62,9 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
   }
 
   @action fetchNextActivities(first?: boolean) {
+    if (this.isLoading) {
+      return
+    }
     performanceStore.setCurrentGenre(this.currentGenre)
     if (first && this.currentItems.length > 0) {
       return
@@ -70,7 +73,7 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
       this.fetchActivities(this.nextHref);
     }
   }
-  @action async fetchActivities(nextHref?: string) {
+  @action private async  fetchActivities(nextHref?: string) {
     let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
       apiUrl(`me/activities?limit=50`, '&')
     try {

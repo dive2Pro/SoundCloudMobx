@@ -10,7 +10,7 @@ import {
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
-import { UserStore } from '../../store/UserStore';
+import { UserStore, User } from '../../store/UserStore';
 import { SessionStore } from '../../store/SessionStore';
 import { SESSION_STORE, USER_STORE } from '../../constants/storeTypes'
 
@@ -188,7 +188,6 @@ class Header extends React.Component<IHeaderProp, undefined> {
                       if (match) {
                         return item.id == location.search.substr(4)
                       }
-
                       return false
                     }}
                     to={{
@@ -206,6 +205,15 @@ class Header extends React.Component<IHeaderProp, undefined> {
       </div>
     )
   }
+  isLoginUserActive = (user: User) =>
+    (match: any, location: any) => {
+
+      if (match) {
+        return user && user.id == location.search.substr(4)
+      }
+
+      return false
+    }
   renderMyCommuPaner = () => {
     const { userStore } = this.props
     const loginModel = userStore.getLoginUserModel
@@ -216,6 +224,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
       )
     }
     const { user } = loginModel
+    const isActive = this.isLoginUserActive(user)
     return (
       <div className={styles._aside_mymusic}>
         <div className={styles._aside_title}>
@@ -224,6 +233,8 @@ class Header extends React.Component<IHeaderProp, undefined> {
         <ul className={styles._aside_header_ul}>
           <li>
             <StyleLink
+              isActive={isActive}
+
               to={{
                 pathname: `/users/favorites`,
                 search: `?id=${user && user.id}`
@@ -236,6 +247,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
               <i className="fa fa-music" /> Tracks </StyleLink> </li>
           <li>
             <StyleLink
+              isActive={isActive}
               to={{
                 pathname: `/users/followings`,
                 search: `?id=${user && user.id}`
@@ -245,6 +257,8 @@ class Header extends React.Component<IHeaderProp, undefined> {
             </StyleLink> </li>
           <li>
             <StyleLink
+              isActive={isActive}
+
               to={{
                 pathname: `/users/followers`,
                 search: `?id=${user && user.id}`

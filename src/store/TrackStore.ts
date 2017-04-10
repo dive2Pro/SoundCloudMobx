@@ -255,7 +255,6 @@ export class TrackStore extends BaseAct<ITrack> {
     try {
       this.setLoadingByGenre(genre, true)
       const data: any = await fetch(url)
-      console.log(data)
       runInAction('loaddata', () => {
         fn.call(this, data)
       })

@@ -5,27 +5,24 @@ import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel from '../FollowsPanel'
 import FavoritesPanel from '../FavoritesPanel';
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
 import Playlist from '../Playlist'
-import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
 import { UserStore, User, UserModel } from '../../store/UserStore';
-import { ActivitiesStore } from '../../store/ActivitiesStore';
-import { USER_STORE, ACTIVITIES_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
-import { PlayerStore } from "../../store/PlayerStore";
-import { PerformanceStore } from "../../store/PerformanceStore";
-import { isObservable } from "._mobx@3.1.8@mobx/lib/mobx";
+import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
+import { PlayerStore } from '../../store/PlayerStore';
+import { PerformanceStore } from '../../store/PerformanceStore';
+import { isObservable } from '._mobx@3.1.8@mobx/lib/mobx';
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 
 interface IDashBorardProps {
   userStore: UserStore
-  activitiesStore: ActivitiesStore
   performanceStore: PerformanceStore
   playerStore: PlayerStore
   location?: any
@@ -77,7 +74,6 @@ const FavoView = observer((props: any) => {
  */
 @inject(
   USER_STORE
-  , ACTIVITIES_STORE
   , PLAYER_STORE
   , PERFORMANCE_STORE)
 @observer
@@ -113,7 +109,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             }}
           />
           <Route
+            path={`/`}
             render={() => {
+              console.log('I m still here')
               return us.isLoginUser ?
                 <FilterActivities />
                 : (
@@ -132,11 +130,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const avatar_url = user.avatar_url
     const is = isObservable(avatar_url)
     let backgroundImageUrl = preload
-    if (Object.keys(this.glassStyle).length > 0) {
+    if (Object.keys(this.infoGlassStyle).length > 0) {
       backgroundImageUrl = avatar_url ?
         getSpecPicPath(avatar_url, PicSize.MASTER) : backgroundImageUrl;
     }
-    console.log(is, user, isObservable(user), user.avatar_url)
+
 
     return (
       <div className={styles._contentHeader}>
@@ -175,7 +173,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 )
             }
           </div>
-
           <Blur
             img={backgroundImageUrl}
             blurRadius={5}
@@ -183,7 +180,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           />
 
         </div>
-        <div
+        {/*<div
           ref={n => this.profile = n}
           style={profile$}
           className={styles._contentHeader_profile}
@@ -205,8 +202,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             blurRadius={10}
             style={this.glassStyle}
           />
-
-        </div>
+        </div>*/}
       </div>
     )
   }
@@ -217,7 +213,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   headerImg: any;
   profile: any;
   id: number
-  glassStyle: any = {}
   infoGlassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
     const um = this.props.userStore.userModel
@@ -253,26 +248,17 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     this.props.performanceStore.setCurrentGlassNodeId('DashBoard')
     const p = this.profile
     const hi = this.headerInfo
-    this.glassStyle = {
-      // TODO 这里如果修改父组件的display为 block,则需要修改为40
-      // why?
-      left: -(p.offsetLeft) + 'px'
-      , top: -p.offsetTop + 'px'
-      , height: '300px'
+
+    this.infoGlassStyle = {
+      left: -hi.offsetLeft + 'px'
+      // , top: -hi.offsetTop + 'px'// todo
+      , top: '-140px'
+      , height: hi.offsetHeight + 'px'
       , width: this.headerImg.offsetWidth + 'px'
       , position: 'absolute'
-      , zIndex: '-1'
-      , display: 'inline-flex'
-    },
-      this.infoGlassStyle = {
-        left: -hi.offsetLeft + 'px'
-        // , top: -hi.offsetTop + 'px'// todo
-        , top: '-140px'
-        , height: hi.offsetHeight + 'px'
-        , width: this.headerImg.offsetWidth + 'px'
-        , position: 'absolute'
-        , zIndex: '-1'
-      }
+      , zIndex: '-9'
+    }
+    console.log(this.infoGlassStyle.width)
     this.forceUpdate()
   }
 
