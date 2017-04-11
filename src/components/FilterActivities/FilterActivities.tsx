@@ -6,7 +6,7 @@ import SearchPanel from '../SearchPanel';
 
 import { inject, observer } from 'mobx-react';
 import * as sortTypes from '../../constants/sortTypes';
-import { ActivitiesStore } from "../../store/ActivitiesStore";
+import { ActivitiesStore } from '../../store/ActivitiesStore';
 import { ACTIVITIES_STORE } from '../../constants/storeTypes'
 const styles = require('./filteractivities.scss')
 
@@ -28,17 +28,8 @@ class FilterActivities extends React.Component<any, any> {
     this.actStore = this.props[ACTIVITIES_STORE]
   }
   handleSearchValue = (value: string) => {
-    this.props.ActivitiesStore && this.props.ActivitiesStore.setFilterTitle(value);
-  };
-
-  componentDidMount() {
-    console.log(' FilterActivities did mount')
-    this.actStore.fetchNextActivities(true);
-  }
-
-  handleScroll = () => {
-    console.log('scroll    ---')
-    this.actStore.fetchNextActivities();
+    this.actStore
+      && this.actStore.setFilterTitle(value);
   };
   handleSortType = (type: string) => {
     this.actStore.setSortType(type);
@@ -47,10 +38,16 @@ class FilterActivities extends React.Component<any, any> {
   handleFilterType = (type: string) => {
     this.actStore.setFilterType(type);
   };
-  componentWillUnmount() {
-    console.log(' FilterActivities will Unmount')
 
+  componentDidMount() {
+    this.actStore.fetchNextActivities(true);
   }
+
+  handleScroll = () => {
+    this.actStore.fetchNextActivities();
+  };
+
+
   render() {
     const filterProp = {
       handleClick: this.handleFilterType,

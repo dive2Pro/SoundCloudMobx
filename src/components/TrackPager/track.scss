@@ -2,13 +2,19 @@
 .main{
   width: $contentMinWidth;  
   padding: 30px;
-  background: $backgroundSecondary;
+  background: $background;
   margin: auto;
   margin-top: $headerHight;
+}
+.comments{
+  padding: $padding*2;
 }
 .edit{
   position: absolute;
   right: 20px;
   top: 20px;
   display: none;
+}
+.comment_body{
+  display: flex;
 }

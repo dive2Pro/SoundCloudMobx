@@ -12,7 +12,8 @@ import { UserStore, UserModel } from '../../store/UserStore';
 import { USER_STORE, TRACK_STORE, PLAYER_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from "../../store/PlayerStore";
 const qs = require('qs')
-
+import Operators from '../Operators'
+import { BigUserIcon } from '../Community'
 const styles = require('./playlist.scss')
 
 
@@ -110,39 +111,58 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
   componentDidUpdate() {
     this.handleLocationChange()
   }
+  handleFollowing = () => {
 
-  render() {
-    const {
-      userStore, location: { search }
-    } = this.props
-    const id = qs.parse(search.substr(1)).id
-    if (!userStore.fetchedPlaylist || userStore.fetchedPlaylist.id != id) {
-      return (
-        <div className={styles.playlistInfo}>
-          <LoadingSpinner isLoading={true} />
-        </div>)
-    }
-
-    const playlist = userStore.fetchedPlaylist;
-
-    const { label_name, artwork_url, user, tracks } = playlist
+  }
+  renderContent = (playlist: IPlaylist) => {
+    const { userStore } = this.props
+    const { label_name, title, artwork_url, user, tracks } = playlist
+    const isFollowing = userStore.isFollowingUser(user.id)
     return (
-      <div className={styles.playlistInfo}>
+      <div className={styles.playlistmain}>
         <TrackProfile
-          label_name={label_name}
+          label_name={title || label_name}
           type="list"
           bigPic={artwork_url}
           user={user}
           playlist={playlist}
         />
+        <div style={{ padding: '20px' }}>
+          <Operators
+            tracks={tracks}
+            isPlaylist={true}
+          />
+          <div className={styles.playlist_body}>
+            <BigUserIcon
+              user={user}
+              handleFollow={() => { userStore.detectIsFollowing(user.id) }}
+              isFollowing={isFollowing}
+            />
+            <Activities
+              isLoading={false}
+              scrollFunc={() => { }}
+              sortType=""
+              isError={false}
+              tracks={tracks}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+  render() {
+    const {
+      userStore, location: { search }
+    } = this.props
+    const id = qs.parse(search.substr(1)).id
 
-        <Activities
-          isLoading={false}
-          scrollFunc={() => { }}
-          sortType=""
-          isError={false}
-          tracks={tracks}
-        />
+    const isLoading = (!userStore.fetchedPlaylist
+      || userStore.fetchedPlaylist.id != id)
+    const playlist = userStore.fetchedPlaylist;
+    return (
+      <div className={styles.playlistInfo}>
+        {(isLoading || !playlist) ? (<LoadingSpinner isLoading={isLoading} />
+        ) : this.renderContent(playlist)}
       </div>
     );
   }

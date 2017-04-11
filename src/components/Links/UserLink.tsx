@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { NavLink as Link } from 'react-router-dom'
-// import * as CSSModule from 'react-css-modules'
 // const styles = require('./.scss')
 
 interface IRouterLinkProp {
   path: string,
   id: number
   children?: any
+  clazz?: string
 }
 
 const RouterLink = (prop: IRouterLinkProp) => {

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 const styles = require('./filterpanel.scss')
 import { observer } from 'mobx-react';
 import ButtonInline from '../ButtonInline'
@@ -19,7 +18,7 @@ const FilterPanel = observer(({ tagClass, activeType
     <div className={styles.main}>
       <nav className={styles.nav}>
         <ButtonInline onClick={() => handleClick("")}>
-          <i className={tagClass}></i>
+          <i className={tagClass} />
         </ButtonInline>
         {items.map((item, index) => {
           return (
@@ -37,4 +36,4 @@ const FilterPanel = observer(({ tagClass, activeType
   );
 })
 
-export default CSSModule(FilterPanel, styles);
+export default (FilterPanel);

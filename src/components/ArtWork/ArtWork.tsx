@@ -1,14 +1,13 @@
 import * as React from 'react'
 const styles = require('./artwork.scss')
-import * as CSSModule from 'react-css-modules';
 const preImage = require('../../../public/images/preload.jpg')
 import { autorun, IReactionDisposer } from 'mobx'
 import {
   observer
   , inject
 } from 'mobx-react'
-import { PerformanceStore } from "../../store/PerformanceStore";
-import { PERFORMANCE_STORE } from "../../constants/storeTypes";
+import { PerformanceStore } from '../../store/PerformanceStore';
+import { PERFORMANCE_STORE } from '../../constants/storeTypes';
 export interface IArtWorkProps {
   size?: number
   alt?: string
@@ -116,4 +115,4 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
     )
   }
 }
-export default CSSModule(ArtWork, styles);
+export default (ArtWork);

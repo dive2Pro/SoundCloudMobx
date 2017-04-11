@@ -4,6 +4,7 @@ export const FETCH_FAVORITES = 'favorites';
 export const FETCH_ACTIVITIES = 'activities';
 export const FETCH_USER = 'USER';
 export const FETCH_PLAYLIST = 'playlists';
+export const FETCH_PLAYLISTINFO = 'playlistInfos';
 export const FETCH_STREAM = 'streams';
 export const FETCH_TRACK = 'track@';
 

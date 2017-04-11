@@ -3,37 +3,52 @@ import TrackProfile from '../TrackProfile'
 import { observer, inject } from 'mobx-react'
 import { TrackStore } from '../../store/TrackStore'
 import LoadingSpinner from '../LoadingSpinner'
-
+import Operators from '../Operators'
 import CommentsContainer from '../Comments'
 import { FETCH_TRACK } from '../../constants/fetchTypes';
 import { CommentStore } from '../../store/CommentStore';
-import { COMMENT_STORE, TRACK_STORE, PLAYER_STORE } from '../../constants/storeTypes'
+import { COMMENT_STORE, TRACK_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes'
 import { ITrack } from '../../interfaces/interface';
 import { PlayerStore } from "../../store/PlayerStore";
+import { PerformanceStore } from "../../store/PerformanceStore";
+import { BigUserIcon } from "../Community/index";
 const qs = require('qs')
 const styles = require('./track.scss');
 
 
-interface ITracklistinfoViewProps {
+interface ITrackPagerProps {
   trackStore: TrackStore
   playerStore: PlayerStore
   commentStore: CommentStore
+  performanceStore: PerformanceStore
   match: any
   location: any
 }
 
 
-@inject(TRACK_STORE, PLAYER_STORE, COMMENT_STORE)
+@inject(TRACK_STORE, PLAYER_STORE, COMMENT_STORE, PERFORMANCE_STORE)
 @observer
-class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
-
+class TrackPager extends React.Component<ITrackPagerProps, any> {
+  trackId: number = -1
+  prevTrackGenre: string = ""
   componentDidMount() {
-    const { location: { search }, trackStore } = this.props
+    const { location: { search }, trackStore, performanceStore } = this.props
+    performanceStore.setCurrentGlassNodeId('TrackPager')
+
     if (search) {
       const id = qs.parse(search.substr(1)).id
+      this.trackId = id
+      if (trackStore.currentGenre != FETCH_TRACK) {
+        this.prevTrackGenre = trackStore.currentGenre
+      }
       trackStore.setGenre(FETCH_TRACK)
       trackStore.setTrackId(id)
     }
+  }
+
+  componentWillUnmount() {
+    const { trackStore } = this.props
+    trackStore.setGenre(this.prevTrackGenre)
   }
 
   handlePlay = () => {
@@ -62,7 +77,7 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.commentStore
     return (
-      <div>
+      <div id="TrackPager">
         <TrackProfile
           bigPic={artwork_url}
           label_name={label_name}
@@ -72,28 +87,39 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
         />
 
         <div className={styles.comments}>
-          <div className={styles.commentsCount}>
-            Comments : {commentsCount}
-          </div>
-
-          <CommentsContainer
-            commentStore={this.props.commentStore}
+          <Operators
             track={currentTrack}
-            scrollFunc={this.handleFetchMoreComments}
           />
+          <div className={styles.comment_body}>
+            <BigUserIcon
+              user={user}
+              handleFollow={() => { }}
+              isFollowing={false}
+            />
+            <CommentsContainer
+              commentStore={this.props.commentStore}
+              track={currentTrack}
+              scrollFunc={this.handleFetchMoreComments}
+            />
+          </div>
         </div>
-      </div>)
+      </div >)
   }
   render() {
     const {
        currentTrack,
       isLoading
+      , isError
      } = this.props.trackStore
 
     return (
       <div className={styles.main}>
         {isLoading || !currentTrack
-          ? <LoadingSpinner isLoading={true} />
+          ? <LoadingSpinner
+            isError={isError(FETCH_TRACK)}
+            onErrorHandler={() => this.props.trackStore.fetchSingleTrack(this.trackId)}
+            isLoading={isLoading}
+          />
           : this.renderContent(currentTrack)}
       </div>
 
@@ -101,4 +127,4 @@ class TracklistinfoView extends React.Component<ITracklistinfoViewProps, any> {
   }
 }
 
-export default TracklistinfoView;
+export default TrackPager;

@@ -56,13 +56,24 @@ export const extendsObservableObjFromJson = (target: any, data: any) => {
   // , p, { value: target[p] }
   // )
   for (p in target) {
-    // extendObservable(target, { p: target[p] })
-    observable(target
-      , p, observable({ p: target[p] })
+    observable(target, p, observable({ p: target[p] })
     )
   }
 
 }
+
+export const specTimeTamp = (date: string): string => {
+  const now = new Date()
+  const spec = new Date(date)
+  const dateArr = date.split(" ")
+  if (now.getFullYear() == spec.getFullYear() &&
+    now.getMonth() == spec.getMonth() + 1 &&
+    now.getDay() == spec.getDay()) {
+    return dateArr[1]
+  }
+  return dateArr[0]
+}
+
 
 export const findRootParentOffSet = (root: any) => {
   while ((root = root.parentNode) != null) {
@@ -72,6 +83,5 @@ export const findRootParentOffSet = (root: any) => {
       break;
     }
   }
-  console.log(root)
   return root.offsetLeft || 0
 }

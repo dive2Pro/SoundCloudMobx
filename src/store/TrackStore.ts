@@ -1,7 +1,6 @@
 import {
   action, observable, runInAction
   , computed, ObservableMap, autorun
-  // , whyRun
   , IReactionDisposer, IObservableArray
 } from 'mobx';
 import {
@@ -15,7 +14,7 @@ import UserStore from './UserStore'
 import performanceStore from './PerformanceStore';
 import { RaceFetch as fetch } from '../services/Fetch'
 import activitiesStore from './ActivitiesStore';
-
+import { } from '../constants/fetchTypes'
 export interface IBaseActStore {
   isLoading: boolean;
   currentGenre: string
@@ -31,11 +30,12 @@ export abstract class BaseAct<T> implements IBaseActStore {
   }
   protected isErrorsMap = new ObservableMap<boolean>()
 
+  // 排序和搜索过滤
   @observable filterType: string
   @observable filterTitle: string
   @observable sortType: string
-
   @observable filteredTracks: ITrack[] = []
+
   @observable currentGenre: string = 'country'
 
   autorunHandle: IReactionDisposer;
@@ -52,9 +52,11 @@ export abstract class BaseAct<T> implements IBaseActStore {
   @action setFilterTitle(title: string) {
     this.filterTitle = title;
   }
+
   @action setSortType(type: string) {
     this.sortType = type;
   }
+
   @action setFilterType(filterType: string = '') {
     this.filterType = filterType;
   }
@@ -215,8 +217,8 @@ export class TrackStore extends BaseAct<ITrack> {
     const url = unauthApiUrl(`tracks/${id}`, '?')
     this.fetchData(url, (data) => {
       // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.
-      this.setCurrentTrack(data);// mayby Track?
-    })
+      this.setCurrentTrack(data); // mayby Track?
+    }, )
   }
 
 
@@ -235,6 +237,7 @@ export class TrackStore extends BaseAct<ITrack> {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);
     })
+
   }
 
 
@@ -247,8 +250,7 @@ export class TrackStore extends BaseAct<ITrack> {
 
   }
 
-  //这里设计的不好,genre不太可调?
-
+  // 这里设计的不好,genre不太可调?
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
   private async fetchData(url: string, fn: (data: any) => void, gr?: string) {
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)

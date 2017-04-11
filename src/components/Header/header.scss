@@ -4,11 +4,11 @@
   position: relative;
   background: #f7f7f7;
   min-width: $_asiderWidth;
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: $padding;
-  font-weight: bold!important;
+  font-weight: bold!important; 
 }
 
 ._aside_playlist{ 
@@ -26,6 +26,8 @@
   padding: 20px 0 20px 8px ;
   display: flex;
   justify-content: space-between;
+  @include bottom_border(2px,rgba(58, 58, 58, 0.05))
+
 }
 ._aside_header button{
   font-size: $mediumIcon;
@@ -47,7 +49,7 @@
 }
 
  .aside_hover{
-  background: #f55874!important;
+  background: $mainRed!important;
   color: #FBFBFB!important;
   box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
   text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
@@ -57,12 +59,13 @@
 
 ._aside a:hover{
   // composes:aside_hover;
-  background: #f55874;
+  background: $mainRed;
   color: #FBFBFB;
   box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
   text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
   border-radius: 5px;
 }
+
 
 .dropbtn {
     background-color: #4CAF50;
