@@ -13,7 +13,7 @@ $secondMainColor:#85a143;
 $thirdMainColor:#D2f233;
 $hyperlinkHover: rgba(0, 0, 0, 0.8);
 $hyperlinkActive: rgba(255, 255, 255, .4);
-$hyperlinkVisited: rgba(200, 200, 200, .4);
+$hyperlinkVisited: rgba(30, 30, 20, .8);
 
 $nav: #141414;
 $background: #ffffff;
@@ -28,13 +28,24 @@ $_100pxEm:7.143em;
 $_30pxEm:2.143em;
 $_180pxEm:12.857em;
 $borderGray:1px solid #dadada;
-$headerHight:5em;
-$white:#fff;
+$headerHight:/*5em*/ 0;
 $circleRadius:50%;
-$shuffleCollor:#14ff00;
+
 $contentMinWidth:89.143em;
-$playerHeight:3.571em;
+$contentPadding:$padding;
+
+$playerHeight:4.071em;
 $playerDurationHeight:1.768em;
+$_asiderWidth:$_100pxEm*2.5;
+
+
+$shuffleCollor:#14ff00;
+$white:#fff;
+$mainFontColor:#000;
+$seconFontColor:#a9a9a9;
+$streamHoverColor:#4a85e3;
+$soundcloudColor:#f77838;
+$mainRed:#f55874;
 
 @mixin bottom_border($size,$color){
   @if $size != null
@@ -46,10 +57,33 @@ $playerDurationHeight:1.768em;
    } 
 }
 
+@mixin btn_white_padding(){
+    background-color: white;
+    border: 1px solid lightgray;
+    padding: ($padding/4) $padding;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #333;
+      &:focus{
+        outline: none;
+      }
+      &:hover{
+        opacity: 0.7;
+      }
+}
+
 .panel{
   background: $mainColor;
   color:$fontColor;
   border:$border; 
   font-size: $mediumIcon;
   padding: $padding/2;
+}
+
+@mixin ellipsisTexts($maxWidth){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: $maxWidth;
+
 }

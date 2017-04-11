@@ -6,3 +6,8 @@
   text-align: center;
   margin: 20px;
 }
+
+.spinner_error{
+  composes:spinner_loading;
+  
+}

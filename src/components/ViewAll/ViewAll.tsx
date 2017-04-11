@@ -1,9 +1,7 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
-// import ButtonInline from '../ButtonInline'
-import Link from '../RouterLink'
+import { UserLink as Link } from '../Links'
 const styles = require('./viewall.scss')
-
+import { transBigMath } from '../../services/utils'
 interface IViewALLProp {
   clazz: string
   count: number
@@ -15,18 +13,22 @@ interface IViewALLProp {
 const ViewALL = (prop: IViewALLProp) => {
 
   return (
-    <div
-      styleName="base">
+    <div className={styles.base}>
       <div >
-        <i className={prop.clazz}></i>
-        <span>{prop.count}  {prop.typeContent}</span>
+        <i className={prop.clazz} />
+        <span>{transBigMath(prop.count)}  {prop.typeContent}</span>
       </div >
-      <span styleName="view">
-        <Link path={prop.path}
-          id={prop.id}> View all</Link></span>
+      <span className={styles.view}>
+        <Link
+          path={prop.path}
+          id={prop.id}
+        >
+          View all
+        </Link>
+      </span>
     </div >
   );
 
 }
 
-export default CSSModule(ViewALL, styles);
+export default (ViewALL);

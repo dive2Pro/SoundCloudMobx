@@ -1,2 +1,2 @@
-import F from './Favorites';
+import F from './FavoritesPanel';
 export { F as default }

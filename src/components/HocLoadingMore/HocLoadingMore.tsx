@@ -23,7 +23,7 @@ function HocLoadingMore<Props, State>(
         const trigger = window.innerHeight + window.pageYOffset
           >= document.body.scrollHeight - 500
 
-        if (trigger) {
+        if (trigger && this.props.scrollFunc) {
           this.props.scrollFunc();
         }
       }
@@ -33,7 +33,7 @@ function HocLoadingMore<Props, State>(
       window.addEventListener('scroll', this.handleScrolling)
     }
 
-    componentWiiUnmount() {
+    componentWillUnmount() {
       window.removeEventListener('scroll', this.handleScrolling)
     }
     render() {

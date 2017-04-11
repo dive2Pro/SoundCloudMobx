@@ -1,13 +1,13 @@
 @import '../../styles/variable.scss';
 @mixin base{
-  visibility: none;
   display: inherit;
   justify-content: inherit;
   align-content: inherit;
   align-items: inherit;
   width: inherit;
-
+  visibility: hidden;
 }
+
 .normal{
   @include base;
 }

@@ -1,28 +1,132 @@
 @import '../../styles/variable.scss';
 
-.main{
-  position: fixed;
-  height: $headerHight;
-  background: $nav;
-  color:white;
+._aside{
+  position: relative;
+  background: #f7f7f7;
+  min-width: $_asiderWidth;
+  min-height: 100vh;
   display: flex;
-  justify-content: space-around;
-  align-items:center;
-  top: 0;
+  flex-direction: column;
+  padding: $padding;
+  font-weight: bold!important; 
+}
+
+._aside_playlist{ 
+
+}
+._aside_header_img{
+  text-align: center;
+  margin-bottom: $padding;
+}
+ ._aside_header_ul{ 
+  text-align: left;
+}
+._aside_title{
+  color: $seconFontColor;
+  padding: 20px 0 20px 8px ;
+  display: flex;
+  justify-content: space-between;
+  @include bottom_border(2px,rgba(58, 58, 58, 0.05))
+
+}
+._aside_header button{
+  font-size: $mediumIcon;
+}
+
+._aside_header_ul li a{
+  font-weight: bold;
+  border: none;
+  background: inherit;
+  padding: 10px;
   width: 100%;
-  z-index: 10;
-  left: 0;
-  &>*{
-    padding: 0 $_30pxEm/3;
+  text-align: inherit;
+  color: $nav;  
+  display: block;
+  &>i{
+       width: 25px;
+       display: inline-block;
   }
 }
-nav{
-  display: flex;
-  h1{
-    font-size: $_30pxEm; 
+
+ .aside_hover{
+  background: $mainRed!important;
+  color: #FBFBFB!important;
+  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
+  text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+  border-radius: 5px;
+
+}
+
+._aside a:hover{
+  // composes:aside_hover;
+  background: $mainRed;
+  color: #FBFBFB;
+  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
+  text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+  border-radius: 5px;
+}
+
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_content {
+    display: none; 
+    background-color: #f9f9f9;
+    min-width: 160px; 
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top:$padding*0.75;
+    position:absolute; 
+    padding:10px;
+    color:#f9f9f9;
+}
+.dropdown_content_visible{
+  display: block;
+  composes:dropdown_content;
+  position: absolute;
+  filter: drop-shadow(0 0 6px #bababa);
+  top: calc(100% + 10px);
+  left: calc(-100% );
+  & button{
+      background: $soundcloudColor;
+      padding: $padding/2 $padding;
+      font-size: $smallIcon;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+  } 
+  &:focus{
+    background: red;
   }
-    align-items: center;
-  a{
-      padding: $padding;
-  }
-} 
+  &::before{
+    position:absolute;
+    content:"";
+    right:50%;
+    top:-6px;
+    height:15px; 
+    width:15px;
+    background:currentColor;
+    z-index:-1;
+    transform:rotateZ(45deg);
+  } 
+}
+
+.dropdown_content:focus{
+
+}

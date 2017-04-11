@@ -1,61 +1,296 @@
 import * as React from 'react';
-import { observer, inject } from "mobx-react";
+import * as ReactDOM from 'react-dom'
+import { observer, inject } from 'mobx-react';
 import DevTool from 'mobx-react-devtools'
-import Link from '../StyleLink'
+import { NavLink } from 'react-router-dom'
+import ButtonInline from '../ButtonInline'
 import {
-  // NavLink as L,
   withRouter
 } from 'react-router-dom'
-import { ISessionStore } from "../../store/index";
 const styles = require('./header.scss');
+import ArtWork from '../ArtWork'
+import { observable, action } from 'mobx';
+import { UserStore, User } from '../../store/UserStore';
+import { SessionStore } from '../../store/SessionStore';
+import { SESSION_STORE, USER_STORE } from '../../constants/storeTypes'
 
 interface IHeaderProp {
-  SessionStore: ISessionStore
+  sessionStore: SessionStore
+  userStore: UserStore
 }
-@inject("SessionStore")
-@observer
-class Main extends React.Component<IHeaderProp, undefined> {
+interface IWidhtRouterStyleLinkProps {
+  to?: string | Object
+  isActive?: (match: any, location: any) => boolean
+}
+class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProps, any> {
+  render() {
+    const { to, isActive } = this.props
+    return (
+      <NavLink
+        to={to || 'abondan'}
+        activeClassName={styles.aside_hover}
+        exact={to === '/'}
+        isActive={isActive}
+      >
+        {this.props.children}
+      </NavLink>)
+  }
+}
 
+const StyleLink =
+  // WidhtRouterStyleLink
+  withRouter(WidhtRouterStyleLink);
+
+
+interface IDropDownProps {
+  store: SessionStore
+}
+
+@observer
+class DropDown extends React.PureComponent<IDropDownProps, any>{
+  dropdownContent: any;
+  @observable dropdowning: boolean = false
+
+  handleSign = () => {
+    const { store } = this.props
+    if (!store.user) {
+      store.login()
+    } else {
+      store.loginout()
+    }
+    this.toggleDropdowning();
+  }
+
+  @action toggleDropdowning = () => {
+    this.dropdowning = !this.dropdowning;
+  }
+
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.onOutsideClick);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.onOutsideClick);
+  }
+
+  @action onOutsideClick = (e: any) => {
+
+    if (!this.dropdowning) {
+      return;
+    }
+
+    e.stopPropagation();
+    const localNode = ReactDOM.findDOMNode(this);
+    let source = e.target;
+
+    while (source.parentNode) {
+      if (source === localNode) {
+        return;
+      }
+      source = source.parentNode;
+    }
+    this.toggleDropdowning()
+  }
+
+  render() {
+    const clazz = this.dropdowning ? styles.dropdown_content_visible : styles.dropdown_content;
+    const { user } = this.props.store
+    const aturl = user && user.avatar_url || ''
+    return (
+      <div className={styles.dropdown}>
+        <ArtWork
+          onClick={this.toggleDropdowning}
+          style={{
+            width: '50px',
+            height: '50px'
+          }}
+          src={aturl}
+          live={true}
+        />
+        <div
+          className={clazz}
+        >
+          <ButtonInline onClick={this.handleSign}>
+            {!user ? 'Sign into SoundCloud' : 'Sign out'}
+          </ButtonInline>
+        </div>
+      </div >
+    )
+  }
+}
+
+@inject(SESSION_STORE, USER_STORE)
+@observer
+class Header extends React.Component<IHeaderProp, undefined> {
+  renderTop = () => {
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel
+    return (
+      <div className={styles._aside_header}>
+        {/*onClick={}*/}
+        <div
+          className={styles._aside_header_img}>
+
+          <DropDown
+            store={this.props.sessionStore}
+          />
+        </div>
+        <ul className={styles._aside_header_ul}>
+          <li>
+            <StyleLink>Library</StyleLink>
+          </li>
+          <li>
+            <StyleLink to="/main">Browse</StyleLink>
+          </li>
+          <li>
+            <StyleLink to="/ssr">Radio</StyleLink>
+          </li>
+          <li>
+            {loginModel ?
+              (
+                <StyleLink
+                  to={{
+                    pathname: '/users',
+                    search: `?id=${loginModel.user && loginModel.user.id}`
+                  }}
+                >home
+                </StyleLink>
+              ) : ''}
+          </li>
+        </ul>
+      </div>
+    )
+  }
+  renderMyPlaylist = () => {
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel
+
+    if (!loginModel) {
+      return (
+        <noscript />
+      )
+    }
+
+    return (
+      <div className={styles._aside_playlist}>
+        <div className={styles._aside_title}>
+          <span> MY PLAYLIST </span> <i className="fa fa-plus " />
+        </div>
+
+        <ul className={styles._aside_header_ul}>
+          {
+            loginModel.playlists.map((item, i) => {
+              return (
+                <li key={`${item.id}- playlist -` + i}>
+                  <StyleLink
+                    isActive={(match: any, location: any) => {
+                      if (match) {
+                        return item.id == location.search.substr(4)
+                      }
+                      return false
+                    }}
+                    to={{
+                      pathname: `/playlist`
+                      , search: `?id=${item.id}`
+                    }}
+                  >
+                    <i>🎶</i> {item.title || item.label_name}
+                  </StyleLink>
+                </li>)
+            })
+          }
+
+        </ul>
+      </div>
+    )
+  }
+  isLoginUserActive = (user: User) =>
+    (match: any, location: any) => {
+
+      if (match) {
+        return user && user.id == location.search.substr(4)
+      }
+
+      return false
+    }
+  renderMyCommuPaner = () => {
+    const { userStore } = this.props
+    const loginModel = userStore.getLoginUserModel
+
+    if (!loginModel) {
+      return (
+        <noscript />
+      )
+    }
+    const { user } = loginModel
+    const isActive = this.isLoginUserActive(user)
+    return (
+      <div className={styles._aside_mymusic}>
+        <div className={styles._aside_title}>
+          MY Music
+            </div>
+        <ul className={styles._aside_header_ul}>
+          <li>
+            <StyleLink
+              isActive={isActive}
+
+              to={{
+                pathname: `/users/favorites`,
+                search: `?id=${user && user.id}`
+              }}
+            > <i className="fa fa-star" /> likes
+            </StyleLink>
+          </li>
+          <li>
+            <StyleLink >
+              <i className="fa fa-music" /> Tracks </StyleLink> </li>
+          <li>
+            <StyleLink
+              isActive={isActive}
+              to={{
+                pathname: `/users/followings`,
+                search: `?id=${user && user.id}`
+              }}
+            >
+              <i className="fa fa-users" /> Followings
+            </StyleLink> </li>
+          <li>
+            <StyleLink
+              isActive={isActive}
+
+              to={{
+                pathname: `/users/followers`,
+                search: `?id=${user && user.id}`
+              }}
+            > <i className="fa fa-user" /> Followers
+            </StyleLink> </li>
+          {/*wating*/}
+          {/*<li><StyleLink> <i>o</i> Albums</StyleLink> </li>
+            <li><StyleLink> <i>o</i> Recent</StyleLink> </li>
+            <li><StyleLink> <i>o</i> Local </StyleLink> </li>
+            <li><StyleLink> <i>o</i> Arists</StyleLink> </li>*/}
+        </ul>
+      </div>
+    )
+  }
   loginIn = () => {
-    const { SessionStore } = this.props;
-    SessionStore.login();
+    const { sessionStore } = this.props;
+    sessionStore.login();
   };
   componentDidMount() {
-    this.props.SessionStore.loadDataFromCookie();
-  }
-  componentWillReceiveProps(nextProps: any) {
-
-    console.log(nextProps)
+    this.props.sessionStore.loadDataFromCookie();
   }
   render() {
 
-    const { user } = this.props.SessionStore;
-    console.log('hehehehehehehe')
     return (
-      <section className={styles.main}>
-        <div className={styles.title}>
-          <h1><Link to="/">MUSIC</Link></h1>
-        </div>
-        <nav>
-          <Link
-
-            to="/main">主页</Link>
-          <Link
-            to="/ssr"
-          >SSR</Link>
-          <Link
-            to={{
-              pathname: '/users/home',
-              search: `?id=${user && user.id}`
-            }}>我的音乐</Link>
-        </nav>
-
-        {
-          <button onClick={this.loginIn}>{user ? "Loginout" : 'Login'}</button>
-        }
+      <section className={styles._aside}>
+        {this.renderTop()}
+        {this.renderMyCommuPaner()}
+        {this.renderMyPlaylist()}
         <DevTool />
       </section>
     );
   }
 }
-export default withRouter(Main);
+export default withRouter(Header);

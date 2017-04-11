@@ -4,20 +4,19 @@ import {
   , IObservableArray
   , ObservableMap
   , computed
+  , expr
+  // , when
 } from 'mobx'
-// import TrackStore from './TrackStore'
 
-export interface IPerformanceStore {
-  scrollLimit: number[]
-  setScrollLimit: (...limit: number[]) => void
-  setCurrentGenre: (genre: string) => void
-}
-
-
-class PerformanceStore implements IPerformanceStore {
+export class PerformanceStore {
+  onceLoadingIsAllSettle: boolean;
 
   scrollLimitByGenre = new ObservableMap<number[]>()
   @observable genre: string
+  // 这个用来记录当前应该被 player 进行毛玻璃效果处理的dom id
+  @observable glassNode: string
+  @observable scrollY: number
+  isLoadingsByKey = new ObservableMap<boolean>();
 
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
@@ -27,11 +26,16 @@ class PerformanceStore implements IPerformanceStore {
     this.genre = genre;
     if (!this.scrollLimitByGenre.get(genre)) {
       // window.innerHeight + window.pageYOffset
-      this.scrollLimitByGenre.set(genre,
-        [window.innerHeight, window.innerHeight])
+      this.scrollLimitByGenre.set(
+        genre,
+        [window.innerHeight, window.innerHeight]
+      )
     }
   }
 
+  getLoadingState(type: string): boolean {
+    return this.isLoadingsByKey.get(type) || false
+  }
   @action setScrollLimit(...limit: number[]) {
     const map = this.scrollLimitByGenre.get(this.genre);
     if (map) {
@@ -39,6 +43,31 @@ class PerformanceStore implements IPerformanceStore {
     } else {
       this.scrollLimitByGenre.set(this.genre, limit)
     }
+  }
+
+  @action setCurrentGlassNodeId(id: string) {
+    this.glassNode = id;
+  }
+
+  @action setScrollY(y: number) {
+    this.scrollY = y;
+  }
+
+  @action setLoadingStateWithKey = (key: string, loading: boolean) => {
+    this.isLoadingsByKey.set(key, loading)
+  }
+
+  getLoadingStateWidthKey = (key: string) => {
+    return this.isLoadingsByKey.get(key) || false
+  }
+
+  /**
+   * 当前所以请求完毕
+   */
+  @computed get allLoadingIsSettle(): boolean {
+    const allSettle = expr(() =>
+      Array.from(this.isLoadingsByKey.values()).every(v => v === false))
+    return allSettle
   }
 
 }

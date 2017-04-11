@@ -1,2 +1,2 @@
-import F, { FollowType } from './Followers';
-export { F as default, FollowType }
+import F from './FollowsPanel';
+export { F as default }

@@ -1,0 +1,44 @@
+@import '../../styles/variable.scss';
+
+.main{
+  position: fixed;
+  bottom: 4.7em;
+  z-index: 10;
+  height: $playerHeight*5;
+  right:  14.543em;
+  background: $backgroundSecondary;
+  width: 36.429em;
+  overflow-y: hidden;
+  font-size: $smallIcon;
+  padding: $padding/4;
+}
+
+.top{
+  display: flex;
+  align-items: center;
+  &>*{
+    &:first-child{
+      flex:1;
+    }
+  }
+} 
+
+.none{
+  display: none;
+}
+
+.playlistitem{
+  display: flex;
+  padding: $padding/2;
+  font-size: $mediumIcon;
+  &:hover{
+    div{
+      visibility: visible!important;
+    }
+  }
+}
+.playlistitem_hover{
+  display: flex;  
+  align-items: center;
+
+}

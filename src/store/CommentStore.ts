@@ -2,8 +2,9 @@ import {
   ObservableMap, observable, computed, action, runInAction
   // , createTransformer
 } from 'mobx'
-import { ITrack } from "./index";
 import { apiUrl } from '../services/soundcloundApi'
+import { ITrack } from "../interfaces/interface";
+
 export interface IComment {
   id: number,
   created_at: string,
@@ -22,50 +23,42 @@ export interface IComment {
   }
 }
 
-export interface ICommentStore {
-  currentTrackComments: IComment[]
-  isLoading: boolean
-  fetchMoreComments: (nextHref?: string) => void;
-  currentTrack: ITrack
-  setCurrentTrack: (track: ITrack) => void;
-  commentsCount: number
-}
 
-class CommentStore implements ICommentStore {
-  commentsByTracks = new ObservableMap<IComment[]>();
+
+export class CommentStore {
   @observable currentTrack: ITrack
   @observable isLoading: boolean
-  @observable nextHrefsByTrack = new ObservableMap<string>();
+  @observable private nextHrefsByTrack = new ObservableMap<string>();
+  private commentsByTracks = new ObservableMap<IComment[]>();
 
   transTrack(track: ITrack) {
-    return { ...track, id: track.id + "" }
+    return { ...track, id: track.id + '' }
   }
 
   @action setCurrentTrack(track: ITrack) {
     this.currentTrack = (track);
     if (this.commentsCount < 1)
-      this.fetchMoreComments();
-
+    { this.fetchMoreComments() }
   }
   @computed get commentsCount() {
     return this.currentTrackComments.length
   }
   @computed get currentTrackComments() {
     if (!this.currentTrack) return [];
-    const data = this.commentsByTracks.get(this.currentTrack.id + "") || []
+    const data = this.commentsByTracks.get(this.currentTrack.id + '') || []
     return data
   }
   @computed get currentCommentNextHref(): string {
-    return this.nextHrefsByTrack.get(this.currentTrack.id + "") || ""
+    return this.nextHrefsByTrack.get(this.currentTrack.id + '') || ''
   }
   @action async fetchMoreComments(nextHref?: string) {
     if (this.isLoading) return
     nextHref = this.currentCommentNextHref;
     const { id } = this.currentTrack
-    const keyId = id + ""
+    const keyId = id + ''
 
     let url = nextHref
-      ? nextHref : apiUrl(`tracks/${id}/comments?linked_partitioning=1&limit=50&offset=0`, "&");
+      ? nextHref : apiUrl(`tracks/${id}/comments?linked_partitioning=1&limit=50&offset=0`, '&');
     this.isLoading = true
     const data: any = await fetch(url).then(response => response.json());
     runInAction(() => {
