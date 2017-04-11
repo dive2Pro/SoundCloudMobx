@@ -1,47 +1,50 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 import ButtonInline from '../ButtonInline'
 import { observer } from 'mobx-react'
 const styles = require('./hoveractions.scss')
 interface IconfiguType {
   fn?: () => void
   className: string
-  activeStyle?: {}
+  style?: {}
   children?: React.ReactChild
 }
 interface IHoverActionsProp {
   configurations: IconfiguType[]
   isVisible: boolean;
+  clazz?: string
 }
 
-export const Action = (cfg: IconfiguType) => {
-  const { fn, className, activeStyle, children } = cfg
-  return (<div
-    className={styles.btnContainer}
-    style={activeStyle}>
-    <ButtonInline
-      onClick={fn && fn}>
-      <i className={className}></i>
-      {children}
-    </ButtonInline>
-  </div>
+export const Action = function Action(cfg: IconfiguType) {
+  const { fn, className, style, children } = cfg
+  return (
+    <div
+      className={styles.btnContainer}
+      style={style}
+    >
+      <ButtonInline
+        onClick={fn && fn}
+      >
+        <i className={className} />
+        {children}
+      </ButtonInline>
+    </div>
   )
 }
 
 const HoverActions = observer(function HoverActions(prop: IHoverActionsProp) {
   const { isVisible, configurations } = prop;
-  let styleName = isVisible ? "active" : 'normal'
+  let styleName = isVisible ? styles.active : styles.normal
   return (
-    <div styleName={styleName}>
+    <div className={styleName} >
       {configurations.map((cfg, index) => {
-        return <Action
-          {...cfg}
-          key={index + cfg.className} >
-
-        </Action>
+        return (
+          <Action
+            {...cfg}
+            key={index + cfg.className}
+          />)
       })}
     </div>
   )
 });
 
-export default CSSModule(HoverActions, styles);
+export default HoverActions;

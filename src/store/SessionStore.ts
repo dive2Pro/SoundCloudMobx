@@ -1,28 +1,20 @@
 import {
   observable, action
-} from "mobx";
+} from 'mobx';
 import {
-  CLIENT_ID,
   REDIRECT_URI,
-  OAUTH_TOKEN
-} from "../constants/authentification";
+  OAUTH_TOKEN,
+  MY_CLIENT_ID
+} from '../constants/authentification';
 import {
-  ISession, IUser
-} from "../interfaces/interface";
-// import TrackStore from './TrackStore'
+  ISession
+} from '../interfaces/interface';
 import UserList from './UserStore'
-import { apiUrl } from "../services/soundcloundApi";
-const SC = require("soundcloud");
-const Cookies = require("js-cookie")
+import { apiUrl } from '../services/soundcloundApi';
+const SC = require('soundcloud');
+const Cookies = require('js-cookie')
+import { User } from './UserStore'
 
-// const Remotedev = require("mobx-remotedev");
-// @Remotedev({ name: "SessionStore" })
-export interface ISessionStore {
-  session: string
-  user: IUser;
-  login: () => void;
-  loadDataFromCookie: () => void;
-}
 
 interface ICatchErr {
   err: any
@@ -31,16 +23,16 @@ interface ICatchErr {
 /**
  * 
  */
-class SessionStore implements ISessionStore {
+export class SessionStore {
   @observable session: any;
-  @observable user: IUser;
+  @observable user: User | undefined;
   oauth_token: string;
 
   loadDataFromCookie() {
-    const oauth_token = Cookies.get(OAUTH_TOKEN);
-    if (oauth_token) {
-      this.fetchUser(oauth_token);
-      this.oauth_token = oauth_token;
+    const token = Cookies.get(OAUTH_TOKEN);
+    if (token && token !== 'null') {
+      this.fetchUser(token);
+      this.oauth_token = token;
       return true
     }
     return false;
@@ -48,12 +40,12 @@ class SessionStore implements ISessionStore {
 
   //TODO : type
   @action catchError({ err, fetchType }: ICatchErr) {
-    console.error(err);
+    // console.error(err);
     throw err;
   }
   @action login() {
-    if (this.loadDataFromCookie()) return
-    SC.initialize({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI });
+    if (this.loadDataFromCookie()) { return }
+    SC.initialize({ client_id: MY_CLIENT_ID, redirect_uri: REDIRECT_URI });
     SC.connect().then((session: ISession) => {
       Cookies.set(OAUTH_TOKEN, session.oauth_token);
       this.oauth_token = session.oauth_token;
@@ -63,21 +55,29 @@ class SessionStore implements ISessionStore {
       this.catchError(err);
     });
   }
-
+  @action loginout() {
+    this.oauth_token = '';
+    this.session = null;
+    Cookies.set(OAUTH_TOKEN, null);
+    this.user = undefined
+    UserList.setLoginUserModel(undefined)
+  }
+  // tslint:disable-next-line:variable-name
   @action fetchUser(oauth_token: string) {
-    const url = apiUrl(`me`, "?")
+    const url = apiUrl(`me`, '?')
     fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {
         this.setUser(rawuser)
         UserList.initUser(rawuser);
         UserList.setLoginUserModel(rawuser.id)
+
       }).catch(err => {
         this.catchError(err);
       })
   }
 
-  @action setUser(user: IUser) {
+  @action setUser(user: User) {
     this.user = user;
   }
 }

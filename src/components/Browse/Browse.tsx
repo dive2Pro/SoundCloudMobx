@@ -10,71 +10,79 @@ import {
   // , Redirect
 } from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
-import { ITrackStore } from "../../store/index";
+import { TrackStore } from '../../store/TrackStore';
+import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
+import { PerformanceStore } from '../../store/PerformanceStore';
+
 interface IDashBorardProps {
   location?: any,
   genre?: string
-  TrackStore: ITrackStore
+  trackStore: TrackStore
+  performanceStore: PerformanceStore
   history: any
 }
 
-
 const FlagLink = ({ to, label }: any) => {
-  return <Route path={to} exact={true} children={({ match }: any) => {
-    return (<div className={match ? "active" : ""}>
-      {match ? <i className='fa fa-flag'></i> : ""}
-      <Link to={to} >{label}</Link>
-    </div>)
-  }}
-  />
+  return (
+    <Route
+      path={to}
+      exact={true}
+      children={({ match }: any) => {
+        return (
+          <div className={match ? 'active' : ''}>
+            {match ? <i className="fa fa-flag" /> : ''}
+            <Link to={to} >{label}</Link>
+          </div>)
+      }}
+    />)
 }
-@inject('TrackStore')
+@inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
   componentDidMount() {
-
+    this.props.performanceStore.setCurrentGlassNodeId('Browser')
     this.setCurrentGenreView()
   }
+
   setCurrentGenreView() {
-    const { TrackStore, history } = this.props
-    const genre = TrackStore.currentGenre
+    const { trackStore, history } = this.props
+    const genre = trackStore.currentGenre || Browse.defaultProps.genre
     if (genre) {
       history.push(`/main/genre=${genre}`)
+      console.log('genre = ' + genre)
     }
   }
+
   componentWillReceiveProps(nextProps: any) {
-    console.info('componentWillReceiveProps', nextProps)
     const { match: { isExact } } = nextProps
     if (isExact) {
       this.setCurrentGenreView()
     }
   }
-  componentDidUpdate(prevProps: any) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-
-    }
-  }
-  componentWillUnmount() {
-    console.info('componentWillUnmount')
-  }
   render() {
-    // const { } = this.props.location
+
     return (
-      <div className={styles.container}>
+      <div
+        id="Browser"
+        className={styles.container}
+      >
         <nav className={styles.nav}>
           {GENRES.map((item, i) => {
-            return <FlagLink
-              key={i + "-" + item}
-              to={`/main/genre=${item}`}
-              label={item} />
+            return (
+              <FlagLink
+                key={i + '-' + item}
+                to={`/main/genre=${item}`}
+                label={item}
+              />)
           })}
         </nav>
         <Route
-          path={`/main/genre=:genre`} component={TrackList} />
-        {/*<Redirect></Redirect>*/}
+          path={`/main/genre=:genre`}
+          component={TrackList}
+        />
       </div>
     );
   }

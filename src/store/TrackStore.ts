@@ -1,50 +1,41 @@
 import {
   action, observable, runInAction
   , computed, ObservableMap, autorun
-  // , whyRun
   , IReactionDisposer, IObservableArray
 } from 'mobx';
 import {
   ITrack
 } from '../interfaces/interface';
-export { ITrack }
 import {
   unauthApiUrl,
   apiUrl
 } from '../services/soundcloundApi'
-import UserStore, { ActivitiesStore } from './UserStore'
-import PerformanceStore from "./PerformanceStore";
-// import { FETCH_TRACK } from "../constants/fetchTypes";
-
-
-export class Track {
-
-  @action updateFromJson(data: any) {
-    // extendsObjFromJson(this, data)
-  }
-}
-
-export interface ITrackStore {
-  fetchTracks: (nextHref: string, genre?: string) => void;
+import UserStore from './UserStore'
+import performanceStore from './PerformanceStore';
+import { RaceFetch as fetch } from '../services/Fetch'
+import activitiesStore from './ActivitiesStore';
+import { } from '../constants/fetchTypes'
+export interface IBaseActStore {
   isLoading: boolean;
-  currentTracks: ITrack[]
-  currentTrack: ITrack
-  setGenre: (genre: string) => void;
-  setTrackId: (id: number) => void
   currentGenre: string
+  isError: (genre: string) => boolean
 }
-export abstract class BaseAct<T> {
+export abstract class BaseAct<T> implements IBaseActStore {
 
   // 记得初始化
-  itemsMap = new ObservableMap<T[]>();
-  @observable nextHrefsByGenre = new ObservableMap<string>();
-  @observable isLoadingByGenre = new ObservableMap<boolean>();
+  protected itemsMap = new ObservableMap<T[]>();
+  @observable protected nextHrefsByGenre = new ObservableMap<string>();
+  protected isLoadingByGenre = {
+    get: performanceStore.getLoadingStateWidthKey
+  }
+  protected isErrorsMap = new ObservableMap<boolean>()
 
+  // 排序和搜索过滤
   @observable filterType: string
   @observable filterTitle: string
   @observable sortType: string
-
   @observable filteredTracks: ITrack[] = []
+
   @observable currentGenre: string = 'country'
 
   autorunHandle: IReactionDisposer;
@@ -53,8 +44,95 @@ export abstract class BaseAct<T> {
     this.setGenre(genre);
   }
 
+  @computed get isLoading(): boolean {
+    return this.isLoadingByGenre.get(this.currentGenre) || false
+  }
 
-  initFilterFunction(type: string) {
+
+  @action setFilterTitle(title: string) {
+    this.filterTitle = title;
+  }
+
+  @action setSortType(type: string) {
+    this.sortType = type;
+  }
+
+  @action setFilterType(filterType: string = '') {
+    this.filterType = filterType;
+  }
+
+  @action setLoadingByGenre(genre: string, loading: boolean) {
+    // this.isLoadingByGenre.set(genre, loading);
+    performanceStore.setLoadingStateWithKey(genre, loading);
+  }
+
+  @action setNextHrefByGenre(genre: string, nextHref: string) {
+    this.nextHrefsByGenre.set(genre, nextHref)
+  }
+  @action setGenre(genre: string) {
+    genre = genre.toLocaleLowerCase();
+    this.currentGenre = genre;
+    performanceStore.setCurrentGenre(this.currentGenre)
+    this.initFilterFunction(genre);
+  }
+  @computed get currentItems(): T[] {
+    return <T[]>this.itemsMap.get(this.currentGenre)
+  }
+
+  @computed get nextHref() {
+    return this.nextHrefsByGenre.get(this.currentGenre) || ''
+  }
+
+  isError = (genre: string): boolean => {
+    return this.isErrorsMap.get(genre) || false
+  }
+
+  @action protected catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+    console.error(err)
+  }
+
+  protected filterByFilterType(fs: T[]): T[] {
+    return fs;
+  }
+  abstract transToTracks(act: T[]): ITrack[];
+
+  private async filterFunc(activities: T[], sortType: string, filterType: string) {
+    let fs: ITrack[] = []
+    const filterByTypes = await this.filterByFilterType(activities)
+    fs = await this.transToTracks(filterByTypes)
+    fs = await this.filterByFilterTitle(fs);
+    fs = await this.filterBySortType(fs);
+
+    runInAction('set-filteredTracks', () => {
+      (<IObservableArray<ITrack>>this.filteredTracks).replace(fs)
+    })
+  }
+  private filterBySortType(fs: ITrack[]) {
+    let temp = fs.slice();
+    if (!!this.sortType) {
+      temp = fs.sort((p, n) => {
+        let pCount = p[this.sortType];
+        let nCount = n[this.sortType];
+        pCount = !Number.isNaN(pCount) ? pCount : 0;
+        nCount = !Number.isNaN(nCount) ? nCount : 0;
+        return nCount - pCount;
+      })
+    }
+    return temp
+  }
+  private filterByFilterTitle(fs: ITrack[]) {
+    let temp = fs.slice();
+    if (!!this.filterTitle) {
+      temp = fs.filter(item => {
+        return item.title.indexOf(this.filterTitle) > -1
+      })
+    }
+    return temp
+  }
+
+
+  private initFilterFunction(type: string) {
 
     if (this.autorunHandle) {
       this.autorunHandle();
@@ -69,85 +147,17 @@ export abstract class BaseAct<T> {
 
 
   }
-
-  @action setFilterTitle(title: string) {
-    this.filterTitle = title;
-  }
-  @action setSortType(type: string) {
-    this.sortType = type;
-  }
-  @action setFilterType(filterType: string = "") {
-    this.filterType = filterType;
-  }
-
-  filterByFilterType(fs: T[]): T[] {
-    return fs;
-  }
-  abstract transToTracks(act: T[]): ITrack[];
-
-  async filterFunc(activities: T[], sortType: string, filterType: string) {
-    let fs: ITrack[] = []
-    const filterByTypes = await this.filterByFilterType(activities)
-    fs = await this.transToTracks(filterByTypes)
-    fs = await this.filterByFilterTitle(fs);
-    fs = await this.filterBySortType(fs);
-
-    runInAction('set-filteredTracks', () => {
-      (<IObservableArray<ITrack>>this.filteredTracks).replace(fs)
-    })
-  }
-  filterBySortType(fs: ITrack[]) {
-    let temp = fs.slice();
-    if (!!this.sortType) {
-      temp = fs.sort((p, n) => {
-        let pCount = p[this.sortType];
-        let nCount = n[this.sortType];
-        pCount = !Number.isNaN(pCount) ? pCount : 0;
-        nCount = !Number.isNaN(nCount) ? nCount : 0;
-        return nCount - pCount;
-      })
-    }
-    return temp
-  }
-  filterByFilterTitle(fs: ITrack[]) {
-    let temp = fs.slice();
-    if (!!this.filterTitle) {
-      temp = fs.filter(item => {
-        return item.title.indexOf(this.filterTitle) > -1
-      })
-    }
-    return temp
-  }
-  @action setLoadingByGenre(genre: string, loading: boolean) {
-    this.isLoadingByGenre.set(genre, loading);
-  }
-
-  @action setNextHrefByGenre(genre: string, nextHref: string) {
-    this.nextHrefsByGenre.set(genre, nextHref)
-  }
-  @action setGenre(genre: string) {
-    genre = genre.toLocaleLowerCase();
-    this.currentGenre = genre;
-    PerformanceStore.setCurrentGenre(this.currentGenre)
-    this.initFilterFunction(genre);
-  }
-  @computed get currentItems(): T[] {
-    return <T[]>this.itemsMap.get(this.currentGenre)
-  }
-
-  @computed get nextHref() {
-    return this.nextHrefsByGenre.get(this.currentGenre) || ""
-  }
 }
 
-class TrackStore extends BaseAct<ITrack> implements ITrackStore {
-  token: string = ""
+export class TrackStore extends BaseAct<ITrack> {
   static defaultGenre = 'country';
   @observable currentTrack: ITrack
 
-  @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(this.currentGenre) || false
+
+  @computed get hasMoreTracks() {
+    return this.hasCurrentGenreTracks
   }
+
 
   @computed get hasCurrentGenreTracks() {
     // const items = this.itemsMap.get(this.currentGenre)
@@ -158,17 +168,17 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     const tracks = this.itemsMap.get(this.currentGenre) || [];
     return tracks
   }
+
   setTrackId(id: number) {
 
-    let track = this.currentTracks.find((track) => track.id == id)
+    let track = this.currentTracks.find((track) => track.id === id)
     if (!track) {
-      track = this.allTracks().find((track) => track.id == id)
+      track = this.allTracks().find((track) => track.id === id)
     }
     if (track) {
       this.setCurrentTrack(track)
     } else {
-      // 下载数据
-      // 可能放在 Track中会好一些?
+      // 下载数据 
       this.fetchSingleTrack(id)
     }
   }
@@ -198,34 +208,36 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     const tracks = values.length > 0 ? values.reduce((preEntrey, currentEntry) => {
       return preEntrey.concat(currentEntry)
     }) : []
-    return ActivitiesStore.tracks
+    return activitiesStore.tracks
       .concat(tracks, UserStore.AllUsersFavorities());
   }
 
 
   fetchSingleTrack(id: number) {
-    const url = apiUrl(`tracks/${id}`, "?")
+    const url = unauthApiUrl(`tracks/${id}`, '?')
     this.fetchData(url, (data) => {
-      // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.  
-      this.setCurrentTrack(data);// mayby Track?
-
-    })
+      // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.
+      this.setCurrentTrack(data); // mayby Track?
+    }, )
   }
+
+
 
   @action async fetchTracks() {
     if (this.isLoading) {
       return;
     }
-    let genre = this.currentGenre || "country", url;
+    let genre = this.currentGenre || 'country', url;
     url = this.nextHref
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, "&")
+      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, '&')
     }
 
     this.fetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);
     })
+
   }
 
 
@@ -237,17 +249,19 @@ class TrackStore extends BaseAct<ITrack> implements ITrackStore {
     }
 
   }
-  //这里设计的不好,genre不太可调?
+
+  // 这里设计的不好,genre不太可调?
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
-  async fetchData(url: string, fn: (data: any) => void, gr?: string) {
+  private async fetchData(url: string, fn: (data: any) => void, gr?: string) {
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
-      const raw: any = await fetch(url)
-      const data = await raw.json()
+      const data: any = await fetch(url)
       runInAction('loaddata', () => {
         fn.call(this, data)
       })
+    } catch (e) {
+      this.catchErr(e, genre)
     } finally {
       this.setLoadingByGenre(genre, false)
     }

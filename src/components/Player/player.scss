@@ -3,14 +3,16 @@
   position: fixed;
   bottom: 0;
   height: $playerHeight;
-  width: 100vw;
-  left:0;
-  z-index: 2;
+  width: $contentMinWidth!important;
+  // left:$_asiderWidth;
+  z-index: 9;
   /*top: 100%;*/
   transition: 0.2s transform ;
-  transform: translateY(90%) ; 
+  // transform: translateY(90%) ; 
   display: flex;
-  
+  overflow: hidden;
+  flex-direction: column;
+  background: rgba(226,226,226,1);
 }
 
 .visible{
@@ -24,27 +26,40 @@
   padding: 5px 50px;
   width: 100%;
   height: 100%;
-  background: #222222;
+  // background: #222222;
   display: flex;
 }
 .content_plays {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 .content_img{
-  padding: 2px;
+  // padding: 2px;
   border-radius: 5px;
-  border: $border;
+  // border: $border;
   text-align: center;
+  margin-top: 5px;
 }
 
 .content_dur{
-  color:$white;
+  color:$mainFontColor;
   margin-left: $padding;  
+  &>span{
+    display: block;
+  }
 }
+.trackName{
+  font-size: $mediumIcon;
+  font-weight: bold;
+  @include ellipsisTexts($_100pxEm*2.5);
 
+}
+.author{
+  font-size: $smallIcon;
+  color: $seconFontColor;
+}
 .content_plays>div{
   margin: 0 7px;
 }
@@ -60,27 +75,46 @@
   align-items: center;
 }
 .content_action{
-  
+  display: flex;
+  align-items: center;
 }
 .content_options>div{
   margin: 0 $padding;
 }
-.range{
-  background: green;
-  width: 100%;
-  bottom: $playerHeight;
-  margin: 0 8px;
-  position: absolute;
-  visibility: hidden;
+.range{ 
+  width: 100%; 
+  visibility: visible;
 }
 .range_visible{
   composes:range;
   visibility: visible;
 }
 
-.volume_container{
-  position: absolute;
-   bottom: $playerHeight; 
-  padding: $padding;
-  background: black;
+.volume_container{  
+  margin-left: $padding/2;
 }
+
+
+/*------------毛玻璃--------*/
+.blurredContentFrame{
+  position: absolute;
+  overflow: hidden;
+  filter: blur(8px);
+  top:0; 
+  left: $padding; 
+  // background: red;    
+  margin: -$padding;
+  z-index: -1;
+  &::before{
+     margin:-20px;
+    //  background: url('../../../public/images/glass.jpg')
+  }
+}
+.fronsted_glass{ 
+  position: absolute;
+  &>*{
+    background: inherit;
+  }
+}
+
+

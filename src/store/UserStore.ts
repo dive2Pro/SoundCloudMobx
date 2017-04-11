@@ -1,190 +1,114 @@
 import {
-  observable, action
+  observable
+  , action
   , ObservableMap
-  , extendObservable, computed,
-  runInAction
-} from "mobx";
+  , extendObservable
+  , computed,
+  autorun,
+  when
+} from 'mobx';
 import {
-  FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS, FETCH_ACTIVITIES
+  FETCH_FOLLOWERS
+  , FETCH_FAVORITES
+  , FETCH_FOLLOWINGS
+  , FETCH_STREAM
+  , FETCH_USER
+  , FETCH_PLAYLIST
 } from '../constants/fetchTypes'
 import {
-  IUser
-  , IActivitiesItem,
-  IPlaylist
-} from "../interfaces/interface";
+  IPlaylist,
+  IStream,
+  ITrack,
+  IMiniUser
+} from '../interfaces/interface';
 import {
-  addAccessToken, apiUrl
-  // , unauthApiUrl
-} from "../services/soundcloundApi";
-import { ITrack } from "./index";
-import { BaseAct } from "./TrackStore";
-import PerformanceStore from './PerformanceStore'
-import {
-  logError
-  // , logInfo
-} from '../services/logger'
-import { extendsObservableObjFromJson } from '../services/utils'
+  addAccessToken, apiUrl,
+  unauthApiUrlV2, unauthApiUrl
+} from '../services/soundcloundApi';
+
+import { performanceStore } from './index'
+import { RaceFetch as fetch } from '../services/Fetch'
+const debounce = require('lodash/debounce')
 
 interface ICatchErr {
-  err: any
+  err: {
+    type: string,
+    msg: string
+  }
   fetchType?: string;
 }
 const limitPageSize = 20;
 
-export interface IActivitiesStore {
-  fetchNextActivities: (first?: boolean) => void;
-  filteredActivities: IActivitiesItem[];
-  isLoading: boolean;
-  setFilterType: (type: string) => void;
-  setSortType: (type: string) => void;
-  setFilterTitle: (type: string) => void;
-  filterType: string
-  sortType: string,
-  filteredTracks: ITrack[];
-}
+export class UserStore {
+  // 
+  debouncedRequestFollowUser: any;
+  @observable fetchedPlaylist: IPlaylist | undefined
+  @observable userModel: UserModel | undefined
 
-
-class ActivitiesModel extends BaseAct<IActivitiesItem> implements IActivitiesStore {
-  @observable filteredActivities: IActivitiesItem[];
-  constructor() {
-    super(FETCH_ACTIVITIES)
-  }
-  @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(FETCH_ACTIVITIES) || false
-  }
-
-
-  @action setNextActivitiesHref(nextHref: string) {
-    this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
-  }
-
-
-  @action addActivities(arr: IActivitiesItem[]) {
-    const items = this.currentItems;
-    items.splice(items.length, 0, ...arr);
-
-  }
-
-  transToTracks(items: IActivitiesItem[]): ITrack[] {
-    return items.map(this.getAllTrackFromActivity).filter(item => item != null);
-  }
-
-  getAllTrackFromActivity(act: IActivitiesItem) {
-    return act.origin
-  }
-
-  @computed get tracks() {
-    return this.currentItems && this.currentItems.map(this.getAllTrackFromActivity)
-  }
-
-  filterByFilterType(fs: IActivitiesItem[]) {
-    let temp = fs.slice();
-    if (!!this.filterType) {
-      temp = fs.filter(item => {
-        return item.type === this.filterType
-      })
-    }
-    return temp;
-  }
-  filterActivities(arr: IActivitiesItem[]) {
-    Promise.resolve(arr)
-      .then(data => {
-        const filterArr = data.filter(item => {
-          const b =
-            this.currentItems.some(active =>
-              active.created_at === item.created_at)
-          return !b;
-        })
-        this.addActivities(filterArr);
-      })
-  }
-
-  @action setLoadingActivities(b: boolean) {
-    this.setLoadingByGenre(FETCH_ACTIVITIES, b);
-  }
-
-  @action fetchNextActivities(first?: boolean) {
-    PerformanceStore.setCurrentGenre(this.currentGenre)
-    if (first && this.currentItems.length > 0) {
-      return
-    }
-    if (!this.isLoading)
-      this.fetchActivities(this.nextHref);
-  }
-  @action async fetchActivities(nextHref?: string) {
-    let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
-      apiUrl(`me/activities?limit=50`, '&')
-    try {
-      this.setLoadingActivities(true);
-      const data: any = await fetch(activitiesUrl)
-        .then(response => response.json());
-      // console.log(data)
-      runInAction(() => {
-        this.setNextActivitiesHref(data.next_href)
-        this.filterActivities(data.collection);
-        this.setLoadingActivities(false)
-
-      })
-    } finally {
-      this.setLoadingActivities(false)
-    }
-  }
-}
-
-export interface IUserStore {
-  initUser: (id: number | IUser) => IUserModel
-  findPlaylistFromCurrentUser: (id: number) => IPlaylist
-  setCurrentUserModel: (user: IUserModel) => void
-  followUser: (user: IUser) => void
-  fetchUserData: (id: number) => void;
-  userModel: IUserModel
-  isLoginUser: boolean
-}
-
-
-export class UserStore implements IUserStore {
-
-  userModels = new ObservableMap<UserModel>()
+  private userModels = new ObservableMap<UserModel>()
   // 当前的登录用户
-  loginModel: IUserModel
-  @observable userModel: IUserModel
-  loginedUserId: number
-  constructor() { }
+  @observable private loginedUserId: number | undefined
 
-  initUser(obj: number | IUser): IUserModel {
+  constructor() {
+    this.debouncedRequestFollowUser = debounce(this.followUser, 500)
+  }
+
+  initUser(obj: number | User): UserModel {
     const isNumber = typeof obj === 'number'
-    let id = isNumber ? obj : ((<IUser>obj).id)
-    let userModel = this.userModels.get(id + "")
+    let id = isNumber ? obj : ((<User>obj).id)
+    let userModel = this.userModels.get(id + '')
+
     if (!userModel) {
       userModel = new UserModel(this, obj)
-      this.userModels.set(id + "", userModel)
+      userModel.fetchCommunityData()
+      this.userModels.set(id + '', userModel)
     } else if (!isNumber) {
-      userModel.setUser(<IUser>obj)
+      userModel.setUser(<User>obj)
     }
+
     return userModel;
   }
 
-  @action setCurrentUserModel(model: IUserModel) {
+  @action setCurrentUserModel(model: UserModel) {
     this.userModel = model
   }
 
   @computed get isLoginUser() {
-    if (!this.loginedUserId) { return false }
-    const lum = this.getLoginUserModel();
-    return this.loginedUserId === (lum.user && lum.user.userId)
+
+    if (this.loginedUserId == null) { return false }
+    const lum = this.userModel;
+
+    return this.loginedUserId === (lum && lum.user && lum.user.userId)
   }
 
-  setLoginUserModel(userId: number) {
-    this.loginedUserId = userId
+  @computed get isLogined() {
+    return this.loginedUserId != null
   }
-  getLoginUserModel() {
-    if (!this.loginModel)
-      this.loginModel = <IUserModel>this.userModels.get(this.loginedUserId + "")
-    return this.loginModel
+
+  @action setLoginUserModel(userId: number | undefined) {
+
+    if (userId === undefined) {
+      this.userModels.delete(this.loginedUserId + '')
+      this.userModel = undefined
+    }
+
+
+    this.loginedUserId = userId
+    if (userId !== undefined) {
+      const um = this.getLoginUserModel
+
+      if (um && um.playlists.length < 1) {
+        um.fetchWithType(FETCH_PLAYLIST);
+      }
+    }
+  }
+
+  @computed get getLoginUserModel(): UserModel | undefined {
+    return this.userModels.get(this.loginedUserId + '')
   }
 
   fetchUserData(id: number) {
-    const userModel = this.userModels.get(id + "")
+    const userModel = this.userModels.get(id + '')
     if (userModel) {
       userModel.fetchUser()
       this.setCurrentUserModel(userModel)
@@ -192,31 +116,41 @@ export class UserStore implements IUserStore {
     return this;
   }
 
-  findPlaylistFromCurrentUser(id: number): IPlaylist {
-    return <IPlaylist>this.getLoginUserModel().playlists.find((item) => item.id == id)
+  @action setFetchedPlaylistInfo = (data: IPlaylist | undefined) => {
+    this.fetchedPlaylist = data
   }
-  /**
-   * follow用户
-   * todo fix 404
-   */
-  async followUser(user: IUser) {
-    const { id, isFollowing } = user
-    // const isFollowing = await this.isFollowingUser(id)
-    const raw = await fetch(apiUrl(`me/followings/${id}`, '?'), {
-      method: isFollowing ? 'delete' : 'put'
-    })
-    const data = await raw.json()
-    if (data) {
-      this.operaUserFromFollowings(user, isFollowing)
+
+  async fetchPlaylistData(id: number) {
+    try {
+      const data = await fetch(unauthApiUrl(`playlists/${id}`, '?'))
+
+      this.setFetchedPlaylistInfo(<IPlaylist>data)
+
+    } catch (err) {
+      // console.error(err)
     }
   }
 
-  // isFollowingUser(id: number): boolean {
-  //   const lm = this.getLoginUserModel()
-  //   if (!lm) return false
-  //   return lm.followings.find(u => u.id == id) != undefined
-  // }
+  @action findPlaylistFromCurrentUser = (id: number) => {
+    const um = this.userModel
+    let p: undefined | IPlaylist = undefined
+    if (um) {
+      p = um.playlists.find((item) => item.id === id)
+    }
 
+    if (p == null) {
+      this.fetchPlaylistData(id)
+    } else {
+      this.setFetchedPlaylistInfo(p)
+
+    }
+  }
+
+  isFollowingUser(id: number): boolean {
+    const lm = this.getLoginUserModel
+    if (!lm) { return false }
+    return lm.followings.find(u => u.id === id) != null
+  }
   AllUsersFavorities(): ITrack[] {
     const tracks: ITrack[] = []
     this.userModels.values().forEach((model) => {
@@ -225,8 +159,42 @@ export class UserStore implements IUserStore {
     return tracks;
   }
 
-  @action operaUserFromFollowings(user: IUser, followed: boolean) {
-    const lum = this.getLoginUserModel()
+
+  async detectIsFollowing(id: number) {
+    // https://api-v2.soundcloud.com/users/7586270/followers/followed_by/278227204?client_id=2t9loNQH90kzJcsFCODdigxfp325aq4z&limit=10&offset=0&linked_partitioning=1&app_version=1491855525
+    const data = await fetch(unauthApiUrlV2(`users/${id}/followings/not_followed_by/${this.loginedUserId}`, "?"))
+    console.log(data);
+  }
+
+  /**
+   * follow用户
+   * todo fix 404
+   */
+  private async  followUser(user: User) {
+    // todo 添加modal?
+    if (!this.getLoginUserModel) {
+      return
+    }
+    const { id, isFollowing } = user
+    // const isFollowing = await this.isFollowingUser(id)
+    const data: any = await fetch(
+      apiUrl(`me/followings/${id}`, '?'),
+      {
+        method: isFollowing ? 'delete' : 'put'
+      }
+    )
+    console.log(data)
+    if (data) {
+      this.operaUserFromFollowings(user, isFollowing)
+    }
+  }
+
+
+
+
+  @action private operaUserFromFollowings(user: User, followed: boolean) {
+    const lum = this.getLoginUserModel
+    if (!lum) return
     if (followed) {
       user.isFollowing = false
       lum.followings.splice(lum.followings.indexOf(user), 1)
@@ -235,120 +203,120 @@ export class UserStore implements IUserStore {
       lum.followings.unshift(user)
     }
   }
+
 }
 
-// const OPERATION_OK = 'Status(200) - OK'
-//目前不做歌单项目, 只能从用户那里过来
-// class PlaylistStore {
-
-//   优化内存的使用
-//   combineUserPlaylist() {
-
-//   }
-
-export interface IUserModel {
-  user: User;
-  loadDataFromCookie: () => void;
-  followers: IUser[];
-  followings: IUser[];
-  favorites: ITrack[];
-  playlists: IPlaylist[];
-  nextHrefs: {}
-  fetchWithType: (type: string) => void
-  fetchCommunityData: () => void
-  isLoading: (type: string) => boolean
-}
-
-
-// }
-/**
- * 以 用户id为key,保存数据
- */
-
-
-export class User {
+export class User implements IMiniUser {
   userId: number
-
+  description: string
   @observable isFollowing: boolean = false
-
-  constructor(obj: IUser | number) {
+  @observable id: number;
+  permalink: string
+  username: string
+  uri: string
+  permalink_url: string
+  @observable avatar_url: string
+  country: string
+  @observable full_name: string
+  kind: string
+  city: string
+  // description: string
+  discogs_name: string
+  comments_count: number
+  myspace_name: string
+  website: string
+  website_title: string
+  online: boolean
+  @observable track_count: number
+  playlist_count: number
+  @observable followers_count: number
+  @observable followings_count: number
+  @observable public_favorites_count: number
+  plan: string
+  private_tracks_count: number
+  private_playlists_count: number
+  primary_email_confirmed: number
+  constructor(obj: User | number) {
     if (typeof obj === 'number') {
       this.userId = obj
+      return this;
     } else {
       this.userId = obj.id
       this.updateFromServe(obj);
     }
+
   }
 
-  @action updateFromServe(rawUser: IUser) {
-    extendsObservableObjFromJson(this, rawUser);
+  @action updateFromServe = (rawUser: User) => {
+    extendObservable(this, rawUser);
   }
 
   @action setFollowingState(following: boolean) {
     this.isFollowing = following
   }
-
-  async fetchUser() {
-    const url = apiUrl(`users/${this.userId}`, "?")
-    try {
-      const rawUser: any = await fetch(url)
-        .then(data => data.json());
-      this.updateFromServe(rawUser)
-    } catch (err) {
-      // this.catchError({ err });
-    }
-
-  }
 }
-class UserModel implements IUserModel {
+export class UserModel {
   @observable user: User;
   // TODO change to ObservableMap  
-  @observable followers: IUser[] = [];
-  @observable followings: IUser[] = [];
-
+  @observable followers: User[] = [];
+  @observable followings: User[] = [];
+  @observable streams: IStream[] = []
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
 
+  isErrorsMap = new ObservableMap<boolean>()
 
-  isLoadings = new ObservableMap<boolean>();
+
+
+  isLoadings = {
+    get: performanceStore.getLoadingStateWidthKey,
+    set: performanceStore.setLoadingStateWithKey
+  };
+
   nextHrefs = new ObservableMap<string>();
   userStore: UserStore;
 
   /**
    * @param obj 如果传入的是一个Iuser对象,直接去获取数据
    */
-  constructor(userStore: UserStore, obj: number | IUser) {
+  constructor(userStore: UserStore, obj: number | User) {
     this.userStore = userStore
-    if (typeof obj == 'number') {
+    if (typeof obj === 'number') {
       this.user = new User(obj)
-      this.user.fetchUser()
+      this.fetchUser()
     } else {
       this.setUser(obj)
     }
+    when(() => userStore.isLogined, () => this.followingFilterByLogin(userStore.isLogined), this)
+  }
+  getAllTrackFromStreams(): ITrack[] {
+    return this.streams.filter(stream => stream.track != null).map(s => s.track);
   }
 
-  loadDataFromCookie() {
 
-  }
-
-  //TODO : type
-  @action catchError({ err, fetchType }: ICatchErr) {
-    logError(err);
-    if (fetchType)
-      this.resetLoadingState(fetchType);
-    throw err;
-  }
 
   @action fetchCommunityData() {
+
     this.fetchWithType(FETCH_FOLLOWERS);
     this.fetchWithType(FETCH_FOLLOWINGS);
     this.fetchWithType(FETCH_FAVORITES);
-  }
-  fetchUser() {
-    this.user.fetchUser();
+
   }
 
-  @action setUser(rawUser: IUser) {
+  @action async fetchUser() {
+    const url = apiUrl(`users/${this.user.userId}`, '?')
+    try {
+      this.changeLoadingState(FETCH_USER, true)
+      const rawUser: any = await fetch(url)
+      this.user.updateFromServe(rawUser)
+    } catch (err) {
+      this.catchErr(err, FETCH_USER);
+    } finally {
+      this.changeLoadingState(FETCH_USER, false)
+    }
+  }
+
+  @action setUser(rawUser: User) {
     this.user = new User(rawUser)
   }
 
@@ -367,70 +335,116 @@ class UserModel implements IUserModel {
     this.isLoadings.set(type, false);
   }
 
-  @action addData(type: string, fs: IUser[]) {
+
+  @action addData(type: string, fs: any[]) {
     const targetArr = this[type]
     if (!targetArr) {
       extendObservable(this[type], []);
     }
-    let user: any = {}
-    if (type === FETCH_FOLLOWERS) {
-      fs.forEach(data => {
-        user = new User(data)
-        targetArr.push(user);
-      })
-    } else if (type === FETCH_FOLLOWINGS) {
-      fs.forEach(data => {
-        user = new User(data)
-        targetArr.push(user);
-        user.isFollowing = true
 
-      })
-    } else {
-      fs.forEach(data => targetArr.push(data))
+    let user: any = {}
+    // 除了是登录用户外,
+    switch (type) {
+      case FETCH_FOLLOWERS:
+      case FETCH_FOLLOWINGS:
+        fs.forEach(data => {
+          user = new User(data)
+          targetArr.push(user)
+          if (this.userStore.isLogined) {
+            user.isFollowing = this.userStore.isFollowingUser(user.id)
+          }
+        })
+        break
+      // case FETCH_PLAYLIST:
+      //   const pls = <IPlaylist[]>fs
+      //   pls.forEach(pl => {
+      //     if (this.userStore.isLogined) {
+      //       // observable(pl.user)
+      //     }
+      //   })
+      //   break
+      default:
+        fs.forEach(data => targetArr.push(data))
+
     }
   }
 
+  @action async followingFilterByLogin(isLogined: boolean) {
+
+    if (isLogined) {
+      await this.followers.forEach(user =>
+        user.isFollowing = this.userStore.isFollowingUser(user.id)
+      )
+      await this.followings.forEach(user =>
+        user.isFollowing = this.userStore.isFollowingUser(user.id)
+      )
+    }
+  }
+
+  apiStream(id: number) {
+    return unauthApiUrlV2(`stream/users/${id}`, `limit=15&offset=0&linked_partitioning=1`)
+  }
 
   @action async fetchWithType(type: string) {
-    if (this.isLoadings.get(type)) {
+    if (this.isLoadings.get(type) === true) {
       return
     }
     let id = this.user.userId;
     if (id == null) {
       return
     }
-    let url = this.nextHrefs.get(type)
-    // 
-    if (url) {
-      url = addAccessToken(url, '&')
-    } else if (!url && this[type].length < 1) {
-      // debugger
-      url = `users/${id}/${type}`
-      url = apiUrl(url + `?limit=${limitPageSize}`, '&')
-    } else {
-      return;
-    }
-    const fetchType = type;
+    const fetchType = type
+    let url = this.getFetchUrl(fetchType, id)
+    if (!url) { return }
+
     try {
       this.changeLoadingState(fetchType, true);
-      const data: any = await fetch(url).then(response => response.json());
+      let data: any = await fetch(url);
+
       if (Array.isArray(data)) {
-        // debugger
-        this.addData(type, data);
+        this.addData(fetchType, data);
       } else {
-        this.addData(type, data.collection);
+        this.addData(fetchType, data.collection);
         this.changeNextHrefs(fetchType, data.next_href);
       }
-    }
-    catch (err) {
-      this.catchError({ err, fetchType })
+    } catch (err) {
+      this.catchErr({ err, fetchType }, fetchType)
     } finally {
       this.changeLoadingState(fetchType, false)
     }
   }
+  isError = (genre: string): boolean => {
+    return this.isErrorsMap.get(genre) || false
+  }
+
+  @action protected catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+  }
+
+  private getFetchUrl(fetchType: string, id: number) {
+    let url = this.nextHrefs.get(fetchType)
+    if (url) {
+      url = addAccessToken(url, '&')
+    } else if (!url && this[fetchType].length < 1) {
+      // debugger
+      switch (fetchType) {
+        case FETCH_STREAM:
+          url = this.apiStream(id);
+          break
+        case FETCH_PLAYLIST:
+          url = `users/${id}/${fetchType}`
+          url = unauthApiUrl(url + `?limit=${limitPageSize}&offset=0&linked_partitioning=1`, '&')
+          break
+        default:
+          url = `users/${id}/${fetchType}`
+          url = apiUrl(url + `?limit=${limitPageSize}&offset=0&linked_partitioning=1`, '&')
+      }
+    }
+    return url
+  }
+
+
 }
 
 
-const ActivitiesStore = new ActivitiesModel()
-export { ActivitiesStore };
 export default new UserStore();

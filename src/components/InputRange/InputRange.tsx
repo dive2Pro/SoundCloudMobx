@@ -4,6 +4,7 @@
 import * as React from "react";
 import { computed, observable, action } from "mobx";
 import { observer } from "mobx-react";
+import { findRootParentOffSet as findRootParentOffSet$ } from '../../services/utils'
 const styles = require("./style.scss");
 interface IInputRange {
   vertical?: boolean,
@@ -15,14 +16,18 @@ interface IInputRange {
   onDragEnd?: (value: string | number) => void,
   value?: string | number
   defaultWide?: number,
-  backgroundColor?: "chocolate",
-  defaultColor?: "beige",
+  backgroundColor?: string,
+  defaultColor?: string,
   defaultTransition?: "0.3s ease-out, box-shadow 0.3s ease-out"
+  dotStyle?: {}
+  cusProcessStyle?: {}
+  contaiStyle?: {}
 }
 
 
 @observer
 class InputRange extends React.Component<IInputRange, any> {
+  rootOffsetLeft: any;
   downPosition: number;
   downPointY: any;
   tt: HTMLElement
@@ -38,7 +43,9 @@ class InputRange extends React.Component<IInputRange, any> {
     defaultWide: 10,
     backgroundColor: "chocolate",
     defaultColor: "beige",
-    defaultTransition: "0.3s ease-out, box-shadow 0.3s ease-out"
+    defaultTransition: "0.3s ease-out, box-shadow 0.3s ease-out",
+    cusProcessStyle: {},
+    contaiStyle: {}
   };
   @observable currentValue = 0;
   @observable isMoving = false;
@@ -86,14 +93,15 @@ class InputRange extends React.Component<IInputRange, any> {
       style = { transform: `translateX(${position}px)` };
     }
     if (this.isMoving) {
+
     } else {
       style = {
         ...style,
         transition: "transform " + this.props.defaultTransition
       };
     }
-
-    return style;
+    const dotStyle = this.props.dotStyle
+    return { ...style, ...dotStyle };
   }
   @computed get position() {
     const [, h] = this.positionLimit;
@@ -129,7 +137,8 @@ class InputRange extends React.Component<IInputRange, any> {
         ...trans
       };
     }
-    return style;
+
+    return { ...style, ...this.props.cusProcessStyle };
   }
   @computed get ttStyle() {
     let style = {};
@@ -161,14 +170,24 @@ class InputRange extends React.Component<IInputRange, any> {
     } else {
       if (paddingLeft && marginLeft)
         return +(this.container.offsetLeft + paddingLeft + marginLeft)
-      return this.container.offsetLeft
+      return this.container.offsetLeft + this.findRootParentOffSet();
     }
   }
+
+  findRootParentOffSet = () => {
+    if (this.rootOffsetLeft) return this.rootOffsetLeft;
+    let root: any = this.container
+    this.rootOffsetLeft = findRootParentOffSet$(root)
+    return this.rootOffsetLeft
+  }
+
+
   @computed get gap(): number {
     const max = this.valueLimit[1];
     const [, width] = this.positionLimit;
     return parseFloat((max / width).toFixed(2)) || 1;
   }
+
   @computed get ContainerStyle() {
     // const [l, h] = this.valueLimit;
     let style = {};
@@ -187,7 +206,7 @@ class InputRange extends React.Component<IInputRange, any> {
         backgroundColor: this.props.defaultColor
       };
     }
-    return style;
+    return { ...style, ...this.props.contaiStyle };
   }
 
   @computed get valueLimit() {
@@ -226,11 +245,13 @@ class InputRange extends React.Component<IInputRange, any> {
     this.dot.addEventListener("mousemove", this.handleMovind, false);
     this.dot.addEventListener("mouseup", this.handleMovind, false);
   };
+
   handleMovind = (e: any) => {
     if (!this.isMoving) return;
     e.preventDefault();
     this.actualPosition(this.getPos(e));
   };
+
   handleMoveend = (e: any) => {
     e.preventDefault();
     this.actualPosition(this.getPos(e));

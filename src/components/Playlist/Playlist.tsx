@@ -1,33 +1,31 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { ITrackStore, IPlayerStore } from '../../store'
 import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
-import {
-  IUserModel,
-  IUserStore
-} from "../../store/index";
 import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
 import { Link } from 'react-router-dom'
-import { IPlaylist } from "../../interfaces/interface";
+import { IPlaylist } from '../../interfaces/interface';
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
+import { UserStore, UserModel } from '../../store/UserStore';
+import { USER_STORE, TRACK_STORE, PLAYER_STORE } from '../../constants/storeTypes';
+import { PlayerStore } from "../../store/PlayerStore";
 const qs = require('qs')
-
+import Operators from '../Operators'
+import { BigUserIcon } from '../Community'
 const styles = require('./playlist.scss')
 
 
 interface IPlaylistProps {
-  TrackStore?: ITrackStore
-  PlayerStore?: IPlayerStore
-  userModel: IUserModel
+  playerStore?: PlayerStore
+  userModel: UserModel
   match?: any
 }
 
 const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist }) {
   const { artwork_url, label_name, id, title } = info
-  const to = { pathname: "/playlist", search: `?id=${id}` }
+  const to = { pathname: '/playlist', search: `?id=${id}` }
   return (
     <div className={styles.itemContainer}>
       <Link to={to}>
@@ -40,6 +38,7 @@ const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist 
     </div>
   )
 })
+
 
 @observer
 class Playlist extends React.Component<IPlaylistProps, any>{
@@ -61,7 +60,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
           return (
             <PlaylistItem
               info={item}
-              key={item.id + "-info-" + i}
+              key={item.id + '-info-' + i}
             />
           )
         })}
@@ -74,59 +73,96 @@ class Playlist extends React.Component<IPlaylistProps, any>{
 export default HocLoadingMore<IPlaylistProps, any>(Playlist)
 
 interface IPlaylistInfoProp {
-  // userModel: IUserModel
   location: any
-  PlayerStore: IPlayerStore
-  UserStore: IUserStore
+  playerStore: PlayerStore
+  userStore: UserStore
 }
-@inject("TrackStore", 'PlayerStore', 'UserStore')
+
+@inject(TRACK_STORE, PLAYER_STORE, USER_STORE)
 @observer
-export class PlaylistInfo extends React.Component<IPlaylistInfoProp, any> {
-  componentDidMount() {
-  }
+export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
 
   handlePlay = () => {
-    const { PlayerStore } = this.props
-    if (!PlayerStore) {
+    const { playerStore } = this.props
+    if (!playerStore) {
       return;
     }
   }
+  componentDidMount() {
+    this.handleLocationChange()
 
+  }
   handleAddToPlaylist = () => {
-    const { PlayerStore } = this.props
-    if (!PlayerStore) {
+    const { playerStore } = this.props
+    if (!playerStore) {
       return;
     }
   }
-
-  render() {
+  handleLocationChange = () => {
     const {
-      UserStore, location: { search }
+      userStore, location: { search }
     } = this.props
-    // debugger
     const id = qs.parse(search.substr(1)).id
-
-    const playlist = UserStore.findPlaylistFromCurrentUser(id);
-    if (!playlist) {
-      return <noscript />
+    const playlist = userStore.fetchedPlaylist;
+    if (!playlist || playlist.id != id) {
+      userStore.fetchPlaylistData(id);
     }
-    const { label_name, artwork_url, user, tracks } = playlist
+  }
+  componentDidUpdate() {
+    this.handleLocationChange()
+  }
+  handleFollowing = () => {
+
+  }
+  renderContent = (playlist: IPlaylist) => {
+    const { userStore } = this.props
+    const { label_name, title, artwork_url, user, tracks } = playlist
+    const isFollowing = userStore.isFollowingUser(user.id)
     return (
-      <div className={styles.playlistInfo}>
+      <div className={styles.playlistmain}>
         <TrackProfile
-          label_name={label_name}
+          label_name={title || label_name}
           type="list"
           bigPic={artwork_url}
           user={user}
           playlist={playlist}
         />
+        <div style={{ padding: '20px' }}>
+          <Operators
+            tracks={tracks}
+            isPlaylist={true}
+          />
+          <div className={styles.playlist_body}>
+            <BigUserIcon
+              user={user}
+              handleFollow={() => { userStore.detectIsFollowing(user.id) }}
+              isFollowing={isFollowing}
+            />
+            <Activities
+              isLoading={false}
+              scrollFunc={() => { }}
+              sortType=""
+              isError={false}
+              tracks={tracks}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+  render() {
+    const {
+      userStore, location: { search }
+    } = this.props
+    const id = qs.parse(search.substr(1)).id
 
-        <Activities
-          isLoading={false}
-          scrollFunc={() => { }}
-          sortType=""
-          tracks={tracks}
-        />
+    const isLoading = (!userStore.fetchedPlaylist
+      || userStore.fetchedPlaylist.id != id)
+    const playlist = userStore.fetchedPlaylist;
+    return (
+      <div className={styles.playlistInfo}>
+        {(isLoading || !playlist) ? (<LoadingSpinner isLoading={isLoading} />
+        ) : this.renderContent(playlist)}
       </div>
     );
   }

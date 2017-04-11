@@ -1,12 +1,9 @@
 import * as React from 'react'
 const styles = require('./searchpanel.scss')
-// import { observable } from 'mobx'
 import {
   observer
-  // , inject
 } from 'mobx-react';
 import * as  _ from 'lodash'
-// import { ITrackStore } from "../../store/TrackStore";
 interface ISearchPanelProps {
   handleSearch: (value: string) => void;
 }
@@ -19,7 +16,7 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
     const debounceChange = _.debounce(this.handleChange, 599);
     return (
       <div className={styles.main}>
-        <i className='fa fa-search'></i>
+        <i className='fa fa-search' />
         <input type="text" placeholder='Search' onChange={e => (debounceChange(e.target.value))} />
       </div>
     );

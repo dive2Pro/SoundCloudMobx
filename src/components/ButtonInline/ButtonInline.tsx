@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 const styles = require('./btinline.scss')
 
 interface IButtonInlineProp {
@@ -21,4 +20,4 @@ const ButtonInline = ({ onClick, children, ...rest }: IButtonInlineProp) => {
 
 }
 
-export default CSSModule(ButtonInline, styles);
+export default (ButtonInline);

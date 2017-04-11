@@ -2,31 +2,15 @@
 
 .main{
   position: fixed;
-  bottom: 4.1em;
+  bottom: 4.7em;
   z-index: 10;
   height: $playerHeight*5;
-  right:  $_100pxEm;
-  background: $nav;
+  right:  14.543em;
+  background: $backgroundSecondary;
   width: 36.429em;
   overflow-y: hidden;
   font-size: $smallIcon;
   padding: $padding/4;
-  table{
-    border: none;
-
-  tr{
-    &:hover{
-      background: #000;
-      opacity: 0.7;
-    }
-    td{
-     white-space: nowrap;
-     text-overflow: ellipsis;
-     overflow: hidden;
-     max-width: 0px;
-    }
-  }
-  }
 }
 
 .top{
@@ -37,10 +21,24 @@
       flex:1;
     }
   }
-}
-.top_right{
+} 
 
-}
 .none{
   display: none;
+}
+
+.playlistitem{
+  display: flex;
+  padding: $padding/2;
+  font-size: $mediumIcon;
+  &:hover{
+    div{
+      visibility: visible!important;
+    }
+  }
+}
+.playlistitem_hover{
+  display: flex;  
+  align-items: center;
+
 }
