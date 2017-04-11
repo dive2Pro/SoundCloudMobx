@@ -162,18 +162,20 @@ export interface IPlaylist {
     uri: string
     permalink_url: string,
     artwork_url: string,
-    user: {
-        id: number
-        kind: string,
-        permalink: string,
-        username: string,
-        uri: string,
-        permalink_url: string,
-        avatar_url: string
-    },
+    user: IMiniUser,
     tracks: ITrack[]
 }
 
+
+export interface IMiniUser {
+    id: number
+    kind: string,
+    permalink: string,
+    username: string,
+    uri: string,
+    permalink_url: string,
+    avatar_url: string
+}
 
 
 export interface IStream {

@@ -17,7 +17,7 @@ import { UserStore, User, UserModel } from '../../store/UserStore';
 import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
-import { isObservable } from '._mobx@3.1.8@mobx/lib/mobx';
+import { isObservable } from 'mobx';
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 
@@ -58,6 +58,7 @@ const FavoView = observer((props: any) => {
   return (
     <div >
       <p className={styles._songs_tag}>FAVORITES SONGS</p>
+
       <Activities
         sortType={''}
         isError={isError(fetchTypes.FETCH_FAVORITES)}
@@ -180,29 +181,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           />
 
         </div>
-        {/*<div
-          ref={n => this.profile = n}
-          style={profile$}
-          className={styles._contentHeader_profile}
-        >
 
-          <ArtWork
-            size={50}
-            src={avatar_url}
-            alt="user Profile"
-          />
-          <span>{user.username}</span>
-          <span>
-            <i
-              className="fa fa-angle-down"
-            />
-          </span>
-          <Blur
-            img={backgroundImageUrl}
-            blurRadius={10}
-            style={this.glassStyle}
-          />
-        </div>*/}
       </div>
     )
   }
@@ -224,7 +203,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       <Route
         path={`${url}/${path}`}
         render={() => {
-          {/*const commuUrl = url.substr(url.lastIndexOf('/') + 1)*/ }
           return (
             <CommunityContainer
               path={path}

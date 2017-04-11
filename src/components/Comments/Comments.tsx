@@ -2,12 +2,12 @@ import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import { observer, inject } from 'mobx-react'
 import LoadingSpinner from '../LoadingSpinner'
-
+import { specTimeTamp } from '../../services/utils'
 import ArtWork from '../ArtWork'
-import Permalink from '../Permalink'
-import { CommentStore, IComment } from "../../store/CommentStore";
-import { TRACK_STORE } from "../../constants/storeTypes";
-import { ITrack } from "../../interfaces/interface";
+import { HomeLink } from '../Links'
+import { CommentStore, IComment } from '../../store/CommentStore';
+import { TRACK_STORE } from '../../constants/storeTypes';
+import { ITrack } from '../../interfaces/interface';
 const styles = require('./comments.scss')
 
 
@@ -18,25 +18,32 @@ interface ICommentsProps {
 
 const TYPE_COMMENTS = 'Comments';
 
+
+
+
 const CommentView = ({ comment }: { comment: IComment }) => {
   const { user: { id, avatar_url, username }, body, created_at } = comment;
 
   return (
     <div className={styles.comment}>
       <ArtWork
-        size={50} src={avatar_url}
+        size={75}
+        src={avatar_url}
+        clazz={styles.avatar}
       />
       <div className={styles.info}>
         <div className={styles.content}>
-          <Permalink
+          <HomeLink
             id={id}
-            fullname={username} /> :
+          >
+            {username}
+          </HomeLink> :
             <p>
             {body}
           </p>
         </div>
         <div className={styles.time}>
-          {created_at}
+          {specTimeTamp(created_at)}
         </div>
       </div>
     </div>
@@ -62,7 +69,7 @@ class Comments extends React.Component<ICommentsProps, any> {
       <div>
         {
           comments.map((item, index) => {
-            return <CommentView key={item.id + "-" + index} comment={item} />
+            return <CommentView key={item.id + '-' + index} comment={item} />
           })
         }
         <LoadingSpinner isLoading={isLoading} />

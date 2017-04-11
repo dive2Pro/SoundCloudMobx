@@ -1,21 +1,30 @@
 @import '../../styles/variable.scss';
 
 .comment{
-display: flex;
-margin: $padding/4;
+  display: flex;
+  margin: $padding/4;
+  padding: $padding*2;
+  @include bottom_border(2px,rgba(58, 58, 58, 0.05))
 }
 .info{
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-left: $padding*2;
 }
-.content{
-  padding: 0 $padding;
+.content{ 
   a{
-    font-size: $mediumIcon;
+    font-size: 1.34em;
+    font-weight: bold;
   }
 }
 .time{
-  text-align: right;
-  margin-top: $usualPadding;
+  text-align: left;
+  // margin-top: $usualPadding;
+  font-style: italic;
+}
+
+.avatar{
+  border-radius: 50%;
+  padding: 2px;
 }

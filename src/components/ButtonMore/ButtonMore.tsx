@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as CSSModule from 'react-css-modules'
 import LoadingSpinner from '../LoadingSpinner';
 import ButtonGhost, { IButtonGhostProps } from '../ButtonGhost';
 // import { observer } from 'mobx-react'
@@ -17,7 +16,7 @@ const ButtonMore = (function ButtonMore(prop: IButtonMoreProp) {
     return <noscript />
   }
   return (
-    <div styleName='more'>
+    <div className={styles.more}>
       {!isLoading ? <ButtonGhost {...prop} >More </ButtonGhost>
         : <LoadingSpinner isLoading={isLoading} />
       }</div>
@@ -25,4 +24,4 @@ const ButtonMore = (function ButtonMore(prop: IButtonMoreProp) {
 
 })
 
-export default CSSModule(ButtonMore, styles);
+export default (ButtonMore);

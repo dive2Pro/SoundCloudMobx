@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Permalink from '../Permalink';
+import { HomeLink } from '../Links';
 import { observer } from 'mobx-react'
 import { observable } from "mobx/lib/mobx";
 interface IPlaylistitemProp {
@@ -14,7 +14,6 @@ export const PlaylistItem = observer((data: IPlaylistitemProp) => {
       <img src="#" alt="#" width={50} height={50} />
       <div className="item-info">
         <h4>{data.title}</h4>
-        {/*<span>{data.count}首by{data.user}</span>*/}
       </div>
     </div>
   );
@@ -52,7 +51,9 @@ class SidebarItem extends React.Component<ISidebarItemProp, any> {
             <span>{title}</span>
           </div>
           <span>
-            <Permalink fullname={'View All'} id={123} />
+            <HomeLink id={123} >
+              {'View All'}
+            </HomeLink>
           </span>
         </div>
         <div className={clazz}>

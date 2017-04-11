@@ -77,7 +77,7 @@ export class PlayerStore {
     if (this.getPlaylistCount < 1) {
       return false;
     }
-    let nextTrack = null;
+    let nextTrack: ITrack | undefined;
     if (this.isShuffleMode) {
       const newList = this.playList.slice();
       const deleIndex = newList.indexOf(this.playingTrack)

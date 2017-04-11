@@ -5,7 +5,7 @@ import {
   , extendObservable
   , computed,
   autorun,
-  whyRun
+  when
 } from 'mobx';
 import {
   FETCH_FOLLOWERS
@@ -18,11 +18,12 @@ import {
 import {
   IPlaylist,
   IStream,
-  ITrack
+  ITrack,
+  IMiniUser
 } from '../interfaces/interface';
 import {
   addAccessToken, apiUrl,
-  unauthApiUrlV2
+  unauthApiUrlV2, unauthApiUrl
 } from '../services/soundcloundApi';
 
 import { performanceStore } from './index'
@@ -39,8 +40,9 @@ interface ICatchErr {
 const limitPageSize = 20;
 
 export class UserStore {
+  // 
   debouncedRequestFollowUser: any;
-  @observable fetchedPlaylist: IPlaylist | null
+  @observable fetchedPlaylist: IPlaylist | undefined
   @observable userModel: UserModel | undefined
 
   private userModels = new ObservableMap<UserModel>()
@@ -114,14 +116,16 @@ export class UserStore {
     return this;
   }
 
-  @action setFetchedPlaylistInfo = (data: IPlaylist | null) => {
+  @action setFetchedPlaylistInfo = (data: IPlaylist | undefined) => {
     this.fetchedPlaylist = data
   }
 
   async fetchPlaylistData(id: number) {
     try {
-      const data = await fetch(apiUrl(`playlists/${id}`, '?'))
+      const data = await fetch(unauthApiUrl(`playlists/${id}`, '?'))
+
       this.setFetchedPlaylistInfo(<IPlaylist>data)
+
     } catch (err) {
       // console.error(err)
     }
@@ -129,9 +133,9 @@ export class UserStore {
 
   @action findPlaylistFromCurrentUser = (id: number) => {
     const um = this.userModel
-    let p = undefined
+    let p: undefined | IPlaylist = undefined
     if (um) {
-      p = <IPlaylist>um.playlists.find((item) => item.id === id)
+      p = um.playlists.find((item) => item.id === id)
     }
 
     if (p == null) {
@@ -154,6 +158,14 @@ export class UserStore {
     })
     return tracks;
   }
+
+
+  async detectIsFollowing(id: number) {
+    // https://api-v2.soundcloud.com/users/7586270/followers/followed_by/278227204?client_id=2t9loNQH90kzJcsFCODdigxfp325aq4z&limit=10&offset=0&linked_partitioning=1&app_version=1491855525
+    const data = await fetch(unauthApiUrlV2(`users/${id}/followings/not_followed_by/${this.loginedUserId}`, "?"))
+    console.log(data);
+  }
+
   /**
    * follow用户
    * todo fix 404
@@ -171,7 +183,7 @@ export class UserStore {
         method: isFollowing ? 'delete' : 'put'
       }
     )
-
+    console.log(data)
     if (data) {
       this.operaUserFromFollowings(user, isFollowing)
     }
@@ -194,7 +206,7 @@ export class UserStore {
 
 }
 
-export class User {
+export class User implements IMiniUser {
   userId: number
   description: string
   @observable isFollowing: boolean = false
@@ -206,6 +218,7 @@ export class User {
   @observable avatar_url: string
   country: string
   @observable full_name: string
+  kind: string
   city: string
   // description: string
   discogs_name: string
@@ -268,15 +281,13 @@ export class UserModel {
    */
   constructor(userStore: UserStore, obj: number | User) {
     this.userStore = userStore
-    if (typeof obj == 'number') {
+    if (typeof obj === 'number') {
       this.user = new User(obj)
-      // this.user = observable.struct(user);
       this.fetchUser()
     } else {
       this.setUser(obj)
     }
-    autorun(() => this.followingFilterByLogin(userStore.isLogined), this)
-    // whyRun(() => this.followingFilterByLogin())
+    when(() => userStore.isLogined, () => this.followingFilterByLogin(userStore.isLogined), this)
   }
   getAllTrackFromStreams(): ITrack[] {
     return this.streams.filter(stream => stream.track != null).map(s => s.track);
@@ -292,7 +303,7 @@ export class UserModel {
 
   }
 
-  async fetchUser() {
+  @action async fetchUser() {
     const url = apiUrl(`users/${this.user.userId}`, '?')
     try {
       this.changeLoadingState(FETCH_USER, true)
@@ -325,7 +336,7 @@ export class UserModel {
   }
 
 
-  @action addData(type: string, fs: User[]) {
+  @action addData(type: string, fs: any[]) {
     const targetArr = this[type]
     if (!targetArr) {
       extendObservable(this[type], []);
@@ -333,26 +344,38 @@ export class UserModel {
 
     let user: any = {}
     // 除了是登录用户外,
-    if (type === FETCH_FOLLOWERS || type === FETCH_FOLLOWINGS) {
-      fs.forEach(data => {
-        user = new User(data)
-        targetArr.push(user)
-        if (this.userStore.isLogined) {
-          user.isFollowing = this.userStore.isFollowingUser(user.id)
-        }
-      })
-    } else {
-      fs.forEach(data => targetArr.push(data))
+    switch (type) {
+      case FETCH_FOLLOWERS:
+      case FETCH_FOLLOWINGS:
+        fs.forEach(data => {
+          user = new User(data)
+          targetArr.push(user)
+          if (this.userStore.isLogined) {
+            user.isFollowing = this.userStore.isFollowingUser(user.id)
+          }
+        })
+        break
+      // case FETCH_PLAYLIST:
+      //   const pls = <IPlaylist[]>fs
+      //   pls.forEach(pl => {
+      //     if (this.userStore.isLogined) {
+      //       // observable(pl.user)
+      //     }
+      //   })
+      //   break
+      default:
+        fs.forEach(data => targetArr.push(data))
+
     }
   }
 
-  @action followingFilterByLogin(isLogined: boolean) {
+  @action async followingFilterByLogin(isLogined: boolean) {
 
     if (isLogined) {
-      this.followers.forEach(user =>
+      await this.followers.forEach(user =>
         user.isFollowing = this.userStore.isFollowingUser(user.id)
       )
-      this.followings.forEach(user =>
+      await this.followings.forEach(user =>
         user.isFollowing = this.userStore.isFollowingUser(user.id)
       )
     }
@@ -385,7 +408,6 @@ export class UserModel {
         this.changeNextHrefs(fetchType, data.next_href);
       }
     } catch (err) {
-      console.error(err)
       this.catchErr({ err, fetchType }, fetchType)
     } finally {
       this.changeLoadingState(fetchType, false)
@@ -408,6 +430,10 @@ export class UserModel {
       switch (fetchType) {
         case FETCH_STREAM:
           url = this.apiStream(id);
+          break
+        case FETCH_PLAYLIST:
+          url = `users/${id}/${fetchType}`
+          url = unauthApiUrl(url + `?limit=${limitPageSize}&offset=0&linked_partitioning=1`, '&')
           break
         default:
           url = `users/${id}/${fetchType}`

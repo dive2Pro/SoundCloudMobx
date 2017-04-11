@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
-import { observable, action } from '._mobx@3.1.8@mobx/lib/mobx';
+import { observable, action } from 'mobx';
 import { UserStore, User } from '../../store/UserStore';
 import { SessionStore } from '../../store/SessionStore';
 import { SESSION_STORE, USER_STORE } from '../../constants/storeTypes'
