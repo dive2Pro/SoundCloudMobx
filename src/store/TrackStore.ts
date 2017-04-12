@@ -14,7 +14,9 @@ import UserStore from './UserStore'
 import performanceStore from './PerformanceStore';
 import { RaceFetch as fetch } from '../services/Fetch'
 import activitiesStore from './ActivitiesStore';
-import { } from '../constants/fetchTypes'
+
+import { GENRES } from '../constants/trackTypes'
+
 export interface IBaseActStore {
   isLoading: boolean;
   currentGenre: string
@@ -70,7 +72,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     this.nextHrefsByGenre.set(genre, nextHref)
   }
   @action setGenre(genre: string) {
-    genre = genre.toLocaleLowerCase();
+    // genre = genre.toLocaleLowerCase();
     this.currentGenre = genre;
     performanceStore.setCurrentGenre(this.currentGenre)
     this.initFilterFunction(genre);
@@ -150,7 +152,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
 }
 
 export class TrackStore extends BaseAct<ITrack> {
-  static defaultGenre = 'country';
+  static defaultGenre = GENRES[0];
   @observable currentTrack: ITrack
 
 
@@ -227,12 +229,12 @@ export class TrackStore extends BaseAct<ITrack> {
     if (this.isLoading) {
       return;
     }
-    let genre = this.currentGenre || 'country', url;
+    let requestGenre = this.currentGenre.toLocaleLowerCase() || 'country', url;
     url = this.nextHref
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, '&')
+      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${requestGenre}`, '&')
     }
-
+    let genre = this.currentGenre
     this.fetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);

@@ -46,6 +46,7 @@ $seconFontColor:#a9a9a9;
 $streamHoverColor:#4a85e3;
 $soundcloudColor:#f77838;
 $mainRed:#f55874;
+$tabHeight:$padding*2.5;
 
 @mixin bottom_border($size,$color){
   @if $size != null

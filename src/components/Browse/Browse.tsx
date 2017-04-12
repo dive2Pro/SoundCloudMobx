@@ -5,14 +5,11 @@ import {
   , inject
 } from 'mobx-react'
 import TrackList from '../Tracklist'
-import {
-  Link, Route
-  // , Redirect
-} from 'react-router-dom'
 import { GENRES } from '../../constants/trackTypes'
 import { TrackStore } from '../../store/TrackStore';
 import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PerformanceStore } from '../../store/PerformanceStore';
+import Tabs from '../Tabs';
 
 interface IDashBorardProps {
   location?: any,
@@ -22,66 +19,44 @@ interface IDashBorardProps {
   history: any
 }
 
-const FlagLink = ({ to, label }: any) => {
-  return (
-    <Route
-      path={to}
-      exact={true}
-      children={({ match }: any) => {
-        return (
-          <div className={match ? 'active' : ''}>
-            {match ? <i className="fa fa-flag" /> : ''}
-            <Link to={to} >{label}</Link>
-          </div>)
-      }}
-    />)
-}
 @inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
-  componentDidMount() {
-    this.props.performanceStore.setCurrentGlassNodeId('Browser')
-    this.setCurrentGenreView()
-  }
 
-  setCurrentGenreView() {
-    const { trackStore, history } = this.props
-    const genre = trackStore.currentGenre || Browse.defaultProps.genre
-    if (genre) {
-      history.push(`/main/genre=${genre}`)
-      console.log('genre = ' + genre)
-    }
-  }
-
-  componentWillReceiveProps(nextProps: any) {
-    const { match: { isExact } } = nextProps
-    if (isExact) {
-      this.setCurrentGenreView()
-    }
+  handleTabActive = (value: string, index: number) => {
+    this.props.trackStore.setGenre(value)
   }
   render() {
-
+    const { currentGenre } = this.props.trackStore
+    const index = GENRES.indexOf(currentGenre)
+    const selectedStyle = '#f55874';
     return (
       <div
         id="Browser"
         className={styles.container}
       >
-        <nav className={styles.nav}>
-          {GENRES.map((item, i) => {
-            return (
-              <FlagLink
-                key={i + '-' + item}
-                to={`/main/genre=${item}`}
-                label={item}
-              />)
-          })}
-        </nav>
-        <Route
-          path={`/main/genre=:genre`}
-          component={TrackList}
+        <Tabs
+          onActive={this.handleTabActive}
+          initialSelectedIndex={index}
+          inkBarStyle={{ background: selectedStyle }}
+          selectedTextColor={selectedStyle}
+        >
+          {
+            GENRES.map((item, i) => {
+              return (
+                <div
+                  key={i + '-' + item}
+                  label={item}
+                >
+                  {item}
+                </div>)
+            })}
+        </Tabs>
+        <TrackList
+          trackStore={this.props.trackStore}
         />
       </div>
     );

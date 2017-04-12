@@ -4,9 +4,11 @@ import { observer, inject } from 'mobx-react';
 import DevTool from 'mobx-react-devtools'
 import { NavLink } from 'react-router-dom'
 import ButtonInline from '../ButtonInline'
+import LoadingSpinner from '../LoadingSpinner'
 import {
   withRouter
 } from 'react-router-dom'
+import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from 'mobx';
@@ -162,22 +164,23 @@ class Header extends React.Component<IHeaderProp, undefined> {
       </div>
     )
   }
+
   renderMyPlaylist = () => {
     const { userStore } = this.props
     const loginModel = userStore.getLoginUserModel
-
     if (!loginModel) {
       return (
         <noscript />
       )
     }
+    const isLoading = loginModel.isLoading(FETCH_PLAYLIST);
+    const isError = loginModel.isError(FETCH_PLAYLIST);
 
     return (
       <div className={styles._aside_playlist}>
         <div className={styles._aside_title}>
           <span> MY PLAYLIST </span> <i className="fa fa-plus " />
         </div>
-
         <ul className={styles._aside_header_ul}>
           {
             loginModel.playlists.map((item, i) => {
@@ -202,6 +205,12 @@ class Header extends React.Component<IHeaderProp, undefined> {
           }
 
         </ul>
+        <LoadingSpinner
+          isLoading={isLoading}
+          isError={isError}
+          onErrorHandler={() => loginModel.fetchWithType(FETCH_PLAYLIST)}
+        />
+
       </div>
     )
   }

@@ -268,7 +268,7 @@ export class UserModel {
 
 
 
-  isLoadings = {
+  private isLoadings = {
     get: performanceStore.getLoadingStateWidthKey,
     set: performanceStore.setLoadingStateWithKey
   };
