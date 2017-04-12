@@ -22,10 +22,15 @@ interface IDashBorardProps {
 @inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
+
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
+  id = 'Browser'
 
+  componentDidMount() {
+    this.props.performanceStore.setCurrentGlassNodeId(this.id)
+  }
   handleTabActive = (value: string, index: number) => {
     this.props.trackStore.setGenre(value)
   }
@@ -35,7 +40,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
     const selectedStyle = '#f55874';
     return (
       <div
-        id="Browser"
+        id={this.id}
         className={styles.container}
       >
         <Tabs

@@ -229,14 +229,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
     this.infoGlassStyle = {
       left: -hi.offsetLeft + 'px'
-      // , top: -hi.offsetTop + 'px'// todo
       , top: '-140px'
       , height: hi.offsetHeight + 'px'
       , width: this.headerImg.offsetWidth + 'px'
       , position: 'absolute'
       , zIndex: '-9'
     }
-    console.log(this.infoGlassStyle.width)
     this.forceUpdate()
   }
 

@@ -10,11 +10,11 @@ import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
 import { UserStore, UserModel } from '../../store/UserStore';
 import { USER_STORE, TRACK_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
-import { PlayerStore } from "../../store/PlayerStore";
+import { PlayerStore } from '../../store/PlayerStore';
 const qs = require('qs')
 import Operators from '../Operators'
 import { BigUserIcon } from '../Community'
-import { PerformanceStore } from "../../store/PerformanceStore";
+import { PerformanceStore } from '../../store/PerformanceStore';
 const styles = require('./playlist.scss')
 
 
@@ -83,7 +83,7 @@ interface IPlaylistInfoProp {
 @inject(TRACK_STORE, PLAYER_STORE, USER_STORE, PERFORMANCE_STORE)
 @observer
 export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
-  id = "playlistView"
+  id = 'playlistView'
   handlePlay = () => {
     const { playerStore } = this.props
     if (!playerStore) {
