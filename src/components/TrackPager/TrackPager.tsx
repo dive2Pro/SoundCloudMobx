@@ -29,11 +29,12 @@ interface ITrackPagerProps {
 @inject(TRACK_STORE, PLAYER_STORE, COMMENT_STORE, PERFORMANCE_STORE)
 @observer
 class TrackPager extends React.Component<ITrackPagerProps, any> {
+  id = "TrackPager"
   trackId: number = -1
   prevTrackGenre: string = ""
   componentDidMount() {
     const { location: { search }, trackStore, performanceStore } = this.props
-    performanceStore.setCurrentGlassNodeId('TrackPager')
+    performanceStore.setCurrentGlassNodeId(this.id)
 
     if (search) {
       const id = qs.parse(search.substr(1)).id
@@ -77,7 +78,7 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
     // const { username, id, avatar_url } = user;
     const { commentsCount } = this.props.commentStore
     return (
-      <div id="TrackPager">
+      <div >
         <TrackProfile
           bigPic={artwork_url}
           label_name={label_name}
@@ -113,13 +114,16 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
      } = this.props.trackStore
 
     return (
-      <div className={styles.main}>
+      <div
+        id={this.id}
+        className={styles.main}>
         {isLoading || !currentTrack
-          ? <LoadingSpinner
-            isError={isError(FETCH_TRACK)}
-            onErrorHandler={() => this.props.trackStore.fetchSingleTrack(this.trackId)}
-            isLoading={isLoading}
-          />
+          ? (
+            <LoadingSpinner
+              isError={isError(FETCH_TRACK)}
+              onErrorHandler={() => this.props.trackStore.fetchSingleTrack(this.trackId)}
+              isLoading={isLoading}
+            />)
           : this.renderContent(currentTrack)}
       </div>
 
