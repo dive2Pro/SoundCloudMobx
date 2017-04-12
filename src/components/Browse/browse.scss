@@ -1,7 +1,7 @@
 @import '../../styles/variable.scss';
 
-.container{ 
-  width: $contentMinWidth;
+.container{  
+  padding: $padding;
 }
 .nav{
     display: flex;

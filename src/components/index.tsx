@@ -60,7 +60,11 @@ class Main extends React.Component<any, undefined> {
         }}
       >
         <Header />
-        <div ref={n => this.route = n}>
+        <div
+          style={{
+            width: '89.143em'
+          }}
+          ref={n => this.route = n}>
           <Switch>
             {
               routes.map((route, i) => (
