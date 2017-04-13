@@ -18,6 +18,7 @@ import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/sto
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { isObservable } from 'mobx';
+import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS } from "../../constants/fetchTypes";
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 
@@ -112,7 +113,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <Route
             path={`/`}
             render={() => {
-              console.log('I m still here')
               return us.isLoginUser ?
                 <FilterActivities />
                 : (
@@ -236,9 +236,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       , zIndex: '-9'
     }
     this.forceUpdate()
+
   }
 
   componentWillMount() {
+
     const loc = this.props.location
     if (loc) {
       // todo id undefined redicet to other 
@@ -298,10 +300,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
               UserModel={userModel}
             />
             <FollowsPanel
-              type={fetchTypes.FETCH_FOLLOWERS}
+              type={FETCH_FOLLOWERS}
+              onErrorHandler={() => userModel.fetchWithType(FETCH_FOLLOWERS)}
             />
             <FollowsPanel
-              type={fetchTypes.FETCH_FOLLOWINGS}
+              type={FETCH_FOLLOWINGS}
+              onErrorHandler={() => userModel.fetchWithType(FETCH_FOLLOWINGS)}
             />
           </aside>
         </div>

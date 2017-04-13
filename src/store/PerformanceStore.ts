@@ -18,6 +18,8 @@ export class PerformanceStore {
   @observable scrollY: number
   isLoadingsByKey = new ObservableMap<boolean>();
 
+  isErrorsMap = new ObservableMap<boolean>()
+
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }
@@ -70,6 +72,18 @@ export class PerformanceStore {
     return allSettle
   }
 
+
+  isError = (genre: string): boolean => {
+    return this.isErrorsMap.get(genre) || false
+  }
+
+  @action catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+  }
+
+  @action resetErrorsMap = (fetchType: string) => {
+    this.isErrorsMap.set(fetchType, false);
+  }
 }
 
 export default new PerformanceStore()

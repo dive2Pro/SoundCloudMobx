@@ -53,9 +53,10 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   getTabs = (): React.ComponentElement<any, any>[] => {
     const tabs: any[] = [];
-    React.Children.forEach(this.props.children, (child: React.ComponentElement<any, any>, index) => {
-      tabs.push(child);
-    });
+    React.Children.forEach(this.props.children,
+      (child: React.ComponentElement<any, any>, index) => {
+        tabs.push(child);
+      });
     return tabs;
   };
 

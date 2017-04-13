@@ -5,7 +5,7 @@ import TrackProfile from '../TrackProfile'
 import HocLoadingMore from '../HocLoadingMore'
 import Activities from '../Activities'
 import { Link } from 'react-router-dom'
-import { IPlaylist } from '../../interfaces/interface';
+import { IPlaylist, IisLoading } from '../../interfaces/interface';
 import ArtWork from '../ArtWork'
 import LoadingSpinner from '../LoadingSpinner'
 import { UserStore, UserModel } from '../../store/UserStore';
@@ -16,9 +16,10 @@ import Operators from '../Operators'
 import { BigUserIcon } from '../Community'
 import { PerformanceStore } from '../../store/PerformanceStore';
 const styles = require('./playlist.scss')
+import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
 
 
-interface IPlaylistProps {
+interface IPlaylistProps extends IisLoading {
   playerStore?: PlayerStore
   userModel: UserModel
   match?: any
@@ -54,7 +55,6 @@ class Playlist extends React.Component<IPlaylistProps, any>{
   render() {
     const um = this.props.userModel
     const { playlists } = um
-    const isloading = um.isLoading(FETCH_PLAYLIST)
     return (
       <div className={styles.playlist}>
         {playlists.map((item, i) => {
@@ -65,13 +65,12 @@ class Playlist extends React.Component<IPlaylistProps, any>{
             />
           )
         })}
-        <LoadingSpinner isLoading={isloading} />
       </div>
     )
   }
 }
 
-export default HocLoadingMore<IPlaylistProps, any>(Playlist)
+export default HocLoadingMore<IPlaylistProps, any>(makeLoadingSpinner(Playlist, FETCH_PLAYLIST))
 
 interface IPlaylistInfoProp {
   location: any

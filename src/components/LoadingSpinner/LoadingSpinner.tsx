@@ -2,7 +2,7 @@ import * as React from 'react'
 const styles = require('./loadingspinner.scss');
 // import {observer} from 'mobx-react'
 import ButtonInline from '../ButtonInline'
-interface ILoadingSpinner {
+export interface ILoadingSpinner {
   isLoading: boolean;
   isError?: boolean
   onErrorHandler?: () => void
