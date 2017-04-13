@@ -3,21 +3,22 @@ import { observer, inject } from 'mobx-react'
 
 import UserItemContainer from '../MiniUser'
 import {
-  // FETCH_FOLLOWINGS,
   FETCH_FOLLOWERS
 } from '../../constants/fetchTypes'
-import LoadingSpinner from '../LoadingSpinner';
 import ViewAll from '../ViewAll';
 import { UserStore, User } from '../../store/UserStore';
-import { USER_STORE } from "../../constants/storeTypes";
+import { USER_STORE } from '../../constants/storeTypes';
+import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
+import { IisLoading } from "../../interfaces/interface";
 const styles = require('./followers.scss')
 
 
 
-export interface IFollowersProps {
+export interface IFollowersProps extends IisLoading {
   type: string
   history?: any,
   userStore?: UserStore
+
 }
 @inject(USER_STORE)
 @observer
@@ -46,18 +47,15 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
   }
 
   render() {
-    const { userStore, type } = this.props
-    if (!userStore || !userStore.userModel) {
+    const { userStore, type, isLoading } = this.props
+    if (!userStore || !userStore.userModel || isLoading) {
       return <noscript />
     }
 
     const um = userStore.userModel;
-
     const { user } = um
     const users = um[type];
-    const isLoading = um.isLoading(type)
     const limitUsers = users.slice(0, 3)
-    const isError = um.isError(type);
     return (
       <section
         className={styles.base}
@@ -67,8 +65,10 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
             {...this.getSpecObj(user, type) }
           />
         </div>
+
         <div
-          className={styles.main}>
+          className={styles.main}
+        >
           {
             limitUsers.map((user: User, i: number) => {
               return (
@@ -79,15 +79,11 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
                 />
               )
             })}
-          <LoadingSpinner
-            isError={isError}
-            isLoading={isLoading}
-            onErrorHandler={() => um.fetchWithType(type)}
-          />
+
         </div>
       </section>
     )
   }
 }
 
-export default Followers;
+export default makeLoadingSpinner(Followers);

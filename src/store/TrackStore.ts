@@ -86,14 +86,16 @@ export abstract class BaseAct<T> implements IBaseActStore {
   }
 
   isError = (genre: string): boolean => {
-    return this.isErrorsMap.get(genre) || false
+    return performanceStore.isError(genre)
   }
 
   @action protected catchErr = (err: any, genre: string) => {
-    this.isErrorsMap.set(genre, true);
+    performanceStore.catchErr(err, genre)
     console.error(err)
   }
-
+  protected resetErrorWithType = (type: string) => {
+    performanceStore.resetErrorsMap(type)
+  }
   protected filterByFilterType(fs: T[]): T[] {
     return fs;
   }
@@ -258,6 +260,7 @@ export class TrackStore extends BaseAct<ITrack> {
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
+      this.resetErrorWithType(genre)
       const data: any = await fetch(url)
       runInAction('loaddata', () => {
         fn.call(this, data)
