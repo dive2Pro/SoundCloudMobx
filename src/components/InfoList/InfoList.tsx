@@ -27,7 +27,7 @@ const InfoList = ({ data }: IInfoListProp) => {
   })
 
   return (
-    <div styleName="container">
+    <div className={styles.container}>
       {infos}
     </div>)
 }

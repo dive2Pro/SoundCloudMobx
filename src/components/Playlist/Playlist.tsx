@@ -143,9 +143,9 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
             <Activities
               isLoading={false}
               scrollFunc={() => { }}
-              sortType=""
+              type=""
               isError={false}
-              tracks={tracks}
+              datas={tracks}
             />
           </div>
         </div>

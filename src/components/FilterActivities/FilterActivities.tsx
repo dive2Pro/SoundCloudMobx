@@ -94,10 +94,10 @@ class FilterActivities extends React.Component<any, any> {
         </div>
         <Activities
           scrollFunc={this.handleScroll}
-          sortType={sortType}
-          tracks={filteredTracks}
           isLoading={isLoading}
           isError={isError(currentGenre)}
+          datas={filteredTracks}
+          type={sortType}
         />
       </div>
     );
