@@ -7,8 +7,7 @@ import {
   ITrack
 } from '../interfaces/interface';
 import {
-  unauthApiUrl,
-  apiUrl
+  unauthApiUrl
 } from '../services/soundcloundApi'
 import UserStore from './UserStore'
 import performanceStore from './PerformanceStore';
@@ -49,7 +48,6 @@ export abstract class BaseAct<T> implements IBaseActStore {
     return this.isLoadingByGenre.get(this.currentGenre) || false
   }
 
-
   @action setFilterTitle(title: string) {
     this.filterTitle = title;
   }
@@ -62,7 +60,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     this.filterType = filterType;
   }
 
-  @action setLoadingByGenre(genre: string, loading: boolean) {
+  setLoadingByGenre(genre: string, loading: boolean) {
     // this.isLoadingByGenre.set(genre, loading);
     performanceStore.setLoadingStateWithKey(genre, loading);
   }

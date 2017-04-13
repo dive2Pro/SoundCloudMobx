@@ -28,7 +28,9 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
     return (
       <div
         style={{
-          padding: '10px'
+          padding: '10px',
+          minHeight: '100vh'
+
         }}
       >
         <Activities

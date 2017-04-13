@@ -15,10 +15,11 @@
   background: rgba(226,226,226,1);
 }
 
-.visible{
-    composes:base;
-    transform: translateY(0);
-  }
+.player_visible{
+  composes:base;
+  transform: translateY(0);
+}
+
 .active{
   color: $mainColor;
 }

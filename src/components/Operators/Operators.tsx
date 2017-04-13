@@ -1,9 +1,9 @@
 import * as React from 'react'
 import ButtonInline from '../ButtonInline'
-import { observer, inject } from "._mobx-react@4.1.7@mobx-react";
-import { PLAYER_STORE } from "../../constants/storeTypes";
-import { PlayerStore } from "../../store/PlayerStore";
-import { ITrack } from "../../interfaces/interface";
+import { observer, inject } from '._mobx-react@4.1.7@mobx-react';
+import { PLAYER_STORE } from '../../constants/storeTypes';
+import { PlayerStore } from '../../store/PlayerStore';
+import { ITrack } from '../../interfaces/interface';
 const styles = require('./operators.scss')
 
 interface IOperatorsProp {
@@ -35,7 +35,7 @@ class Operators extends React.PureComponent<IOperatorsProp, any>  {
       <div className={styles.infos_actions}>
         <ButtonInline
           onClick={this.handleAddToPlaylist}>
-          <i className='fa fa-plus'></i>
+          <i className="fa fa-plus" />
         </ButtonInline>
         <ButtonInline>
           <i className="fa fa-heart" />
@@ -49,12 +49,13 @@ class Operators extends React.PureComponent<IOperatorsProp, any>  {
         </ButtonInline>
         {
           !isPlaylist &&
-          (<ButtonInline>
-            <i className="fa fa-comments" />
-            <span>
-              Comments
+          (
+            <ButtonInline>
+              <i className="fa fa-comments" />
+              <span>
+                Comments
                   </span>
-          </ButtonInline>
+            </ButtonInline>
           )
         }
       </div>
