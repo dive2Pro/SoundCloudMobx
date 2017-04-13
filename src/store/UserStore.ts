@@ -372,10 +372,10 @@ export class UserModel {
   @action async followingFilterByLogin(isLogined: boolean) {
 
     if (isLogined) {
-      await this.followers.forEach(user =>
+      this.followers.forEach(user =>
         user.isFollowing = this.userStore.isFollowingUser(user.id)
       )
-      await this.followings.forEach(user =>
+      this.followings.forEach(user =>
         user.isFollowing = this.userStore.isFollowingUser(user.id)
       )
     }

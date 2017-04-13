@@ -7,8 +7,6 @@ import { addAccessToken, apiUrl } from '../services/soundcloundApi';
 import { RaceFetch as fetch } from '../services/Fetch'
 export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
 
-  @observable filteredActivities: IActivitiesItem[];
-
   constructor() {
     super(FETCH_ACTIVITIES)
   }

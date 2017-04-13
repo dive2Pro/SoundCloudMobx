@@ -19,11 +19,6 @@ function HocLoadingMore<Props, State>(
       this.handleScrolling = this.handleScrolling.bind(this)
     }
 
-
-    componentWillMount() {
-
-    }
-
     handleScrolling(e: any) {
       if (window) {
         const trigger = window.innerHeight + window.pageYOffset

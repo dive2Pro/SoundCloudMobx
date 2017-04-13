@@ -37,8 +37,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
   @observable filterTitle: string
   @observable sortType: string
   @observable filteredTracks: ITrack[] = []
-
-  @observable currentGenre: string = 'country'
+  @observable currentGenre: string = GENRES[0]
 
   autorunHandle: IReactionDisposer;
 
@@ -101,7 +100,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
   }
   abstract transToTracks(act: T[]): ITrack[];
 
-  private async filterFunc(activities: T[], sortType: string, filterType: string) {
+  private async filterFunc(activities: T[], filterTitle: string, sortType: string, filterType: string) {
     let fs: ITrack[] = []
     const filterByTypes = await this.filterByFilterType(activities)
     fs = await this.transToTracks(filterByTypes)
@@ -146,7 +145,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
       this.itemsMap.set(type, []);
     }
     this.autorunHandle = autorun(() => {
-      this.filterFunc(<T[]>this.itemsMap.get(type), this.sortType, this.filterType)
+      this.filterFunc(<T[]>this.itemsMap.get(type), this.filterTitle, this.sortType, this.filterType)
     })
 
 
