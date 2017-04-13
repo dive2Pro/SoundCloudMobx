@@ -32,7 +32,6 @@ export default function makeOpacityMotion<Props, State>(
             styles => {
               const opacity = styles.opacity;
               const frame = styles.frame
-              console.log(styles)
               return (
                 <div onClickCapture={() => this.setState({ mounted: true })}>
 

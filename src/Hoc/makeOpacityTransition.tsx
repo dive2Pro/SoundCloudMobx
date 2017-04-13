@@ -18,54 +18,55 @@ export interface IAddtionalProps {
   className?: string
 }
 
-// todo ,children不好拿
 function makeOpacityTransition<Props, State>
   (
   Target: (new () => Component<Props & IAddtionalProps, State>),
   TargetClassName?: string
   ) {
 
-  class makeOpacityTransitionComponent extends Component<Props & ImakeOpacityTransitionProp
-    , any>{
+  // tslint:disable-next-line:class-name
+  class makeOpacityTransitionComponent extends Component<Props
+    & ImakeOpacityTransitionProp, any>{
     state = {
       datas: new Array<Object>()
     }
 
     componentDidMount() {
       this.setState({
-        datas: this.props.datas.map((item, index) => (
-          { ...item, key: `item-${index}` }))
+        datas: this.props.datas.map(this.geneDataItem)
       })
     }
 
     componentWillReceiveProps(nextProps) {
       this.setState({
-        datas: nextProps.datas.map((item, index) => (
-          { ...item, key: `item-${index}` }))
+        datas: nextProps.datas.map(this.geneDataItem)
       })
+
     }
 
+
+    geneDataItem = (item, index) => {
+      return {
+        style: {
+          height: 0,
+          opacity: 1
+        },
+        data: item
+        , key: `item-${index}`
+      }
+    }
     getDefaultStyles = () => {
-      return this.state.datas.map((item, index) => {
-        return {
-          style: {
-            height: 0,
-            opacity: 1
-          },
-          item
-          , key: `item-${index}`
-        }
-      })
+      return this.state.datas.map(this.geneDataItem)
     }
 
     getStyles = () => {
       return this.state.datas.map((item, index) => {
 
-        const data = {
-          data: item, style: { height: spring(100), opacity: spring(1) }
-          , key: `item-${index}`
+        return {
+          ...item,
+          style: { height: spring(100), opacity: spring(1) }
         }
-        return data
+
       })
     }
     willEnter = () => {

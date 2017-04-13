@@ -46,7 +46,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
         <div className={styles.tracks}>
           {interpolatedStyles && interpolatedStyles.map((item, i) => {
             const style: any = item.style
-            const track: any = item.data
+            const track: any = item.data || datas[i]
             return (
               <div
                 key={item.key + track.id + '-' + i}
