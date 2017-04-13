@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
-import "./styles/index.scss";
+import './styles/index.scss';
 import { Provider } from 'mobx-react';
 import * as stores from './store';
 require('font-awesome/css/font-awesome.css');

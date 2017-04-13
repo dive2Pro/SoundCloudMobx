@@ -3,9 +3,8 @@ import {
   , action
   , ObservableMap
   , extendObservable
-  , computed,
-  autorun,
-  when
+  , computed
+  , when
 } from 'mobx';
 import {
   FETCH_FOLLOWERS

@@ -372,7 +372,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     let clazzName = styles.base;
 
     if (this.isVisible) {
-      clazzName = styles.visible;
+      clazzName = styles.player_visible;
     }
     if (!playerStore) {
       return <noscript />;

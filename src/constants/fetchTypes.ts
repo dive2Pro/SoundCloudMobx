@@ -6,5 +6,6 @@ export const FETCH_USER = 'USER';
 export const FETCH_PLAYLIST = 'playlists';
 export const FETCH_PLAYLISTINFO = 'playlistInfos';
 export const FETCH_STREAM = 'streams';
-export const FETCH_TRACK = 'track@';
+export const FETCH_TRACK = 'tracks';
+export const FETCH_COMMENTS = 'comments';
 
