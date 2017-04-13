@@ -7,11 +7,13 @@ import Stream from '../Stream'
 import { PlayerStore } from '../../store/PlayerStore';
 import { PLAYER_STORE } from '../../constants/storeTypes';
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
-interface IActivitiesProps {
+import makeOpacityTransition, { IAddtionalProps } from '../../Hoc/makeOpacityTransition'
+
+interface IActivitiesProps extends IAddtionalProps {
   playerStore?: PlayerStore
   isLoading: boolean,
-  tracks: ITrack[],
-  sortType: string
+  datas: ITrack[],
+  type: string
   isError?: boolean
 }
 
@@ -30,24 +32,34 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
   render() {
     const {
-      tracks,
-      sortType,
-      playerStore: store } = this.props;
+      datas,
+      type,
+      playerStore: store
+      , interpolatedStyles
+    } = this.props;
 
-    if (!store || !tracks) {
+    if (!store || !datas) {
       return <noscript />
     }
     return (
       <div className={styles.main}>
         <div className={styles.tracks}>
-          {tracks.map((item, i) => (
-            <Stream
-              key={item.id + '-' + i}
-              sortType={sortType}
-              track={item}
-              i={i + 1}
-              store={store}
-            />))
+          {interpolatedStyles && interpolatedStyles.map((item, i) => {
+            const style: any = item.style
+            const track: any = item.data
+            return (
+              <div
+                key={item.key + track.id + '-' + i}
+                style={{ ...style, height: `${style.height}%`, overflow: 'hidden' }}>
+                <Stream
+                  type={type}
+                  track={track}
+                  i={i + 1}
+                  store={store}
+                />
+              </div>
+            )
+          })
           }
         </div>
       </div >
@@ -55,6 +67,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
   }
 }
 
+
 // let  ActivitiesCount = 0
 // 这里不需要传入 type,因为已经在 TrackStore中setGenre的时候设置了
-export default Hoc<IActivitiesProps, any>(makeLoadingSpinner(Activities))
+export default Hoc(makeOpacityTransition(makeLoadingSpinner(Activities)))

@@ -12,6 +12,8 @@ interface ImakeLoadingSinnerProp {
   performanceStore?: PerformanceStore
   type: string
   onErrorHandler?: () => void
+  isLoading?: boolean
+  isError?: boolean
 }
 
 function makeLoadingSinner<Props, State>
@@ -26,14 +28,14 @@ function makeLoadingSinner<Props, State>
     extends React.PureComponent<Props & ImakeLoadingSinnerProp, State>{
 
     render() {
-      const { rootClazz, type
+      let { rootClazz, type, isError, isLoading
         , performanceStore } = this.props
       if (!performanceStore) {
         return <noscript />
       }
       const ps: any = performanceStore;
-      const isError = ps.isError(loadingType || type);
-      const isLoading = ps.getLoadingState(type);
+      isError = isError || ps.isError(loadingType || type);
+      let loading = isLoading || ps.getLoadingState(type);
       return (
         <div className={rootClazz}>
           <Comp
@@ -41,7 +43,7 @@ function makeLoadingSinner<Props, State>
             isLoading={isLoading}
           />
           <LoadingSpinner
-            isLoading={isLoading}
+            isLoading={loading}
             isError={isError}
             onErrorHandler={this.props.scrollFunc
               || this.props.onErrorHandler}

@@ -91,7 +91,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
 
   @action protected catchErr = (err: any, genre: string) => {
     performanceStore.catchErr(err, genre)
-    console.error(err)
+    console.error(err, genre)
   }
   protected resetErrorWithType = (type: string) => {
     performanceStore.resetErrorsMap(type)
@@ -175,9 +175,9 @@ export class TrackStore extends BaseAct<ITrack> {
 
   setTrackId(id: number) {
 
-    let track = this.currentTracks.find((track) => track.id === id)
+    let track = this.currentTracks.filter(track => track != null).find((track) => track.id === id)
     if (!track) {
-      track = this.allTracks().find((track) => track.id === id)
+      track = this.allTracks().filter(track => track != null).find((track) => track.id === id)
     }
     if (track) {
       this.setCurrentTrack(track)

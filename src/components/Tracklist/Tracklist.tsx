@@ -33,8 +33,8 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
       >
         <Activities
           isLoading={isLoading}
-          tracks={currentTracks}
-          sortType={''}
+          datas={currentTracks}
+          type={''}
           isError={ie}
           scrollFunc={this.handleScroll}
         />

@@ -75,8 +75,6 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
     const { label_name
       // , release_day
       , user, artwork_url } = currentTrack
-    // const { username, id, avatar_url } = user;
-    const { commentsCount } = this.props.commentStore
     return (
       <div >
         <TrackProfile
@@ -86,7 +84,6 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
           type={'Track'}
           user={user}
         />
-
         <div className={styles.comments}>
           <Operators
             track={currentTrack}

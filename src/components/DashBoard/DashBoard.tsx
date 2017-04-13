@@ -61,11 +61,11 @@ const FavoView = observer((props: any) => {
       <p className={styles._songs_tag}>FAVORITES SONGS</p>
 
       <Activities
-        sortType={''}
+        type={''}
         isError={isError(fetchTypes.FETCH_FAVORITES)}
         isLoading={isloadingFavorites}
         scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-        tracks={favorites}
+        datas={favorites}
       />
     </div>
   )
