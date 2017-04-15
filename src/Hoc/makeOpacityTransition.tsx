@@ -87,6 +87,7 @@ function makeOpacityTransition<Props, State>
           styles={this.getStyles()}
           willEnter={this.willEnter}
           willLeave={this.willLeave}
+          style={{ width: 'inherit', height: 'inherit' }}
         >
           {
             interpolatedStyles => (

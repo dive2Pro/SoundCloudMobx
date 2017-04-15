@@ -47,7 +47,10 @@ class Activities extends React.Component<IActivitiesProps, any> {
             return (
               <div
                 key={item.key + track.id + '-' + i}
-                style={{ ...style, height: `${style.height}%`, overflow: 'hidden' }}>
+                style={{
+                  ...style, height: `${style.height}%`
+                }}>
+                {/*, overflow: 'hidden'*/}
                 <Stream
                   type={type}
                   track={track}
@@ -67,4 +70,4 @@ class Activities extends React.Component<IActivitiesProps, any> {
 
 // let  ActivitiesCount = 0
 // 这里不需要传入 type,因为已经在 TrackStore中setGenre的时候设置了
-export default Hoc(makeOpacityTransition(makeLoadingSpinner(Activities)))
+export default Hoc(makeOpacityTransition(makeLoadingSpinner(Activities), styles.main))

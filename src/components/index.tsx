@@ -9,7 +9,7 @@ import DashBoard from './DashBoard'
 import Browser from './Browse'
 import TrackPager from './TrackPager'
 import { PlaylistInfo } from './Playlist'
-
+const styles = require('./favemusic.scss')
 
 const routes = [
   {
@@ -61,9 +61,7 @@ class Main extends React.Component<any, undefined> {
       >
         <Header />
         <div
-          style={{
-            width: '89.143em'
-          }}
+          className={styles.fave_div}
           ref={n => this.route = n}>
           <Switch>
             {

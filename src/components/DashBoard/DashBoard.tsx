@@ -144,7 +144,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           className={styles._contentHeader_img}
           style={{
             backgroundImage: `url(${backgroundImageUrl})`
-            , width: '1248px', height: '300px'
+            , height: '300px'
           }}
         />
         <div
