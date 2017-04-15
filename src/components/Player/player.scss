@@ -4,11 +4,8 @@
   bottom: 0;
   height: $playerHeight;
   width: $contentMinWidth!important;
-  // left:$_asiderWidth;
   z-index: 9;
-  /*top: 100%;*/
   transition: 0.2s transform ;
-  // transform: translateY(90%) ; 
   display: flex;
   overflow: hidden;
   flex-direction: column;
@@ -54,7 +51,7 @@
 .trackName{
   font-size: $mediumIcon;
   font-weight: bold;
-  @include ellipsisTexts($_100pxEm*2.5);
+  @include ellipsisTexts(px2rem(250px));
 
 }
 .author{

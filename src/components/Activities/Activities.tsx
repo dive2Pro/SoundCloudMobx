@@ -26,10 +26,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
       playerStore.addToPlaylist(track);
     }
   }
-  componentWillUnmount() {
-    // console.log('Activities  componentWillUnmount')
 
-  }
   render() {
     const {
       datas,

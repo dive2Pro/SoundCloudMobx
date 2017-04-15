@@ -112,7 +112,7 @@ div .indexPlay{
 ._stream_info_title{
   font-weight: bold;
   display: table-cell;  
-  @include ellipsisTexts($_100pxEm*3);
+  @include ellipsisTexts(px2rem(300px));
    &:visited{
       color:#333;
      }
@@ -131,5 +131,5 @@ div .indexPlay{
 ._stream_settings{
   color: #bababa;
   flex: 1;
-  margin-right: $padding/2;
+  margin-right: px2rem(10px);
 }

@@ -1,7 +1,7 @@
 @import '../../styles/variable.scss';
 
 .view{
-  height:$_100pxEm*3.875;;
+  height:px2rem(387.5px);
   display: flex;
   position: relative;
   width: 100%;
@@ -32,8 +32,8 @@
     top: $padding;
     left: $padding;
     z-index: 1;
-    width: 340px;
-    height: 340px; 
+    width: px2rem(340px);
+    height: px2rem(340px); 
     background-image: linear-gradient(135deg,#8e8485,#e6846e)
 }
 
