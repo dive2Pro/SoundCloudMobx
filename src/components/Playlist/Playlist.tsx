@@ -134,7 +134,8 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
             tracks={tracks}
             isPlaylist={true}
           />
-          <div className={styles.playlist_body}>
+          <div
+            className={styles.playlist_body}>
             <BigUserIcon
               user={user}
               handleFollow={() => { userStore.detectIsFollowing(user.id) }}

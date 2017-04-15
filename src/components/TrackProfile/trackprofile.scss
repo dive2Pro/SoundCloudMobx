@@ -45,11 +45,6 @@
     box-shadow: rgba(0,0,0,.1)0 0 0 1px inset;
 }
 
-
-
-
-
-
 .commentsCount{
   font-size: $mediumIcon;
   @include bottom_border($usualPadding,$mainColor);
@@ -57,9 +52,8 @@
 
 
 .playlist_avatar{
-  
   width: 100%;
-  height: 400px;
+  height:px2rem(400px);
 }
 
 
@@ -71,13 +65,13 @@
   z-index: 10;
   width: 100%;
   height: 100%;
-  padding: $padding*2;
+  padding: px2rem(40px);
   background-repeat: no-repeat;
    
 }
 .infos_operators{
   position: absolute;
-  left: $_100pxEm*4; 
+  left: px2rem(400px); 
 }
 .infos_title{ 
   align-items: center;
@@ -114,17 +108,17 @@
   }
   .infos_actions_play{
     @include btn_white_padding();
-      border-radius: 50%;
-      padding: 0;
-      padding-left: 10px;
-      text-align: center;
-      height: $padding*3;
-      width: $padding*3;
-      position: absolute;
-      left: $padding*20;
-      bottom: $padding*2;
-      &:hover{  
+    border-radius: 50%;
+    padding: 0;
+    padding-left: 10px;
+    text-align: center;
+    height: px2rem(55px);
+    width: px2rem(55px);
+    position: absolute;
+    left: px2rem(400px);
+    bottom: px2rem(40px);
+    &:hover{  
 
-      }
-      color: $mainRed;
+    }
+    color: $mainRed;
   }

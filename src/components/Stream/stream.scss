@@ -43,9 +43,9 @@ div .indexPlay{
   flex: 3;
 }
 ._contentBody_streams_tag{
-  padding-left: 25px;
-  font-size: 18px;
-  padding-bottom: 20px;
+  padding-left: px2rem(25px);
+  font-size: px2rem(18px);
+  padding-bottom: $padding;
   font-weight: bold;
   
 }

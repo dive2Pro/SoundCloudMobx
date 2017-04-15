@@ -70,7 +70,7 @@ $tabHeight:px2rem(50px);
 @mixin btn_white_padding(){
     background-color: white;
     border: 1px solid lightgray;
-    padding: ($padding/4) $padding;
+    padding: (px2rem(5px)) $padding;
     border-radius: 5px;
     cursor: pointer;
     color: #333;
@@ -87,7 +87,7 @@ $tabHeight:px2rem(50px);
   color:$fontColor;
   border:$border; 
   font-size: $mediumIcon;
-  padding: $padding/2;
+  padding: px2rem(10px);
 }
 
 @mixin ellipsisTexts($maxWidth){

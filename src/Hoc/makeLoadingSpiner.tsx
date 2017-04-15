@@ -37,7 +37,10 @@ function makeLoadingSinner<Props, State>
       isError = isError || ps.isError(loadingType || type);
       let loading = isLoading || ps.getLoadingState(type);
       return (
-        <div className={rootClazz}>
+        <div
+          style={{ width: 'inherit', height: 'inherit' }}
+
+          className={rootClazz}>
           <Comp
             {...this.props}
             isLoading={isLoading}
