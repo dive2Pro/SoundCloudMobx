@@ -50,8 +50,9 @@ export class CommentStore {
 
   @action setCurrentTrack(track: ITrack) {
     this.currentTrack = (track);
-    if (this.commentsCount < 1)
-    { this.fetchMoreComments() }
+    if (this.commentsCount < 1) {
+      this.fetchMoreComments()
+    }
   }
   @computed get commentsCount() {
     return this.currentTrackComments.length
@@ -81,12 +82,10 @@ export class CommentStore {
     }
     const { id } = this.currentTrack
     const keyId = id + ''
-    console.log(this.isLoadingMoreComment)
     let url = nextHref
       ? nextHref : apiUrl(`tracks/${id}/comments?linked_partitioning=1&limit=50&offset=0`, '&');
 
     this.setLoadingState(FETCH_COMMENTS, true)
-    console.log(this.isLoadingMoreComment)
 
     try {
       const data: any = await fetch(url);

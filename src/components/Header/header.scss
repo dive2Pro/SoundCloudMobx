@@ -14,6 +14,7 @@
 ._aside_playlist{ 
 
 }
+
 ._aside_header_img{
   text-align: center;
   margin-bottom: $padding;
@@ -91,7 +92,7 @@
     min-width: 160px; 
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    top:$padding*0.75;
+    top:px2rem(15px);
     position:absolute; 
     padding:10px;
     color:#f9f9f9;
@@ -105,7 +106,7 @@
   left: calc(-100% );
   & button{
       background: $soundcloudColor;
-      padding: $padding/2 $padding;
+      padding: px2rem(15px) $padding;
       font-size: $smallIcon;
       width: 100%;
       height: 100%;
