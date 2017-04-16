@@ -394,6 +394,7 @@ export class UserModel {
     }
     const fetchType = type
     let url = this.getFetchUrl(fetchType, id)
+    console.log(url, type)
     if (!url) { return }
 
     try {

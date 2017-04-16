@@ -26,6 +26,7 @@ export default function makeOpacityMotion<Props, State>(
         opacity: this.state.mounted ? spring(0) : spring(1),
         frame: this.state.mounted ? spring(0) : spring(400)
       }
+
       return (
         <Motion style={style}>
           {

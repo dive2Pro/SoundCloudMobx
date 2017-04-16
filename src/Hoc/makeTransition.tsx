@@ -7,8 +7,11 @@ import { observer } from "._mobx-react@4.1.7@mobx-react";
 interface ImakeOpacityTransitionProp {
   datas?: Object[]
   rootClazz?: string,
-  itemClazz?: string
-
+  itemClazz?: string,
+  getDefaultItemStyle: (item: Object, index: number) => Object
+  getItemStyle: (item: Object, index: number) => Object
+  willEnter: () => Object
+  willLeave: () => Object
 }
 interface ImakeOpacityTransitionState {
   datas?: Object[],
@@ -18,17 +21,60 @@ export interface IAddtionalProps {
   className?: string
 }
 
+
+
+const transitionMixin = {
+  componentDidMount: function () {
+    // this.onchildDidMount()
+    console.log(this)
+  },
+  componentWillUnmount: function () {
+    // this.onchildUnmount()
+  }
+}
+
+
+function patch(target, funcName) {
+  const base = target[funcName]
+  const mixinFunc = transitionMixin[funcName]
+  const f = !base ? mixinFunc : function () {
+    base.apply(this.arguments)
+    mixinFunc.apply(this, arguments)
+  }
+  // console.log(target)
+  // target[funcName] = f
+}
+
+function mixinLifecycleEvents(target) {
+  [
+    'componentDidMount',
+    'componentWillUnmount'
+  ].forEach(function (funcName) {
+    patch(target, funcName)
+  })
+  return target
+}
+
+
+
+
+
 function makeOpacityTransition<Props, State>
   (
   Target: (new () => Component<Props & IAddtionalProps, State>),
   TargetClassName?: string
   ) {
-
   // tslint:disable-next-line:class-name
   class makeOpacityTransitionComponent extends Component<Props
     & ImakeOpacityTransitionProp, any>{
     state = {
       datas: new Array<Object>()
+    }
+
+    componentWillMount() {
+      React.Children.forEach(this.props.children, (child, index) => {
+        mixinLifecycleEvents(child)
+      })
     }
 
     componentDidMount() {
@@ -38,6 +84,12 @@ function makeOpacityTransition<Props, State>
           ? datas.map(this.geneDataItem)
           : React.Children.map(this.props.children, this.geneItemWithoutData)
       })
+      const { children } = this.props
+
+    }
+
+    componentWillUnmount() {
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -46,45 +98,34 @@ function makeOpacityTransition<Props, State>
         datas: nextProps.datas.map(this.geneDataItem)
       })
     }
+
     geneItemWithoutData = (item, index) => {
       return this.geneDataItem(null, index);
     }
 
     geneDataItem = (item, index) => {
+
       return {
-        style: {
-          height: 0,
-          opacity: 1
-        },
+        style: this.props.getDefaultItemStyle(item, index),
         data: item
         , key: `item-${index}`
       }
     }
     getDefaultStyles = () => {
+
       return this.state.datas.map(this.geneDataItem)
     }
+
 
     getStyles = () => {
       return this.state.datas.map((item, index) => {
 
         return {
           ...item,
-          style: {
-            // height: spring(100),
-            opacity: spring(1)
-          }
+          style: this.props.getItemStyle(item, index)
         }
 
       })
-    }
-    willEnter = () => {
-      return {
-        opacity: 0
-      }
-    }
-
-    willLeave = () => {
-
     }
 
     render() {
@@ -92,8 +133,8 @@ function makeOpacityTransition<Props, State>
         <TransitionMotion
           defaultStyles={this.getDefaultStyles()}
           styles={this.getStyles()}
-          willEnter={this.willEnter}
-          willLeave={this.willLeave}
+          willEnter={this.props.willEnter}
+          willLeave={this.props.willLeave}
           style={{ width: 'inherit', height: 'inherit' }}
         >
           {

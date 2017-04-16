@@ -101,8 +101,10 @@ export class PlayerStore {
   }
 
   addToPlaylist(tracks: ITrack | ITrack[]) {
+
     if ('length' in tracks) {
-      (<ITrack[]>tracks).slice().forEach(t => {
+      (<ITrack[]>tracks).slice().forEach((t, i) => {
+        i === 0 && this.setPlayingTrack(t)
         this.pushToPlayerlist(t)
       })
     } else {

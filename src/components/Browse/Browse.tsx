@@ -43,6 +43,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
         id={this.id}
         className={styles.container}
       >
+
         <Tabs
           onActive={this.handleTabActive}
           initialSelectedIndex={index}
@@ -68,4 +69,4 @@ class Browse extends React.Component<IDashBorardProps, any> {
   }
 }
 
-export default Browse; 
+export default Browse;
