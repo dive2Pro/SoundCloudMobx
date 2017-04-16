@@ -17,6 +17,7 @@ import { BigUserIcon } from '../Community'
 import { PerformanceStore } from '../../store/PerformanceStore';
 const styles = require('./playlist.scss')
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
+import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
 
 interface IPlaylistProps extends IisLoading {
@@ -25,23 +26,30 @@ interface IPlaylistProps extends IisLoading {
   match?: any
 }
 
-const PlaylistItem = observer(function PlaylistItem({ info }: { info: IPlaylist }) {
-  const { artwork_url, label_name, id, title } = info
-  const to = { pathname: '/playlist', search: `?id=${id}` }
-  return (
-    <div className={styles.itemContainer}>
-      <Link to={to}>
-        <ArtWork src={artwork_url} size={250} />
-      </Link>
-      <div className={styles.itemTitle}>
+@observer
+class PlaylistItem extends React.PureComponent<{ info: IPlaylist }, any> {
 
-        <Link to={to}><h3>{label_name || title}</h3></Link>
+
+
+  render() {
+    const { artwork_url, label_name, id, title } = this.props.info
+    const to = { pathname: '/playlist', search: `?id=${id}` }
+    return (
+      <div className={styles.itemContainer}>
+        <Link to={to}>
+          <ArtWork src={artwork_url} size={250} />
+        </Link>
+        <div className={styles.itemTitle}>
+
+          <Link to={to}><h3>{label_name || title}</h3></Link>
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  }
+}
 
 
+// @makeTranslateXMotion
 @observer
 class Playlist extends React.Component<IPlaylistProps, any>{
 
@@ -51,12 +59,14 @@ class Playlist extends React.Component<IPlaylistProps, any>{
     } = this.props
     userModel.fetchWithType(FETCH_PLAYLIST);
   }
-
   render() {
     const um = this.props.userModel
     const { playlists } = um
     return (
-      <div className={styles.playlist}>
+
+      <div
+        className={styles.playlist}
+      >
         {playlists.map((item, i) => {
           return (
             <PlaylistItem
@@ -65,8 +75,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
             />
           )
         })}
-      </div>
-    )
+      </div>)
   }
 }
 

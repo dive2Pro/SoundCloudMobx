@@ -36,7 +36,10 @@ class Community extends React.Component<ICommunityProps, any> {
       us.debouncedRequestFollowUser(user)
     }
   }
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
 
+  }
   render() {
     const { userStore: us, path, scrollFunc } = this.props
     if (!us || !path || !scrollFunc || !us.userModel) {

@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel from '../FollowsPanel'
 import FavoritesPanel from '../FavoritesPanel';
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
@@ -13,12 +13,13 @@ import Playlist from '../Playlist'
 import LoadingSpinner from '../LoadingSpinner'
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import Blur from 'react-blur'
-import { UserStore, User, UserModel } from '../../store/UserStore';
+import { UserStore, User } from '../../store/UserStore';
 import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
-import { isObservable } from 'mobx';
-import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS } from "../../constants/fetchTypes";
+import { spring, presets } from 'react-motion'
+import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from "../../constants/fetchTypes";
+import Route from '../Route/TransitionRoute'
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 
@@ -51,41 +52,51 @@ const profile$: any = {
 }
 
 
-const FavoView = observer((props: any) => {
-  const { performanceStore, userStore } = props
-  const { userModel } = userStore
-  const { favorites, isError } = userModel
-  const isloadingFavorites = performanceStore.getLoadingState(fetchTypes.FETCH_FAVORITES);
-  return (
-    <div >
-      <p className={styles._songs_tag}>FAVORITES SONGS</p>
-
-      <Activities
-        type={''}
-        isError={isError(fetchTypes.FETCH_FAVORITES)}
-        isLoading={isloadingFavorites}
-        scrollFunc={() => userModel.fetchWithType(fetchTypes.FETCH_FAVORITES)}
-        datas={favorites}
-      />
-    </div>
-  )
+@observer
+class FavoView extends React.PureComponent<any, any>  {
+  render() {
+    const { performanceStore, userStore } = this.props
+    const { userModel } = userStore
+    const { favorites, isError } = userModel
+    const isloadingFavorites = performanceStore.getLoadingState(FETCH_FAVORITES);
+    return (
+      <div >
+        <p className={styles._songs_tag}>FAVORITES SONGS</p>
+        <Activities
+          type={FETCH_FAVORITES}
+          isError={isError(FETCH_FAVORITES)}
+          isLoading={isloadingFavorites}
+          scrollFunc={() => userModel.fetchWithType(FETCH_FAVORITES)}
+          datas={favorites}
+        />
+      </div>
+    )
+  }
 }
-)
 /**
  * 用户界面
  */
 @inject(
-  USER_STORE
-  , PLAYER_STORE
-  , PERFORMANCE_STORE)
+  USER_STORE,
+  PLAYER_STORE,
+  PERFORMANCE_STORE)
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
   renderContentBodyMain = (us: UserStore, performanceStore: PerformanceStore) => {
     const { match: { url } } = this.props
     const { userModel } = us
+
     return (
       <div className={styles._contentBody_main}>
-        <Switch>
+        {/* getDefaultItemStyle={(item, index) => ({ opacity: 0, left: -200, overflow: 'hidden' })}
+          getItemStyle={(item, index) => ({ opacity: spring(1), left: spring(0, presets.gentle) })}
+          willEnter={() => {
+            return ({ left: -200, opacity: 1 })
+          }}
+          willLeave={() => ({ left: spring(-200, presets.gentle), spacity: spring(0, presets.gentle) })}
+       */}
+        <Switch
+        >
           {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
           {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
           <Route
@@ -101,7 +112,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           <Route
             path={`${url}/playlist`}
             render={(match: any) => {
-
               return userModel ? (
                 <Playlist
                   scrollFunc={this.handleFetchMorePlaylist}
@@ -111,7 +121,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
             }}
           />
           <Route
-            path={`/`}
+            path={'/'}
             render={() => {
               return us.isLoginUser ?
                 <FilterActivities />
@@ -127,9 +137,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     )
   }
   renderContentHeader = (user: User, isLoginUser: boolean) => {
-    // const user = model.user;
     const avatar_url = user.avatar_url
-    const is = isObservable(avatar_url)
     let backgroundImageUrl = preload
     if (Object.keys(this.infoGlassStyle).length > 0) {
       backgroundImageUrl = avatar_url ?
@@ -187,7 +195,11 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   headerInfo: any;
-  handlePlayAll: any;
+  handlePlayAll = () => {
+    if (this.props.userStore.userModel) {
+      this.props.playerStore.addToPlaylist(this.props.userStore.userModel.favorites)
+    }
+  }
 
   headerImg: any;
   profile: any;

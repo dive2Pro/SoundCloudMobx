@@ -26,6 +26,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin: $padding auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .playlist_body{
