@@ -27,6 +27,7 @@ interface IWidhtRouterStyleLinkProps {
 class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProps, any> {
   render() {
     const { to, isActive } = this.props
+
     return (
       <NavLink
         to={to || 'abondan'}
@@ -252,7 +253,9 @@ class Header extends React.Component<IHeaderProp, undefined> {
             </StyleLink>
           </li>
           <li>
-            <StyleLink >
+            <StyleLink
+
+            >
               <i className="fa fa-music" /> Tracks </StyleLink> </li>
           <li>
             <StyleLink

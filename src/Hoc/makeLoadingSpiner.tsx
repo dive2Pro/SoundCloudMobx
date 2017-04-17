@@ -39,8 +39,8 @@ function makeLoadingSinner<Props, State>
       return (
         <div
           style={{ width: 'inherit', height: 'inherit' }}
-
-          className={rootClazz}>
+          className={rootClazz}
+        >
           <Comp
             {...this.props}
             isLoading={isLoading}

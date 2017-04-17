@@ -17,6 +17,7 @@ function HocLoadingMore<Props, State>(
     constructor() {
       super()
       this.handleScrolling = this.handleScrolling.bind(this)
+
     }
 
     handleScrolling(e: any) {

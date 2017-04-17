@@ -46,6 +46,7 @@ function makeOpacityTransition<Props, State>
         datas: nextProps.datas.map(this.geneDataItem)
       })
     }
+
     geneItemWithoutData = (item, index) => {
       return this.geneDataItem(null, index);
     }

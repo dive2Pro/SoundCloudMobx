@@ -8,6 +8,7 @@ import { PlayerStore } from '../../store/PlayerStore';
 import { PLAYER_STORE } from '../../constants/storeTypes';
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
 import makeOpacityTransition, { IAddtionalProps } from '../../Hoc/makeOpacityTransition'
+import makeTranslateXMotionWrapper from '../../Hoc/makeTranslateXStragged'
 
 interface IActivitiesProps extends IAddtionalProps {
   playerStore?: PlayerStore
@@ -38,29 +39,41 @@ class Activities extends React.Component<IActivitiesProps, any> {
     if (!store || !datas) {
       return <noscript />
     }
+
     return (
       <div className={styles.main}>
         <div className={styles.tracks}>
-          {interpolatedStyles && interpolatedStyles.map((item, i) => {
-            const style: any = item.style
-            const track: any = item.data || datas[i]
-            return (
-              <div
-                key={item.key + track.id + '-' + i}
-                style={{
-                  ...style, height: `${style.height}%`
-                }}>
-                {/*, overflow: 'hidden'*/}
+          {
+            interpolatedStyles ? interpolatedStyles.map((item, i) => {
+              const style: any = item.style || item
+
+              const track: any = item.data || datas[i]
+
+              return (
+                <div
+                  key={item.key + track.id + '-' + i}
+                  style={{
+                    ...style, left: `${style.left}`
+                  }}>
+                  <Stream
+                    type={type}
+                    track={track}
+                    i={i + 1}
+                    store={store}
+                  />
+                </div>
+              )
+            }) : datas.map((item, i) => {
+              return (
                 <Stream
+                  key={item.id + '-' + i}
                   type={type}
-                  track={track}
+                  track={item}
                   i={i + 1}
                   store={store}
                 />
-              </div>
-            )
-          })
-          }
+              )
+            })}
         </div>
       </div >
     );
@@ -70,4 +83,12 @@ class Activities extends React.Component<IActivitiesProps, any> {
 
 // let  ActivitiesCount = 0
 // 这里不需要传入 type,因为已经在 TrackStore中setGenre的时候设置了
-export default Hoc(makeOpacityTransition(makeLoadingSpinner(Activities), styles.main))
+export default Hoc(
+  // makeOpacityTransition(
+  makeLoadingSpinner(
+    // makeTranslateXMotionWrapper(
+    Activities
+    // )
+    // , styles.main
+  )
+)
