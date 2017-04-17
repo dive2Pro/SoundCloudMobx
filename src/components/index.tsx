@@ -1,7 +1,6 @@
 import * as React from "react";
-// import Header from './Header/Header'
 import { Route, Switch } from 'react-router-dom'
-import Header from './Header'
+import Side from './Header'
 import Player from './Player'
 import Playerlist from './Playerlist'
 import Callback from './Callback'
@@ -9,7 +8,8 @@ import DashBoard from './DashBoard'
 import Browser from './Browse'
 import TrackPager from './TrackPager'
 import { PlaylistInfo } from './Playlist'
-
+import { OpacityTransitoinSwitch } from './Switch'
+const styles = require('./favemusic.scss')
 
 const routes = [
   {
@@ -49,8 +49,8 @@ const routes = [
 
 
 class Main extends React.Component<any, undefined> {
-  route: HTMLDivElement;
   render() {
+
     return (
       <div
         style={{
@@ -59,18 +59,14 @@ class Main extends React.Component<any, undefined> {
           , position: 'relative'
         }}
       >
-        <Header />
-        <div ref={n => this.route = n}>
-          <Switch>
-            {
-              routes.map((route, i) => (
-                <Route
-                  key={i}
-                  {...route}
-                />
-              ))
-            }
-          </Switch>
+        <Side />
+        <div
+          className={styles.fave_div}
+        >
+          <OpacityTransitoinSwitch
+            datas={routes}
+            location={this.props.location}
+          />
           <Player />
           <Playerlist />
         </div>

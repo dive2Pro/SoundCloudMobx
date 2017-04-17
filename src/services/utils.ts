@@ -32,6 +32,7 @@ export function seconds2time(seconds: number): string {
 }
 
 export function transBigMath(value: number): string {
+  if (!value) { return '0' }
   if (value < 1000) {
     return value + '';
   }

@@ -66,7 +66,12 @@ class ArtWork extends React.Component<IArtWorkProps, any> {
       }
     })
   }
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.src !== this.img.src) {
 
+      this.caclImg(nextProps.src)
+    }
+  }
   caclImg = (src: string) => {
     const reg = /-{1}large\.{1}/
     let { size, style } = this.props

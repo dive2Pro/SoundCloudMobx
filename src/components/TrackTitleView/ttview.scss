@@ -2,12 +2,13 @@
 .track_counts{
   display: flex;
   justify-content: space-between;
+  max-width: px2rem(200px);
 }
 
 .track_info{
-  padding: $padding/2;  
+  padding: px2rem(10px);  
   text-align: initial;
-  @include ellipsisTexts($_100pxEm*5);
+  @include ellipsisTexts(px2rem(500px));
   &>*{
     // padding: $padding 0;
     text-overflow: inherit;

@@ -80,24 +80,31 @@ class FilterActivities extends React.Component<any, any> {
       activeType: this.actStore.sortType
     };
 
-    const { filteredTracks
+    const {
+       filteredTracks
       , isLoading
       , sortType
       , currentGenre
       , isError } = this.actStore
+    // 这里为了mobx更新
+    filteredTracks.length
+
     return (
       <div>
         <div className={styles.types}>
           <FilterPanel {...filterProp} />
           <FilterPanel {...sortProp} />
-          <SearchPanel handleSearch={this.handleSearchValue} />
+          <SearchPanel
+            autoSearch={true}
+            handleSearch={this.handleSearchValue}
+          />
         </div>
         <Activities
           scrollFunc={this.handleScroll}
-          sortType={sortType}
-          tracks={filteredTracks}
           isLoading={isLoading}
           isError={isError(currentGenre)}
+          datas={this.actStore.filteredTracks}
+          type={sortType}
         />
       </div>
     );

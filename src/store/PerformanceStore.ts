@@ -6,6 +6,7 @@ import {
   , computed
   , expr
   // , when
+  , runInAction
 } from 'mobx'
 
 export class PerformanceStore {
@@ -18,6 +19,8 @@ export class PerformanceStore {
   @observable scrollY: number
   isLoadingsByKey = new ObservableMap<boolean>();
 
+  isErrorsMap = new ObservableMap<boolean>()
+
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }
@@ -25,7 +28,6 @@ export class PerformanceStore {
   @action setCurrentGenre(genre: string) {
     this.genre = genre;
     if (!this.scrollLimitByGenre.get(genre)) {
-      // window.innerHeight + window.pageYOffset
       this.scrollLimitByGenre.set(
         genre,
         [window.innerHeight, window.innerHeight]
@@ -70,6 +72,18 @@ export class PerformanceStore {
     return allSettle
   }
 
+
+  isError = (genre: string): boolean => {
+    return this.isErrorsMap.get(genre) || false
+  }
+
+  @action catchErr = (err: any, genre: string) => {
+    this.isErrorsMap.set(genre, true);
+  }
+
+  @action resetErrorsMap = (fetchType: string) => {
+    this.isErrorsMap.set(fetchType, false);
+  }
 }
 
 export default new PerformanceStore()

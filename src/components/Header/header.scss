@@ -12,8 +12,9 @@
 }
 
 ._aside_playlist{ 
-
+  // overflow: hidden;
 }
+
 ._aside_header_img{
   text-align: center;
   margin-bottom: $padding;
@@ -82,18 +83,19 @@
 
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
 }
 
 .dropdown_content {
     display: none; 
     background-color: #f9f9f9;
-    min-width: 160px; 
+    min-width: px2rem(160px); 
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    top:$padding*0.75;
+    top:px2rem(15px);
     position:absolute; 
-    padding:10px;
+    padding:px2rem(10px);
     color:#f9f9f9;
 }
 .dropdown_content_visible{
@@ -101,11 +103,10 @@
   composes:dropdown_content;
   position: absolute;
   filter: drop-shadow(0 0 6px #bababa);
-  top: calc(100% + 10px);
-  left: calc(-100% );
+  top: calc(100% + 15px); 
   & button{
       background: $soundcloudColor;
-      padding: $padding/2 $padding;
+      padding: px2rem(15px) $padding;
       font-size: $smallIcon;
       width: 100%;
       height: 100%;
@@ -117,10 +118,10 @@
   &::before{
     position:absolute;
     content:"";
-    right:50%;
-    top:-6px;
-    height:15px; 
-    width:15px;
+    right:calc(50% - 7px);
+    top:px2rem(-6px);
+    height:px2rem(15px); 
+    width:px2rem(15px);
     background:currentColor;
     z-index:-1;
     transform:rotateZ(45deg);

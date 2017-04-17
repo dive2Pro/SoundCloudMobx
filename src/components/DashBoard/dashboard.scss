@@ -1,8 +1,7 @@
 @import "../../styles/variable.scss";
 
 .container{ 
-  // background: $background; 
-  width: $contentMinWidth;
+  // background: $background;  
   margin-top: $headerHight;
   margin-bottom: $playerHeight;
   justify-content: space-around;
@@ -11,6 +10,8 @@
 
 ._contentHeader{
   position: relative;
+  box-shadow: 0 0 2px black;
+    margin: 1px;
 }
 ._contentHeader_img{
   /*background: url("./images/mountain.jpg")*/
@@ -20,7 +21,7 @@
 }
 ._contentHeader_info{
   // background: linear-gradient(to bottom,transparent,white); 
-  padding: 20px 40px;
+  padding: $padding px2rem(40px);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -31,14 +32,14 @@
 }
 
 ._contentHeader_actions{
-  padding: 20px 0; 
+  padding: $padding 0; 
   width: 100%;
 }
 ._contentHeader_actions button{
-  padding: 5px 40px ;
-  margin-right: 20px;
+  padding: px2rem(5px) px2rem(40px) ;
+  margin-right: $padding;
   outline: none;
-  border-radius: 20px;
+  border-radius: $padding;
   background: white;
   border: 1px solid white;
   box-shadow: 0px 0px 2px 1px #a9a9a9;
@@ -56,9 +57,9 @@
  }
 
  ._contentHeader_profile{
-      font-size: 18px;
+      font-size: px2rem(18px);
       justify-content: space-around;
-      min-width: 180px;
+      min-width: px2rem(180px);
     &>span{
        border:none;
     }
@@ -79,6 +80,12 @@
   display: flex; 
   position: relative;
   padding: $padding/2  0;
+  &>*{
+    &:first-child{
+      flex: 4;
+      overflow: hidden;
+    }
+  }
 }
 ._songs_tag{
   color: #333;
@@ -100,9 +107,9 @@
  }
 
 ._contentBody_community_tag{
-  padding-left: 10px;
-  font-size: 18px;
-  padding-bottom: 20px;
+  padding-left: px2rem(10px);
+  font-size: px2rem(18px);
+  padding-bottom: $padding;
   font-weight: bold;
 } 
 ._contentBody_community_list{

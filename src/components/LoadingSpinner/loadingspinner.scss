@@ -1,7 +1,7 @@
 @import "../../styles/variable.scss";
 
 .spinner_loading{
-  height: $_100pxEm*0.75;
+  height: px2rem(75px);
   width: 100%;
   text-align: center;
   margin: 20px;

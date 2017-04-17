@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useStrict } from 'mobx'
-import "./styles/index.scss";
+import './styles/index.scss';
 import { Provider } from 'mobx-react';
 import * as stores from './store';
 require('font-awesome/css/font-awesome.css');
 useStrict(true)
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import App from './components'
 // const stores = [ActivitiesStore, userStore, TrackStore, PlayerStore]
 
@@ -15,7 +15,11 @@ const render = () => (
         <Provider
             {...stores}
         >
-            <App />
+            <Route
+                render={({ location }) => (
+                    <App location={location} />
+                )}
+            />
         </Provider>
     </Router>
 )
