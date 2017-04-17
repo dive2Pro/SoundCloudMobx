@@ -34,7 +34,7 @@ class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProp
 
     return (
       <NavLink
-        to={to || 'abondan'}
+        to={to || '/abondan'}
         activeClassName={styles.aside_hover}
         exact={to === '/'}
         isActive={isActive}
@@ -134,16 +134,14 @@ class Header extends React.Component<IHeaderProp, undefined> {
     const loginModel = userStore.getLoginUserModel
     return (
       <div className={styles._aside_header}>
-        {/*onClick={}*/}
         <div
           className={styles._aside_header_img}
         >
           <DropDown
             store={this.props.sessionStore}
           />
-
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
           <SearchPanel
             handleSearch={(value) => {
               if (location.pathname !== 'main') {

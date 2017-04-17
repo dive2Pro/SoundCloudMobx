@@ -1,5 +1,5 @@
 # fave_mobx
-[Live Mode](https://build-xxiwrnzryj.now.sh/)
+[Live Mode]( https://build-nqrhiscmsu.now.sh/)
 > 这是一个soundcloud的个人客户端 
 
 

@@ -53,18 +53,15 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.value != undefined) {
-
       const index = this.getSelectedIndex(nextProps)
-      if (index == -1) {
-        this.setIndex(index)
-      }
-
+      this.setIndex(index)
     }
   }
 
   componentWillReceiveProps(nextProps) {
 
   }
+
   @action setIndex = (index: number) => {
     this.index = index
   }
@@ -152,7 +149,7 @@ class Tabs extends React.Component<ITabsProps, any> {
     return {
       width: width + 'px',
       transition: 'transform 0.3s ease',
-      transform: `translateX(${width * this.index + 'px'})`,
+      transform: `translateX(${width * i + 'px'})`,
       background: '#0f0',
       height: '100%'
       , ...inkBarStyle,
