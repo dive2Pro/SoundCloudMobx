@@ -94,7 +94,10 @@ class FilterActivities extends React.Component<any, any> {
         <div className={styles.types}>
           <FilterPanel {...filterProp} />
           <FilterPanel {...sortProp} />
-          <SearchPanel handleSearch={this.handleSearchValue} />
+          <SearchPanel
+            autoSearch={true}
+            handleSearch={this.handleSearchValue}
+          />
         </div>
         <Activities
           scrollFunc={this.handleScroll}

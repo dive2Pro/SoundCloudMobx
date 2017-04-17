@@ -2,6 +2,7 @@
 .track_counts{
   display: flex;
   justify-content: space-between;
+  max-width: px2rem(200px);
 }
 
 .track_info{

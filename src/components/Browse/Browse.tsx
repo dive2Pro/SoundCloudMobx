@@ -17,7 +17,8 @@ interface IDashBorardProps {
   genre?: string
   trackStore: TrackStore
   performanceStore: PerformanceStore
-  history: any
+  history: any,
+  searchGenre?: string
 }
 
 @inject(TRACK_STORE, PERFORMANCE_STORE)
@@ -27,16 +28,21 @@ class Browse extends React.Component<IDashBorardProps, any> {
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
+
   id = 'Browser'
+
+  componentWillReceiveProps(nextProps: IDashBorardProps) {
+    if (nextProps.searchGenre != null) {
+      this.props.trackStore.setGenre(nextProps.searchGenre);
+    }
+  }
 
   componentDidMount() {
     this.props.performanceStore.setCurrentGlassNodeId(this.id)
   }
+
   handleTabActive = (value: string, index: number) => {
-    this.props.trackStore.setGenre(value)
-    console.log(value);
-
-
+    this.props.trackStore.setGenre(value);
   }
   render() {
     const { currentGenre } = this.props.trackStore

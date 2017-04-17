@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { computed, observable, autorun, expr, action } from 'mobx';
-import { observer } from 'mobx-react'; 
+import { observer } from 'mobx-react';
 const styles = require('./tabs.scss')
 
 interface ITabsProps {
@@ -46,17 +46,35 @@ class Tabs extends React.Component<ITabsProps, any> {
     return { ...tempStyle, ...root }
   };
 
-  @action componentWillMount() {
-    this.index = this.props.initialSelectedIndex || 0
+  componentWillMount() {
+
+    this.setIndex(this.props.initialSelectedIndex || 0)
   }
-  @action componentWillReceiveProps(nextProps) {
+
+  componentWillUpdate(nextProps, nextState) {
     if (nextProps.value != undefined) {
-      // this.index = this.getSelectedIndex(nextProps)
+      console.log(nextProps.value);
+
+      const index = this.getSelectedIndex(nextProps)
+      // console.log(nextProps.value);
+      if (index == -1) {
+        // this.index = index
+        this.setIndex(index)
+      }
+      console.log(this.index, index);
+
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+
+  }
+  @action setIndex = (index: number) => {
+    this.index = index
+  }
+
   getSelectedIndex = (props): number => {
-    const valueLink = this.getValueLink()
+    const valueLink = this.getValueLink(props)
 
     let selectedIndex = -1;
     this.getTabs().forEach((tab, index) => {
@@ -64,14 +82,17 @@ class Tabs extends React.Component<ITabsProps, any> {
         selectedIndex = index
       }
     })
+    console.log('selectedIndex = ' + selectedIndex);
+
     return selectedIndex
   }
-  getValueLink = () => {
-    return { value: this.props.value }
+
+  getValueLink = (props) => {
+    return { value: props.value }
   }
 
   getSelected = (tab: any, i: number): boolean => {
-    const valueLink = this.getValueLink()
+    const valueLink = this.getValueLink(this.props)
 
     return valueLink.value ? valueLink.value === tab.props.value : this.index === i
   }
@@ -79,15 +100,15 @@ class Tabs extends React.Component<ITabsProps, any> {
   tabs = () => {
     const { tabTemplateStyle } = this.props
     this.tabContent = [];
-    return this.getTabs().map((c, i) => {
+    return this.getTabs().map((c, index) => {
       if (!c.type || c.type['uiName'] !== 'Tab') {
-        console.warn(`Tabs only accepts  Tab component as children,${c.type} found ${i + 1} of Tabs`);
+        console.warn(`Tabs only accepts  Tab component as children,${c.type} found ${index + 1} of Tabs`);
       }
 
       this.tabContent.push(c.props.children ? React.createElement(
         TabTemplate, {
-          key: i,
-          selected: this.getSelected(c, i)
+          key: index,
+          selected: this.getSelected(c, index)
           , style: tabTemplateStyle
         },
         c.props.children) : undefined);
@@ -95,10 +116,10 @@ class Tabs extends React.Component<ITabsProps, any> {
       const tab = React.cloneElement(
         c,
         {
-          key: 'tab - ' + i,
-          index: i,
-          selected: this.getSelected(c, i),
-          style: this.getSelectedStyle(i),
+          key: 'tab - ' + index,
+          index: index,
+          selected: this.getSelected(c, index),
+          style: this.getSelectedStyle(index),
           handleClick: this.handleOnClick
         },
         c.props.children
@@ -120,7 +141,6 @@ class Tabs extends React.Component<ITabsProps, any> {
     // const valueLink = this.getValueLink()
     this.index = index;
     if (this.props.onActive) {
-      
       this.props.onActive(value, index);
     }
   };
@@ -131,6 +151,8 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @computed get linkStyle() {
     const i = this.index;
+    console.log(this.index, '===');
+
     const width = 1 / this.getTabs().length * this.width;
     const { inkBarStyle } = this.props
     return {
@@ -144,7 +166,6 @@ class Tabs extends React.Component<ITabsProps, any> {
   }
 
   render() {
-    
     return (
       <div
         ref={n => this.link = n}
