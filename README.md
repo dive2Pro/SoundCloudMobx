@@ -1,6 +1,8 @@
 # fave_mobx
-
+[Live Mode](https://build-xxiwrnzryj.now.sh/)
 > 这是一个soundcloud的个人客户端 
+
+
 ## 使用到的技术
 1. react
 2. mobx 
