@@ -29,8 +29,6 @@ interface IPlaylistProps extends IisLoading {
 @observer
 class PlaylistItem extends React.PureComponent<{ info: IPlaylist }, any> {
 
-
-
   render() {
     const { artwork_url, label_name, id, title } = this.props.info
     const to = { pathname: '/playlist', search: `?id=${id}` }
@@ -47,7 +45,6 @@ class PlaylistItem extends React.PureComponent<{ info: IPlaylist }, any> {
     )
   }
 }
-
 
 @makeTranslateXMotion
 @observer

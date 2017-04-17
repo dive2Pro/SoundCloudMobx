@@ -9,10 +9,8 @@ import ViewAll from '../ViewAll';
 import { UserStore, User } from '../../store/UserStore';
 import { USER_STORE } from '../../constants/storeTypes';
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
-import { IisLoading } from "../../interfaces/interface";
+import { IisLoading } from '../../interfaces/interface';
 const styles = require('./followers.scss')
-
-
 
 export interface IFollowersProps extends IisLoading {
   type: string
@@ -86,4 +84,4 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
   }
 }
 
-export default makeLoadingSpinner(Followers);
+export default makeLoadingSpinner(Followers, styles.base);
