@@ -24,20 +24,17 @@ interface IDashBorardProps {
 @inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Browse extends React.Component<IDashBorardProps, any> {
-
   public static defaultProps: Partial<IDashBorardProps> = {
     genre: GENRES[0]
   }
 
   id = 'Browser'
 
-  componentWillReceiveProps(nextProps: IDashBorardProps) {
-    if (nextProps.searchGenre != null) {
-      this.props.trackStore.setGenre(nextProps.searchGenre);
-    }
-  }
-
   componentDidMount() {
+    const { currentGenre } = this.props.trackStore
+    if (!GENRES.some(item => item === currentGenre)) {
+      this.props.trackStore.setGenre(GENRES[0]);
+    }
     this.props.performanceStore.setCurrentGlassNodeId(this.id)
   }
 
