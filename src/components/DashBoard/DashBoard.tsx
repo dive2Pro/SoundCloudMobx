@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel from '../FollowsPanel'
 import FavoritesPanel from '../FavoritesPanel';
-import { Switch } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
@@ -17,11 +17,11 @@ import { UserStore, User } from '../../store/UserStore';
 import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
-import { spring, presets } from 'react-motion'
-import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from "../../constants/fetchTypes";
-import Route from '../Route/TransitionRoute'
+import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from '../../constants/fetchTypes';
+// import Route from '../Route/TransitionRoute'
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
+import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
 interface IDashBorardProps {
   userStore: UserStore
@@ -40,18 +40,7 @@ export const BlankView = () => {
   )
 }
 
-const profile$: any = {
-  position: 'absolute',
-  right: '5%',
-  top: '5%',
-  zIndex: '2',
-  background: 'hsla(0, 0, 100 % ,0.3)',
-  overflow: 'hidden',
-  display: 'inline-flex'
-  , alignItems: 'center'
-}
-
-
+@makeTranslateXMotion
 @observer
 class FavoView extends React.PureComponent<any, any>  {
   render() {
@@ -82,6 +71,12 @@ class FavoView extends React.PureComponent<any, any>  {
   PERFORMANCE_STORE)
 @observer
 class DashBorard extends React.Component<IDashBorardProps, any> {
+  id: number
+  infoGlassStyle: {} = {}
+  headerInfo: any
+  headerImg: any;
+  profile: any;
+
   renderContentBodyMain = (us: UserStore, performanceStore: PerformanceStore) => {
     const { match: { url } } = this.props
     const { userModel } = us
@@ -95,8 +90,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
           }}
           willLeave={() => ({ left: spring(-200, presets.gentle), spacity: spring(0, presets.gentle) })}
        */}
-        <Switch
-        >
+        <Switch>
           {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
           {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
           <Route
@@ -194,17 +188,12 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     )
   }
 
-  headerInfo: any;
   handlePlayAll = () => {
     if (this.props.userStore.userModel) {
       this.props.playerStore.addToPlaylist(this.props.userStore.userModel.favorites)
     }
   }
 
-  headerImg: any;
-  profile: any;
-  id: number
-  infoGlassStyle: any = {}
   handlerFetchMoreContacts = (type: string) => {
     const um = this.props.userStore.userModel
     um && um.fetchWithType(type);
@@ -252,7 +241,6 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
   }
 
   componentWillMount() {
-
     const loc = this.props.location
     if (loc) {
       // todo id undefined redicet to other 
@@ -280,6 +268,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
       this.changeUserId(id)
     }
   }
+
   handleFetchMorePlaylist = () => {
 
   }

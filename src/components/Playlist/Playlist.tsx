@@ -49,7 +49,7 @@ class PlaylistItem extends React.PureComponent<{ info: IPlaylist }, any> {
 }
 
 
-// @makeTranslateXMotion
+@makeTranslateXMotion
 @observer
 class Playlist extends React.Component<IPlaylistProps, any>{
 
@@ -121,6 +121,7 @@ export class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
   componentDidUpdate() {
     this.handleLocationChange()
   }
+
   handleFollowing = () => {
 
   }

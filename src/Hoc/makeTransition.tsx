@@ -46,13 +46,14 @@ function patch(target, funcName) {
 }
 
 function mixinLifecycleEvents(target) {
+  const newChild = React.cloneElement(target);
   [
     'componentDidMount',
     'componentWillUnmount'
   ].forEach(function (funcName) {
-    patch(target, funcName)
+    patch(newChild, funcName)
   })
-  return target
+  return newChild
 }
 
 
@@ -70,10 +71,10 @@ function makeOpacityTransition<Props, State>
     state = {
       datas: new Array<Object>()
     }
-
+    clonedChildren: any[];
     componentWillMount() {
-      React.Children.forEach(this.props.children, (child, index) => {
-        mixinLifecycleEvents(child)
+      this.clonedChildren = React.Children.map(this.props.children, (child, index) => {
+        return mixinLifecycleEvents(child)
       })
     }
 
@@ -143,6 +144,7 @@ function makeOpacityTransition<Props, State>
                 {...this.props}
                 className={TargetClassName}
                 interpolatedStyles={interpolatedStyles}
+                children={this.clonedChildren}
               />
             )
           }

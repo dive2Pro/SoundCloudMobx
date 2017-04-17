@@ -6,7 +6,7 @@ export default function makeTranslateMotion<Props, State>(
   Comp: new () => Component<Props, State>
 ) {
 
-  return class makeOpacityMotionWrapper extends Component<any, any>{
+  return class makeTranslateXMotionWrapper extends Component<any, any>{
     state = {
       mounted: false
     }
@@ -31,7 +31,9 @@ export default function makeTranslateMotion<Props, State>(
       }
 
       return (
-        <Motion style={style}>
+        <Motion
+          style={style}
+        >
           {
             styles => {
               return (

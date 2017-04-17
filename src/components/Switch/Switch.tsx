@@ -18,7 +18,7 @@ class SwitchDefault extends React.Component<ISwitchDefaultProps, any> {
               <div
                 key={'SwitchDefault - ' + item.key + ' i ' + i}
                 {...route}
-                style={item.style}
+                style={{ ...item.style, position: 'relative' }}
               >
                 <Route
                   location={this.props.location}

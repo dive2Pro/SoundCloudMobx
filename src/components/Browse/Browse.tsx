@@ -10,6 +10,7 @@ import { TrackStore } from '../../store/TrackStore';
 import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import Tabs from '../Tabs';
+import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
 interface IDashBorardProps {
   location?: any,
@@ -69,4 +70,4 @@ class Browse extends React.Component<IDashBorardProps, any> {
   }
 }
 
-export default Browse;
+export default makeTranslateXMotion(Browse)

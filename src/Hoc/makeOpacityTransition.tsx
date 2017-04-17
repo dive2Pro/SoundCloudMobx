@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Component } from 'react'
 import { spring, TransitionMotion, presets } from 'react-motion'
-import { observer } from "._mobx-react@4.1.7@mobx-react";
+import { observer } from "mobx-react";
 
 interface ImakeOpacityTransitionProp {
   datas?: Object[]
@@ -53,7 +53,7 @@ function makeOpacityTransition<Props, State>
     geneDataItem = (item, index) => {
       return {
         style: {
-          height: 0,
+          left: -200,
           opacity: 1
         },
         data: item
@@ -70,8 +70,8 @@ function makeOpacityTransition<Props, State>
         return {
           ...item,
           style: {
-            // height: spring(100),
-            opacity: spring(1)
+            opacity: spring(1),
+            left: spring(0, presets.gentle)
           }
         }
 
@@ -79,12 +79,16 @@ function makeOpacityTransition<Props, State>
     }
     willEnter = () => {
       return {
-        opacity: 0
+        opacity: 0,
+        left: -200
       }
     }
 
     willLeave = () => {
-
+      return {
+        opacity: spring(0),
+        left: spring(-200, presets.gentle)
+      }
     }
 
     render() {
