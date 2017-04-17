@@ -8,7 +8,7 @@ const styles = require('./stream.scss')
 import StreamExtends from './StreamExtends'
 import StreamMain from './StreamMain'
 import { PlayerStore } from "../../store/PlayerStore";
-import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
+// import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
 
 interface IStreamProps {
   track: ITrack, store: PlayerStore, type: string, i: number,

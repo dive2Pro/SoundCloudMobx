@@ -9,7 +9,7 @@ import { GENRES } from '../../constants/trackTypes'
 import { TrackStore } from '../../store/TrackStore';
 import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PerformanceStore } from '../../store/PerformanceStore';
-import Tabs from '../Tabs';
+import Tabs, { Tab } from '../Tabs';
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
 interface IDashBorardProps {
@@ -34,6 +34,9 @@ class Browse extends React.Component<IDashBorardProps, any> {
   }
   handleTabActive = (value: string, index: number) => {
     this.props.trackStore.setGenre(value)
+    console.log(value);
+
+
   }
   render() {
     const { currentGenre } = this.props.trackStore
@@ -44,22 +47,21 @@ class Browse extends React.Component<IDashBorardProps, any> {
         id={this.id}
         className={styles.container}
       >
-
         <Tabs
           onActive={this.handleTabActive}
           initialSelectedIndex={index}
           inkBarStyle={{ background: selectedStyle }}
           selectedTextColor={selectedStyle}
+          value={currentGenre}
         >
           {
             GENRES.map((item, i) => {
               return (
-                <div
-                  key={i + '-' + item}
+                <Tab
+                  key={`${item} -- ${i}`}
                   label={item}
-                >
-                  {item}
-                </div>)
+                  value={item}
+                />)
             })}
         </Tabs>
         <TrackList

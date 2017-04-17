@@ -12,10 +12,7 @@ interface ITransitionRouteProp {
 }
 @makeTranslateXMotion
 class TransitionRoute extends React.PureComponent<ITransitionRouteProp, any>{
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
 
-  }
   render() {
 
     return (

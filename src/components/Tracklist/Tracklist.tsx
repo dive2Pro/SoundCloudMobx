@@ -3,6 +3,7 @@ import Activities from '../Activities'
 import ButtonMore from '../ButtonMore'
 import { observer } from 'mobx-react'
 import { TrackStore } from '../../store/TrackStore';
+import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
 
 export function getGenreFromPathname(pathname: string) {
   const reg = /=\w{2,8}/g;
@@ -10,7 +11,6 @@ export function getGenreFromPathname(pathname: string) {
   let genre = reged[0].substr(1);
   return genre;
 }
-
 @observer
 class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
 
@@ -30,7 +30,6 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
         style={{
           padding: '10px',
           minHeight: '100vh'
-
         }}
       >
         <Activities
@@ -51,4 +50,4 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
     )
   }
 }
-export default Tracklist;
+export default makeOpacityMotion(Tracklist);

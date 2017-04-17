@@ -5,7 +5,10 @@ import { observer, inject } from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel from '../FollowsPanel'
 import FavoritesPanel from '../FavoritesPanel';
-import { Switch, Route } from 'react-router-dom'
+import {
+  Switch
+  // , Route
+} from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
@@ -18,7 +21,7 @@ import { USER_STORE, PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/sto
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from '../../constants/fetchTypes';
-// import Route from '../Route/TransitionRoute'
+import Route from '../Route/TransitionRoute'
 const preload = require('../../../public/images/preload.jpg')
 const qs = require('qs')
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
@@ -82,52 +85,61 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     const { userModel } = us
 
     return (
-      <div className={styles._contentBody_main}>
-        {/* getDefaultItemStyle={(item, index) => ({ opacity: 0, left: -200, overflow: 'hidden' })}
+
+      <Route
+        path={`${url}`}
+        render={({ location }) => {
+          {/* getDefaultItemStyle={(item, index) => ({ opacity: 0, left: -200, overflow: 'hidden' })}
           getItemStyle={(item, index) => ({ opacity: spring(1), left: spring(0, presets.gentle) })}
           willEnter={() => {
             return ({ left: -200, opacity: 1 })
           }}
           willLeave={() => ({ left: spring(-200, presets.gentle), spacity: spring(0, presets.gentle) })}
        */}
-        <Switch>
-          {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
-          {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
-          <Route
-            path={`${url}/favorites`}
-            render={() => {
-              return (
-                <FavoView
-                  userStore={us}
-                  performanceStore={performanceStore}
-                />)
-            }}
-          />
-          <Route
-            path={`${url}/playlist`}
-            render={(match: any) => {
-              return userModel ? (
-                <Playlist
-                  scrollFunc={this.handleFetchMorePlaylist}
-                  userModel={userModel}
+          return (
+            <div className={styles._contentBody_main}>
+              <Switch location={location}>
+                {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWERS)}
+                {this.renderCommunityContainer(url, fetchTypes.FETCH_FOLLOWINGS)}
+                <Route
+                  path={`${url}/favorites`}
+                  location={location}
+                  render={() => {
+                    return (
+                      <FavoView
+                        userStore={us}
+                        performanceStore={performanceStore}
+                      />)
+                  }}
                 />
-              ) : <LoadingSpinner isLoading={true} />
-            }}
-          />
-          <Route
-            path={'/'}
-            render={() => {
-              return us.isLoginUser ?
-                <FilterActivities />
-                : (
-                  <FavoView
-                    userStore={us}
-                    performanceStore={performanceStore}
-                  />)
-            }}
-          />
-        </Switch>
-      </div>
+                <Route
+                  path={`${url}/playlist`}
+                  render={(match: any) => {
+                    return userModel ? (
+                      <Playlist
+                        scrollFunc={this.handleFetchMorePlaylist}
+                        userModel={userModel}
+                      />
+                    ) : <LoadingSpinner isLoading={true} />
+                  }}
+                />
+
+                <Route
+                  path={'/'}
+                  render={() => {
+                    return us.isLoginUser ?
+                      <FilterActivities />
+                      : (
+                        <FavoView
+                          userStore={us}
+                          performanceStore={performanceStore}
+                        />)
+                  }}
+                />
+              </Switch>
+            </div>)
+        }} />
+
     )
   }
   renderContentHeader = (user: User, isLoginUser: boolean) => {

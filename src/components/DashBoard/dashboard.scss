@@ -80,6 +80,12 @@
   display: flex; 
   position: relative;
   padding: $padding/2  0;
+  &>*{
+    &:first-child{
+      flex: 4;
+      overflow: hidden;
+    }
+  }
 }
 ._songs_tag{
   color: #333;

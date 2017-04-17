@@ -14,17 +14,26 @@ export default function makeOpacityMotion<Props, State>(
 
   return class makeOpacityMotionWrapper extends Component<Props, any>{
     state = {
-      mounted: false
+      opacity: 0
+    }
+    componentDidMount() {
+      this.setState({ opacity: 1 })
     }
     componentWillReceiveProps(nextProps) {
-      this.setState({
-        mounted: false
-      })
+
     }
+
+    componentDidUpdate(prevProps, prevState) {
+
+      if (this.state.opacity == 0 && prevState.opacity == 1) {
+        this.setState({ opacity: 1 })
+      }
+    }
+
+
     render() {
       const style = {
-        opacity: this.state.mounted ? spring(0) : spring(1),
-        frame: this.state.mounted ? spring(0) : spring(400)
+        opacity: spring(this.state.opacity, presets.gentle)
       }
 
       return (
@@ -34,7 +43,9 @@ export default function makeOpacityMotion<Props, State>(
               const opacity = styles.opacity;
               const frame = styles.frame
               return (
-                <div onClickCapture={() => this.setState({ mounted: true })}>
+                <div
+                  style={styles}
+                  onClickCapture={() => this.setState({ mounted: true })}>
 
                   <Comp
                     additionalStyles={{

@@ -40,12 +40,10 @@ export abstract class BaseAct<T> implements IBaseActStore {
 
   autorunHandle: IReactionDisposer;
 
-  constructor(genre: string) {
-    this.setGenre(genre);
-  }
+
 
   @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(this.currentGenre) || false
+    return this.isLoadingByGenre.get(this.currentGenre)
   }
 
   @action setFilterTitle(title: string) {
@@ -149,11 +147,24 @@ export abstract class BaseAct<T> implements IBaseActStore {
 
   }
 }
+const debounce = require('lodash/debounce')
 
 export class TrackStore extends BaseAct<ITrack> {
   static defaultGenre = GENRES[0];
-  @observable currentTrack: ITrack
+  debouncedFetchData: any;
 
+  @observable currentTrack: ITrack
+  constructor() {
+    super()
+    this.bindDebounced();
+    this.setGenre(TrackStore.defaultGenre)
+  }
+
+  bindDebounced = () => {
+    if (!this.debouncedFetchData) {
+      this.debouncedFetchData = debounce(this.fetchData.bind(this), 50).bind(this)
+    }
+  }
 
   @computed get hasMoreTracks() {
     return this.hasCurrentGenreTracks
@@ -216,7 +227,7 @@ export class TrackStore extends BaseAct<ITrack> {
 
   fetchSingleTrack(id: number) {
     const url = unauthApiUrl(`tracks/${id}`, '?')
-    this.fetchData(url, (data) => {
+    this.debouncedFetchData(url, (data) => {
       // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.
       this.setCurrentTrack(data); // mayby Track?
     }, )
@@ -225,16 +236,14 @@ export class TrackStore extends BaseAct<ITrack> {
 
 
   @action async fetchTracks() {
-    if (this.isLoading) {
-      return;
-    }
+
     let requestGenre = this.currentGenre.toLocaleLowerCase() || 'country', url;
     url = this.nextHref
     if (!url) {
       url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${requestGenre}`, '&')
     }
     let genre = this.currentGenre
-    this.fetchData(url, (data: any) => {
+    this.debouncedFetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);
     })
@@ -254,6 +263,9 @@ export class TrackStore extends BaseAct<ITrack> {
   // 这里设计的不好,genre不太可调?
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
   private async fetchData(url: string, fn: (data: any) => void, gr?: string) {
+    if (this.isLoading) {
+      return;
+    }
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
@@ -271,4 +283,4 @@ export class TrackStore extends BaseAct<ITrack> {
 
 }
 
-export default new TrackStore(TrackStore.defaultGenre);
+export default new TrackStore();

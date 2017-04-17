@@ -8,7 +8,8 @@ import { RaceFetch as fetch } from '../services/Fetch'
 export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
 
   constructor() {
-    super(FETCH_ACTIVITIES)
+    super()
+    this.setGenre(FETCH_ACTIVITIES)
   }
 
 
