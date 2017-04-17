@@ -56,14 +56,7 @@ export class PerformanceStore {
   }
 
   @action setLoadingStateWithKey = (key: string, loading: boolean) => {
-
-    // this.isLoadingsByKey.set(key, loading)
-    // setTimeout(
-    // runInAction('setLoadingStateWithKey',
-    // () =>
     this.isLoadingsByKey.set(key, loading)
-    // , 500
-    // )
   }
 
   getLoadingStateWidthKey = (key: string) => {

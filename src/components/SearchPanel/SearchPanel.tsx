@@ -55,7 +55,7 @@ function catchOutSideCLick<Props, State>(Comp: new () => Component<Props
     }
 
     onOutsideClick = (event) => {
-      if (!this.props.isOpen) return
+      if (!this.props.isOpen) { return }
       event.preventDefault();
       const local = ReactDOM.findDOMNode(this)
 

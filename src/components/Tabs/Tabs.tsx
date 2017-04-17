@@ -53,15 +53,11 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.value != undefined) {
-      console.log(nextProps.value);
 
       const index = this.getSelectedIndex(nextProps)
-      // console.log(nextProps.value);
       if (index == -1) {
-        // this.index = index
         this.setIndex(index)
       }
-      console.log(this.index, index);
 
     }
   }
@@ -82,7 +78,6 @@ class Tabs extends React.Component<ITabsProps, any> {
         selectedIndex = index
       }
     })
-    console.log('selectedIndex = ' + selectedIndex);
 
     return selectedIndex
   }
@@ -151,7 +146,6 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @computed get linkStyle() {
     const i = this.index;
-    console.log(this.index, '===');
 
     const width = 1 / this.getTabs().length * this.width;
     const { inkBarStyle } = this.props

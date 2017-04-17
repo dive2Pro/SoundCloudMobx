@@ -20,7 +20,7 @@ function makeLoadingSinner<Props, State>
   (
   Comp: new () => Component<Props & IisLoading, State>
   ,
-  loadingType?: string) {
+  rootClazz?: string) {
 
   @inject(PERFORMANCE_STORE)
   @observer
@@ -28,13 +28,13 @@ function makeLoadingSinner<Props, State>
     extends React.PureComponent<Props & ImakeLoadingSinnerProp, State>{
 
     render() {
-      let { rootClazz, type, isError, isLoading
+      let { type, isError, isLoading
         , performanceStore } = this.props
       if (!performanceStore) {
         return <noscript />
       }
       const ps: any = performanceStore;
-      isError = isError || ps.isError(loadingType || type);
+      isError = isError || ps.isError(type);
       let loading = isLoading || ps.getLoadingState(type);
       return (
         <div
