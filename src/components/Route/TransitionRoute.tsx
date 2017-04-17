@@ -17,7 +17,6 @@ class TransitionRoute extends React.PureComponent<ITransitionRouteProp, any>{
 
   }
   render() {
-    console.log(this.props);
 
     return (
       <Route {...this.props} />

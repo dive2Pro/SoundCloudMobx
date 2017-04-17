@@ -56,13 +56,14 @@ export class UserStore {
     const isNumber = typeof obj === 'number'
     let id = isNumber ? obj : ((<User>obj).id)
     let userModel = this.userModels.get(id + '')
-
     if (!userModel) {
       userModel = new UserModel(this, obj)
       userModel.fetchCommunityData()
       this.userModels.set(id + '', userModel)
     } else if (!isNumber) {
       userModel.setUser(<User>obj)
+    } else {
+      userModel.fetchCommunityDataWithEmptyLength()
     }
 
     return userModel;
@@ -160,9 +161,10 @@ export class UserStore {
 
 
   async detectIsFollowing(id: number) {
-    //  https://api-v2.soundcloud.com/users/7586270/followers/followed_by/278227204?client_id=2t9loNQH90kzJcsFCODdigxfp325aq4z&limit=10&offset=0&linked_partitioning=1&app_version=1491855525
-    const data = await fetch(unauthApiUrlV2(`users/${id}/followings/not_followed_by/${this.loginedUserId}`, "?"))
-    console.log(data);
+    //  https://api-v2.soundcloud.com/users/7586270/followers/followed_by/278227204
+    // ?client_id = 2t9loNQH90kzJcsFCODdigxfp325aq4z& limit=10 
+    // & offset=0 & linked_partitioning=1 & app_version=1491855525
+    const data = await fetch(unauthApiUrlV2(`users/${id}/followings/not_followed_by/${this.loginedUserId}`, '?'))
   }
 
   /**
@@ -182,7 +184,6 @@ export class UserStore {
         method: isFollowing ? 'delete' : 'put'
       }
     )
-    console.log(data)
     if (data) {
       this.operaUserFromFollowings(user, isFollowing)
     }
@@ -193,7 +194,7 @@ export class UserStore {
 
   @action private operaUserFromFollowings(user: User, followed: boolean) {
     const lum = this.getLoginUserModel
-    if (!lum) return
+    if (!lum) { return }
     if (followed) {
       user.isFollowing = false
       lum.followings.splice(lum.followings.indexOf(user), 1)
@@ -292,9 +293,16 @@ export class UserModel {
     return this.streams.filter(stream => stream.track != null).map(s => s.track);
   }
 
+  fetchCommunityDataWithEmptyLength() {
+    [FETCH_FOLLOWERS, FETCH_FAVORITES, FETCH_FOLLOWINGS]
+      .forEach(item => {
+        if (this[item].length < 1) {
+          this.fetchWithType(item)
+        }
+      })
+  }
 
-
-  @action fetchCommunityData() {
+  fetchCommunityData() {
 
     this.fetchWithType(FETCH_FOLLOWERS);
     this.fetchWithType(FETCH_FOLLOWINGS);
@@ -394,7 +402,7 @@ export class UserModel {
     }
     const fetchType = type
     let url = this.getFetchUrl(fetchType, id)
-    console.log(url, type)
+
     if (!url) { return }
 
     try {

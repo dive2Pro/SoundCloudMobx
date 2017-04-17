@@ -1,7 +1,6 @@
 import * as React from "react";
-// import Header from './Header/Header'
 import { Route, Switch } from 'react-router-dom'
-import Header from './Header'
+import Side from './Header'
 import Player from './Player'
 import Playerlist from './Playerlist'
 import Callback from './Callback'
@@ -60,7 +59,7 @@ class Main extends React.Component<any, undefined> {
           , position: 'relative'
         }}
       >
-        <Header />
+        <Side />
         <div
           className={styles.fave_div}
         >
