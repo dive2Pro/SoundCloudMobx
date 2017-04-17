@@ -235,14 +235,23 @@ export class TrackStore extends BaseAct<ITrack> {
 
 
 
-  @action async fetchTracks() {
+  @action async fetchTracks(urlCallback?: () => string) {
 
     let requestGenre = this.currentGenre.toLocaleLowerCase() || 'country', url;
     url = this.nextHref
+
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${requestGenre}`, '&')
+      if (urlCallback) {
+        url = urlCallback();
+      } else {
+        url = `tracks?linked_partitioning=1&limit=20&offset=0&genres=${requestGenre}`;
+      }
+      url = unauthApiUrl(url, '&');
     }
+
     let genre = this.currentGenre
+
+
     this.debouncedFetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);
@@ -251,14 +260,16 @@ export class TrackStore extends BaseAct<ITrack> {
   }
 
 
-  @action setGenre(genre: string) {
+  @action setGenre(genre: string, urlCallback?: () => string) {
     super.setGenre(genre);
 
     if (!this.hasCurrentGenreTracks) {
-      this.fetchTracks();
+      this.fetchTracks(urlCallback);
     }
-
   }
+
+
+
 
   // 这里设计的不好,genre不太可调?
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?

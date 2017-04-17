@@ -8,17 +8,21 @@ import LoadingSpinner from '../LoadingSpinner'
 import {
   withRouter
 } from 'react-router-dom'
-import { FETCH_PLAYLIST } from '../../constants/fetchTypes'
+import { FETCH_PLAYLIST, FETCH_QUERY } from '../../constants/fetchTypes'
 const styles = require('./header.scss');
 import ArtWork from '../ArtWork'
 import { observable, action } from 'mobx';
 import { UserStore, User } from '../../store/UserStore';
 import { SessionStore } from '../../store/SessionStore';
-import { SESSION_STORE, USER_STORE } from '../../constants/storeTypes'
-
+import { SESSION_STORE, USER_STORE, TRACK_STORE } from '../../constants/storeTypes'
+import SearchPanel from '../SearchPanel'
+import { TrackStore } from "../../store/TrackStore";
 interface IHeaderProp {
   sessionStore: SessionStore
-  userStore: UserStore
+  userStore: UserStore,
+  trackStore: TrackStore
+  location: any,
+  history: any
 }
 interface IWidhtRouterStyleLinkProps {
   to?: string | Object
@@ -67,7 +71,6 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
   @action toggleDropdowning = () => {
     this.dropdowning = !this.dropdowning;
   }
-
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onOutsideClick);
@@ -123,22 +126,36 @@ class DropDown extends React.PureComponent<IDropDownProps, any>{
   }
 }
 
-@inject(SESSION_STORE, USER_STORE)
+@inject(SESSION_STORE, USER_STORE, TRACK_STORE)
 @observer
 class Header extends React.Component<IHeaderProp, undefined> {
   renderTop = () => {
-    const { userStore } = this.props
+    const { userStore, location, history, trackStore } = this.props
     const loginModel = userStore.getLoginUserModel
     return (
       <div className={styles._aside_header}>
         {/*onClick={}*/}
         <div
-          className={styles._aside_header_img}>
-
+          className={styles._aside_header_img}
+        >
           <DropDown
             store={this.props.sessionStore}
           />
+
         </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <SearchPanel
+            handleSearch={(value) => {
+              if (location.pathname !== 'main') {
+                history.push('/main')
+              }
+              trackStore.setGenre(`${FETCH_QUERY}_${value}`, function () {
+                return `tracks?linked_partitioning=1&limit=20&offset=0&q=${value}`
+              })
+            }}
+          />
+        </div>
+
         <ul className={styles._aside_header_ul}>
           <li>
             <StyleLink>Library</StyleLink>
@@ -204,7 +221,6 @@ class Header extends React.Component<IHeaderProp, undefined> {
                 </li>)
             })
           }
-
         </ul>
         <LoadingSpinner
           isLoading={isLoading}
@@ -244,7 +260,6 @@ class Header extends React.Component<IHeaderProp, undefined> {
           <li>
             <StyleLink
               isActive={isActive}
-
               to={{
                 pathname: `/users/favorites`,
                 search: `?id=${user && user.id}`
@@ -253,9 +268,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
             </StyleLink>
           </li>
           <li>
-            <StyleLink
-
-            >
+            <StyleLink>
               <i className="fa fa-music" /> Tracks </StyleLink> </li>
           <li>
             <StyleLink

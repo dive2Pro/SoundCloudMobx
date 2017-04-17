@@ -2,7 +2,14 @@
 
 .main{
   composes:panel;
+  color:white;
+  height: 100%;
+
   input{
     border: none;
+    &:focus{
+      outline: none;
+      height: 100%;
+    }
   }
 }
