@@ -245,8 +245,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
       const glass = this.fronsted_glass
       const style = glass.style;
       const glassFrame = this.blurredContentFrame
-      // let loadingAllSettle = false
-
       const resetPositoin = () => {
         if (node$) {
           const scrollY = ps.scrollY || 0;
@@ -263,7 +261,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         glass.appendChild(node$);
         glassFrame.style.width = node$.offsetWidth + 'px';
         glassFrame.style.height = node$.offsetHeight + 'px';
-        style.width = node$.offsetWidth + 'px';
+        style.width = 1473 + 'px';
         style.height = node$.offsetHeight + 'px';
         resetPositoin();
       }
@@ -372,7 +370,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     let clazzName = styles.base;
 
     if (this.isVisible) {
-      clazzName = styles.visible;
+      clazzName = styles.player_visible;
     }
     if (!playerStore) {
       return <noscript />;

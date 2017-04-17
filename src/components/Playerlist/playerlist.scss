@@ -4,13 +4,13 @@
   position: fixed;
   bottom: 4.7em;
   z-index: 10;
-  height: $playerHeight*5;
+  height: px2rem(280px);
   right:  14.543em;
   background: $backgroundSecondary;
   width: 36.429em;
-  overflow-y: hidden;
+  overflow-y: hidden; 
   font-size: $smallIcon;
-  padding: $padding/4;
+  padding: px2rem(5px);
 }
 
 .top{
@@ -29,7 +29,7 @@
 
 .playlistitem{
   display: flex;
-  padding: $padding/2;
+  padding: px2rem(10px);
   font-size: $mediumIcon;
   &:hover{
     div{

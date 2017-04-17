@@ -2,9 +2,9 @@
 
 .playlistInfo{ 
   width: $contentMinWidth; 
-  padding: 30px;
+  padding: px2rem(30px);
   background: #ffffff;
-  margin: auto; 
+  margin: auto;
 }
 .playlistmain{
   min-height: 100vh;
@@ -15,7 +15,7 @@
   }
 }
 .itemContainer{
-  padding: $padding/2;
+  padding: px2rem(10px);
 }
 .itemTitle{
   text-align: center;
@@ -26,8 +26,11 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin: $padding auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .playlist_body{
   display: flex;
+  width: 100%;
 }

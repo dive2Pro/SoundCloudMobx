@@ -9,7 +9,9 @@ export interface ISession {
     oauth_token: string
 }
 
-
+export interface IisLoading {
+    isLoading?: boolean
+}
 
 // User 的接口 不实现，做提示用
 export interface IUser {

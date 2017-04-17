@@ -7,10 +7,9 @@ import { addAccessToken, apiUrl } from '../services/soundcloundApi';
 import { RaceFetch as fetch } from '../services/Fetch'
 export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
 
-  @observable filteredActivities: IActivitiesItem[];
-
   constructor() {
-    super(FETCH_ACTIVITIES)
+    super()
+    this.setGenre(FETCH_ACTIVITIES)
   }
 
 
@@ -57,8 +56,10 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
 
   }
 
-  @action setLoadingActivities(b: boolean) {
+  setLoadingActivities(b: boolean) {
+
     this.setLoadingByGenre(FETCH_ACTIVITIES, b);
+
   }
 
   @action fetchNextActivities(first?: boolean) {
@@ -74,6 +75,7 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
     }
   }
   @action private async  fetchActivities(nextHref?: string) {
+    if (this.isLoading) { return }
     let activitiesUrl = nextHref ? addAccessToken(nextHref, '&') :
       apiUrl(`me/activities?limit=50`, '&')
     try {
@@ -82,7 +84,6 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
       runInAction(() => {
         this.setNextActivitiesHref(data.next_href)
         this.filterActivities(data.collection);
-        this.setLoadingActivities(false)
       })
     } catch (err) {
       this.catchErr(err, this.currentGenre)

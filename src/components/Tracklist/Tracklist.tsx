@@ -1,10 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 import Activities from '../Activities'
-
 import ButtonMore from '../ButtonMore'
-import { observer, inject } from 'mobx-react'
-import { TrackStore } from "../../store/TrackStore";
-import { TRACK_STORE } from "../../constants/storeTypes";
+import { observer } from 'mobx-react'
+import { TrackStore } from '../../store/TrackStore';
+import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
 
 export function getGenreFromPathname(pathname: string) {
   const reg = /=\w{2,8}/g;
@@ -12,27 +11,9 @@ export function getGenreFromPathname(pathname: string) {
   let genre = reged[0].substr(1);
   return genre;
 }
-
-@inject(TRACK_STORE)
 @observer
 class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
-  currentGenre = ''
-  componentDidMount() {
-    this.setCurrentGenre(this.props);
-  }
-  setCurrentGenre = (props: any) => {
-    let { match: { params: genre } } = props
-    genre = genre.genre || 'Country';
 
-    if (genre !== this.currentGenre) {
-      let { trackStore } = this.props
-      trackStore.setGenre(genre);
-    }
-    this.currentGenre = genre;
-  }
-  componentWillReceiveProps(nextProp: any) {
-    this.setCurrentGenre(nextProp);
-  }
 
   handleScroll = () => {
     const trackStore = this.props.trackStore;
@@ -42,18 +23,19 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
 
   render() {
     const { trackStore } = this.props;
-    const { currentTracks, isLoading, isError } = trackStore
-    const ie = isError(this.currentGenre);
+    const { currentTracks, isLoading, isError, currentGenre } = trackStore
+    const ie = isError(currentGenre);
     return (
       <div
         style={{
-          padding: '10px 20px'
+          padding: '10px',
+          minHeight: '100vh'
         }}
       >
         <Activities
           isLoading={isLoading}
-          tracks={currentTracks}
-          sortType={''}
+          datas={currentTracks}
+          type={''}
           isError={ie}
           scrollFunc={this.handleScroll}
         />
@@ -68,6 +50,4 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
     )
   }
 }
-// let TracklistCount = 0;
-
-export default Tracklist;
+export default makeOpacityMotion(Tracklist);

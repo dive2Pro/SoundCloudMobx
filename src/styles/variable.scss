@@ -1,16 +1,23 @@
-$padding: 1.429em;
+
+@function px2rem($px){
+  $rem:14px;
+  @return ($px/$rem)+rem;
+}
+
+
+$padding: px2rem(20px);
 
 $fontColor: #A0A0A0;
 $subFontColor:#999;
-$menuSize: 0.875em;
+$menuSize: px2rem(14px);
 
-$bigIcon: 1.429em;
-$mediumIcon: 1.14em;
-$smallIcon: 0.875em;
+$bigIcon:  px2rem(18px);
+$mediumIcon:  px2rem(16px);
+$smallIcon:  px2rem(14px);
 
-$mainColor: #61B25A;
-$secondMainColor:#85a143;
-$thirdMainColor:#D2f233;
+$mainColor:#f55874;
+$secondMainColor:#e6846e;
+$thirdMainColor:#b1887f;
 $hyperlinkHover: rgba(0, 0, 0, 0.8);
 $hyperlinkActive: rgba(255, 255, 255, .4);
 $hyperlinkVisited: rgba(30, 30, 20, .8);
@@ -24,19 +31,19 @@ $border: 1px solid #3A3A3A;
 $darkBorder: 1px solid #3A3A3A;
 
 $usualPadding:0.25em;
-$_100pxEm:7.143em;
-$_30pxEm:2.143em;
-$_180pxEm:12.857em;
+$_100pxEm: px2rem(100px);
+$_30pxEm: px2rem(30px);
+$_180pxEm: px2rem(180px);
 $borderGray:1px solid #dadada;
 $headerHight:/*5em*/ 0;
 $circleRadius:50%;
 
-$contentMinWidth:89.143em;
+$contentMinWidth: px2rem(1289px);
 $contentPadding:$padding;
 
-$playerHeight:4.071em;
-$playerDurationHeight:1.768em;
-$_asiderWidth:$_100pxEm*2.5;
+$playerHeight: px2rem(56px);
+$playerDurationHeight: px2rem(20px);
+$_asiderWidth:px2rem(250px);
 
 
 $shuffleCollor:#14ff00;
@@ -46,6 +53,9 @@ $seconFontColor:#a9a9a9;
 $streamHoverColor:#4a85e3;
 $soundcloudColor:#f77838;
 $mainRed:#f55874;
+$tabHeight:px2rem(50px);
+
+
 
 @mixin bottom_border($size,$color){
   @if $size != null
@@ -60,7 +70,7 @@ $mainRed:#f55874;
 @mixin btn_white_padding(){
     background-color: white;
     border: 1px solid lightgray;
-    padding: ($padding/4) $padding;
+    padding: (px2rem(5px)) $padding;
     border-radius: 5px;
     cursor: pointer;
     color: #333;
@@ -77,7 +87,7 @@ $mainRed:#f55874;
   color:$fontColor;
   border:$border; 
   font-size: $mediumIcon;
-  padding: $padding/2;
+  padding: px2rem(10px);
 }
 
 @mixin ellipsisTexts($maxWidth){

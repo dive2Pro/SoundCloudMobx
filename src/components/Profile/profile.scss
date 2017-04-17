@@ -21,7 +21,7 @@ figure {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-bottom: $padding/2;
+  margin-bottom: px2rem(10px);
 }
 .showMore_open{
   composes:showMore;
@@ -32,14 +32,14 @@ figure {
   height: $padding;
 }
 .wrapper{
-    height: $padding/2;
+    height: px2rem(10px);
     width: 100%;
     background: linear-gradient(rgba(255,255,255,0),#ffffff);
     position: absolute;
     bottom: $padding;
 }
 .desc {
-  font-size: $menuSize*0.85;
+  font-size: px2rem(12px);
   color: $subFontColor; 
   top: $padding;
   line-height: 1.2em;
@@ -58,7 +58,7 @@ figure {
       border-left: none;
     }
     &:nth-child(n+1) {
-        padding: 0 $padding/2;   
+        padding: 0 px2rem(10px);   
     }
 
     &>a { 
@@ -70,8 +70,7 @@ figure {
         font-size: $smallIcon;
       }
       &>span {
-        display: block;
-        // padding: $padding/4 0 $padding/2;
+        display: block; 
         font-size: $padding;
         line-height: $padding;
         font-family: Arial;
@@ -83,8 +82,6 @@ figure {
 .container {
   padding: 2.14em  2.14em 2.14em 0;
   position: relative;
-  // background: url('http://s2.music.126.net/style/web2/img/frduser.png?94f53db0496b779d499aa4499946eeed');
-  // repeat-x 0 0;
 }
 
 .info { 

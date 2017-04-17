@@ -2,13 +2,12 @@ import * as React from 'react'
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import LoadingSpinner from '../LoadingSpinner'
 import { BigUserIcon } from './index'
-import ArtWork from '../ArtWork'
-import ButtonGhost from '../ButtonGhost'
 const styles = require('./community.scss')
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from 'mobx-react';
-import { UserStore, User } from "../../store/UserStore";
-import { USER_STORE } from "../../constants/storeTypes";
+import { UserStore, User } from '../../store/UserStore';
+import { USER_STORE } from '../../constants/storeTypes';
+import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
 
 interface ICommunityProps {
@@ -67,4 +66,7 @@ class Community extends React.Component<ICommunityProps, any> {
   }
 }
 
-export default Hoc<ICommunityProps, any>(withRouter(Community))
+export default (Hoc<ICommunityProps, any>(
+  makeTranslateXMotion(
+    withRouter(Community))
+))

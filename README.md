@@ -1,12 +1,15 @@
 # fave_mobx
-
+[Live Mode](https://build-xxiwrnzryj.now.sh/)
 > 这是一个soundcloud的个人客户端 
+
+
 ## 使用到的技术
 1. react
 2. mobx 
 3. typescript
 4. scss
 5. react-router v4
+6. react-motion
 
 mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 状态驱动能让你更关注compoennt的主要更新点.它值得你一试!这里是它的[中文文档](http://cn.mobx.js.org/)
@@ -18,14 +21,17 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
  - 分页加载
  - 播放进度
  - 个人主页歌曲排序
-
+ - 模拟评论
 
 ## 截图
-
+![screen1](/screens/screen1.png)
+![screen2](/screens/screen2.png)
+![screen3](/screens/screen3.png)
+![screen4](/screens/screen4.png)
+![screen5](/screens/screen5.png)
 
 ## 注意 🔥🔥
-因为 soundcloud 被墙,所以需要工具才能获取数据.
-现在这个id已经**不能用于播放**,所以我放了一首歌在 public 包中模拟播放
+因为 soundcloud 被墙,所以需要`工具`才能获取数据.
 
 
 ## 使用
@@ -35,11 +41,11 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 
 
 ## todo 📇📇
-- [ ] 更好的ui
+- [x] 更好的ui
 - [ ] 添加测试
 - [ ] 响应式ui
-- [ ] 数据缓存
-- [ ] 动画效果
+- [x] 数据缓存,内存
+- [x] 动画效果
 - [ ] react-native版本
 - [ ] 服务端
 

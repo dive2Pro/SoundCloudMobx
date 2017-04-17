@@ -20,7 +20,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
     "experimentalDecorators": true,
-    "allowUnusedLabels": false
+    "allowUnusedLabels": false,
+    "suppressExcessPropertyErrors": true
   },
   "exclude": [
     "node_modules",

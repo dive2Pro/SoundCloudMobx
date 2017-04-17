@@ -6,7 +6,7 @@ import { specTimeTamp } from '../../services/utils'
 import ArtWork from '../ArtWork'
 import { HomeLink } from '../Links'
 import { CommentStore, IComment } from '../../store/CommentStore';
-import { TRACK_STORE } from '../../constants/storeTypes';
+import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { ITrack } from '../../interfaces/interface';
 const styles = require('./comments.scss')
 
@@ -50,7 +50,7 @@ const CommentView = ({ comment }: { comment: IComment }) => {
   )
 }
 
-@inject(TRACK_STORE)
+@inject(TRACK_STORE, PERFORMANCE_STORE)
 @observer
 class Comments extends React.Component<ICommentsProps, any> {
 
@@ -63,19 +63,20 @@ class Comments extends React.Component<ICommentsProps, any> {
 
   render() {
     const { currentTrackComments: comments
-      , isLoading
+      , isLoadingMoreComment
     } = this.props.commentStore
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         {
           comments.map((item, index) => {
             return <CommentView key={item.id + '-' + index} comment={item} />
           })
         }
-        <LoadingSpinner isLoading={isLoading} />
+        <LoadingSpinner isLoading={isLoadingMoreComment} />
       </div>
     );
   }
 }
 
+// todo  Transitions
 export default Hoc<ICommentsProps, any>(Comments, TYPE_COMMENTS);

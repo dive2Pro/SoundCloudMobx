@@ -7,14 +7,15 @@ import {
   ITrack
 } from '../interfaces/interface';
 import {
-  unauthApiUrl,
-  apiUrl
+  unauthApiUrl
 } from '../services/soundcloundApi'
 import UserStore from './UserStore'
 import performanceStore from './PerformanceStore';
 import { RaceFetch as fetch } from '../services/Fetch'
 import activitiesStore from './ActivitiesStore';
-import { } from '../constants/fetchTypes'
+
+import { GENRES } from '../constants/trackTypes'
+
 export interface IBaseActStore {
   isLoading: boolean;
   currentGenre: string
@@ -35,19 +36,15 @@ export abstract class BaseAct<T> implements IBaseActStore {
   @observable filterTitle: string
   @observable sortType: string
   @observable filteredTracks: ITrack[] = []
-
-  @observable currentGenre: string = 'country'
+  @observable currentGenre: string = GENRES[0]
 
   autorunHandle: IReactionDisposer;
 
-  constructor(genre: string) {
-    this.setGenre(genre);
-  }
+
 
   @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(this.currentGenre) || false
+    return this.isLoadingByGenre.get(this.currentGenre)
   }
-
 
   @action setFilterTitle(title: string) {
     this.filterTitle = title;
@@ -61,7 +58,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     this.filterType = filterType;
   }
 
-  @action setLoadingByGenre(genre: string, loading: boolean) {
+  setLoadingByGenre(genre: string, loading: boolean) {
     // this.isLoadingByGenre.set(genre, loading);
     performanceStore.setLoadingStateWithKey(genre, loading);
   }
@@ -70,7 +67,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
     this.nextHrefsByGenre.set(genre, nextHref)
   }
   @action setGenre(genre: string) {
-    genre = genre.toLocaleLowerCase();
+    // genre = genre.toLocaleLowerCase();
     this.currentGenre = genre;
     performanceStore.setCurrentGenre(this.currentGenre)
     this.initFilterFunction(genre);
@@ -84,20 +81,22 @@ export abstract class BaseAct<T> implements IBaseActStore {
   }
 
   isError = (genre: string): boolean => {
-    return this.isErrorsMap.get(genre) || false
+    return performanceStore.isError(genre)
   }
 
   @action protected catchErr = (err: any, genre: string) => {
-    this.isErrorsMap.set(genre, true);
-    console.error(err)
+    performanceStore.catchErr(err, genre)
+    console.error(err, genre)
   }
-
+  protected resetErrorWithType = (type: string) => {
+    performanceStore.resetErrorsMap(type)
+  }
   protected filterByFilterType(fs: T[]): T[] {
     return fs;
   }
   abstract transToTracks(act: T[]): ITrack[];
 
-  private async filterFunc(activities: T[], sortType: string, filterType: string) {
+  private async filterFunc(activities: T[], filterTitle: string, sortType: string, filterType: string) {
     let fs: ITrack[] = []
     const filterByTypes = await this.filterByFilterType(activities)
     fs = await this.transToTracks(filterByTypes)
@@ -142,17 +141,30 @@ export abstract class BaseAct<T> implements IBaseActStore {
       this.itemsMap.set(type, []);
     }
     this.autorunHandle = autorun(() => {
-      this.filterFunc(<T[]>this.itemsMap.get(type), this.sortType, this.filterType)
+      this.filterFunc(<T[]>this.itemsMap.get(type), this.filterTitle, this.sortType, this.filterType)
     })
 
 
   }
 }
+const debounce = require('lodash/debounce')
 
 export class TrackStore extends BaseAct<ITrack> {
-  static defaultGenre = 'country';
-  @observable currentTrack: ITrack
+  static defaultGenre = GENRES[0];
+  debouncedFetchData: any;
 
+  @observable currentTrack: ITrack
+  constructor() {
+    super()
+    this.bindDebounced();
+    this.setGenre(TrackStore.defaultGenre)
+  }
+
+  bindDebounced = () => {
+    if (!this.debouncedFetchData) {
+      this.debouncedFetchData = debounce(this.fetchData.bind(this), 50).bind(this)
+    }
+  }
 
   @computed get hasMoreTracks() {
     return this.hasCurrentGenreTracks
@@ -171,9 +183,9 @@ export class TrackStore extends BaseAct<ITrack> {
 
   setTrackId(id: number) {
 
-    let track = this.currentTracks.find((track) => track.id === id)
+    let track = this.currentTracks.filter(track => track != null).find((track) => track.id === id)
     if (!track) {
-      track = this.allTracks().find((track) => track.id === id)
+      track = this.allTracks().filter(track => track != null).find((track) => track.id === id)
     }
     if (track) {
       this.setCurrentTrack(track)
@@ -215,7 +227,7 @@ export class TrackStore extends BaseAct<ITrack> {
 
   fetchSingleTrack(id: number) {
     const url = unauthApiUrl(`tracks/${id}`, '?')
-    this.fetchData(url, (data) => {
+    this.debouncedFetchData(url, (data) => {
       // 我只需要知道这个歌曲的信息,不需要放入那个 genre中.
       this.setCurrentTrack(data); // mayby Track?
     }, )
@@ -223,17 +235,24 @@ export class TrackStore extends BaseAct<ITrack> {
 
 
 
-  @action async fetchTracks() {
-    if (this.isLoading) {
-      return;
-    }
-    let genre = this.currentGenre || 'country', url;
+  @action async fetchTracks(urlCallback?: () => string) {
+
+    let requestGenre = this.currentGenre.toLocaleLowerCase() || 'country', url;
     url = this.nextHref
+
     if (!url) {
-      url = unauthApiUrl(`tracks?linked_partitioning=1&limit=20&offset=0&genres=${genre.toLocaleLowerCase()}`, '&')
+      if (urlCallback) {
+        url = urlCallback();
+      } else {
+        url = `tracks?linked_partitioning=1&limit=20&offset=0&genres=${requestGenre}`;
+      }
+      url = unauthApiUrl(url, '&');
     }
 
-    this.fetchData(url, (data: any) => {
+    let genre = this.currentGenre
+
+
+    this.debouncedFetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);
     })
@@ -241,21 +260,27 @@ export class TrackStore extends BaseAct<ITrack> {
   }
 
 
-  @action setGenre(genre: string) {
+  @action setGenre(genre: string, urlCallback?: () => string) {
     super.setGenre(genre);
 
     if (!this.hasCurrentGenreTracks) {
-      this.fetchTracks();
+      this.fetchTracks(urlCallback);
     }
-
   }
+
+
+
 
   // 这里设计的不好,genre不太可调?
   // 如果只需要通过 this.currentGenre来,就不需要这个参数了吧?
   private async fetchData(url: string, fn: (data: any) => void, gr?: string) {
+    if (this.isLoading) {
+      return;
+    }
     const genre = gr || (this.currentGenre || TrackStore.defaultGenre)
     try {
       this.setLoadingByGenre(genre, true)
+      this.resetErrorWithType(genre)
       const data: any = await fetch(url)
       runInAction('loaddata', () => {
         fn.call(this, data)
@@ -269,4 +294,4 @@ export class TrackStore extends BaseAct<ITrack> {
 
 }
 
-export default new TrackStore(TrackStore.defaultGenre);
+export default new TrackStore();
