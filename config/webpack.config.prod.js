@@ -66,7 +66,18 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: {
+    main: [require.resolve('./polyfills'), paths.appIndexJs]
+    /*vendor: [
+      'mobx',
+      'lodash',
+      'mobx-react',
+      'react-router-dom',
+      'react-motion',
+      'react-blur',
+      'js-cookie'
+    ]*/
+  },
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -94,7 +105,7 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-      'preload.jpg': path.join(__dirname, '../public/images/preload.jpg')
+      'preload.jpg': paths.resolveApp('public/images/preload.jpg')
     }
   },
   externals: externals,
@@ -158,15 +169,37 @@ module.exports = {
       // in the main CSS file.
       {
         test: /\.css$/,
+        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { modules: true, importLoaders: 1 } },
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]-[hash:base64:5]'
+              }
+            },
             postcssLoader
           ],
           publicPath: extractTextPluginOptions
-        })
-        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+        }),
+        exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader'
+            },
+            postcssLoader
+          ],
+          publicPath: extractTextPluginOptions
+        }),
+        include: /node_modules/
       },
       // "file" loader for svg
       {
@@ -254,6 +287,17 @@ module.exports = {
     // having to parse `index.html`.
     new ManifestPlugin({
       fileName: 'asset-manifest.json'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function(module) {
+        // 该配置假定你引入的 vendor 存在于 node_modules 目录中
+        return module.context && module.context.indexOf('node_modules') !== -1;
+      }
+    }),
+    //CommonChunksPlugin will now extract all the common modules from vendor and main bundles
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest' //But since there are no more common modules between them we end up with just the runtime code included in the manifest file
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.
