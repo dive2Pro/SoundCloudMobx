@@ -71,12 +71,12 @@ module.exports = {
     // We use `fallback` instead of `root` because we want `node_modules` to "win"
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    fallback: paths.nodePaths,
+    // fallback: paths.nodePaths,
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx', ''],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -95,7 +95,7 @@ module.exports = {
     //     include: paths.appSrc
     //   }
     // ],
-    loaders: [
+    rules: [
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.
       // The `exclude` list *must* be updated with every change to loader extensions.
@@ -114,17 +114,19 @@ module.exports = {
           /\.svg$/,
           /\.scss$/
         ],
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: 'static/media/[name].[hash:8].[ext]'
+          }
         }
       },
       // Compile .tsx?
       {
         test: /\.(ts|tsx)$/,
         include: paths.appSrc,
-        loaders: ['react-hot-loader/webpack', 'ts-loader']
+        use: ['react-hot-loader/webpack', 'ts-loader']
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -133,21 +135,33 @@ module.exports = {
       // in development "style" loader enables hot editing of CSS.
       {
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1!postcss',
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                autoprefixer({
+                  browsers: [
+                    '>1%',
+                    'last 4 versions',
+                    'Firefox ESR',
+                    'not ie < 9' // React doesn't support IE8 anyway
+                  ]
+                })
+              ]
+            }
+          }
+        ],
         exclude: [path.resolve(__dirname, 'src/styles/font-awesome.min.css')]
-      },
-      // JSON is not enabled by default in Webpack but both Node and Browserify
-      // allow it implicitly so we also enable it.
-      {
-        test: /\.json$/,
-        loader: 'json'
       },
       // "file" loader for svg
       {
         test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
+        use: {
+          loader: 'file-loader',
+          options: { name: 'static/media/[name].[hash:8].[ext]' }
         }
       },
       // ** STOP ** Are you adding a new loader?
@@ -155,28 +169,38 @@ module.exports = {
       {
         test: /\.scss$/,
         include: path.resolve(__dirname, 'src/styles'),
-        loader: 'style!css!sass?sourceMap=true'
+        use: ['style-loader', 'css-loader', { loader: 'sass-loader', options: { sourceMap: true } }]
       },
       {
         test: /\.scss$/,
         exclude: path.resolve(__dirname, 'src/styles'),
-        loader: 'style!css?modules&localIdentName=[name]__[local]!postcss!sass?sourceMap=true'
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: { modules: true, localIdentName: '[name]__[local]' }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                autoprefixer({
+                  browsers: [
+                    '>1%',
+                    'last 4 versions',
+                    'Firefox ESR',
+                    'not ie < 9' // React doesn't support IE8 anyway
+                  ]
+                })
+              ]
+            }
+          },
+          { loader: 'sass-loader', options: { sourceMap: true } }
+        ]
       }
     ]
   },
-  // We use PostCSS for autoprefixing only.
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9' // React doesn't support IE8 anyway
-        ]
-      })
-    ];
-  },
+
   plugins: [
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
