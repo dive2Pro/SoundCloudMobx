@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom'
 import { observer, inject } from 'mobx-react';
-import DevTool from 'mobx-react-devtools'
+// import DevTool from 'mobx-react-devtools'
 import { NavLink } from 'react-router-dom'
 import ButtonInline from '../ButtonInline'
 import LoadingSpinner from '../LoadingSpinner'
@@ -16,7 +16,7 @@ import { UserStore, User } from '../../store/UserStore';
 import { SessionStore } from '../../store/SessionStore';
 import { SESSION_STORE, USER_STORE, TRACK_STORE } from '../../constants/storeTypes'
 import SearchPanel from '../SearchPanel'
-import { TrackStore } from "../../store/TrackStore";
+import { TrackStore } from '../../store/TrackStore';
 interface IHeaderProp {
   sessionStore: SessionStore
   userStore: UserStore,
@@ -311,7 +311,7 @@ class Header extends React.Component<IHeaderProp, undefined> {
         {this.renderTop()}
         {this.renderMyCommuPaner()}
         {this.renderMyPlaylist()}
-        <DevTool />
+
       </section>
     );
   }

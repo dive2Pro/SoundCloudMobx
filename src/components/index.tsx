@@ -9,7 +9,7 @@ import Browser from './Browse'
 import TrackPager from './TrackPager'
 import { PlaylistInfo } from './Playlist'
 import { OpacityTransitoinSwitch } from './Switch'
-const styles = require('./favemusic.scss')
+const styles = require('./soundcloud.scss')
 
 class Abadon extends React.PureComponent<any, any>{
   handleTimeout: any;

@@ -1,7 +1,6 @@
-# fave_mobx
+# SoundCloundMobx
 [Live Mode]( https://build-nqrhiscmsu.now.sh/)
 > 这是一个soundcloud的个人客户端 
-
 
 ## 使用到的技术
 1. react

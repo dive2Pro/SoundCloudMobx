@@ -22,7 +22,7 @@ import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from '../../constants/fetchTypes';
 import Route from '../Route/TransitionRoute'
-const preload = require('../../../public/images/preload.jpg')
+const preload = require('preload.jpg')
 const qs = require('qs')
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 

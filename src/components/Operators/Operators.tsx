@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ButtonInline from '../ButtonInline'
-import { observer, inject } from '._mobx-react@4.1.7@mobx-react';
+import { observer, inject } from 'mobx-react';
 import { PLAYER_STORE } from '../../constants/storeTypes';
 import { PlayerStore } from '../../store/PlayerStore';
 import { ITrack } from '../../interfaces/interface';
