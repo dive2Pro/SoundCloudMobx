@@ -28,7 +28,7 @@
     "css-loader": "0.26.1",
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
-    "extract-text-webpack-plugin": "1.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "0.10.0",
     "filesize": "3.3.0",
     "font-awesome": "^4.7.0",
