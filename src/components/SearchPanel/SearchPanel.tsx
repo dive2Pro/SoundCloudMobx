@@ -3,7 +3,7 @@ const styles = require('./searchpanel.scss')
 import {
   observer
 } from 'mobx-react';
-const _ = require('lodash')
+const debounce = require('lodash/debounce')
 
 import { Component } from "react";
 import * as ReactDOM from 'react-dom'
@@ -119,7 +119,7 @@ function makeExpandingAnimation<Props, State>(
 class SearchPanel extends React.Component<ISearchPanelProps, any> {
   query: HTMLInputElement;
   handleChange = (value: string) => {
-    _.debounce(() => this.props.handleSearch(value), 500)();
+    debounce(() => this.props.handleSearch(value), 500)();
   }
   handleKeyUp = (event) => {
     const ENTER_KEY = 13;
@@ -135,7 +135,7 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
   }
 
   render() {
-    const debounceChange = _.debounce(this.handleChange, 599);
+    const debounceChange = debounce(this.handleChange, 599);
     const { additionalStyles, isOpen, onClick, autoSearch } = this.props
     let textStyle = isOpen ? defaultStyle.open : defaultStyle.close
     textStyle = { ...textStyle, ...additionalStyles ? additionalStyles.text : {} }

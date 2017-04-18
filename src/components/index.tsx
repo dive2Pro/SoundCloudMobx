@@ -1,15 +1,18 @@
 import * as React from "react";
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import Side from './Header'
 import Player from './Player'
 import Playerlist from './Playerlist'
 import Callback from './Callback'
-import DashBoard from './DashBoard'
 import Browser from './Browse'
-import TrackPager from './TrackPager'
-import { PlaylistInfo } from './Playlist'
+// import DashBoard from './DashBoard'
+// import TrackPager from './TrackPager'
+// import { PlaylistInfo } from './Playlist'
 import { OpacityTransitoinSwitch } from './Switch'
-const styles = require('./soundcloud.scss')
+import Loadable from '../Hoc/Loadable'
+import LoadingSpinner from './LoadingSpinner';
+const styles: any = require('./soundcloud.scss');
+
 
 class Abadon extends React.PureComponent<any, any>{
   handleTimeout: any;
@@ -48,7 +51,9 @@ const routes = [
   {
     exact: true,
     path: '/',
-    component: Browser
+    render: () => {
+      return (<Redirect to={{ pathname: '/main' }} />)
+    }
   }
   , {
     path: '/main',
@@ -56,15 +61,26 @@ const routes = [
   },
   {
     path: '/users',
-    component: DashBoard
+    component: Loadable({
+      LoadingComponent: LoadingSpinner
+      , loader: () =>
+        System.import('./DashBoard')
+    })
   },
   {
     path: '/stream'
-    , component: TrackPager
+    , component: Loadable({
+      LoadingComponent: LoadingSpinner
+      , loader: () => System.import('./TrackPager')
+    })
   }
   , {
     path: '/playlist'
-    , component: PlaylistInfo
+    , component: Loadable({
+      LoadingComponent: LoadingSpinner
+      , loader: () => System.import('./Playlist/PlaylistInfo')
+
+    })
   }
   , {
     path: '/callback(:*)',

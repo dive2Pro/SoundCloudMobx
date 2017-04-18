@@ -32,9 +32,11 @@ class Browse extends React.Component<IDashBorardProps, any> {
 
   componentDidMount() {
     const { currentGenre } = this.props.trackStore
+
     if (!GENRES.some(item => item === currentGenre)) {
       this.props.trackStore.setGenre(GENRES[0]);
     }
+
     this.props.performanceStore.setCurrentGlassNodeId(this.id)
   }
 
