@@ -1,4 +1,5 @@
-const {cloneDeep,assignInWith} = require('lodash')
+const cloneDeep = require('lodash/cloneDeep')
+const assignInWith = require('lodash/assignInWith')
 
 import {
   observable,

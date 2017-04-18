@@ -20,7 +20,21 @@ var publicPath = '/';
 var publicUrl = '';
 // Get environment variables to inject into our app.
 var env = getClientEnvironment(publicUrl);
-
+const postcssLoader = {
+  loader: 'postcss-loader',
+  options: {
+    plugins: () => [
+      autoprefixer({
+        browsers: [
+          '>1%',
+          'last 4 versions',
+          'Firefox ESR',
+          'not ie < 9' // React doesn't support IE8 anyway
+        ]
+      })
+    ]
+  }
+};
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
@@ -64,7 +78,9 @@ module.exports = {
     // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath
   },
-  externals: externals,
+  externals: {
+    soundcloud: 'SC'
+  },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
     // We read `NODE_PATH` environment variable in `paths.js` and pass paths here.
@@ -138,21 +154,7 @@ module.exports = {
         use: [
           'style-loader',
           { loader: 'css-loader', options: { importLoaders: 1 } },
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: () => [
-                autoprefixer({
-                  browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'not ie < 9' // React doesn't support IE8 anyway
-                  ]
-                })
-              ]
-            }
-          }
+          postcssLoader
         ],
         exclude: [path.resolve(__dirname, 'src/styles/font-awesome.min.css')]
       },
@@ -180,21 +182,7 @@ module.exports = {
             loader: 'css-loader',
             options: { modules: true, localIdentName: '[name]__[local]' }
           },
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: () => [
-                autoprefixer({
-                  browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'not ie < 9' // React doesn't support IE8 anyway
-                  ]
-                })
-              ]
-            }
-          },
+          postcssLoader,
           { loader: 'sass-loader', options: { sourceMap: true } }
         ]
       }
@@ -206,7 +194,7 @@ module.exports = {
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

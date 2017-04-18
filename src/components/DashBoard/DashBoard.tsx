@@ -138,7 +138,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               </Switch>
             </div>)
-        }} />
+        }}
+      />
 
     )
   }
@@ -231,13 +232,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   handleFollow = () => {
     const { userStore: us } = this.props
-    if (us.userModel)
-    { us.debouncedRequestFollowUser(us.userModel.user) }
+    if (us.userModel) {
+      us.debouncedRequestFollowUser(us.userModel.user)
+    }
   }
 
   componentDidMount() {
     this.props.performanceStore.setCurrentGlassNodeId('DashBoard')
-    const p = this.profile
     const hi = this.headerInfo
 
     this.infoGlassStyle = {
