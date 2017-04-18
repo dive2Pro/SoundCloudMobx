@@ -43,8 +43,7 @@ export class CommentStore {
     return { ...track, id: track.id + '' }
   }
 
-  @computed get isLoadingMoreComment() {
-    console.log('isLoadingMoreComment')
+  @computed get isLoadingMoreComment() { 
     return performanceStore.getLoadingStateWidthKey(FETCH_COMMENTS);
   }
 

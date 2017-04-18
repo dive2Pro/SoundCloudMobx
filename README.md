@@ -9,7 +9,7 @@
 4. scss
 5. react-router v4
 6. react-motion
-
+7. webpack2.0
 mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 状态驱动能让你更关注compoennt的主要更新点.它值得你一试!这里是它的[中文文档](http://cn.mobx.js.org/)
 
