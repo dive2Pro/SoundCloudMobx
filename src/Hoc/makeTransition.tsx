@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { Component } from 'react'
 import { spring, TransitionMotion, presets } from 'react-motion'
-import { observer } from "._mobx-react@4.1.7@mobx-react";
 
 interface ImakeOpacityTransitionProp {
   datas?: Object[]

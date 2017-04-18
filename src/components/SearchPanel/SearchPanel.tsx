@@ -3,7 +3,8 @@ const styles = require('./searchpanel.scss')
 import {
   observer
 } from 'mobx-react';
-import * as  _ from 'lodash'
+const _ = require('lodash')
+
 import { Component } from "react";
 import * as ReactDOM from 'react-dom'
 

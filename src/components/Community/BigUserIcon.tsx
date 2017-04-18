@@ -1,11 +1,9 @@
 import * as React from 'react'
-import { observer, inject } from "._mobx-react@4.1.7@mobx-react";
-import { User } from "../../store/UserStore";
+import { observer, inject } from 'mobx-react'
 const styles = require('./community.scss')
 import { Link, withRouter } from 'react-router-dom'
 import ArtWork from '../ArtWork'
-import ButtonGhost from '../ButtonGhost'
-import { IMiniUser } from "../../interfaces/interface";
+import { IMiniUser } from '../../interfaces/interface';
 
 interface IBigUserPicProps {
   user: IMiniUser

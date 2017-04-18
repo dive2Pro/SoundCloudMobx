@@ -149,6 +149,7 @@ export abstract class BaseAct<T> implements IBaseActStore {
 }
 const debounce = require('lodash/debounce')
 
+
 export class TrackStore extends BaseAct<ITrack> {
   static defaultGenre = GENRES[0];
   debouncedFetchData: any;
