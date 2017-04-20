@@ -11,10 +11,11 @@ import {
 } from '../interfaces/interface';
 import UserList from './UserStore'
 import { apiUrl } from '../services/soundcloundApi';
+
 const SC = require('soundcloud');
+
 const Cookies = require('js-cookie')
 import { User } from './UserStore'
-
 
 interface ICatchErr {
   err: any
@@ -97,7 +98,6 @@ export class SessionStore {
     fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {
-
         this.setUser(rawuser)
         UserList.initUser(rawuser);
         UserList.setLoginUserModel(rawuser.id)

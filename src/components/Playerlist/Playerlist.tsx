@@ -4,11 +4,13 @@ import ButtonInline from '../ButtonInline';
 import HoverActions from '../HoverActions'
 const styles = require('./playerlist.scss');
 import { StreamMain } from '../Stream'
-import { ITrack } from "../../interfaces/interface";
-import { PlayerStore } from "../../store/PlayerStore";
-import { PLAYER_STORE } from "../../constants/storeTypes";
+import { ITrack } from '../../interfaces/interface';
+import { PlayerStore } from '../../store/PlayerStore';
+import { PLAYER_STORE } from '../../constants/storeTypes';
+import makeDumbProps from '../../Hoc/makeDumbProps';
+
 interface IPlaylistProp {
-  playerStore?: PlayerStore
+  playerStore: PlayerStore
 }
 interface IPlaylistItemProp {
   track: ITrack
@@ -59,13 +61,11 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
 
   handleClearlist = () => {
     const playerStore = this.props.playerStore;
-    if (!playerStore) { return; }
     playerStore.clearPlaylist();
   };
 
   render() {
     const { playerStore } = this.props;
-    if (!playerStore) { return <noscript />; }
 
     const { playList, isPlaylistOpen } = playerStore;
     const mainClass = isPlaylistOpen ? styles.main : styles.none;
@@ -97,4 +97,4 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
   }
 }
 
-export default Playerlist;
+export default makeDumbProps(Playerlist);

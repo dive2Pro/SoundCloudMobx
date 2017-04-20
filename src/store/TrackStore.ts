@@ -149,7 +149,6 @@ export abstract class BaseAct<T> implements IBaseActStore {
 }
 const debounce = require('lodash/debounce')
 
-
 export class TrackStore extends BaseAct<ITrack> {
   static defaultGenre = GENRES[0];
   debouncedFetchData: any;
@@ -251,8 +250,7 @@ export class TrackStore extends BaseAct<ITrack> {
     }
 
     let genre = this.currentGenre
-
-
+    
     this.debouncedFetchData(url, (data: any) => {
       this.tracks = { genre, values: data.collection };
       this.setNextHrefByGenre(genre, data.next_href);

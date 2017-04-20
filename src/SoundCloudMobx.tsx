@@ -11,10 +11,10 @@ import App from './components'
 require('font-awesome/css/font-awesome.min.css');
 useStrict(true)
 
-const render = () => (
+const render = (strs) => (
     <Router>
         <Provider
-            {...stores}
+            {...strs}
         >
             <Route
                 render={({ location }) => (
@@ -24,8 +24,9 @@ const render = () => (
         </Provider>
     </Router>
 )
+export { render }
 ReactDOM.render(
-    render(),
+    render(stores),
     document.getElementById('root')
 );
 // Hot Module Replacement API

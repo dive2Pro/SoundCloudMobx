@@ -63,8 +63,7 @@ const routes = [
     path: '/users',
     component: Loadable({
       LoadingComponent: LoadingSpinner
-      , loader: () =>
-        System.import('./DashBoard')
+      , loader: () => System.import('./DashBoard')
     })
   },
   {
@@ -79,7 +78,6 @@ const routes = [
     , component: Loadable({
       LoadingComponent: LoadingSpinner
       , loader: () => System.import('./Playlist/PlaylistInfo')
-
     })
   }
   , {

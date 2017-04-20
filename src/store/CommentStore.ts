@@ -4,7 +4,8 @@ import {
 } from 'mobx'
 import { apiUrl, unauthApiUrl } from '../services/soundcloundApi'
 import { ITrack } from '../interfaces/interface';
-import { performanceStore, sessionStore } from './index'
+import  performanceStore  from './PerformanceStore'
+import  sessionStore  from './SessionStore'
 import { FETCH_COMMENTS } from '../constants/fetchTypes';
 import { POST_TARCK_COMMENT } from '../constants/requestTypes';
 
@@ -31,17 +32,16 @@ export interface IComment {
 
 
 export class CommentStore {
-  @observable currentTrack: ITrack
+  @observable currentTrack: ITrack|null=null
   @observable private nextHrefsByTrack = new ObservableMap<string>();
+  
   private commentsByTracks = new ObservableMap<IComment[]>();
 
   constructor() {
     performanceStore.setLoadingStateWithKey(FETCH_COMMENTS, false)
     performanceStore.setLoadingStateWithKey(POST_TARCK_COMMENT, false)
   }
-  transTrack(track: ITrack) {
-    return { ...track, id: track.id + '' }
-  }
+ 
 
   @computed get isLoadingMoreComment() { 
     return performanceStore.getLoadingStateWidthKey(FETCH_COMMENTS);
@@ -53,16 +53,18 @@ export class CommentStore {
       this.fetchMoreComments()
     }
   }
+
   @computed get commentsCount() {
     return this.currentTrackComments.length
   }
+
   @computed get currentTrackComments() {
     if (!this.currentTrack) { return []; }
     const data = this.commentsByTracks.get(this.currentTrack.id + '') || []
     return data
   }
   @computed get currentCommentNextHref(): string {
-    return this.nextHrefsByTrack.get(this.currentTrack.id + '') || ''
+    return this.currentTrack &&this.nextHrefsByTrack.get(this.currentTrack.id + '') || ''
   }
 
   setLoadingState(type: string, loading: boolean) {
@@ -70,13 +72,15 @@ export class CommentStore {
   }
 
   @action pushLastReplay(data) {
+    console.log(this.currentTrackComments);
+    
     this.currentTrackComments.unshift(data)
   }
 
   @action async fetchMoreComments(nextHref?: string) {
     if (this.isLoadingMoreComment) { return }
     nextHref = this.currentCommentNextHref
-    if (nextHref == 'EMPTY') {
+    if (nextHref == 'EMPTY'||!this.currentTrack) {
       return
     }
     const { id } = this.currentTrack

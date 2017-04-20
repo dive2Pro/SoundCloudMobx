@@ -29,9 +29,7 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
   id = 'playlistView'
   handlePlay = () => {
     const { playerStore } = this.props
-    if (!playerStore) {
-      return;
-    }
+
   }
   componentDidMount() {
     this.handleLocationChange()
@@ -39,9 +37,7 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
   }
   handleAddToPlaylist = () => {
     const { playerStore } = this.props
-    if (!playerStore) {
-      return;
-    }
+
   }
   handleLocationChange = () => {
     const {
@@ -73,6 +69,7 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
           bigPic={artwork_url}
           user={user}
           playlist={playlist}
+          playerStore={this.props.playerStore}
         />
         <div style={{ padding: '20px' }}>
           <Operators
