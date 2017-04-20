@@ -5,10 +5,7 @@ import {
   , ObservableMap
   , computed
   , expr
-  // , when
-  , runInAction
 } from 'mobx'
-
 export class PerformanceStore {
   onceLoadingIsAllSettle: boolean;
 
@@ -38,6 +35,7 @@ export class PerformanceStore {
   getLoadingState(type: string): boolean {
     return this.isLoadingsByKey.get(type) || false
   }
+
   @action setScrollLimit(...limit: number[]) {
     const map = this.scrollLimitByGenre.get(this.genre);
     if (map) {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Component, ReactElement } from 'react'
+// import { Component, ReactElement } from 'react'
 
 
 interface ILoadableProps {
@@ -18,15 +18,25 @@ function Loadable({ loader, LoadingComponent }: ILoadableProps) {
   let outsideError
   let outsidePromise
   const load = () => {
+
+    require.ensure([], req => {
+      const das = req('../components/DashBoard')
+      console.log(das)
+      debugger
+    })
+
     if (!outsidePromise) {
       isLoading = true
 
       outsidePromise = loader()
         .then(comp => {
+          // console.log('----------', comp);
+
           isLoading = false
           outsideComponent = babelInterop(comp)
         }).catch(err => {
-          isLoading = false
+          isLoading = false;
+          console.log('err = ', err);
           outsideError = err
         })
     }
@@ -67,17 +77,15 @@ function Loadable({ loader, LoadingComponent }: ILoadableProps) {
     }
     render() {
       const { error, Comp } = this.state
-      if (error || isLoading) {
+      if (isLoading) {
         return (
           <LoadingComponent
             isLoading={isLoading}
-            error={error}
           />)
       } else if (Comp) {
-
         return <Comp {...this.props} />
       } else {
-        return (<div />)
+        return (<div >{...error}</div>)
       }
     }
   }

@@ -9,6 +9,7 @@ import colorThief from '../../services/ColorThief'
 const preImage = require('preload.jpg')
 import { HomeLink } from '../Links'
 const styles = require('./trackprofile.scss')
+
 interface ITrackProfileProps {
   type: string
   bigPic: string
@@ -16,10 +17,9 @@ interface ITrackProfileProps {
   user: any
   track?: ITrack
   playlist?: IPlaylist
-  playerStore?: PlayerStore
+  playerStore: PlayerStore
 }
 
-@inject(PLAYER_STORE)
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
   isTrack: boolean
@@ -70,7 +70,6 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
   handlePlay = () => {
     //  根据type
     const { track, playlist, playerStore } = this.props
-    if (!playerStore) { return }
     if (this.isTrack && track) {
       playerStore.setPlayingTrack(track)
     } else if (playlist) {
@@ -82,7 +81,6 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
   handleAddToPlaylist = () => {
     const { track, playlist, playerStore } = this.props
-    if (!playerStore) { return }
     if (this.isTrack && track) {
       playerStore.addToPlaylist(track)
     } else if (playlist) {
@@ -95,10 +93,9 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
     const { type, bigPic, user, label_name, playerStore, track } = this.props
     const { username, id } = user
     let isCurrentTrackPlaying = false
-    if (playerStore) {
-      isCurrentTrackPlaying = playerStore.isPlaying
-        && playerStore.playingTrack == track
-    }
+    isCurrentTrackPlaying = playerStore.isPlaying
+      && playerStore.playingTrack == track
+
     return (
       <div
         className={styles.view}

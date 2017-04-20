@@ -57,17 +57,13 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
 
   handlePlay = () => {
     const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
-      return;
-    }
+
     playerStore.setPlayingTrack(trackStore.currentTrack)
   }
 
   handleAddToPlaylist = () => {
     const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
-      return;
-    }
+
     playerStore.addToPlaylist(trackStore.currentTrack)
 
   }
@@ -125,6 +121,7 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
           track={currentTrack}
           type={'Track'}
           user={user}
+          playerStore={this.props.playerStore}
         />
         <div className={styles.comments}>
           <section className={styles.replay_operators}>
