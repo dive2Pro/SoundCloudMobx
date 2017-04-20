@@ -19,6 +19,7 @@
     "@types/react": "^15.0.16",
     "@types/react-css-modules": "^3.7.6",
     "@types/webpack-env": "^1.13.0",
+    "app-root-path": "^2.0.1",
     "autoprefixer": "6.7.2",
     "awesome-typescript-loader": "^3.1.2",
     "case-sensitive-paths-webpack-plugin": "1.1.4",
