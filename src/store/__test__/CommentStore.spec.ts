@@ -59,22 +59,6 @@ describe('CommentStore', () => {
     expect(cs.currentCommentNextHref)
       .toBe(expectNextHref);
     done()
-
-//     // const comment = rawData('hyc')
 });
-  // it('@action fetchMoreComments',  () => {
-  //     cs.setCurrentTrack(track)  
-  //     const user:any={}
-      
-  //     sessionStore.user = user
-      // expect(cs.currentTrackComments.length).toBe(0);
-  //     await cs.fetchMoreComments()
-      // done()
-      
-  //     expect(cs.currentCommentNextHref)
-  //       .toBe(expectNextHref);
-  
-  //     // const comment = rawData('hyc')
-    
-  // })
+ 
 })

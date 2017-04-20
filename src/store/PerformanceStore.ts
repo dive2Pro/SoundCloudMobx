@@ -6,18 +6,16 @@ import {
   , computed
   , expr
 } from 'mobx'
+
 export class PerformanceStore {
   onceLoadingIsAllSettle: boolean;
-
   scrollLimitByGenre = new ObservableMap<number[]>()
   @observable genre: string
   // 这个用来记录当前应该被 player 进行毛玻璃效果处理的dom id
   @observable glassNode: string
   @observable scrollY: number
   isLoadingsByKey = new ObservableMap<boolean>();
-
   isErrorsMap = new ObservableMap<boolean>()
-
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }
