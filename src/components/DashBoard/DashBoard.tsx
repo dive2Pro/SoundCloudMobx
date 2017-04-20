@@ -22,7 +22,7 @@ import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { FETCH_FOLLOWERS, FETCH_FOLLOWINGS, FETCH_FAVORITES } from '../../constants/fetchTypes';
 import Route from '../Route/TransitionRoute'
-const preload = require('../../../public/images/preload.jpg')
+const preload = require('preload.jpg')
 const qs = require('qs')
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 
@@ -138,7 +138,8 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
                 />
               </Switch>
             </div>)
-        }} />
+        }}
+      />
 
     )
   }
@@ -231,13 +232,13 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
 
   handleFollow = () => {
     const { userStore: us } = this.props
-    if (us.userModel)
-    { us.debouncedRequestFollowUser(us.userModel.user) }
+    if (us.userModel) {
+      us.debouncedRequestFollowUser(us.userModel.user)
+    }
   }
 
   componentDidMount() {
     this.props.performanceStore.setCurrentGlassNodeId('DashBoard')
-    const p = this.profile
     const hi = this.headerInfo
 
     this.infoGlassStyle = {

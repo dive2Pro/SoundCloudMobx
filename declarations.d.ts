@@ -7,5 +7,5 @@ declare module 'react-dom';
 declare module 'qs';
 declare module 'react-blur';
 declare module 'color-thief';
-
+declare var System;
 declare module '*.scss';

@@ -7,7 +7,9 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
-
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var path = require('path');
+var externals = require('./externals');
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 var publicPath = paths.servedPath;
@@ -36,9 +38,24 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 // To have this structure working with relative paths, we have to use custom options.
 const extractTextPluginOptions = shouldUseRelativeAssetPaths
   ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
+    Array(cssFilename.split('/').length).join('../')
   : undefined;
 
+const postcssLoader = {
+  loader: 'postcss-loader',
+  options: {
+    plugins: () => [
+      autoprefixer({
+        browsers: [
+          '>1%',
+          'last 4 versions',
+          'Firefox ESR',
+          'not ie < 9' // React doesn't support IE8 anyway
+        ]
+      })
+    ]
+  }
+};
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -49,7 +66,18 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: {
+    main: [require.resolve('./polyfills'), paths.appIndexJs]
+    /*vendor: [
+      'mobx',
+      'lodash',
+      'mobx-react',
+      'react-router-dom',
+      'react-motion',
+      'react-blur',
+      'js-cookie'
+    ]*/
+  },
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -67,30 +95,30 @@ module.exports = {
     // We use `fallback` instead of `root` because we want `node_modules` to "win"
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    fallback: paths.nodePaths,
+    // fallback: paths.nodePaths,
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx', ''],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web'
+      'react-native': 'react-native-web',
+      'preload.jpg': paths.resolveApp('public/images/preload.jpg')
     }
   },
-
+  externals: externals,
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
-    preLoaders: [
+    rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: 'tslint',
+        enforce: 'pre',
+        loader: 'tslint-loader',
         include: paths.appSrc
-      }
-    ],
-    loaders: [
+      },
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.
       // The `exclude` list *must* be updated with every change to loader extensions.
@@ -113,17 +141,19 @@ module.exports = {
           // /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
           // /\.eot(\?v=\d+\.\d+\.\d+)?$/
         ],
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: 'static/media/[name].[hash:8].[ext]'
+          }
         }
       },
       // Compile .tsx?
       {
         test: /\.(ts|tsx)$/,
         include: paths.appSrc,
-        loader: 'ts'
+        loader: 'ts-loader'
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -139,25 +169,46 @@ module.exports = {
       // in the main CSS file.
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?modules&importLoaders=1!postcss',
-          extractTextPluginOptions
-        )
         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]-[hash:base64:5]'
+              }
+            },
+            postcssLoader
+          ],
+          publicPath: extractTextPluginOptions
+        }),
+        exclude: /node_modules/
       },
-      // JSON is not enabled by default in Webpack but both Node and Browserify
-      // allow it implicitly so we also enable it.
       {
-        test: /\.json$/,
-        loader: 'json'
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader'
+            },
+            postcssLoader
+          ],
+          publicPath: extractTextPluginOptions
+        }),
+        include: /node_modules/
       },
       // "file" loader for svg
       {
         test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'static/media/[name].[hash:8].[ext]'
+          }
         }
       },
       // ** STOP ** Are you adding a new loader?
@@ -165,33 +216,29 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css?modules!sass?importLoaders=1!postcss',
-          extractTextPluginOptions
-        )
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: { modules: true }
+            },
+            { loader: 'sass-loader', options: { importLoaders: 1 } },
+            postcssLoader
+          ],
+          publicPath: extractTextPluginOptions
+        })
       }
     ]
   },
-  // We use PostCSS for autoprefixing only.
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9' // React doesn't support IE8 anyway
-        ]
-      })
-    ];
-  },
   plugins: [
+    new BundleAnalyzerPlugin(),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
+
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
@@ -218,7 +265,7 @@ module.exports = {
     // This helps ensure the builds are consistent if source hasn't changed:
     new webpack.optimize.OccurrenceOrderPlugin(),
     // Try to dedupe duplicated modules, if any:
-    new webpack.optimize.DedupePlugin(),
+    // new webpack.optimize.DedupePlugin(),
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -240,6 +287,17 @@ module.exports = {
     // having to parse `index.html`.
     new ManifestPlugin({
       fileName: 'asset-manifest.json'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function(module) {
+        // 该配置假定你引入的 vendor 存在于 node_modules 目录中
+        return module.context && module.context.indexOf('node_modules') !== -1;
+      }
+    }),
+    //CommonChunksPlugin will now extract all the common modules from vendor and main bundles
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest' //But since there are no more common modules between them we end up with just the runtime code included in the manifest file
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.

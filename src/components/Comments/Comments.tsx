@@ -59,6 +59,7 @@ class Comments extends React.Component<ICommentsProps, any> {
     const { track, commentStore } = this.props
     // const { id } = track
     commentStore.setCurrentTrack(track);
+    commentStore.fetchMoreComments()
   }
 
   render() {

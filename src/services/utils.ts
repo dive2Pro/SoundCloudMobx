@@ -1,4 +1,6 @@
-import * as  _ from 'lodash'
+const cloneDeep = require('lodash/cloneDeep')
+const assignInWith = require('lodash/assignInWith')
+
 import {
   observable,
   // extendObservable
@@ -51,7 +53,7 @@ export function transBigMath(value: number): string {
 }
 
 export const extendsObservableObjFromJson = (target: any, data: any) => {
-  _.assignInWith(target, _.cloneDeep(data))
+  assignInWith(target, cloneDeep(data))
   let p = '';
   // observable(target
   // , p, { value: target[p] }

@@ -1,6 +1,6 @@
 import * as React from 'react'
 const styles = require('./artwork.scss')
-const preImage = require('../../../public/images/preload.jpg')
+const preImage = require('preload.jpg')
 import { autorun, IReactionDisposer } from 'mobx'
 import {
   observer

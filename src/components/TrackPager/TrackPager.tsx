@@ -12,7 +12,7 @@ import { ITrack } from '../../interfaces/interface';
 import { PlayerStore } from '../../store/PlayerStore';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { BigUserIcon } from '../Community/index';
-import { UserStore } from "../../store/UserStore";
+import { UserStore } from '../../store/UserStore';
 import ArtWork from '../ArtWork'
 const qs = require('qs')
 const styles = require('./track.scss');
@@ -48,7 +48,6 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
       trackStore.setGenre(FETCH_TRACK)
       trackStore.setTrackId(id)
     }
-    // this.currentTrack = trackStore.currentTrack
   }
 
   componentWillUnmount() {
@@ -58,17 +57,13 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
 
   handlePlay = () => {
     const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
-      return;
-    }
+
     playerStore.setPlayingTrack(trackStore.currentTrack)
   }
 
   handleAddToPlaylist = () => {
     const { playerStore, trackStore } = this.props
-    if (!playerStore || !trackStore) {
-      return;
-    }
+
     playerStore.addToPlaylist(trackStore.currentTrack)
 
   }
@@ -101,15 +96,15 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
           />
           <div className={styles.replay_input}>
             <input
-              placeholder="Write a comment" name="replay"
-              type="text" />
+              placeholder="Write a comment"
+              name="replay"
+              type="text"
+            />
 
           </div>
         </div>
       </form>
     )
-
-
   }
 
 
@@ -126,6 +121,7 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
           track={currentTrack}
           type={'Track'}
           user={user}
+          playerStore={this.props.playerStore}
         />
         <div className={styles.comments}>
           <section className={styles.replay_operators}>

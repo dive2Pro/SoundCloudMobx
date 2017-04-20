@@ -11,7 +11,9 @@ import { PlayerStore } from "../../store/PlayerStore";
 // import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
 
 interface IStreamProps {
-  track: ITrack, store: PlayerStore, type: string, i: number,
+  track: ITrack,
+  store: PlayerStore,
+  type: string, i: number,
   additionalStyles?: { opacity: number, height: number }
 }
 
