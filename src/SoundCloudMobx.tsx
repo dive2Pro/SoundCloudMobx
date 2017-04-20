@@ -4,16 +4,17 @@ import { useStrict } from 'mobx'
 import './styles/index.scss';
 import { Provider } from 'mobx-react';
 import * as stores from './store';
-require('font-awesome/css/font-awesome.css');
-useStrict(true)
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import App from './components'
-// const stores = [ActivitiesStore, userStore, TrackStore, PlayerStore]
 
-const render = () => (
+
+require('font-awesome/css/font-awesome.min.css');
+useStrict(true)
+
+const render = (strs) => (
     <Router>
         <Provider
-            {...stores}
+            {...strs}
         >
             <Route
                 render={({ location }) => (
@@ -23,8 +24,9 @@ const render = () => (
         </Provider>
     </Router>
 )
+export { render }
 ReactDOM.render(
-    render(),
+    render(stores),
     document.getElementById('root')
 );
 // Hot Module Replacement API

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import ArtWork from '../ArtWork'
 import ButtonInline from '../ButtonInline'
 import { observer, inject } from 'mobx-react'
 import { IPlaylist, ITrack } from '../../interfaces/interface';
@@ -7,10 +6,10 @@ import { PlayerStore } from '../../store/PlayerStore';
 import { PLAYER_STORE } from '../../constants/storeTypes';
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import colorThief from '../../services/ColorThief'
-import Blur from 'react-blur'
-const preImage = require('../../../public/images/preload.jpg')
+const preImage = require('preload.jpg')
 import { HomeLink } from '../Links'
 const styles = require('./trackprofile.scss')
+
 interface ITrackProfileProps {
   type: string
   bigPic: string
@@ -18,19 +17,22 @@ interface ITrackProfileProps {
   user: any
   track?: ITrack
   playlist?: IPlaylist
-  playerStore?: PlayerStore
+  playerStore: PlayerStore
 }
 
-@inject(PLAYER_STORE)
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
+  isTrack: boolean
+  palettes: any[][]
   renderBackgroundGradient = () => {
-    if (!this.palettes || this.palettes.length < 2) return (
-      <div className={styles.backgroundGradient}>
-        <div className={styles.backgroundGradient_buffer} />
-        <div className={styles.backgroundGradient_hidden} />
-      </div>
-    )
+    if (!this.palettes || this.palettes.length < 2) {
+      return (
+        <div className={styles.backgroundGradient}>
+          <div className={styles.backgroundGradient_buffer} />
+          <div className={styles.backgroundGradient_hidden} />
+        </div>
+      )
+    }
     const [a, b, c, d] = this.palettes
     const [a1, a2, a3] = a
     const [b1, b2, b3] = b
@@ -51,26 +53,23 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
       </div>
     )
   }
-  isTrack: boolean
-  palettes: any[][]
+
   componentDidMount() {
     const { type, bigPic } = this.props
     this.isTrack = type !== 'list'
     Promise.resolve(bigPic)
       .then(source => {
         const pic = getSpecPicPath(bigPic, PicSize.MASTER)
-        colorThief.getColorFromUrl(pic,
-          (palettes, url) => {
-            this.palettes = palettes
-            this.forceUpdate()
-          })
+        colorThief.getColorFromUrl(pic, (palettes, url) => {
+          this.palettes = palettes
+          this.forceUpdate()
+        })
       })
 
   }
   handlePlay = () => {
     //  根据type
     const { track, playlist, playerStore } = this.props
-    if (!playerStore) return
     if (this.isTrack && track) {
       playerStore.setPlayingTrack(track)
     } else if (playlist) {
@@ -82,7 +81,6 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
   handleAddToPlaylist = () => {
     const { track, playlist, playerStore } = this.props
-    if (!playerStore) return
     if (this.isTrack && track) {
       playerStore.addToPlaylist(track)
     } else if (playlist) {
@@ -93,14 +91,11 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
   render() {
     const { type, bigPic, user, label_name, playerStore, track } = this.props
-    const isList = type === 'list';
-
-    const { username, avatar_url, id } = user
+    const { username, id } = user
     let isCurrentTrackPlaying = false
-    if (playerStore) {
-      isCurrentTrackPlaying = playerStore.isPlaying
-        && playerStore.playingTrack == track
-    }
+    isCurrentTrackPlaying = playerStore.isPlaying
+      && playerStore.playingTrack == track
+
     return (
       <div
         className={styles.view}
@@ -113,8 +108,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
             <span
               className={styles.artwork}
               style={{ backgroundImage: `url(${bigPic ? getSpecPicPath(bigPic, PicSize.MASTER) : preImage})` }}
-            >
-            </span>
+            />
           </div>
 
           <ButtonInline

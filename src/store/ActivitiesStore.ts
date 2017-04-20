@@ -1,30 +1,35 @@
-import { observable, action, computed, runInAction } from 'mobx'
-import { BaseAct } from './TrackStore';
+import { action, computed, runInAction } from 'mobx'
+import  BaseStreamStore  from './BaseStreamStore';
 import { IActivitiesItem, ITrack } from '../interfaces/interface';
 import { FETCH_ACTIVITIES } from '../constants/fetchTypes';
-import { performanceStore } from './index';
+import  performanceStore from './PerformanceStore';
 import { addAccessToken, apiUrl } from '../services/soundcloundApi';
 import { RaceFetch as fetch } from '../services/Fetch'
-export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
+
+export class ActivitiesStore extends BaseStreamStore<IActivitiesItem>  {
 
   constructor() {
     super()
     this.setGenre(FETCH_ACTIVITIES)
   }
 
-
   @action setNextActivitiesHref(nextHref: string) {
     this.setNextHrefByGenre(FETCH_ACTIVITIES, nextHref)
   }
 
   @action addActivities(arr: IActivitiesItem[]) {
-    const items = this.currentItems;
-    items.splice(items.length, 0, ...arr);
-
+    const itemsLength = this.currentItems.length;
+    this.currentItems.splice(itemsLength, 0, ...arr);
+    // const t : any= []
+    // const iis:any = t.splice(0, 0, ...arr)
+    // console.log(
+    //   // t, '-------------',
+    //   this.currentItems)
   }
 
   transToTracks(items: IActivitiesItem[]): ITrack[] {
-    return items.map(this.getAllTrackFromActivity).filter(item => item != null);
+    return items.map(this.getAllTrackFromActivity)
+      .filter(item => item != null);
   }
 
   getAllTrackFromActivity(act: IActivitiesItem) {
@@ -45,34 +50,31 @@ export class ActivitiesStore extends BaseAct<IActivitiesItem>  {
     return temp;
   }
   async filterActivities(arr: IActivitiesItem[]) {
-    if (!arr) { return }
     const filterArr = await arr.filter(item => {
-      const b = this.currentItems.some(active =>
+    const b = this.currentItems.some(active =>
         active.created_at === item.created_at)
-      return !b;
+    return !b;
     })
-
     this.addActivities(filterArr);
-
   }
 
   setLoadingActivities(b: boolean) {
-
     this.setLoadingByGenre(FETCH_ACTIVITIES, b);
-
   }
 
-  @action fetchNextActivities(first?: boolean) {
+  async fetchNextActivities(first?: boolean) {
+     
     if (this.isLoading) {
-      return
+       
+      return  
     }
-    performanceStore.setCurrentGenre(this.currentGenre)
+    
     if (first && this.currentItems.length > 0) {
       return
     }
-    if (!this.isLoading) {
-      this.fetchActivities(this.nextHref);
-    }
+
+    performanceStore.setCurrentGenre(this.currentGenre)
+    await this.fetchActivities(this.nextHref);
   }
   @action private async  fetchActivities(nextHref?: string) {
     if (this.isLoading) { return }

@@ -4,7 +4,8 @@ import {
 } from 'mobx'
 import { apiUrl, unauthApiUrl } from '../services/soundcloundApi'
 import { ITrack } from '../interfaces/interface';
-import { performanceStore, sessionStore } from './index'
+import  performanceStore  from './PerformanceStore'
+import  sessionStore  from './SessionStore'
 import { FETCH_COMMENTS } from '../constants/fetchTypes';
 import { POST_TARCK_COMMENT } from '../constants/requestTypes';
 
@@ -31,53 +32,55 @@ export interface IComment {
 
 
 export class CommentStore {
-  @observable currentTrack: ITrack
-  @observable private nextHrefsByTrack = new ObservableMap<string>();
+  @observable currentTrack: ITrack|null = null
+  @observable private nextHrefsByTrack
+   = new ObservableMap<string>();
+  
   private commentsByTracks = new ObservableMap<IComment[]>();
 
   constructor() {
     performanceStore.setLoadingStateWithKey(FETCH_COMMENTS, false)
     performanceStore.setLoadingStateWithKey(POST_TARCK_COMMENT, false)
   }
-  transTrack(track: ITrack) {
-    return { ...track, id: track.id + '' }
-  }
+ 
 
-  @computed get isLoadingMoreComment() {
-    console.log('isLoadingMoreComment')
+  
+
+
+  @computed get isLoadingMoreComment() { 
     return performanceStore.getLoadingStateWidthKey(FETCH_COMMENTS);
   }
 
-  @action setCurrentTrack(track: ITrack) {
-    this.currentTrack = (track);
-    if (this.commentsCount < 1) {
-      this.fetchMoreComments()
-    }
-  }
   @computed get commentsCount() {
     return this.currentTrackComments.length
   }
+
   @computed get currentTrackComments() {
     if (!this.currentTrack) { return []; }
-    const data = this.commentsByTracks.get(this.currentTrack.id + '') || []
-    return data
+    const id =this.currentTrack.id + ''
+    const has = this.commentsByTracks.has(id)
+    if (!has) {
+      this.commentsByTracks.set(id,[])
+    }
+    return this.commentsByTracks.get(id)||[]
   }
   @computed get currentCommentNextHref(): string {
-    return this.nextHrefsByTrack.get(this.currentTrack.id + '') || ''
+    return this.currentTrack &&this.nextHrefsByTrack.get(this.currentTrack.id + '') || ''
   }
 
   setLoadingState(type: string, loading: boolean) {
     performanceStore.setLoadingStateWithKey(type, loading);
   }
 
-  @action pushLastReplay(data) {
-    this.currentTrackComments.unshift(data)
+  @action setCurrentTrack(track: ITrack) {
+    this.currentTrack = (track);
+    
   }
 
   @action async fetchMoreComments(nextHref?: string) {
     if (this.isLoadingMoreComment) { return }
     nextHref = this.currentCommentNextHref
-    if (nextHref == 'EMPTY') {
+    if (nextHref == 'EMPTY'||!this.currentTrack) {
       return
     }
     const { id } = this.currentTrack
@@ -88,9 +91,9 @@ export class CommentStore {
     this.setLoadingState(FETCH_COMMENTS, true)
 
     try {
-      const data: any = await fetch(url);
-      const oldData = this.commentsByTracks.get(keyId)
-      runInAction(() => {
+       const data: any = await fetch(url); 
+       const oldData = this.commentsByTracks.get(keyId)
+       runInAction(() => {
         if (oldData) {
           oldData.push(...data.collection);
         } else {
@@ -110,16 +113,38 @@ export class CommentStore {
     const user = sessionStore.user
     if (!user) {
       return
-    }
+    } 
+    
     const url = unauthApiUrl(`/tracks/${id}/comments`, '&')
     try {
       this.setLoadingState(POST_TARCK_COMMENT, true)
       // const data = await fetch(url, {
       // method: 'POST', 'Content-Type': `application/x-www-form-urlencoded; charset=UTF-8 `
-      // })
+      // })      
       const data = await new Promise((resolve, reject) => {
         setTimeout(() => {
-          const rawData = {
+          resolve(rawData(msg))
+         
+        }, 500)
+      }) 
+      this.pushLastReplay(data)
+      
+    } catch (err) {
+      performanceStore.catchErr(err, POST_TARCK_COMMENT)
+    } finally {
+      this.setLoadingState(POST_TARCK_COMMENT, false)
+    }
+
+  }
+  @action private pushLastReplay(data) {
+    if (!this.currentTrack) { 
+      return
+    }
+    const comments = this.currentTrackComments;  
+    comments.unshift(data)
+  }
+}
+  export const rawData= (msg:string):IComment => ({
             kind: 'comment'
             , id: 341101782,
             created_at: '2017/04/13 16:23:38 +0000',
@@ -138,19 +163,6 @@ export class CommentStore {
               permalink_url: 'http://soundcloud.com/huang-alex-635833920',
               avatar_url: 'https://i1.sndcdn.com/avatars-000286355267-ibfmck-large.jpg'
             }
-          }
-          resolve(rawData)
-        }, 500)
-      })
-      // console.log(data)
-      this.pushLastReplay(data)
-    } catch (err) {
-      performanceStore.catchErr(err, POST_TARCK_COMMENT)
-    } finally {
-      this.setLoadingState(POST_TARCK_COMMENT, false)
-    }
-
-  }
-}
-
+  })
+          
 export default new CommentStore();

@@ -25,7 +25,7 @@ import {
   unauthApiUrlV2, unauthApiUrl
 } from '../services/soundcloundApi';
 
-import { performanceStore } from './index'
+import  performanceStore  from './PerformanceStore'
 import { RaceFetch as fetch } from '../services/Fetch'
 const debounce = require('lodash/debounce')
 
@@ -56,6 +56,7 @@ export class UserStore {
     const isNumber = typeof obj === 'number'
     let id = isNumber ? obj : ((<User>obj).id)
     let userModel = this.userModels.get(id + '')
+
     if (!userModel) {
       userModel = new UserModel(this, obj)
       userModel.fetchCommunityData()
@@ -127,7 +128,7 @@ export class UserStore {
       this.setFetchedPlaylistInfo(<IPlaylist>data)
 
     } catch (err) {
-      // console.error(err)
+      console.error(err)
     }
   }
 
@@ -188,9 +189,6 @@ export class UserStore {
       this.operaUserFromFollowings(user, isFollowing)
     }
   }
-
-
-
 
   @action private operaUserFromFollowings(user: User, followed: boolean) {
     const lum = this.getLoginUserModel
@@ -264,6 +262,9 @@ export class UserModel {
   @observable favorites: ITrack[] = [];
   @observable playlists: IPlaylist[] = [];
 
+  nextHrefs = new ObservableMap<string>();
+  userStore: UserStore;
+
   isErrorsMap = new ObservableMap<boolean>()
 
 
@@ -273,8 +274,6 @@ export class UserModel {
     set: performanceStore.setLoadingStateWithKey
   };
 
-  nextHrefs = new ObservableMap<string>();
-  userStore: UserStore;
 
   /**
    * @param obj 如果传入的是一个Iuser对象,直接去获取数据
@@ -379,17 +378,14 @@ export class UserModel {
   @action async followingFilterByLogin(isLogined: boolean) {
 
     if (isLogined) {
-      this.followers.forEach(user =>
-        user.isFollowing = this.userStore.isFollowingUser(user.id)
-      )
-      this.followings.forEach(user =>
-        user.isFollowing = this.userStore.isFollowingUser(user.id)
-      )
+      this.followers.forEach(user =>user.isFollowing = this.userStore.isFollowingUser(user.id))
+      this.followings.forEach(user =>user.isFollowing = this.userStore.isFollowingUser(user.id))
     }
+
   }
 
   apiStream(id: number) {
-    return unauthApiUrlV2(`stream/users/${id}`, `limit=15&offset=0&linked_partitioning=1`)
+    return unauthApiUrlV2(`stream/users/${id}`,`limit=15&offset=0&linked_partitioning=1`)
   }
 
   @action async fetchWithType(type: string) {

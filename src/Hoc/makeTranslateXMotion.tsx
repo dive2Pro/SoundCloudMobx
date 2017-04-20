@@ -38,7 +38,7 @@ export default function makeTranslateMotion<Props, State>(
             styles => {
               return (
                 <div
-                  style={{ ...styles, position: 'relative' }}
+                  style={{ ...styles, position: 'relative', minHeight: '100vh' }}
                 >
                   <Comp
                     {...this.props}
@@ -47,7 +47,7 @@ export default function makeTranslateMotion<Props, State>(
               )
             }
           }
-        </Motion>
+        </Motion >
 
       )
     }

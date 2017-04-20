@@ -11,10 +11,10 @@ const styles = require('./player.scss');
 import Range from '../InputRange'
 import { PLAYER_STORE, PERFORMANCE_STORE } from "../../constants/storeTypes";
 import { PerformanceStore } from "../../store/PerformanceStore";
-
+import makeDumbProps from '../../Hoc/makeDumbProps';
 interface IPlayerProps {
-  playerStore?: PlayerStore
-  performanceStore?: PerformanceStore
+  playerStore: PlayerStore
+  performanceStore: PerformanceStore
 }
 interface IPlayerState {
   visible: boolean
@@ -235,60 +235,56 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
    * 同步更新 glass的偏移值
    */
   initGlassData = () => {
-    if (0 == 0) {
-      // return
-    }
+
     const ps = this.props.performanceStore
-    if (ps) {
-      let node$: any;
-      const main = this.main
-      const glass = this.fronsted_glass
-      const style = glass.style;
-      const glassFrame = this.blurredContentFrame
-      const resetPositoin = () => {
-        if (node$) {
-          const scrollY = ps.scrollY || 0;
-          style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
-        }
+    let node$: any;
+    const main = this.main
+    const glass = this.fronsted_glass
+    const style = glass.style;
+    const glassFrame = this.blurredContentFrame
+    const resetPositoin = () => {
+      if (node$) {
+        const scrollY = ps.scrollY || 0;
+        style.top = -(node$.offsetTop + main.offsetTop + scrollY) + 'px';
       }
-
-      const resetNode$ = (glassNode: string, n: number) => {
-        node$ = document.querySelector(`#${glassNode}`)
-        if (!node$) { return }
-        node$ = node$.cloneNode(true);
-        // main.style.left = -node$.offsetLeft + "px"
-        glass.innerHTML = '';
-        glass.appendChild(node$);
-        glassFrame.style.width = node$.offsetWidth + 'px';
-        glassFrame.style.height = node$.offsetHeight + 'px';
-        style.width = 1473 + 'px';
-        style.height = node$.offsetHeight + 'px';
-        resetPositoin();
-      }
-
-
-      const onceObservser = () => when(
-        () => !ps.allLoadingIsSettle,
-        () => {
-          const handleObservaer = autorun(
-            () => {
-              // 当为true 即更新node //fuck
-              if (ps.allLoadingIsSettle) {
-                resetNode$(ps.glassNode, ps.scrollY)
-                handleObservaer()
-                onceObservser()
-              }
-            })
-        })
-      onceObservser();
-      this.initGlassData = autorun(() => {
-        const { glassNode } = ps
-        if (!node$ || node$.id !== glassNode) {
-          resetNode$(glassNode, ps.scrollY)
-        }
-        resetPositoin();
-      })
     }
+
+    const resetNode$ = (glassNode: string, n: number) => {
+      node$ = document.querySelector(`#${glassNode}`)
+      if (!node$) { return }
+      node$ = node$.cloneNode(true);
+      // main.style.left = -node$.offsetLeft + "px"
+      glass.innerHTML = '';
+      glass.appendChild(node$);
+      glassFrame.style.width = node$.offsetWidth + 'px';
+      glassFrame.style.height = node$.offsetHeight + 'px';
+      style.width = 1473 + 'px';
+      style.height = node$.offsetHeight + 'px';
+      resetPositoin();
+    }
+
+
+    const onceObservser = () => when(
+      () => !ps.allLoadingIsSettle,
+      () => {
+        const handleObservaer = autorun(
+          () => {
+            // 当为true 即更新node //fuck
+            if (ps.allLoadingIsSettle) {
+              resetNode$(ps.glassNode, ps.scrollY)
+              handleObservaer()
+              onceObservser()
+            }
+          })
+      })
+    onceObservser();
+    this.initGlassData = autorun(() => {
+      const { glassNode } = ps
+      if (!node$ || node$.id !== glassNode) {
+        resetNode$(glassNode, ps.scrollY)
+      }
+      resetPositoin();
+    })
   }
 
   // 取消autoruns  
@@ -299,9 +295,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
   updateWithVolumeAndPlay() {
     this.updateWithVolumeAndPlay = autorun(() => {
-      if (!this.props.playerStore) {
-        return;
-      }
+
       const { volume, isPlaying } = this.props.playerStore;
       const audio = this.audio
       if (isPlaying) {
@@ -321,20 +315,18 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
   handleOpenPlaylist = () => {
     const playStore = this.props.playerStore;
-    if (playStore) { playStore.togglePlaylistOpen(); }
+    playStore.togglePlaylistOpen()
   };
 
   handlePlayNext = (diff: number) => {
     const playStore = this.props.playerStore;
-    if (playStore) {
-      playStore.playNextTrack(diff);
-    }
+    playStore.playNextTrack(diff);
+
   };
 
   handleShuffleMode = () => {
-    if (this.props.playerStore) {
-      this.props.playerStore.toggleShuffleMode();
-    }
+    this.props.playerStore.toggleShuffleMode();
+
   }
 
   handleProcessChange = (value: string) => {
@@ -360,9 +352,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
   handleVolimeProcessChange = (percent: string) => {
     const p = this.props.playerStore
-    if (p) {
-      p.setVolume(+percent)
-    }
+
+    p.setVolume(+percent)
+
   }
   render() {
 
@@ -372,9 +364,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     if (this.isVisible) {
       clazzName = styles.player_visible;
     }
-    if (!playerStore) {
-      return <noscript />;
-    }
+
 
     return (
       <div
@@ -406,4 +396,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   }
 }
 
-export default Player 
+
+
+export default makeDumbProps(Player)
