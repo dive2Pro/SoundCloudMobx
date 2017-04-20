@@ -1,5 +1,7 @@
 # SoundCloundMobx
-[Live Mode]( https://build-nqrhiscmsu.now.sh/)
+
+[Live Mode]( https://build-zlcxofopic.now.sh)
+
 > 这是一个soundcloud的个人客户端 
 
 ## 使用到的技术
@@ -41,7 +43,7 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 
 ## todo 📇📇
 - [x] 更好的ui
-- [ ] 添加测试
+- [ ] 添加测试ing
 - [ ] 响应式ui
 - [x] 数据缓存,内存
 - [x] 动画效果
