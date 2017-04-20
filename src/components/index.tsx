@@ -5,9 +5,9 @@ import Player from './Player'
 import Playerlist from './Playerlist'
 import Callback from './Callback'
 import Browser from './Browse'
-// import DashBoard from './DashBoard'
-// import TrackPager from './TrackPager'
-// import { PlaylistInfo } from './Playlist'
+import DashBoard from './DashBoard'
+import TrackPager from './TrackPager'
+import { PlaylistInfo } from './Playlist'
 import { OpacityTransitoinSwitch } from './Switch'
 import Loadable from '../Hoc/Loadable'
 import LoadingSpinner from './LoadingSpinner';
@@ -61,24 +61,27 @@ const routes = [
   },
   {
     path: '/users',
-    component: Loadable({
-      LoadingComponent: LoadingSpinner
-      , loader: () => System.import('./DashBoard')
-    })
+    component: DashBoard
+    // Loadable({
+    // LoadingComponent: LoadingSpinner
+    // , loader: () => System.import('./DashBoard')
+    // })
   },
   {
     path: '/stream'
-    , component: Loadable({
-      LoadingComponent: LoadingSpinner
-      , loader: () => System.import('./TrackPager')
-    })
+    , component: TrackPager
+    // Loadable({
+    // LoadingComponent: LoadingSpinner
+    // , loader: () => System.import('./TrackPager')
+    // })
   }
   , {
     path: '/playlist'
-    , component: Loadable({
-      LoadingComponent: LoadingSpinner
-      , loader: () => System.import('./Playlist/PlaylistInfo')
-    })
+    , component: PlaylistInfo
+    // Loadable({
+    // LoadingComponent: LoadingSpinner
+    // , loader: () => System.import('./Playlist/PlaylistInfo')
+    // })
   }
   , {
     path: '/callback(:*)',
