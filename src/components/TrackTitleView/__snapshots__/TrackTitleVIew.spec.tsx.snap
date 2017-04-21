@@ -1,0 +1,27 @@
+exports[`TrackTitleView Component 初始化渲染 1`] = `
+<div>
+  <h5>
+    <StreamLink>
+      Test---
+    </StreamLink>
+     - 
+    <span>
+      haha
+    </span>
+  </h5>
+  <div>
+    <Action
+      className="fa fa-play"
+      style={Object {}} />
+    <Action
+      className="fa fa-likes"
+      style={Object {}} />
+    <Action
+      className="fa fa-comment"
+      style={Object {}} />
+    <Action
+      className="fa fa-download"
+      style={Object {}} />
+  </div>
+</div>
+`;
