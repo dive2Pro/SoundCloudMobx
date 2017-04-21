@@ -1,0 +1,1725 @@
+exports[`Player Component action  1`] = `
+<Provider
+  activitiesStore={
+    ActivitiesStore {
+      "autorunHandle": [Function],
+      "currentGenre": "activities",
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "activities": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  commentStore={
+    CommentStore {
+      "commentsByTracks": Object {},
+      "currentTrack": null,
+      "nextHrefsByTrack": Object {},
+    }
+  }
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "glassNode": undefined,
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+      "scrollY": undefined,
+    }
+  }
+  playerStore={
+    PlayerStore {
+      "isPlaying": true,
+      "isPlaylistOpen": false,
+      "isShuffleMode": false,
+      "isVolumeOpen": false,
+      "playList": Array [
+        Object {
+          "id": 1234,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+        Object {
+          "id": 222,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+      ],
+      "playingTrack": Object {
+        "id": 1234,
+        "title": "hohohoho",
+        "user": Object {},
+      },
+      "volume": 0.25,
+    }
+  }
+  sessionStore={SessionStore {}}
+  trackStore={
+    TrackStore {
+      "autorunHandle": [Function],
+      "bindDebounced": [Function],
+      "currentGenre": "Country",
+      "debouncedFetchData": [Function],
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "Country": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  userStore={
+    UserStore {
+      "debouncedRequestFollowUser": [Function],
+      "userModels": Object {},
+    }
+  }>
+  <inject-Player-with-playerStore-performanceStore>
+    <Player
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "glassNode": undefined,
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+          "scrollY": undefined,
+        }
+      }
+      playerStore={
+        PlayerStore {
+          "isPlaying": true,
+          "isPlaylistOpen": false,
+          "isShuffleMode": false,
+          "isVolumeOpen": false,
+          "playList": Array [
+            Object {
+              "id": 1234,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+            Object {
+              "id": 222,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+          ],
+          "playingTrack": Object {
+            "id": 1234,
+            "title": "hohohoho",
+            "user": Object {},
+          },
+          "volume": 0.25,
+        }
+      }>
+      <div
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}>
+        <div>
+          <div />
+        </div>
+        <div>
+          <div>
+            <InputRange
+              backgroundColor="#9e9f9f"
+              contaiStyle={
+                Object {
+                  "height": "4px",
+                }
+              }
+              cusProcessStyle={Object {}}
+              data={500}
+              defaultColor="#b6bbbb"
+              defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+              defaultWide={10}
+              dotStyle={
+                Object {
+                  "visibility": "hidden",
+                }
+              }
+              onDragEnd={[Function]}
+              onDragIng={[Function]}
+              value={NaN}>
+              <div>
+                <div
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#b6bbbb",
+                      "height": "4px",
+                      "width": "100%",
+                    }
+                  }>
+                  <div
+                    onMouseDown={[Function]}
+                    style={
+                      Object {
+                        "transform": "translateX(0px)",
+                        "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "visibility": "hidden",
+                      }
+                    }>
+                    <span
+                      style={
+                        Object {
+                          "visibility": "hidden",
+                        }
+                      }>
+                      0
+                    </span>
+                  </div>
+                  <div
+                    style={
+                      Object {
+                        "backgroundColor": "#9e9f9f",
+                        "height": "100%",
+                        "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "width": "0px",
+                      }
+                    } />
+                </div>
+              </div>
+            </InputRange>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <inject-ArtWork-with-performanceStore
+                live={true}
+                size={45}>
+                <ArtWork
+                  live={true}
+                  performanceStore={
+                    PerformanceStore {
+                      "genre": "Country",
+                      "getLoadingStateWidthKey": [Function],
+                      "glassNode": undefined,
+                      "isError": [Function],
+                      "isErrorsMap": Object {},
+                      "isLoadingsByKey": Object {
+                        "comments": false,
+                        "post_track_comment": false,
+                      },
+                      "scrollLimitByGenre": Object {
+                        "Country": Array [
+                          768,
+                          768,
+                        ],
+                        "activities": Array [
+                          768,
+                          768,
+                        ],
+                      },
+                      "scrollY": undefined,
+                    }
+                  }
+                  size={45}>
+                  <img
+                    height={45}
+                    src="preload.jpg"
+                    width={45} />
+                </ArtWork>
+              </inject-ArtWork-with-performanceStore>
+            </div>
+            <div>
+              <span>
+                hohohoho
+              </span>
+              <span />
+            </div>
+          </div>
+          <div>
+            <div
+              alt="random track"
+              className={false}>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-random">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div
+              alt="next Stream">
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-backward">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-pause" />
+                   
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-forward">
+                     
+                  </i>
+                   
+                </button>
+              </ButtonInline>
+            </div>
+          </div>
+          <div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-bars fa-2x">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <i
+                className="fa fa-volume-down fa-2x"
+                style={
+                  Object {
+                    "width": "25px",
+                  }
+                }>
+                 
+              </i>
+              <div
+                style={
+                  Object {
+                    "left": 0,
+                  }
+                }>
+                <InputRange
+                  backgroundColor="#9e9f9f"
+                  contaiStyle={
+                    Object {
+                      "height": "7px",
+                    }
+                  }
+                  cusProcessStyle={Object {}}
+                  data={100}
+                  defaultColor="#b6bbbb"
+                  defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+                  defaultWide={10}
+                  dotStyle={
+                    Object {
+                      "backgroundColor": "white",
+                      "boxShadow": "0px 0px 2px 0px black",
+                    }
+                  }
+                  onDragEnd={[Function]}
+                  onDragIng={[Function]}
+                  value={25}
+                  wide={120}>
+                  <div>
+                    <div
+                      onMouseDown={[Function]}
+                      style={
+                        Object {
+                          "backgroundColor": "#b6bbbb",
+                          "height": "7px",
+                          "width": "120px",
+                        }
+                      }>
+                      <div
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "backgroundColor": "white",
+                            "boxShadow": "0px 0px 2px 0px black",
+                            "transform": "translateX(30.120481927710845px)",
+                            "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                          }
+                        }>
+                        <span
+                          style={
+                            Object {
+                              "visibility": "hidden",
+                            }
+                          }>
+                          25
+                        </span>
+                      </div>
+                      <div
+                        style={
+                          Object {
+                            "backgroundColor": "#9e9f9f",
+                            "height": "100%",
+                            "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                            "width": "30.120481927710845px",
+                          }
+                        } />
+                    </div>
+                  </div>
+                </InputRange>
+              </div>
+            </div>
+          </div>
+        </div>
+        <audio
+          id="audio"
+          onTimeUpdate={[Function]} />
+      </div>
+    </Player>
+  </inject-Player-with-playerStore-performanceStore>
+</Provider>
+`;
+
+exports[`Player Component action  2`] = `
+<Provider
+  activitiesStore={
+    ActivitiesStore {
+      "autorunHandle": [Function],
+      "currentGenre": "activities",
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "activities": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  commentStore={
+    CommentStore {
+      "commentsByTracks": Object {},
+      "currentTrack": null,
+      "nextHrefsByTrack": Object {},
+    }
+  }
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "glassNode": undefined,
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+      "scrollY": undefined,
+    }
+  }
+  playerStore={
+    PlayerStore {
+      "isPlaying": false,
+      "isPlaylistOpen": false,
+      "isShuffleMode": false,
+      "isVolumeOpen": false,
+      "playList": Array [
+        Object {
+          "id": 1234,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+        Object {
+          "id": 222,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+      ],
+      "playingTrack": Object {
+        "id": 1234,
+        "title": "hohohoho",
+        "user": Object {},
+      },
+      "volume": 0.25,
+    }
+  }
+  sessionStore={SessionStore {}}
+  trackStore={
+    TrackStore {
+      "autorunHandle": [Function],
+      "bindDebounced": [Function],
+      "currentGenre": "Country",
+      "debouncedFetchData": [Function],
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "Country": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  userStore={
+    UserStore {
+      "debouncedRequestFollowUser": [Function],
+      "userModels": Object {},
+    }
+  }>
+  <inject-Player-with-playerStore-performanceStore>
+    <Player
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "glassNode": undefined,
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+          "scrollY": undefined,
+        }
+      }
+      playerStore={
+        PlayerStore {
+          "isPlaying": false,
+          "isPlaylistOpen": false,
+          "isShuffleMode": false,
+          "isVolumeOpen": false,
+          "playList": Array [
+            Object {
+              "id": 1234,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+            Object {
+              "id": 222,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+          ],
+          "playingTrack": Object {
+            "id": 1234,
+            "title": "hohohoho",
+            "user": Object {},
+          },
+          "volume": 0.25,
+        }
+      }>
+      <div
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}>
+        <div>
+          <div />
+        </div>
+        <div>
+          <div>
+            <InputRange
+              backgroundColor="#9e9f9f"
+              contaiStyle={
+                Object {
+                  "height": "4px",
+                }
+              }
+              cusProcessStyle={Object {}}
+              data={500}
+              defaultColor="#b6bbbb"
+              defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+              defaultWide={10}
+              dotStyle={
+                Object {
+                  "visibility": "hidden",
+                }
+              }
+              onDragEnd={[Function]}
+              onDragIng={[Function]}
+              value={NaN}>
+              <div>
+                <div
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#b6bbbb",
+                      "height": "4px",
+                      "width": "100%",
+                    }
+                  }>
+                  <div
+                    onMouseDown={[Function]}
+                    style={
+                      Object {
+                        "transform": "translateX(0px)",
+                        "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "visibility": "hidden",
+                      }
+                    }>
+                    <span
+                      style={
+                        Object {
+                          "visibility": "hidden",
+                        }
+                      }>
+                      0
+                    </span>
+                  </div>
+                  <div
+                    style={
+                      Object {
+                        "backgroundColor": "#9e9f9f",
+                        "height": "100%",
+                        "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "width": "0px",
+                      }
+                    } />
+                </div>
+              </div>
+            </InputRange>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <inject-ArtWork-with-performanceStore
+                live={true}
+                size={45}>
+                <ArtWork
+                  live={true}
+                  performanceStore={
+                    PerformanceStore {
+                      "genre": "Country",
+                      "getLoadingStateWidthKey": [Function],
+                      "glassNode": undefined,
+                      "isError": [Function],
+                      "isErrorsMap": Object {},
+                      "isLoadingsByKey": Object {
+                        "comments": false,
+                        "post_track_comment": false,
+                      },
+                      "scrollLimitByGenre": Object {
+                        "Country": Array [
+                          768,
+                          768,
+                        ],
+                        "activities": Array [
+                          768,
+                          768,
+                        ],
+                      },
+                      "scrollY": undefined,
+                    }
+                  }
+                  size={45}>
+                  <img
+                    height={45}
+                    src="preload.jpg"
+                    width={45} />
+                </ArtWork>
+              </inject-ArtWork-with-performanceStore>
+            </div>
+            <div>
+              <span>
+                hohohoho
+              </span>
+              <span />
+            </div>
+          </div>
+          <div>
+            <div
+              alt="random track"
+              className={false}>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-random">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div
+              alt="next Stream">
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-backward">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-play" />
+                   
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-forward">
+                     
+                  </i>
+                   
+                </button>
+              </ButtonInline>
+            </div>
+          </div>
+          <div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-bars fa-2x">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <i
+                className="fa fa-volume-down fa-2x"
+                style={
+                  Object {
+                    "width": "25px",
+                  }
+                }>
+                 
+              </i>
+              <div
+                style={
+                  Object {
+                    "left": 0,
+                  }
+                }>
+                <InputRange
+                  backgroundColor="#9e9f9f"
+                  contaiStyle={
+                    Object {
+                      "height": "7px",
+                    }
+                  }
+                  cusProcessStyle={Object {}}
+                  data={100}
+                  defaultColor="#b6bbbb"
+                  defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+                  defaultWide={10}
+                  dotStyle={
+                    Object {
+                      "backgroundColor": "white",
+                      "boxShadow": "0px 0px 2px 0px black",
+                    }
+                  }
+                  onDragEnd={[Function]}
+                  onDragIng={[Function]}
+                  value={25}
+                  wide={120}>
+                  <div>
+                    <div
+                      onMouseDown={[Function]}
+                      style={
+                        Object {
+                          "backgroundColor": "#b6bbbb",
+                          "height": "7px",
+                          "width": "120px",
+                        }
+                      }>
+                      <div
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "backgroundColor": "white",
+                            "boxShadow": "0px 0px 2px 0px black",
+                            "transform": "translateX(30.120481927710845px)",
+                            "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                          }
+                        }>
+                        <span
+                          style={
+                            Object {
+                              "visibility": "hidden",
+                            }
+                          }>
+                          25
+                        </span>
+                      </div>
+                      <div
+                        style={
+                          Object {
+                            "backgroundColor": "#9e9f9f",
+                            "height": "100%",
+                            "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                            "width": "30.120481927710845px",
+                          }
+                        } />
+                    </div>
+                  </div>
+                </InputRange>
+              </div>
+            </div>
+          </div>
+        </div>
+        <audio
+          id="audio"
+          onTimeUpdate={[Function]} />
+      </div>
+    </Player>
+  </inject-Player-with-playerStore-performanceStore>
+</Provider>
+`;
+
+exports[`Player Component action  3`] = `
+<Provider
+  activitiesStore={
+    ActivitiesStore {
+      "autorunHandle": [Function],
+      "currentGenre": "activities",
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "activities": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  commentStore={
+    CommentStore {
+      "commentsByTracks": Object {},
+      "currentTrack": null,
+      "nextHrefsByTrack": Object {},
+    }
+  }
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "glassNode": undefined,
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+      "scrollY": undefined,
+    }
+  }
+  playerStore={
+    PlayerStore {
+      "isPlaying": false,
+      "isPlaylistOpen": false,
+      "isShuffleMode": false,
+      "isVolumeOpen": false,
+      "playList": Array [
+        Object {
+          "id": 1234,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+        Object {
+          "id": 222,
+          "title": "hohohoho",
+          "user": Object {},
+        },
+      ],
+      "playingTrack": Object {
+        "id": 1234,
+        "title": "hohohoho",
+        "user": Object {},
+      },
+      "volume": 0.25,
+    }
+  }
+  sessionStore={SessionStore {}}
+  trackStore={
+    TrackStore {
+      "autorunHandle": [Function],
+      "bindDebounced": [Function],
+      "currentGenre": "Country",
+      "debouncedFetchData": [Function],
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "Country": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  userStore={
+    UserStore {
+      "debouncedRequestFollowUser": [Function],
+      "userModels": Object {},
+    }
+  }>
+  <inject-Player-with-playerStore-performanceStore>
+    <Player
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "glassNode": undefined,
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+          "scrollY": undefined,
+        }
+      }
+      playerStore={
+        PlayerStore {
+          "isPlaying": false,
+          "isPlaylistOpen": false,
+          "isShuffleMode": false,
+          "isVolumeOpen": false,
+          "playList": Array [
+            Object {
+              "id": 1234,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+            Object {
+              "id": 222,
+              "title": "hohohoho",
+              "user": Object {},
+            },
+          ],
+          "playingTrack": Object {
+            "id": 1234,
+            "title": "hohohoho",
+            "user": Object {},
+          },
+          "volume": 0.25,
+        }
+      }>
+      <div
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}>
+        <div>
+          <div />
+        </div>
+        <div>
+          <div>
+            <InputRange
+              backgroundColor="#9e9f9f"
+              contaiStyle={
+                Object {
+                  "height": "4px",
+                }
+              }
+              cusProcessStyle={Object {}}
+              data={500}
+              defaultColor="#b6bbbb"
+              defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+              defaultWide={10}
+              dotStyle={
+                Object {
+                  "visibility": "hidden",
+                }
+              }
+              onDragEnd={[Function]}
+              onDragIng={[Function]}
+              value={NaN}>
+              <div>
+                <div
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#b6bbbb",
+                      "height": "4px",
+                      "width": "100%",
+                    }
+                  }>
+                  <div
+                    onMouseDown={[Function]}
+                    style={
+                      Object {
+                        "transform": "translateX(0px)",
+                        "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "visibility": "hidden",
+                      }
+                    }>
+                    <span
+                      style={
+                        Object {
+                          "visibility": "hidden",
+                        }
+                      }>
+                      0
+                    </span>
+                  </div>
+                  <div
+                    style={
+                      Object {
+                        "backgroundColor": "#9e9f9f",
+                        "height": "100%",
+                        "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "width": "0px",
+                      }
+                    } />
+                </div>
+              </div>
+            </InputRange>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <inject-ArtWork-with-performanceStore
+                live={true}
+                size={45}>
+                <ArtWork
+                  live={true}
+                  performanceStore={
+                    PerformanceStore {
+                      "genre": "Country",
+                      "getLoadingStateWidthKey": [Function],
+                      "glassNode": undefined,
+                      "isError": [Function],
+                      "isErrorsMap": Object {},
+                      "isLoadingsByKey": Object {
+                        "comments": false,
+                        "post_track_comment": false,
+                      },
+                      "scrollLimitByGenre": Object {
+                        "Country": Array [
+                          768,
+                          768,
+                        ],
+                        "activities": Array [
+                          768,
+                          768,
+                        ],
+                      },
+                      "scrollY": undefined,
+                    }
+                  }
+                  size={45}>
+                  <img
+                    height={45}
+                    src="preload.jpg"
+                    width={45} />
+                </ArtWork>
+              </inject-ArtWork-with-performanceStore>
+            </div>
+            <div>
+              <span>
+                hohohoho
+              </span>
+              <span />
+            </div>
+          </div>
+          <div>
+            <div
+              alt="random track"
+              className={false}>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-random">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div
+              alt="next Stream">
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-backward">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-play" />
+                   
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-forward">
+                     
+                  </i>
+                   
+                </button>
+              </ButtonInline>
+            </div>
+          </div>
+          <div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-bars fa-2x">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <i
+                className="fa fa-volume-down fa-2x"
+                style={
+                  Object {
+                    "width": "25px",
+                  }
+                }>
+                 
+              </i>
+              <div
+                style={
+                  Object {
+                    "left": 0,
+                  }
+                }>
+                <InputRange
+                  backgroundColor="#9e9f9f"
+                  contaiStyle={
+                    Object {
+                      "height": "7px",
+                    }
+                  }
+                  cusProcessStyle={Object {}}
+                  data={100}
+                  defaultColor="#b6bbbb"
+                  defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+                  defaultWide={10}
+                  dotStyle={
+                    Object {
+                      "backgroundColor": "white",
+                      "boxShadow": "0px 0px 2px 0px black",
+                    }
+                  }
+                  onDragEnd={[Function]}
+                  onDragIng={[Function]}
+                  value={25}
+                  wide={120}>
+                  <div>
+                    <div
+                      onMouseDown={[Function]}
+                      style={
+                        Object {
+                          "backgroundColor": "#b6bbbb",
+                          "height": "7px",
+                          "width": "120px",
+                        }
+                      }>
+                      <div
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "backgroundColor": "white",
+                            "boxShadow": "0px 0px 2px 0px black",
+                            "transform": "translateX(30.120481927710845px)",
+                            "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                          }
+                        }>
+                        <span
+                          style={
+                            Object {
+                              "visibility": "hidden",
+                            }
+                          }>
+                          25
+                        </span>
+                      </div>
+                      <div
+                        style={
+                          Object {
+                            "backgroundColor": "#9e9f9f",
+                            "height": "100%",
+                            "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                            "width": "30.120481927710845px",
+                          }
+                        } />
+                    </div>
+                  </div>
+                </InputRange>
+              </div>
+            </div>
+          </div>
+        </div>
+        <audio
+          id="audio"
+          onTimeUpdate={[Function]} />
+      </div>
+    </Player>
+  </inject-Player-with-playerStore-performanceStore>
+</Provider>
+`;
+
+exports[`Player Component 初始化渲染 1`] = `
+<Provider
+  activitiesStore={
+    ActivitiesStore {
+      "autorunHandle": [Function],
+      "currentGenre": "activities",
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "activities": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  commentStore={
+    CommentStore {
+      "commentsByTracks": Object {},
+      "currentTrack": null,
+      "nextHrefsByTrack": Object {},
+    }
+  }
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "glassNode": undefined,
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+      "scrollY": undefined,
+    }
+  }
+  playerStore={
+    PlayerStore {
+      "isPlaying": false,
+      "isPlaylistOpen": false,
+      "isShuffleMode": false,
+      "isVolumeOpen": false,
+      "playList": Array [],
+      "playingTrack": undefined,
+      "volume": 0.25,
+    }
+  }
+  sessionStore={SessionStore {}}
+  trackStore={
+    TrackStore {
+      "autorunHandle": [Function],
+      "bindDebounced": [Function],
+      "currentGenre": "Country",
+      "debouncedFetchData": [Function],
+      "filterTitle": undefined,
+      "filterType": undefined,
+      "filteredTracks": Array [],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingByGenre": Object {
+        "get": [Function],
+      },
+      "itemsMap": Object {
+        "Country": Array [],
+      },
+      "nextHrefsByGenre": Object {},
+      "resetErrorWithType": [Function],
+      "sortType": undefined,
+    }
+  }
+  userStore={
+    UserStore {
+      "debouncedRequestFollowUser": [Function],
+      "userModels": Object {},
+    }
+  }>
+  <inject-Player-with-playerStore-performanceStore>
+    <Player
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "glassNode": undefined,
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+          "scrollY": undefined,
+        }
+      }
+      playerStore={
+        PlayerStore {
+          "isPlaying": false,
+          "isPlaylistOpen": false,
+          "isShuffleMode": false,
+          "isVolumeOpen": false,
+          "playList": Array [],
+          "playingTrack": undefined,
+          "volume": 0.25,
+        }
+      }>
+      <div
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}>
+        <div>
+          <div />
+        </div>
+        <div>
+          <div>
+            <InputRange
+              backgroundColor="#9e9f9f"
+              contaiStyle={
+                Object {
+                  "height": "4px",
+                }
+              }
+              cusProcessStyle={Object {}}
+              data={500}
+              defaultColor="#b6bbbb"
+              defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+              defaultWide={10}
+              dotStyle={
+                Object {
+                  "visibility": "hidden",
+                }
+              }
+              onDragEnd={[Function]}
+              onDragIng={[Function]}
+              value={0}>
+              <div>
+                <div
+                  onMouseDown={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "#b6bbbb",
+                      "height": "4px",
+                      "width": "100%",
+                    }
+                  }>
+                  <div
+                    onMouseDown={[Function]}
+                    style={
+                      Object {
+                        "transform": "translateX(0px)",
+                        "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "visibility": "hidden",
+                      }
+                    }>
+                    <span
+                      style={
+                        Object {
+                          "visibility": "hidden",
+                        }
+                      }>
+                      0
+                    </span>
+                  </div>
+                  <div
+                    style={
+                      Object {
+                        "backgroundColor": "#9e9f9f",
+                        "height": "100%",
+                        "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                        "width": "0px",
+                      }
+                    } />
+                </div>
+              </div>
+            </InputRange>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <inject-ArtWork-with-performanceStore
+                live={true}
+                size={45}
+                src="">
+                <ArtWork
+                  live={true}
+                  performanceStore={
+                    PerformanceStore {
+                      "genre": "Country",
+                      "getLoadingStateWidthKey": [Function],
+                      "glassNode": undefined,
+                      "isError": [Function],
+                      "isErrorsMap": Object {},
+                      "isLoadingsByKey": Object {
+                        "comments": false,
+                        "post_track_comment": false,
+                      },
+                      "scrollLimitByGenre": Object {
+                        "Country": Array [
+                          768,
+                          768,
+                        ],
+                        "activities": Array [
+                          768,
+                          768,
+                        ],
+                      },
+                      "scrollY": undefined,
+                    }
+                  }
+                  size={45}
+                  src="">
+                  <img
+                    height={45}
+                    src="preload.jpg"
+                    width={45} />
+                </ArtWork>
+              </inject-ArtWork-with-performanceStore>
+            </div>
+            <div>
+              <span />
+              <span />
+            </div>
+          </div>
+          <div>
+            <div
+              alt="random track"
+              className={false}>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-random">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div
+              alt="next Stream">
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-backward">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-play" />
+                   
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-step-forward">
+                     
+                  </i>
+                   
+                </button>
+              </ButtonInline>
+            </div>
+          </div>
+          <div>
+            <div>
+              <ButtonInline
+                onClick={[Function]}>
+                <button
+                  onClick={[Function]}
+                  type="button">
+                  <i
+                    className="fa fa-bars fa-2x">
+                     
+                  </i>
+                </button>
+              </ButtonInline>
+            </div>
+            <div>
+              <i
+                className="fa fa-volume-down fa-2x"
+                style={
+                  Object {
+                    "width": "25px",
+                  }
+                }>
+                 
+              </i>
+              <div
+                style={Object {}}>
+                <InputRange
+                  backgroundColor="#9e9f9f"
+                  contaiStyle={
+                    Object {
+                      "height": "7px",
+                    }
+                  }
+                  cusProcessStyle={Object {}}
+                  data={100}
+                  defaultColor="#b6bbbb"
+                  defaultTransition="0.3s ease-out, box-shadow 0.3s ease-out"
+                  defaultWide={10}
+                  dotStyle={
+                    Object {
+                      "backgroundColor": "white",
+                      "boxShadow": "0px 0px 2px 0px black",
+                    }
+                  }
+                  onDragEnd={[Function]}
+                  onDragIng={[Function]}
+                  value={25}
+                  wide={120}>
+                  <div>
+                    <div
+                      onMouseDown={[Function]}
+                      style={
+                        Object {
+                          "backgroundColor": "#b6bbbb",
+                          "height": "7px",
+                          "width": "120px",
+                        }
+                      }>
+                      <div
+                        onMouseDown={[Function]}
+                        style={
+                          Object {
+                            "backgroundColor": "white",
+                            "boxShadow": "0px 0px 2px 0px black",
+                            "transform": "translateX(30.120481927710845px)",
+                            "transition": "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                          }
+                        }>
+                        <span
+                          style={
+                            Object {
+                              "visibility": "hidden",
+                            }
+                          }>
+                          25
+                        </span>
+                      </div>
+                      <div
+                        style={
+                          Object {
+                            "backgroundColor": "#9e9f9f",
+                            "height": "100%",
+                            "transition": "width 0.3s ease-out, box-shadow 0.3s ease-out",
+                            "width": "30.120481927710845px",
+                          }
+                        } />
+                    </div>
+                  </div>
+                </InputRange>
+              </div>
+            </div>
+          </div>
+        </div>
+        <audio
+          id="audio"
+          onTimeUpdate={[Function]} />
+      </div>
+    </Player>
+  </inject-Player-with-playerStore-performanceStore>
+</Provider>
+`;

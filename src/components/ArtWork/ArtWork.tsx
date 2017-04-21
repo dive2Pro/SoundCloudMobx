@@ -1,6 +1,6 @@
 import * as React from 'react'
-const styles = require('./artwork.scss')
-const preImage = require('preload.jpg')
+const preImage = require('../../../public/images/preload.jpg')
+
 import { autorun, IReactionDisposer } from 'mobx'
 import {
   observer
@@ -8,6 +8,7 @@ import {
 } from 'mobx-react'
 import { PerformanceStore } from '../../store/PerformanceStore';
 import { PERFORMANCE_STORE } from '../../constants/storeTypes';
+
 export interface IArtWorkProps {
   size?: number
   alt?: string

@@ -1,0 +1,20 @@
+exports[`ViewAll Component 初始化渲染 1`] = `
+<div>
+  <div>
+    <i
+      className="TestView" />
+    <span>
+      12
+        
+      Texting
+    </span>
+  </div>
+  <span>
+    <RouterLink
+      id={11}
+      path="href:next">
+      View all
+    </RouterLink>
+  </span>
+</div>
+`;

@@ -13,7 +13,7 @@ interface TdTrackTitleViewProp {
 }
 
 
-const TdTrackTitleView = observer(function TdTrackTitleView({ track, sortType }: TdTrackTitleViewProp) {
+const TrackTitleView = observer(function TrackTitleView({ track, sortType }: TdTrackTitleViewProp) {
   const { user, title, playback_count, id,
     favoritings_count, comment_count, download_count } = track;
   const { username } = user
@@ -53,4 +53,4 @@ const TdTrackTitleView = observer(function TdTrackTitleView({ track, sortType }:
     </div>
   )
 })
-export default TdTrackTitleView
+export default TrackTitleView
