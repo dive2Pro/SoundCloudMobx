@@ -1,0 +1,12 @@
+exports[`ArtWork Component 初始化渲染 1`] = `
+<inject-ArtWork-with-performanceStore
+  src="http://img4.imgtn.bdimg.com/it/u=1350614941,725003865&fm=23&gp=0.jpg"
+  track={
+    Object {
+      "title": "Test---",
+      "user": Object {
+        "username": "haha",
+      },
+    }
+  } />
+`;
