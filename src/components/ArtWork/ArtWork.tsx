@@ -10,9 +10,9 @@ import { PerformanceStore } from '../../store/PerformanceStore';
 import { PERFORMANCE_STORE } from '../../constants/storeTypes';
 
 export interface IArtWorkProps {
+  src: string
   size?: number
   alt?: string
-  src: string
   optionalImg?: string,
   clazz?: string
   style?: { width?: any, height?: any }
