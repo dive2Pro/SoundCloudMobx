@@ -120,7 +120,7 @@ function makeImageLazyLoad<Props, State>(
     }
 
     componentWillReceiveProps(nextProps) {
-      if (nextProps.src && nextProps.src !== this.state.imageSrc) {
+      if (!!nextProps.src && nextProps.src !== this.state.imageSrc) {
         this.caclImg(nextProps.src, nextProps.size)
       }
     }

@@ -14,7 +14,6 @@ const ButtonInline = ({ onClick, children, ...rest }: IButtonInlineProp) => {
       {...rest}
       type="button">
       {children}
-
     </button>
   );
 

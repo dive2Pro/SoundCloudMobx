@@ -12,7 +12,7 @@ const ButtonGhost = ({ onClick, isSmall, children }: IButtonGhostProps) => {
   return (
     <button
       className={clazz}
-      type='button'
+      type="button"
       onClick={onClick}
     >
       {children}

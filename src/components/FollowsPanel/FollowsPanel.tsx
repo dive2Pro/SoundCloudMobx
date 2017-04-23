@@ -10,17 +10,16 @@ import { UserStore, User } from '../../store/UserStore';
 import { USER_STORE } from '../../constants/storeTypes';
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
 import { IisLoading } from '../../interfaces/interface';
+import makeDumbProps from '../../Hoc/makeDumbProps'
 const styles = require('./followers.scss')
 
 export interface IFollowersProps extends IisLoading {
   type: string
-  history?: any,
-  userStore?: UserStore
-
+  userStore: UserStore
 }
 @inject(USER_STORE)
 @observer
-class Followers extends React.PureComponent<IFollowersProps, {}> {
+export class Followers extends React.PureComponent<IFollowersProps, {}> {
   debounceFunc: {};
 
   // TODO refacotror for repeart this with follower  
@@ -77,11 +76,10 @@ class Followers extends React.PureComponent<IFollowersProps, {}> {
                 />
               )
             })}
-
         </div>
       </section>
     )
   }
 }
 
-export default makeLoadingSpinner(Followers, styles.base);
+export default makeLoadingSpinner(makeDumbProps(Followers), styles.base)
