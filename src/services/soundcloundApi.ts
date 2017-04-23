@@ -82,6 +82,8 @@ export const getSpecPicPath = (url: string, tag: number = PicSize.NORMAL): strin
     case PicSize.CROP:
       afterPrev = 'crop'
       break
+    default:
+      
   }
   const reg = /-{1}large\.{1}/
   return url.replace(reg, `-${afterPrev}\.`);

@@ -1,7 +1,8 @@
 import { observable, action, computed } from 'mobx';
 import { addClientId } from '../services/soundcloundApi'
-import { ITrack } from '../interfaces/interface';
+import { ITrack } from '../interfaces/interface'
 
+const isEqual =require('lodash/isEqual')
 export class PlayerStore {
   @observable playingTrack: ITrack
   @observable isPlaying: boolean = false;
@@ -14,12 +15,15 @@ export class PlayerStore {
   @action setVolume(v: number) {
     this.volume = v;
   }
+
   @action setPlayingTrack(track: ITrack | number) {
     if (typeof track === 'number') {
       track = this.playList[track];
     }
-    if (this.playingTrack === track && this.isPlaying) {
+
+    if (isEqual(this.playingTrack, track) && this.isPlaying) {
       this.isPlaying = false;
+      
     } else {
       this.playingTrack = track;
       this.isPlaying = true;
@@ -102,8 +106,7 @@ export class PlayerStore {
   }
 
   addToPlaylist(tracks: ITrack | ITrack[]) {
-
-    if ('length' in tracks) {
+    if (Array.isArray(tracks)) {
       (<ITrack[]>tracks).slice().forEach((t, i) => {
         i === 0 && this.setPlayingTrack(t)
         this.pushToPlayerlist(t)
@@ -114,7 +117,7 @@ export class PlayerStore {
   }
 
   @action private pushToPlayerlist(t: ITrack) {
-    if (this.playList.indexOf(t) === -1) {
+    if (!this.playList.some((item)=>item.id===t.id)) {
       this.playList.push(t)
     }
   }

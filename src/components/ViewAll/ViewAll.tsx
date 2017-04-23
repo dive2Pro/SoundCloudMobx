@@ -31,4 +31,4 @@ const ViewALL = (prop: IViewALLProp) => {
 
 }
 
-export default (ViewALL);
+export default ViewALL;
