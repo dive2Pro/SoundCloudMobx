@@ -38,6 +38,7 @@ describe('Player Component', () => {
     expect(wrapper.find({ className: 'fa fa-random' }).length).toBe(1)
 
   })
+
   it("action ", () => {
     // playerStore.setPlayingTrack(track)
     let track2 = { ...track, id: 222 }
