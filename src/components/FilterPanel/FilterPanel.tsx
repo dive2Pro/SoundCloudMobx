@@ -17,16 +17,18 @@ const FilterPanel = observer(({ tagClass, activeType
   return (
     <div className={styles.main}>
       <nav className={styles.nav}>
-        <ButtonInline onClick={() => handleClick("")}>
+        <ButtonInline onClick={() => handleClick('')}>
           <i className={tagClass} />
         </ButtonInline>
         {items.map((item, index) => {
           return (
             <ButtonInline
-              key={index + "-" + item.content}
-              onClick={() => handleClick(item.type)}>
+              key={index + '-' + item.content}
+              onClick={() => handleClick(item.type)}
+            >
               <span
-                className={activeType == item.type && styles.active}>
+                className={activeType === item.type && styles.active}
+              >
                 {item.content}
               </span>
             </ButtonInline>)

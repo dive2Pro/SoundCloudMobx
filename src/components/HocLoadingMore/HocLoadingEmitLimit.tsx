@@ -1,8 +1,8 @@
 import * as React from 'react'
 import HocLoadingMore from './HocLoadingMore'
 import { inject } from 'mobx-react'
-import { PerformanceStore } from "../../store/PerformanceStore";
-import { PERFORMANCE_STORE } from "../../constants/storeTypes";
+import { PerformanceStore } from '../../store/PerformanceStore';
+import { PERFORMANCE_STORE } from '../../constants/storeTypes';
 const debounce = require('lodash/debounce')
 
 interface IE {
