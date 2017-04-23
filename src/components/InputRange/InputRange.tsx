@@ -2,10 +2,10 @@
  * Created by hyc on 17-3-22.
  */
 import * as React from "react";
-import { computed, observable, action } from "mobx";
-import { observer } from "mobx-react";
+import { computed, observable, action } from 'mobx';
+import { observer } from 'mobx-react';
 import { findRootParentOffSet as findRootParentOffSet$ } from '../../services/utils'
-const styles = require("./style.scss");
+const styles = require('./style.scss');
 interface IInputRange {
   vertical?: boolean,
   wide?: number
@@ -18,7 +18,7 @@ interface IInputRange {
   defaultWide?: number,
   backgroundColor?: string,
   defaultColor?: string,
-  defaultTransition?: "0.3s ease-out, box-shadow 0.3s ease-out"
+  defaultTransition?: string
   dotStyle?: {}
   cusProcessStyle?: {}
   contaiStyle?: {}
@@ -27,6 +27,20 @@ interface IInputRange {
 
 @observer
 class InputRange extends React.Component<IInputRange, any> {
+  public static defaultProps: IInputRange = {
+    data: 500,
+    defaultWide: 10,
+    backgroundColor: 'chocolate',
+    defaultColor: 'beige',
+    defaultTransition: '0.3s ease-out, box-shadow 0.3s ease-out',
+    cusProcessStyle: {},
+    contaiStyle: {}
+  };
+
+  @observable currentValue = 0;
+  @observable isMoving = false;
+  @observable maxWidth = 100;
+
   rootOffsetLeft: any;
   downPosition: number;
   downPointY: any;
@@ -34,22 +48,145 @@ class InputRange extends React.Component<IInputRange, any> {
   container: HTMLElement
   process: HTMLElement
   dot: HTMLElement
-  constructor() {
-    super()
+
+  @computed get dotStyle() {
+    let position = this.position;
+    let style = {};
+    if (this.isVertical) {
+      // const difHeight = this.dot ? this.dot.offsetHeight / 2 : 0
+      style = { transform: `translateY(${position}px)` };
+    } else {
+      style = { transform: `translateX(${position}px)` };
+    }
+    if (!this.isMoving) {
+      style = {
+        ...style,
+        transition: 'transform ' + this.props.defaultTransition
+      };
+    }
+    const dotStyle = this.props.dotStyle
+    return { ...style, ...dotStyle };
+  }
+
+  @computed get position() {
+    const [, h] = this.positionLimit;
+    const position = this.currentValue / this.gap;
+    return this.isVertical ? h - position : position;
+  }
+
+  @computed get ProcessStyle() {
+    const position = this.position;
+    let style = this.isVertical
+      ? {
+        height: position + 'px',
+        width: '100%',
+        backgroundColor: this.props.defaultColor,
+        left: '-8.5px'
+      }
+      : {
+        width: position + 'px',
+        height: '100%',
+        backgroundColor: this.props.backgroundColor
+      };
+
+    if (this.isMoving) {
+      style = {
+        ...style,
+        transition: ''
+      };
+    } else {
+      const trans = this.isVertical
+        ? { transition: 'height ' + this.props.defaultTransition }
+        : { transition: 'width ' + this.props.defaultTransition };
+      style = {
+        ...style,
+        ...trans
+      };
+    }
+    return { ...style, ...this.props.cusProcessStyle };
+  }
+
+  @computed get ttStyle() {
+    let style = {};
+    if (this.props.toolTip) {
+      style = {
+        visibility: 'visible'
+      };
+    } else {
+      style = {
+        visibility: 'hidden'
+      };
+    }
+    return style;
+  }
+
+  @computed get offLength(): number {
+    if (!this.process.style) { return 0 }
+    const {
+      paddingLeft,
+      marginLeft,
+      paddingTop,
+      marginTop
+    } = this.process.style;
+
+    if (this.isVertical) {
+      if (paddingTop != null && marginTop != null) {
+        return +(this.container.offsetTop + (paddingTop) + marginTop)
+      }
+      return this.container.offsetTop
+    } else {
+      if (paddingLeft && marginLeft) {
+        return +(this.container.offsetLeft + paddingLeft + marginLeft)
+      }
+      return this.container.offsetLeft + this.findRootParentOffSet();
+    }
+  }
+
+  @computed get gap(): number {
+    const max = this.valueLimit[1];
+    const [, width] = this.positionLimit;
+    return parseFloat((max / width).toFixed(2)) || 1;
+  }
+
+  @computed get ContainerStyle() {
+    // const [l, h] = this.valueLimit;
+    let style = {};
+    let wide = this.props.wide;
+    const wided = wide ? wide + 'px' : '100%'
+    if (this.isVertical) {
+      style = {
+        width: this.props.defaultWide + 'px',
+        height: wided,
+        backgroundColor: this.props.backgroundColor
+      };
+    } else {
+      style = {
+        height: this.props.defaultWide + 'px',
+        width: wided,
+        backgroundColor: this.props.defaultColor
+      };
+    }
+    return { ...style, ...this.props.contaiStyle };
+  }
+
+  @computed get valueLimit() {
+    const max = this.props.data;
+    return [0, max];
+  }
+
+  @computed get positionLimit() {
+    let max = this.props.wide
+    if (!!max === false) { max = this.maxWidth };
+    return max ? [0, max] : [0, this.props.defaultWide || 0];
 
   }
-  public static defaultProps: IInputRange = {
-    data: 500,
-    defaultWide: 10,
-    backgroundColor: "chocolate",
-    defaultColor: "beige",
-    defaultTransition: "0.3s ease-out, box-shadow 0.3s ease-out",
-    cusProcessStyle: {},
-    contaiStyle: {}
-  };
-  @observable currentValue = 0;
-  @observable isMoving = false;
-  @observable maxWidth = 0;
+
+  @computed get isVertical() {
+    return !!this.props.vertical;
+  }
+
+
+
 
   actualPosition(pos: number) {
     let value = pos * this.gap;
@@ -76,158 +213,22 @@ class InputRange extends React.Component<IInputRange, any> {
   }
 
   getCurrentProcssPercent() {
-
-    // console.info(this.currentValue, '---', this.valueLimit[1])
     const v = +(this.currentValue / this.valueLimit[1]).toFixed(2)
     return Number.isNaN(v) ? 1 : v;
-
-  }
-
-  @computed get dotStyle() {
-    let position = this.position;
-    let style = {};
-    if (this.isVertical) {
-      // const difHeight = this.dot ? this.dot.offsetHeight / 2 : 0
-      style = { transform: `translateY(${position}px)` };
-    } else {
-      style = { transform: `translateX(${position}px)` };
-    }
-    if (this.isMoving) {
-
-    } else {
-      style = {
-        ...style,
-        transition: "transform " + this.props.defaultTransition
-      };
-    }
-    const dotStyle = this.props.dotStyle
-    return { ...style, ...dotStyle };
-  }
-  @computed get position() {
-    const [, h] = this.positionLimit;
-    const position = this.currentValue / this.gap;
-    return this.isVertical ? h - position : position;
-  }
-  @computed get ProcessStyle() {
-    const position = this.position;
-
-    let style = this.isVertical
-      ? {
-        height: position + "px",
-        width: "100%",
-        backgroundColor: this.props.defaultColor,
-        left: "-8.5px"
-      }
-      : {
-        width: position + "px",
-        height: "100%",
-        backgroundColor: this.props.backgroundColor
-      };
-    if (this.isMoving) {
-      style = {
-        ...style,
-        transition: ""
-      };
-    } else {
-      const trans = this.isVertical
-        ? { transition: "height " + this.props.defaultTransition }
-        : { transition: "width " + this.props.defaultTransition };
-      style = {
-        ...style,
-        ...trans
-      };
-    }
-
-    return { ...style, ...this.props.cusProcessStyle };
-  }
-  @computed get ttStyle() {
-    let style = {};
-    if (this.props.toolTip) {
-      style = {
-        visibility: "visible"
-      };
-    } else {
-      style = {
-        visibility: "hidden"
-      };
-    }
-    return style;
-  }
-  @computed get offLength(): number {
-    if (!this.process.style) { return 0 }
-    const {
-      paddingLeft,
-      marginLeft,
-      paddingTop,
-      marginTop
-    } = this.process.style;
-
-    if (this.isVertical) {
-      if (paddingTop != null && marginTop != null) {
-        return +(this.container.offsetTop + (paddingTop) + marginTop)
-      }
-      return this.container.offsetTop
-    } else {
-      if (paddingLeft && marginLeft)
-        return +(this.container.offsetLeft + paddingLeft + marginLeft)
-      return this.container.offsetLeft + this.findRootParentOffSet();
-    }
   }
 
   findRootParentOffSet = () => {
-    if (this.rootOffsetLeft) return this.rootOffsetLeft;
+    if (this.rootOffsetLeft) { return this.rootOffsetLeft; }
     let root: any = this.container
     this.rootOffsetLeft = findRootParentOffSet$(root)
     return this.rootOffsetLeft
   }
 
-
-  @computed get gap(): number {
-    const max = this.valueLimit[1];
-    const [, width] = this.positionLimit;
-    return parseFloat((max / width).toFixed(2)) || 1;
-  }
-
-  @computed get ContainerStyle() {
-    // const [l, h] = this.valueLimit;
-    let style = {};
-    let wide = this.props.wide;
-    const wided = wide ? wide + "px" : "100%"
-    if (this.isVertical) {
-      style = {
-        width: this.props.defaultWide + "px",
-        height: wided,
-        backgroundColor: this.props.backgroundColor
-      };
-    } else {
-      style = {
-        height: this.props.defaultWide + "px",
-        width: wided,
-        backgroundColor: this.props.defaultColor
-      };
-    }
-    return { ...style, ...this.props.contaiStyle };
-  }
-
-  @computed get valueLimit() {
-    const max = this.props.data;
-    return [0, max];
-  }
-  @computed get positionLimit() {
-    let max = this.props.wide
-    if (!max)
-      max = this.maxWidth;
-
-    return max ? [0, max] : [0, this.props.defaultWide || 0];
-
-  }
   @action setMax(length: number) {
 
     this.maxWidth = length;
   }
-  @computed get isVertical() {
-    return !!this.props.vertical;
-  }
+
 
   handleMouseDown = (e: any) => {
     if (e.target == this.dot) {
@@ -239,15 +240,15 @@ class InputRange extends React.Component<IInputRange, any> {
     if (onDragStart) {
       onDragStart(this.currentValue);
     }
-    this.container.addEventListener("mouseup", this.handleMoveend, false);
-    window.addEventListener("mousemove", this.handleMovind, false);
-    window.addEventListener("mouseup", this.handleMoveend, false);
-    this.dot.addEventListener("mousemove", this.handleMovind, false);
-    this.dot.addEventListener("mouseup", this.handleMovind, false);
+    this.container.addEventListener('mouseup', this.handleMoveend, false);
+    window.addEventListener('mousemove', this.handleMovind, false);
+    window.addEventListener('mouseup', this.handleMoveend, false);
+    this.dot.addEventListener('mousemove', this.handleMovind, false);
+    this.dot.addEventListener('mouseup', this.handleMovind, false);
   };
 
   handleMovind = (e: any) => {
-    if (!this.isMoving) return;
+    if (!this.isMoving) { return };
     e.preventDefault();
     this.actualPosition(this.getPos(e));
   };
@@ -263,8 +264,8 @@ class InputRange extends React.Component<IInputRange, any> {
       const process = this.getCurrentProcssPercent()
       onDragEnd(process);
     }
-    window.removeEventListener("mousemove", this.handleMovind, false);
-    window.removeEventListener("mouseup", this.handleMoveend, false);
+    window.removeEventListener('mousemove', this.handleMovind, false);
+    window.removeEventListener('mouseup', this.handleMoveend, false);
   };
   isCurrentValueIntheRange() {
     const value = this.currentValue
@@ -286,8 +287,7 @@ class InputRange extends React.Component<IInputRange, any> {
         pos = diff + this.downPosition;
       }
       return pos
-    }
-    else {
+    } else {
       pos = e.clientX;
     }
     return pos - this.offLength;
@@ -299,12 +299,13 @@ class InputRange extends React.Component<IInputRange, any> {
       this.setValue(nextProps.value)
     }
   }
+
   componentWillUnmount() {
-    this.dot.removeEventListener("mousemove", this.handleMovind, false);
-    this.process.removeEventListener("mouseup", this.handleMoveend, false);
-    this.process.removeEventListener("mouseup", this.handleMoveend, false);
-    window.removeEventListener("mousemove", this.handleMovind, false);
-    window.removeEventListener("mouseup", this.handleMoveend, false);
+    this.dot.removeEventListener('mousemove', this.handleMovind, false);
+    this.process.removeEventListener('mouseup', this.handleMoveend, false);
+    this.process.removeEventListener('mouseup', this.handleMoveend, false);
+    window.removeEventListener('mousemove', this.handleMovind, false);
+    window.removeEventListener('mouseup', this.handleMoveend, false);
   }
 
   componentDidMount() {
@@ -325,23 +326,27 @@ class InputRange extends React.Component<IInputRange, any> {
           onMouseDown={this.handleMouseDown}
           style={this.ContainerStyle}
           ref={r => this.container = r}
-          className={styles.input_container}>
+          className={styles.input_container}
+        >
           <div
             onMouseDown={this.handleMouseDown}
             ref={n => this.dot = n}
             className={styles.input_dot}
-            style={this.dotStyle} >
+            style={this.dotStyle}
+          >
             <span
               style={this.ttStyle}
               ref={n => this.tt = n}
-              className={styles.input_tooltip}>
+              className={styles.input_tooltip}
+            >
               {value}
             </span>
           </div>
           <div
             className={styles.process}
             style={this.ProcessStyle}
-            ref={n => this.process = n} />
+            ref={n => this.process = n}
+          />
 
         </div>
       </div>
