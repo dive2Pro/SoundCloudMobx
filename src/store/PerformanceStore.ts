@@ -16,6 +16,7 @@ export class PerformanceStore {
   @observable scrollY: number
   isLoadingsByKey = new ObservableMap<boolean>();
   isErrorsMap = new ObservableMap<boolean>()
+  
   @computed get scrollLimit(): number[] {
     return this.scrollLimitByGenre.get(this.genre) || [];
   }

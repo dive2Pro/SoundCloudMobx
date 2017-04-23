@@ -231,10 +231,10 @@ exports[`Player Component action  1`] = `
         <div>
           <div>
             <div>
-              <inject-ArtWork-with-performanceStore
+              <inject-MakeImageLazyLoadWrapper-with-performanceStore
                 live={true}
                 size={45}>
-                <ArtWork
+                <MakeImageLazyLoadWrapper
                   live={true}
                   performanceStore={
                     PerformanceStore {
@@ -261,12 +261,41 @@ exports[`Player Component action  1`] = `
                     }
                   }
                   size={45}>
-                  <img
-                    height={45}
-                    src="preload.jpg"
-                    width={45} />
-                </ArtWork>
-              </inject-ArtWork-with-performanceStore>
+                  <ArtWork
+                    live={true}
+                    performanceStore={
+                      PerformanceStore {
+                        "genre": "Country",
+                        "getLoadingStateWidthKey": [Function],
+                        "glassNode": undefined,
+                        "isError": [Function],
+                        "isErrorsMap": Object {},
+                        "isLoadingsByKey": Object {
+                          "comments": false,
+                          "post_track_comment": false,
+                        },
+                        "scrollLimitByGenre": Object {
+                          "Country": Array [
+                            768,
+                            768,
+                          ],
+                          "activities": Array [
+                            768,
+                            768,
+                          ],
+                        },
+                        "scrollY": undefined,
+                      }
+                    }
+                    size={45}
+                    src="">
+                    <img
+                      height={45}
+                      src="preload.jpg"
+                      width={45} />
+                  </ArtWork>
+                </MakeImageLazyLoadWrapper>
+              </inject-MakeImageLazyLoadWrapper-with-performanceStore>
             </div>
             <div>
               <span>
@@ -671,10 +700,10 @@ exports[`Player Component action  2`] = `
         <div>
           <div>
             <div>
-              <inject-ArtWork-with-performanceStore
+              <inject-MakeImageLazyLoadWrapper-with-performanceStore
                 live={true}
                 size={45}>
-                <ArtWork
+                <MakeImageLazyLoadWrapper
                   live={true}
                   performanceStore={
                     PerformanceStore {
@@ -701,12 +730,41 @@ exports[`Player Component action  2`] = `
                     }
                   }
                   size={45}>
-                  <img
-                    height={45}
-                    src="preload.jpg"
-                    width={45} />
-                </ArtWork>
-              </inject-ArtWork-with-performanceStore>
+                  <ArtWork
+                    live={true}
+                    performanceStore={
+                      PerformanceStore {
+                        "genre": "Country",
+                        "getLoadingStateWidthKey": [Function],
+                        "glassNode": undefined,
+                        "isError": [Function],
+                        "isErrorsMap": Object {},
+                        "isLoadingsByKey": Object {
+                          "comments": false,
+                          "post_track_comment": false,
+                        },
+                        "scrollLimitByGenre": Object {
+                          "Country": Array [
+                            768,
+                            768,
+                          ],
+                          "activities": Array [
+                            768,
+                            768,
+                          ],
+                        },
+                        "scrollY": undefined,
+                      }
+                    }
+                    size={45}
+                    src="">
+                    <img
+                      height={45}
+                      src="preload.jpg"
+                      width={45} />
+                  </ArtWork>
+                </MakeImageLazyLoadWrapper>
+              </inject-MakeImageLazyLoadWrapper-with-performanceStore>
             </div>
             <div>
               <span>
@@ -1111,10 +1169,10 @@ exports[`Player Component action  3`] = `
         <div>
           <div>
             <div>
-              <inject-ArtWork-with-performanceStore
+              <inject-MakeImageLazyLoadWrapper-with-performanceStore
                 live={true}
                 size={45}>
-                <ArtWork
+                <MakeImageLazyLoadWrapper
                   live={true}
                   performanceStore={
                     PerformanceStore {
@@ -1141,12 +1199,41 @@ exports[`Player Component action  3`] = `
                     }
                   }
                   size={45}>
-                  <img
-                    height={45}
-                    src="preload.jpg"
-                    width={45} />
-                </ArtWork>
-              </inject-ArtWork-with-performanceStore>
+                  <ArtWork
+                    live={true}
+                    performanceStore={
+                      PerformanceStore {
+                        "genre": "Country",
+                        "getLoadingStateWidthKey": [Function],
+                        "glassNode": undefined,
+                        "isError": [Function],
+                        "isErrorsMap": Object {},
+                        "isLoadingsByKey": Object {
+                          "comments": false,
+                          "post_track_comment": false,
+                        },
+                        "scrollLimitByGenre": Object {
+                          "Country": Array [
+                            768,
+                            768,
+                          ],
+                          "activities": Array [
+                            768,
+                            768,
+                          ],
+                        },
+                        "scrollY": undefined,
+                      }
+                    }
+                    size={45}
+                    src="">
+                    <img
+                      height={45}
+                      src="preload.jpg"
+                      width={45} />
+                  </ArtWork>
+                </MakeImageLazyLoadWrapper>
+              </inject-MakeImageLazyLoadWrapper-with-performanceStore>
             </div>
             <div>
               <span>
@@ -1521,11 +1608,11 @@ exports[`Player Component 初始化渲染 1`] = `
         <div>
           <div>
             <div>
-              <inject-ArtWork-with-performanceStore
+              <inject-MakeImageLazyLoadWrapper-with-performanceStore
                 live={true}
                 size={45}
                 src="">
-                <ArtWork
+                <MakeImageLazyLoadWrapper
                   live={true}
                   performanceStore={
                     PerformanceStore {
@@ -1553,12 +1640,41 @@ exports[`Player Component 初始化渲染 1`] = `
                   }
                   size={45}
                   src="">
-                  <img
-                    height={45}
-                    src="preload.jpg"
-                    width={45} />
-                </ArtWork>
-              </inject-ArtWork-with-performanceStore>
+                  <ArtWork
+                    live={true}
+                    performanceStore={
+                      PerformanceStore {
+                        "genre": "Country",
+                        "getLoadingStateWidthKey": [Function],
+                        "glassNode": undefined,
+                        "isError": [Function],
+                        "isErrorsMap": Object {},
+                        "isLoadingsByKey": Object {
+                          "comments": false,
+                          "post_track_comment": false,
+                        },
+                        "scrollLimitByGenre": Object {
+                          "Country": Array [
+                            768,
+                            768,
+                          ],
+                          "activities": Array [
+                            768,
+                            768,
+                          ],
+                        },
+                        "scrollY": undefined,
+                      }
+                    }
+                    size={45}
+                    src="">
+                    <img
+                      height={45}
+                      src="preload.jpg"
+                      width={45} />
+                  </ArtWork>
+                </MakeImageLazyLoadWrapper>
+              </inject-MakeImageLazyLoadWrapper-with-performanceStore>
             </div>
             <div>
               <span />
