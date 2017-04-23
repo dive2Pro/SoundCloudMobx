@@ -1,0 +1,288 @@
+exports[`ArtWork Component 初始化渲染 1`] = `
+<Provider
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }>
+  <inject-MakeImageLazyLoadWrapper-with-performanceStore
+    src="http://img4.imgtn.bdimg.com/it/u=1350614941,725003865&fm=23&gp=0.jpg"
+    track={
+      Object {
+        "title": "Test---",
+        "user": Object {
+          "username": "haha",
+        },
+      }
+    }>
+    <MakeImageLazyLoadWrapper
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+        }
+      }
+      src="http://img4.imgtn.bdimg.com/it/u=1350614941,725003865&fm=23&gp=0.jpg"
+      track={
+        Object {
+          "title": "Test---",
+          "user": Object {
+            "username": "haha",
+          },
+        }
+      }>
+      <ArtWork
+        performanceStore={
+          PerformanceStore {
+            "genre": "Country",
+            "getLoadingStateWidthKey": [Function],
+            "isError": [Function],
+            "isErrorsMap": Object {},
+            "isLoadingsByKey": Object {
+              "comments": false,
+              "post_track_comment": false,
+            },
+            "scrollLimitByGenre": Object {
+              "Country": Array [
+                768,
+                768,
+              ],
+              "activities": Array [
+                768,
+                768,
+              ],
+            },
+          }
+        }
+        src="preload.jpg"
+        track={
+          Object {
+            "title": "Test---",
+            "user": Object {
+              "username": "haha",
+            },
+          }
+        }>
+        <img
+          src="preload.jpg" />
+      </ArtWork>
+    </MakeImageLazyLoadWrapper>
+  </inject-MakeImageLazyLoadWrapper-with-performanceStore>
+</Provider>
+`;
+
+exports[`ArtWork Component 所有的属性 1`] = `
+<Provider
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }>
+  <inject-MakeImageLazyLoadWrapper-with-performanceStore
+    size={50}
+    src="http://img4.imgtn.bdimg.com/it/u=1350614941,725003865&fm=23&gp=0.jpg"
+    style={
+      Object {
+        "width": "100px",
+      }
+    }
+    track={
+      Object {
+        "title": "Test---",
+        "user": Object {
+          "username": "haha",
+        },
+      }
+    }>
+    <MakeImageLazyLoadWrapper
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+        }
+      }
+      size={50}
+      src="http://img4.imgtn.bdimg.com/it/u=1350614941,725003865&fm=23&gp=0.jpg"
+      style={
+        Object {
+          "width": "100px",
+        }
+      }
+      track={
+        Object {
+          "title": "Test---",
+          "user": Object {
+            "username": "haha",
+          },
+        }
+      }>
+      <ArtWork
+        performanceStore={
+          PerformanceStore {
+            "genre": "Country",
+            "getLoadingStateWidthKey": [Function],
+            "isError": [Function],
+            "isErrorsMap": Object {},
+            "isLoadingsByKey": Object {
+              "comments": false,
+              "post_track_comment": false,
+            },
+            "scrollLimitByGenre": Object {
+              "Country": Array [
+                768,
+                768,
+              ],
+              "activities": Array [
+                768,
+                768,
+              ],
+            },
+          }
+        }
+        size={50}
+        src="preload.jpg"
+        style={
+          Object {
+            "width": "100px",
+          }
+        }
+        track={
+          Object {
+            "title": "Test---",
+            "user": Object {
+              "username": "haha",
+            },
+          }
+        }>
+        <img
+          height={50}
+          src="preload.jpg"
+          style={
+            Object {
+              "width": "100px",
+            }
+          }
+          width={50} />
+      </ArtWork>
+    </MakeImageLazyLoadWrapper>
+  </inject-MakeImageLazyLoadWrapper-with-performanceStore>
+</Provider>
+`;
+
+exports[`ArtWork Component 改变props 1`] = `
+<MakeImageLazyLoadWrapper
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }>
+  <ArtWork
+    performanceStore={
+      PerformanceStore {
+        "genre": "Country",
+        "getLoadingStateWidthKey": [Function],
+        "isError": [Function],
+        "isErrorsMap": Object {},
+        "isLoadingsByKey": Object {
+          "comments": false,
+          "post_track_comment": false,
+        },
+        "scrollLimitByGenre": Object {
+          "Country": Array [
+            768,
+            768,
+          ],
+          "activities": Array [
+            768,
+            768,
+          ],
+        },
+      }
+    }>
+    <img />
+  </ArtWork>
+</MakeImageLazyLoadWrapper>
+`;

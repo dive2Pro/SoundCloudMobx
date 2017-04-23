@@ -1,0 +1,274 @@
+exports[`makeImageLazyLoad HOC 初始化 1`] = `
+<Provider
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }>
+  <inject-MakeImageLazyLoadWrapper-with-performanceStore
+    src="name-large">
+    <MakeImageLazyLoadWrapper
+      performanceStore={
+        PerformanceStore {
+          "genre": "Country",
+          "getLoadingStateWidthKey": [Function],
+          "isError": [Function],
+          "isErrorsMap": Object {},
+          "isLoadingsByKey": Object {
+            "comments": false,
+            "post_track_comment": false,
+          },
+          "scrollLimitByGenre": Object {
+            "Country": Array [
+              768,
+              768,
+            ],
+            "activities": Array [
+              768,
+              768,
+            ],
+          },
+        }
+      }
+      src="name-large">
+      <tempWrapper
+        performanceStore={
+          PerformanceStore {
+            "genre": "Country",
+            "getLoadingStateWidthKey": [Function],
+            "isError": [Function],
+            "isErrorsMap": Object {},
+            "isLoadingsByKey": Object {
+              "comments": false,
+              "post_track_comment": false,
+            },
+            "scrollLimitByGenre": Object {
+              "Country": Array [
+                768,
+                768,
+              ],
+              "activities": Array [
+                768,
+                768,
+              ],
+            },
+          }
+        }
+        src="preload.jpg">
+        <img
+          alt="some test"
+          src="preload.jpg" />
+      </tempWrapper>
+    </MakeImageLazyLoadWrapper>
+  </inject-MakeImageLazyLoadWrapper-with-performanceStore>
+</Provider>
+`;
+
+exports[`makeImageLazyLoad HOC 检测src的变化 1`] = `
+<MakeImageLazyLoadWrapper
+  performanceStore={
+    PerformanceStore {
+      "genre": "Country",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }
+  src="http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg">
+  <tempWrapper
+    performanceStore={
+      PerformanceStore {
+        "genre": "Country",
+        "getLoadingStateWidthKey": [Function],
+        "isError": [Function],
+        "isErrorsMap": Object {},
+        "isLoadingsByKey": Object {
+          "comments": false,
+          "post_track_comment": false,
+        },
+        "scrollLimitByGenre": Object {
+          "Country": Array [
+            768,
+            768,
+          ],
+          "activities": Array [
+            768,
+            768,
+          ],
+        },
+      }
+    }
+    src="preload.jpg">
+    <img
+      alt="some test"
+      src="preload.jpg" />
+  </tempWrapper>
+</MakeImageLazyLoadWrapper>
+`;
+
+exports[`makeImageLazyLoad HOC 检测src的变化 2`] = `
+<MakeImageLazyLoadWrapper
+  performanceStore={
+    PerformanceStore {
+      "genre": "Test",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {},
+      "isLoadingsByKey": Object {
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "Test": Array [
+          0,
+          128,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }
+  src="http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg">
+  <tempWrapper
+    performanceStore={
+      PerformanceStore {
+        "genre": "Test",
+        "getLoadingStateWidthKey": [Function],
+        "isError": [Function],
+        "isErrorsMap": Object {},
+        "isLoadingsByKey": Object {
+          "comments": false,
+          "post_track_comment": false,
+        },
+        "scrollLimitByGenre": Object {
+          "Country": Array [
+            768,
+            768,
+          ],
+          "Test": Array [
+            0,
+            128,
+          ],
+          "activities": Array [
+            768,
+            768,
+          ],
+        },
+      }
+    }
+    src="http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg">
+    <img
+      alt="some test"
+      src="http://img3.imgtn.bdimg.com/it/u=4271053251,2424464488&fm=23&gp=0.jpg" />
+  </tempWrapper>
+</MakeImageLazyLoadWrapper>
+`;
+
+exports[`makeImageLazyLoad HOC 检测src的变化 3`] = `
+<MakeImageLazyLoadWrapper
+  performanceStore={
+    PerformanceStore {
+      "genre": "Test",
+      "getLoadingStateWidthKey": [Function],
+      "isError": [Function],
+      "isErrorsMap": Object {
+        "Country": false,
+      },
+      "isLoadingsByKey": Object {
+        "Country": true,
+        "comments": false,
+        "post_track_comment": false,
+      },
+      "scrollLimitByGenre": Object {
+        "Country": Array [
+          768,
+          768,
+        ],
+        "Test": Array [
+          0,
+          128,
+        ],
+        "activities": Array [
+          768,
+          768,
+        ],
+      },
+    }
+  }
+  size={50}
+  src="http://ooul6pnb3.bkt.clouddn.com/23192045-large.jpg">
+  <tempWrapper
+    performanceStore={
+      PerformanceStore {
+        "genre": "Test",
+        "getLoadingStateWidthKey": [Function],
+        "isError": [Function],
+        "isErrorsMap": Object {
+          "Country": false,
+        },
+        "isLoadingsByKey": Object {
+          "Country": true,
+          "comments": false,
+          "post_track_comment": false,
+        },
+        "scrollLimitByGenre": Object {
+          "Country": Array [
+            768,
+            768,
+          ],
+          "Test": Array [
+            0,
+            128,
+          ],
+          "activities": Array [
+            768,
+            768,
+          ],
+        },
+      }
+    }
+    size={50}
+    src="http://ooul6pnb3.bkt.clouddn.com/23192045-badge.jpg">
+    <img
+      alt="some test"
+      src="http://ooul6pnb3.bkt.clouddn.com/23192045-badge.jpg" />
+  </tempWrapper>
+</MakeImageLazyLoadWrapper>
+`;

@@ -9,9 +9,10 @@ import {
 } from 'mobx';
 const styles = require('./player.scss');
 import Range from '../InputRange'
-import { PLAYER_STORE, PERFORMANCE_STORE } from "../../constants/storeTypes";
-import { PerformanceStore } from "../../store/PerformanceStore";
+import { PLAYER_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
+import { PerformanceStore } from '../../store/PerformanceStore';
 import makeDumbProps from '../../Hoc/makeDumbProps';
+
 interface IPlayerProps {
   playerStore: PlayerStore
   performanceStore: PerformanceStore
@@ -20,9 +21,6 @@ interface IPlayerState {
   visible: boolean
 }
 
-const once = () => {
-
-}
 @inject(PLAYER_STORE, PERFORMANCE_STORE)
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
@@ -95,8 +93,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         }
       }
     })
-
   }
+
   renderPlayerOpearators = (store: PlayerStore) => {
     const { isPlaying, playingTrack, isShuffleMode
       , volume
@@ -118,7 +116,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     return (
       <div
         className={styles.content}>
-        {/*<input type="file" onChange={this.handleFiles} />*/}
         <div className={styles.content_name}>
           <div >
             <ArtWork
@@ -127,7 +124,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
               src={artworkUrl}
               live={true}
             />
-            {/*live={true}*/}
+
           </div>
           <div className={styles.content_dur}>
             <span className={styles.trackName}>{trackName}</span>
@@ -234,6 +231,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
   /**
    * 同步更新 glass的偏移值
    */
+
   initGlassData = () => {
 
     const ps = this.props.performanceStore

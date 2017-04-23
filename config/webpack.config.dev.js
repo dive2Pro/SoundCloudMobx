@@ -79,7 +79,12 @@ module.exports = {
     publicPath: publicPath
   },
   externals: {
-    soundcloud: 'SC'
+    soundcloud: 'SC',
+    /**fix testing enzyme @link https://github.com/airbnb/enzyme/issues/302 */
+    cheerio: 'window',
+    'react/addons': true, // important!!
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.

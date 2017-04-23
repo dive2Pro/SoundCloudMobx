@@ -1,13 +1,14 @@
 import * as React from 'react'
 import ButtonInline from '../ButtonInline'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { IPlaylist, ITrack } from '../../interfaces/interface';
 import { PlayerStore } from '../../store/PlayerStore';
-import { PLAYER_STORE } from '../../constants/storeTypes';
 import { getSpecPicPath, PicSize } from '../../services/soundcloundApi'
 import colorThief from '../../services/ColorThief'
-const preImage = require('preload.jpg')
+const preImage = require('../../../public/images/preload.jpg')
 import { HomeLink } from '../Links'
+const isEqual = require('lodash/isEqual')
+
 const styles = require('./trackprofile.scss')
 
 interface ITrackProfileProps {
@@ -79,22 +80,13 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
   }
 
-  handleAddToPlaylist = () => {
-    const { track, playlist, playerStore } = this.props
-    if (this.isTrack && track) {
-      playerStore.addToPlaylist(track)
-    } else if (playlist) {
-      playerStore.addToPlaylist(playlist.tracks)
-    }
-
-  }
 
   render() {
-    const { type, bigPic, user, label_name, playerStore, track } = this.props
+    const { bigPic, user, label_name, playerStore, track } = this.props
     const { username, id } = user
-    let isCurrentTrackPlaying = false
+    let isCurrentTrackPlaying = false;
     isCurrentTrackPlaying = playerStore.isPlaying
-      && playerStore.playingTrack == track
+      && isEqual(playerStore.playingTrack, track)
 
     return (
       <div
@@ -113,7 +105,8 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
           <ButtonInline
             className={styles.infos_actions_play}
-            onClick={this.handlePlay}>
+            onClick={this.handlePlay}
+          >
             <i
               className={`fa fa-${isCurrentTrackPlaying ? 'pause fa-2x' : 'play fa-3x'}`}
             />
@@ -129,18 +122,11 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
               >
                 {username}
               </HomeLink>
-
               <h1>
                 {track ? track.title : label_name}
               </h1>
-
             </div>
-
           </div>
-        </div>
-        <div className={styles.edit}>
-          <i />
-          {/*<a href="#">编辑</a>*/}
         </div>
       </div>
     );

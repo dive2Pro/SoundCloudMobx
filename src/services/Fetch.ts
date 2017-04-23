@@ -1,6 +1,6 @@
 export const RaceFetch = (p: string, method?: object, time?: number) => {
 
-  return new Promise((res, rej) => {
+  return new Promise((res, rej) => { 
     const timeoutPromise = new Promise((timeRes, timeRej) => {
       setTimeout(
         () => {

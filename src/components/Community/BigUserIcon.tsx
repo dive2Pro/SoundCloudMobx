@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 const styles = require('./community.scss')
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import ArtWork from '../ArtWork'
 import { IMiniUser } from '../../interfaces/interface';
+import ButtonGhost from '../ButtonGhost';
 
 interface IBigUserPicProps {
   user: IMiniUser
@@ -11,9 +12,8 @@ interface IBigUserPicProps {
   , isFollowing: boolean
 }
 
-
 @observer
-export default class BigUserPic extends React.PureComponent<IBigUserPicProps, any> {
+export default class BigUserPic extends React.PureComponent<IBigUserPicProps, {}> {
   render() {
     const { user, handleFollow, isFollowing } = this.props
     const { username, avatar_url, id } = user;
@@ -41,11 +41,11 @@ export default class BigUserPic extends React.PureComponent<IBigUserPicProps, an
         <div
           className={styles.toggle}
         >
-          {/*<ButtonGhost
+          <ButtonGhost
             onClick={handleFollow}
           >
-             {isFollowing ? 'UNFOLLOW' : 'FOLLOW'}
-          </ButtonGhost>*/}
+            {isFollowing ? 'UNFOLLOW' : 'FOLLOW'}
+          </ButtonGhost>
         </div>
       </div >
     )
