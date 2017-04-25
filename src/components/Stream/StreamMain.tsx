@@ -33,6 +33,7 @@ const IndexAndPlayView =
     }
     const divClazz = isHidden ? styles.indexPlay : styles.active;
     return (
+
       <div className={divClazz}>
         <ArtWork
           src={artwork_url}

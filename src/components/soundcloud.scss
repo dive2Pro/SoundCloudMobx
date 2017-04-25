@@ -1,5 +1,20 @@
 @import '../styles/variable.scss';
 
-.fave_div{
-  width:$contentMinWidth;
+.fave_div {
+  flex-basis: 80%;
+  @include respond-to($break-large){
+    margin-top:$headerHight;
+  }
+}
+
+.app {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+  @include respond-to($break-large){
+      flex-direction: column;
+
+  }
 }

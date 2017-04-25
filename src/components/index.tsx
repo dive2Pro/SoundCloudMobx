@@ -39,7 +39,7 @@ class Abadon extends React.PureComponent<any, any>{
   }
   render() {
     return (
-      <div style={{ minWidth: '89.143em', height: '100vh', background: 'white', textAlign: 'center' }}>
+      <div style={{ flexBasis:'80%', height: '100vh', background: 'white', textAlign: 'center' }}>
         {this.state.time > -1 ? `${this.state.time} 秒后 跳转到 主页` : <Redirect to={{ pathname: '/main' }} />}
       </div>
     )
@@ -98,11 +98,7 @@ class Main extends React.Component<any, undefined> {
 
     return (
       <div
-        style={{
-          display: 'flex', height: '100%', overflow: 'hidden'
-          , justifyContent: 'center'
-          , position: 'relative'
-        }}
+        className={styles.app}
       >
         <Side />
         <div
