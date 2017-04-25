@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 0;
   height: $playerHeight;
-  width: $contentMinWidth!important;
+  width: 100vw;
   z-index: 9;
   transition: 0.2s transform ;
   display: flex;
@@ -68,7 +68,7 @@
   margin-left: $padding;    
 }
 .content_options {
-  flex: 1;
+  flex:1 20%;
   display: flex;
   align-items: center;
 }
@@ -98,15 +98,9 @@
   position: absolute;
   overflow: hidden;
   filter: blur(8px);
-  top:0; 
-  left: $padding; 
-  // background: red;    
-  margin: -$padding;
+  top:0;
   z-index: -1;
-  &::before{
-     margin:-20px;
-    //  background: url('../../../public/images/glass.jpg')
-  }
+  left: -40px;
 }
 .fronsted_glass{ 
   position: absolute;
@@ -116,3 +110,24 @@
 }
 
 
+/*----------- media query ----------*/
+
+
+@media screen and (min-width: 1600px){
+.blurredContentFrame{
+  left:-60px;
+}
+
+}
+
+@media screen and(max-width: 1200px ) {
+  .content_plays{
+    flex: 1 20%;
+  }
+  .content_name{
+    flex:1 10%;
+  }
+  .content_options{
+    flex:1 50%;
+  }
+}

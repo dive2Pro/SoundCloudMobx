@@ -1,9 +1,14 @@
+$rem:14px;
 
 @function px2rem($px){
-  $rem:14px;
+
   @return ($px/$rem)+rem;
 }
 
+
+@function negPx2rem($px){
+  @return -($px/$rem+rem);
+}
 
 $padding: px2rem(20px);
 
