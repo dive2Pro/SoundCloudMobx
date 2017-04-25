@@ -6,21 +6,25 @@
   background: #ffffff;
   margin: auto;
 }
+
 .playlistmain{
   min-height: 100vh;
   &>div{
-    &:nth-last-child(){
+    &:nth-last-child{
       margin-top: $padding;
     }
   }
 }
+
 .itemContainer{
   padding: px2rem(10px);
 }
+
 .itemTitle{
   text-align: center;
   margin-top: $padding;
 }
+
 .playlist{
   display: flex;
   flex-wrap: wrap;

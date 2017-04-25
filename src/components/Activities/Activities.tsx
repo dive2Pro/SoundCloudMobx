@@ -20,7 +20,7 @@ interface IActivitiesProps extends IAddtionalProps {
 
 @inject(PLAYER_STORE)
 @observer
-class Activities extends React.Component<IActivitiesProps, any> {
+class Activities extends React.Component<IActivitiesProps, {}> {
   addToTrackList = (track: ITrack) => {
     const { playerStore } = this.props
     if (playerStore) {
