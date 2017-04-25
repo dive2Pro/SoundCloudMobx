@@ -58,9 +58,6 @@ class Tabs extends React.Component<ITabsProps, any> {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-
-  }
 
   @action setIndex = (index: number) => {
     this.index = index
@@ -139,6 +136,16 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @action componentDidMount() {
     this.width = this.link.offsetWidth;
+    window.addEventListener('resize',this.resizeListener,false);
+  }
+
+  resizeListener = ()=>{
+
+  }
+
+  componentWillUnmount(){
+    document.removeEventListener('resize',this.resizeListener,false);
+
   }
 
   @computed get linkStyle() {

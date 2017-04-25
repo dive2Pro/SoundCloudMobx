@@ -1,3 +1,6 @@
+
+@import "medias";
+
 $rem:14px;
 
 @function px2rem($px){
@@ -40,7 +43,7 @@ $_100pxEm: px2rem(100px);
 $_30pxEm: px2rem(30px);
 $_180pxEm: px2rem(180px);
 $borderGray:1px solid #dadada;
-$headerHight:/*5em*/ 0;
+$headerHight: px2rem(50px);
 $circleRadius:50%;
 
 $contentMinWidth: px2rem(1289px);

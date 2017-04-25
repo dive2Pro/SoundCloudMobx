@@ -31,3 +31,9 @@
   background: white;  
   bottom: 0;
 }
+
+@media screen and (max-width: 1200px){
+  .tabs_container{
+    //width: 1200px;
+  }
+}

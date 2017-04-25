@@ -32,7 +32,8 @@ div .indexPlay{
 .duration{
     display: block;
  }
-.actions{ 
+
+.actions{
     display: none;    
     justify-content: space-around;
     width: 100%;
@@ -42,12 +43,12 @@ div .indexPlay{
   padding: 0 $contentPadding;
   flex: 3;
 }
+
 ._contentBody_streams_tag{
   padding-left: px2rem(25px);
   font-size: px2rem(18px);
   padding-bottom: $padding;
   font-weight: bold;
-  
 }
 
 
