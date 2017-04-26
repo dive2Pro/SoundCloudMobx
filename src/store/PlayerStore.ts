@@ -34,7 +34,13 @@ export class PlayerStore {
   }
 
   @action togglePlaying() {
-    this.isPlaying = !this.isPlaying;
+    if(!this.playingTrack){
+        this.playNextTrack(1)
+    }else{
+      this.isPlaying = !this.isPlaying;
+
+    }
+
   }
   @action toggleVolumeOpen(open?: boolean) {
     if (open != null) {

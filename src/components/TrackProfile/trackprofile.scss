@@ -195,3 +195,15 @@
   }
   color: $mainRed;
 }
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate_animation{
+  animation:rotate   30s linear 0s infinite reverse;;
+}

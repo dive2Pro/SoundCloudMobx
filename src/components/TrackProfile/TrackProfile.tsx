@@ -21,8 +21,12 @@ interface ITrackProfileProps {
     track?: ITrack
     playlist?: IPlaylist
     playerStore: PlayerStore
-    performanceStore?:PerformanceStore
+    performanceStore?: PerformanceStore
 }
+
+
+
+
 @inject(PERFORMANCE_STORE)
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
@@ -49,7 +53,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
             background: `linear-gradient(45deg,rgb(${c1},${c2},${c3}) 0%,rgb(${d1}, ${d2},${d3}) 100%`
         }
         const {performanceStore} = this.props
-        if(performanceStore){
+        if (performanceStore) {
             performanceStore.setTrackPalettesBackground(b2Clazz.background);
         }
         return (
@@ -102,7 +106,9 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
                 >
                     <div className={styles.artwork_wrapper}>
 
-                        <div className={styles.artworks_vinly}>
+                        <div
+                            style={{animationPlayState:isCurrentTrackPlaying?"running":"paused"}}
+                            className={`${styles.artworks_vinly} ${styles.rotate_animation}`}>
                             <span
                                 className={styles.artwork}
                                 style={{
