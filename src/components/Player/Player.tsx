@@ -131,7 +131,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
         const shuffleClazz = isShuffleMode && styles.active;
         const pstore = this.props.performanceStore
-        const isUnderMediumFa = pstore.iUnderMedium?"fa-2x":""
+        const isUnderMediumFa = pstore.iUnderMedium?"fa-2x":"fa-2x"
         return (
             <div
                 ref={n => this.playerContainer = n}
