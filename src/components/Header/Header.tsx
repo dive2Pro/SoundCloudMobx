@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {observer, inject} from 'mobx-react';
+import * as ReactDOM from 'react-dom'
+import {observer, inject,IReactComponent} from 'mobx-react';
 import {NavLink} from 'react-router-dom'
 import LoadingSpinner from '../LoadingSpinner'
 import {
@@ -44,20 +45,25 @@ class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProp
     }
 }
 
+
 const StyleLink =
-    // WidhtRouterStyleLink
     withRouter(WidhtRouterStyleLink);
 
 @inject(SESSION_STORE, USER_STORE, TRACK_STORE)
 @observer
+@makeCatchoutside
 class Header extends React.Component<IHeaderProp, any> {
-    state={isOpen:  false}
-    toggleMenusShowing = () => {
+    state={isOpen:false}
+
+    toggleMenusShowing =(e)=>{
+        console.log(this.state.isOpen)
+        e.stopPropagation();
+        e.preventDefault();
         this.setState(prev=>({isOpen:!prev.isOpen}))
     }
 
     handleTouchOutside=()=>{
-        this.toggleMenusShowing()
+        this.setState(prev=>({isOpen:false}))
     }
 
     handleAuthClick = ()=>{
@@ -262,6 +268,7 @@ class Header extends React.Component<IHeaderProp, any> {
 
     render() {
         const menusStyle = this.state.isOpen?{display:'block'}:{};
+        console.log(menusStyle)
         return (
             <section className={styles._aside}>
                 {this.renderTop()}
@@ -276,4 +283,4 @@ class Header extends React.Component<IHeaderProp, any> {
         );
     }
 }
-export default withRouter(makeCatchoutside(Header))
+export default withRouter(Header)
