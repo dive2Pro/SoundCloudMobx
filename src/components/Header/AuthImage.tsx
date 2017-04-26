@@ -20,6 +20,7 @@ interface IDropDownProps {
 
 @inject('userStore')
 @observer
+@makeCatchoutside
 class DropDown extends React.PureComponent<IDropDownProps, any> {
     state={isOpen:  false}
 
@@ -57,4 +58,4 @@ class DropDown extends React.PureComponent<IDropDownProps, any> {
         )
     }
 }
-export default makeCatchoutside(DropDown);
+export default (DropDown);

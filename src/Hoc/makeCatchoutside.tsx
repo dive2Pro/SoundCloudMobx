@@ -1,62 +1,81 @@
-/**
- *
- */
+
+
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {Component} from 'react'
 import Any = jasmine.Any;
+import {docMethods} from '../services/docMethos'
 
 interface  ICatchOutsideClickCompProps{
     onClick:(b:boolean)=>void
 }
 interface ICompProps{
-
-    handleTouchOutside?:()=>void;
     ref?:(n)=>any
 }
-export default function makeCatchoutside<Props, State>(
-    Comp:React.ComponentClass<Props&ICompProps>|React.StatelessComponent<Props&ICompProps>
-) {
-    return class CatchOutSideWrapper extends React.PureComponent<Props & any, any>{
-        comp:any
-        componentDidMount() {
-            document.addEventListener('mousedown', this.onOutsideClick);
+
+function clickOutsideFunc(event){
+    if(!this.state)return
+    if(!this.state.isOpen){
+        return
+    }
+    event.preventDefault();
+    const local = ReactDOM.findDOMNode(this);
+    let target = event.target
+    let clickOutside=true
+    while (target.parentNode) {
+        if (target === local) {
+            return
         }
+        target = target.parentNode
+    }
+    if(this.handleTouchOutside)
+        this.handleTouchOutside();
+}
 
-        componentWillUnmount() {
-            document.removeEventListener('mousedown', this.onOutsideClick);
-        }
+const catchClickOutSideMixin={
+    'componentDidMount':function(){
+        docMethods.addEvent('mousedown',clickOutsideFunc.bind(this))
+    },
+    'componentWillUnmount':function(){
+        docMethods.removeEvent('mousedown',clickOutsideFunc.bind(this))
 
-        onOutsideClick = (event) => {
-            console.log(this.comp) //todo 修改 mobx-inject的实现,获取inject的对象组件的state引用,貌似行不通.先睡了
-            // 递归检查子组件
-
-            if(!this.comp.state)return
-
-            if(!this.comp.state.isOpen){
-                return
-            }
-
-            event.preventDefault();
-            const local = ReactDOM.findDOMNode(this)
-            let target = event.target
-            while (target.parentNode) {
-                if (target === local) {
-                    return
-                }
-                target = target.parentNode
-            }
-            if(this.comp.handleTouchOutside)
-                this.comp.handleTouchOutside();
-        }
-
-        render() {
-            return (
-                <Comp
-                    {...this.props}
-                    ref={n=>this.comp=n}
-                />
-            )
-        }
     }
 }
+
+function patch(target,funcName){
+    const base = target[funcName]
+    const mixinFunc = catchClickOutSideMixin[funcName]
+    const f = !base?mixinFunc:function(){
+        base.apply(this,arguments)
+        mixinFunc.apply(this,arguments);
+    }
+    target[funcName]=f
+}
+
+export default function makeCatchoutside<Props>
+(
+    Cons:new (Props?: any | undefined, context?: any) => React.Component<Props,any>
+)
+{
+    if(typeof Cons ==='function'&&(!Cons.prototype||!Cons.prototype.render)&&!React.Component.isPrototypeOf(Cons))
+    {
+        return makeCatchoutside(
+            class tempCons extends Component<Props,any>{
+                render() { return Cons.call(this, this.props, this.context); }
+            }
+        )
+    }
+
+    function mixinLifecycleEvents(target){
+        [
+            'componentDidMount',
+            'componentWillUnmount'
+        ].forEach(function(funcName){
+            patch(target,funcName)
+        })
+    }
+    const target = Cons.prototype||Cons
+    mixinLifecycleEvents(target)
+    return Cons
+}
+

@@ -1,0 +1,19 @@
+// http://thesassway.com/intermediate/responsive-web-design-in-sass-using-media-queries-in-sass-32
+
+$break-large: 1200px;
+$break-medium: 475px;
+
+$information-large: "only screen and (max-width: "+$break-large+")";
+$information-medium: "only screen and (max-width: "+$break-medium+")";
+
+
+@mixin respond-to($media) {
+  @if $media == $break-large {
+    @media #{$information-large} {
+      @content
+    }
+  }
+  @else if $media == $break-medium{
+    @media #{$information-medium}{@content}
+  }
+}

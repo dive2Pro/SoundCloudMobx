@@ -31,7 +31,6 @@
     left: 0;
     ._aside_header{
       display: flex;
-      align-items: center;
       align-content: space-between;
       justify-content: flex-end;
       flex-direction: row-reverse;
@@ -43,6 +42,10 @@
       ._aside_header_bars{
         visibility: visible;
         display: flex;
+        margin-right: px2rem(10px);
+        height: 47px;
+        border-radius: 5px;
+        width: 48px;
       }
     }
     ._menus{
@@ -50,6 +53,12 @@
     }
     ._aside_header_img{
       margin-bottom: 0;
+    }
+    .dropdown_content{
+      right:0;
+      &::before{
+        right: 7%;
+      }
     }
   }
 }
@@ -78,6 +87,7 @@
   text-align: center;
   padding: px2rem(10px);
   color: white;
+
 }
 
 ._aside_playlist {
@@ -152,6 +162,7 @@
   position: absolute;
   padding: px2rem(10px);
   color: #f9f9f9;
+
 }
 
 .dropdown_content_visible {

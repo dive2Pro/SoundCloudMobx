@@ -7,7 +7,6 @@ const debounce = require('lodash/debounce')
 import { Component } from "react";
 import makeCatchoutside from "../../Hoc/makeCatchoutside";
 
-
 interface ISearchPanelProps {
   handleSearch: (value: string) => void;
   isOpen: boolean,
@@ -40,9 +39,6 @@ const defaultStyle = {
   }
 }
 
-
-
-
 const animationStyle = {
   transition: 'width 0.2s ease'
 }
@@ -54,8 +50,6 @@ function makeExpandingAnimation<Props, State>(
     }, State>
 ) {
   return class ExpandingAnimationWrapper extends React.PureComponent<Props, any>{
-
-
 
     render() {
 
@@ -70,6 +64,7 @@ function makeExpandingAnimation<Props, State>(
 }
 
 @observer
+@makeCatchoutside
 class SearchPanel extends React.Component<ISearchPanelProps, any> {
   query: HTMLInputElement;
   state={
@@ -88,8 +83,9 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.isOpen) {
+    if (this.state.isOpen) {
       this.query.focus();
+
     }
   }
 
@@ -136,4 +132,4 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
 
 export default makeExpandingAnimation<{
   handleSearch: (value: string) => void, autoSearch?: boolean
-}, any>(makeCatchoutside(SearchPanel));
+}, any>( (SearchPanel));
