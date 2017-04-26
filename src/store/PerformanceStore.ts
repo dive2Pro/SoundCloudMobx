@@ -8,6 +8,13 @@ import {
 } from 'mobx'
 
 export class PerformanceStore {
+
+   __breaks={
+    $breakMedium:700
+  }
+
+  @observable windowWidth = window.innerWidth;
+
   onceLoadingIsAllSettle: boolean;
   scrollLimitByGenre = new ObservableMap<number[]>()
   @observable genre: string
@@ -81,6 +88,23 @@ export class PerformanceStore {
   @action resetErrorsMap = (fetchType: string) => {
     this.isErrorsMap.set(fetchType, false);
   }
+
+  @action setWindowSize(size){
+    this.windowWidth = size
+  }
+
+  @computed get isUnderLarge(){
+    return this.windowWidth < 1200
+  }
+
+  @computed get iUnderMedium(){
+    return this.windowWidth < 680
+  }
+
+  @computed get iUnderHandsets(){
+    return this.windowWidth < 475
+  }
+
 }
 
 export default new PerformanceStore()

@@ -7,9 +7,11 @@ export class PlayerStore {
   @observable playingTrack: ITrack
   @observable isPlaying: boolean = false;
   @observable playList: ITrack[] = [];
+
   @observable isPlaylistOpen: boolean = false;
   @observable isShuffleMode: boolean = false;
   @observable isVolumeOpen: boolean = false
+
   @observable volume: number = 0.25
 
   @action setVolume(v: number) {

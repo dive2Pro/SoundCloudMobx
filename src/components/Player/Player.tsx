@@ -13,6 +13,8 @@ import {PLAYER_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes';
 import {PerformanceStore} from '../../store/PerformanceStore';
 import makeDumbProps from '../../Hoc/makeDumbProps';
 import * as  ReactDOM from "react-dom";
+import {docMethods} from '../../services/docMethos'
+
 
 interface IPlayerProps {
     playerStore: PlayerStore
@@ -73,21 +75,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         }
 
         runInAction(() => {
-            this.volumeContainerStyle = vcStyle
+            // this.volumeContainerStyle = vcStyle
         })
+
         this.initGlassData();
         this.playNextTrack()
         this.updateWithVolumeAndPlay()
-        this.addResizeListener();
-    }
 
-
-    addResizeListener = () => {
-        this.playerContainer.addEventListener('resize', this.Resize, false);
-    }
-
-    Resize() {
-        console.log('resize',this.playerContainer.offsetWidth)
     }
 
 
@@ -108,6 +102,16 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         })
     }
 
+    handleVolumeOpen = () => {
+        const {
+            performanceStore: pstore,
+            playerStore
+        } = this.props
+
+        if (pstore.iUnderMedium) {
+            playerStore.toggleVolumeOpen();
+        }
+    }
     renderPlayerOpearators = (store: PlayerStore) => {
         const {
             isPlaying, playingTrack, isShuffleMode
@@ -116,7 +120,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
         let artworkUrl = '', trackName, username = '';
         if (playingTrack) {
-            // todo es6的对象扩展?
             const {artwork_url, title, user: {username: uname}} = playingTrack;
             artworkUrl = artwork_url;
             trackName = title;
@@ -127,6 +130,8 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         }
 
         const shuffleClazz = isShuffleMode && styles.active;
+        const pstore = this.props.performanceStore
+        const isUnderMediumFa = pstore.iUnderMedium?"fa-2x":""
         return (
             <div
                 ref={n => this.playerContainer = n}
@@ -153,7 +158,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                         alt={'random track'}
                         className={shuffleClazz}>
                         <ButtonInline onClick={this.handleShuffleMode}>
-                            <i className="fa fa-random">&nbsp;</i>
+                            <i className={`fa fa-random ${isUnderMediumFa}`}>&nbsp;</i>
                         </ButtonInline>
                     </div>
 
@@ -161,18 +166,18 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                         alt={'next Stream'}
                         className={styles.content_action}>
                         <ButtonInline onClick={() => this.handlePlayNext(-1)}>
-                            <i className="fa fa-step-backward">&nbsp;</i>
+                            <i className={`fa fa-backward ${isUnderMediumFa}`}>&nbsp;</i>
                         </ButtonInline>
                     </div>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={() => store.togglePlaying()}>
-                            <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'}`}/>
+                            <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'} ${isUnderMediumFa}`}/>
                             &nbsp;
                         </ButtonInline>
                     </div>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={() => this.handlePlayNext(1)}>
-                            <i className="fa fa-step-forward">&nbsp;</i>
+                            <i className={`fa fa-step-forward ${isUnderMediumFa}`}>&nbsp;</i>
                             &nbsp;
                         </ButtonInline>
                     </div>
@@ -181,34 +186,42 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                 <div className={styles.content_options}>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={this.handleOpenPlaylist}>
-                            <i className="fa fa-bars fa-2x">&nbsp; </i>
+                            <i className={`fa fa-bars fa-2x`}>&nbsp; </i>
                         </ButtonInline>
                     </div>
                     <div
                         ref={n => this.volumeTag = n}
                         className={styles.content_action}>
                         <i
+                            onClick={this.handleVolumeOpen}
                             style={{width: '25px'}}
                             className={`fa fa-volume-${volume > 0.5 ?
                                 'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
                         <div
-                            style={volumeContainerStyle}
+                            style={{display:pstore.iUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
                             ref={n => this.volumeContainer = n}
-                            className={styles.volume_container}>
-                            <Range
-                                onDragEnd={this.handleVolimeProcessChange}
-                                onDragIng={this.handleVolimeProcessChange}
-                                wide={120}
-                                data={100}
-                                value={100 * volume}
-                                backgroundColor={'#9e9f9f'}
-                                defaultColor={'#b6bbbb'}
-                                contaiStyle={{height: '7px'}}
-                                dotStyle={{
-                                    backgroundColor: 'white',
-                                    boxShadow: '0px 0px 2px 0px black'
-                                }}
-                            />
+                            className={styles.volume_container}
+                        >
+                            {
+                                (pstore.iUnderMedium
+                                &&!store.isVolumeOpen)
+                                || (
+                                    <Range
+                                        onDragEnd={this.handleVolimeProcessChange}
+                                        onDragIng={this.handleVolimeProcessChange}
+                                        wide={120}
+                                        data={100}
+                                        value={100 * volume}
+                                        backgroundColor={'#9e9f9f'}
+                                        defaultColor={'#b6bbbb'}
+                                        vertical={pstore.iUnderMedium}
+                                        dotStyle={{
+                                            backgroundColor: 'white',
+                                            boxShadow: '0px 0px 2px 0px black'
+                                        }}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
 
@@ -219,13 +232,9 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
 
 
-
-
-
     renderPlayerRanges = (store: PlayerStore) => {
         const {
             playingTrack
-            // , isPlaying
         } = store
         const rangeClazz = styles.range;
         const duration = playingTrack ? playingTrack.duration : 0
@@ -277,11 +286,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             glass.appendChild(node$);
             glassFrame.style.width = node$.offsetWidth + 'px';
             glassFrame.style.height = node$.offsetHeight + 'px';
-            node$.style.left='0px';
-            node$.style.margin='0px';
+            node$.style.left = '0px';
+            node$.style.margin = '0px';
 
-            style.width =  100 + 'vw';
-            console.log(node$.style,node$.wide,node$.offsetWidth)
+            style.width = 100 + 'vw';
+            console.log(node$.style, node$.wide, node$.offsetWidth)
             style.height = node$.offsetHeight + 'px';
             resetPositoin();
         }
@@ -315,7 +324,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         this.initGlassData();
         this.playNextTrack()
         this.updateWithVolumeAndPlay()
-        this.playerContainer.removeEventListener('resize', this.Resize, false);
 
     }
 

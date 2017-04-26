@@ -5,9 +5,9 @@
 
 export const docMethods = {
     addEvent:function addEventListener(type,func,capture=false){
-        document.addEventListener(type,func,capture)
+        window.addEventListener(type,func,capture)
     },
     removeEvent:function removeEventListener(type,func,capture=false){
-        document.removeEventListener(type,func,capture);
+        window.removeEventListener(type,func,capture);
     }
 }
