@@ -11,8 +11,11 @@ import { PlaylistInfo } from './Playlist'
 import { OpacityTransitoinSwitch } from './Switch'
 import Loadable from '../Hoc/Loadable'
 import LoadingSpinner from './LoadingSpinner';
+import {inject} from "mobx-react";
+import {PERFORMANCE_STORE} from "../constants/storeTypes";
+import {docMethods} from "../services/docMethos";
 const styles: any = require('./soundcloud.scss');
-
+import * as ReactDOM from 'react-dom'
 
 class Abadon extends React.PureComponent<any, any>{
   handleTimeout: any;
@@ -93,12 +96,31 @@ const routes = [
 ]
 
 
+@inject(PERFORMANCE_STORE)
 class Main extends React.Component<any, undefined> {
-  render() {
+  app :HTMLDivElement
+  componentDidMount() {
+    docMethods.addEvent('resize',this.resizeListener,false);
+  }
 
+    resizeListener = ()=>{
+    if(this.app){
+      let width = this.app.offsetWidth
+      this.props.performanceStore.setWindowSize(width);
+    }
+
+  }
+
+  componentWillUnmount(){
+    docMethods.removeEvent('resize',this.resizeListener,false);
+  }
+
+
+  render() {
     return (
       <div
         className={styles.app}
+        ref={n=>this.app=n}
       >
         <Side />
         <div

@@ -52,8 +52,14 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
         >
           <i className="fa fa-plus" />
         </span>
-        <StreamMain store={store} track={track} />
-        <StreamExtends store={store} track={track} />
+        <StreamMain
+            store={store}
+            track={track}
+        />
+        <StreamExtends
+            store={store}
+            track={track}
+        />
       </section >
     );
   }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { computed, observable, autorun, expr, action } from 'mobx';
 import { observer } from 'mobx-react';
 const styles = require('./tabs.scss')
+import {docMethods} from '../../services/docMethos'
 
 interface ITabsProps {
   initialSelectedIndex?: number,
@@ -136,22 +137,23 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @action componentDidMount() {
     this.width = this.link.offsetWidth;
-    window.addEventListener('resize',this.resizeListener,false);
+    docMethods.addEvent('resize',this.resizeListener,false);
   }
 
   @action resizeListener = ()=>{
     if(this.link)
     this.width = this.link.offsetWidth
   }
+
   componentWillUnmount(){
-    document.removeEventListener('resize',this.resizeListener,false);
+   docMethods.removeEvent('resize',this.resizeListener,false);
   }
 
   @computed get linkStyle() {
     const i = this.index;
     let width = 1 / this.getTabs().length * this.width;
 
-    if(this.width<1200){
+    if(this.width<900){
        width = 115
     }
 

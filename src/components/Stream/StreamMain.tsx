@@ -6,13 +6,17 @@ import { ITrack } from '../../interfaces/interface';
 import ButtonInline from '../ButtonInline'
 import ArtWork from '../ArtWork';
 import {
-  observer
+  observer,inject
 } from 'mobx-react';
 import { PlayerStore } from "../../store/PlayerStore";
+import * as ReactDOM from "react-dom";
+import {PERFORMANCE_STORE} from "../../constants/storeTypes";
+import {PerformanceStore} from "../../store/PerformanceStore";
 
 interface IStreamMainProp {
   track: ITrack
   , store: PlayerStore
+    performanceStore?:PerformanceStore
 }
 
 interface IndexAndPlayViewProp {
@@ -52,26 +56,40 @@ const IndexAndPlayView =
     )
   });
 
-const StreamMain = observer(({ store, track }: IStreamMainProp) => {
+const StreamMain = inject(PERFORMANCE_STORE)(observer(({ store, track,performanceStore }: IStreamMainProp) => {
   const { isPlaying, playingTrack } = store
   const { user
     , title,
     id
   } = track
   const { username } = user
-
+  let streamMain
   const isHidden = !playingTrack || playingTrack.id !== id;
 
+  const handlePlayStream=(event)=>{
+      if(!performanceStore){
+          return
+      }
+      const root = streamMain
+      if(root.offsetWidth<performanceStore.__breaks.$breakMedium){
+           store.setPlayingTrack(track)
+           event.preventDefault()
+      }
+  }
+
   return (
-    <div className={styles._stream_main}>
-      <IndexAndPlayView
+
+    <div
+        onClickCapture={handlePlayStream}
+        ref={n=>streamMain=n}
+        className={styles._stream_main}>
+        <IndexAndPlayView
         isPlaying={isPlaying}
         isHidden={isHidden}
         track={track}
         onClick={() => store.setPlayingTrack(track)}
       />
-      <div className={styles._stream_info}>
-
+        <div className={styles._stream_info}>
         <Link
           className={styles._stream_info_title}
           to={{
@@ -88,12 +106,13 @@ const StreamMain = observer(({ store, track }: IStreamMainProp) => {
             pathname: '/users'
             , search: `?id=${user.id}`
           }}
-        >  {username}
+        >
+            {username}
         </Link>
       </div>
 
     </div>
   );
-})
+}))
 
 export default StreamMain;
