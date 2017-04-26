@@ -139,24 +139,28 @@ class Tabs extends React.Component<ITabsProps, any> {
     window.addEventListener('resize',this.resizeListener,false);
   }
 
-  resizeListener = ()=>{
-
+  @action resizeListener = ()=>{
+    if(this.link)
+    this.width = this.link.offsetWidth
   }
-
   componentWillUnmount(){
     document.removeEventListener('resize',this.resizeListener,false);
-
   }
 
   @computed get linkStyle() {
     const i = this.index;
+    let width = 1 / this.getTabs().length * this.width;
 
-    const width = 1 / this.getTabs().length * this.width;
+    if(this.width<1200){
+       width = 115
+    }
+
     const { inkBarStyle } = this.props
+    const scrollLeft = this.link?this.link.scrollLeft:0
     return {
       width: width + 'px',
       transition: 'transform 0.3s ease',
-      transform: `translateX(${width * i + 'px'})`,
+      transform: `translateX(${width * i+ 'px'})`,
       background: '#0f0',
       height: '100%'
       , ...inkBarStyle,
