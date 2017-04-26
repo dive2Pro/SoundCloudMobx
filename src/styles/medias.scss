@@ -2,7 +2,7 @@
 
 $break-large: 1200px;
 $break-medium: 680px;
-$break-handset: 475px;
+$break-handset: 575px;
 
 $information-large: "only screen and (max-width: "+$break-large+")";
 $information-medium: "only screen and (max-width: "+$break-medium+")";
@@ -19,6 +19,9 @@ $information-handset: "only screen and (max-width: "+$break-handset+")";
       @content
     }
   } @else if $media == $break-handset {
-    @content
+    @media #{$information-handset} {
+     @content
+
+    }
   }
 }

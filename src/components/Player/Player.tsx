@@ -12,9 +12,7 @@ import Range from '../InputRange'
 import {PLAYER_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes';
 import {PerformanceStore} from '../../store/PerformanceStore';
 import makeDumbProps from '../../Hoc/makeDumbProps';
-import * as  ReactDOM from "react-dom";
-import {docMethods} from '../../services/docMethos'
-
+import {StreamLink,UserLink} from '../Links'
 
 interface IPlayerProps {
     playerStore: PlayerStore
@@ -118,12 +116,14 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             , volume
         } = store;
 
-        let artworkUrl = '', trackName, username = '';
+        let artworkUrl = '', trackName, username = '',trackId=0,userId=0;
         if (playingTrack) {
-            const {artwork_url, title, user: {username: uname}} = playingTrack;
+             const {artwork_url, title, id,user: {username: uname,id:uId}} = playingTrack;
             artworkUrl = artwork_url;
             trackName = title;
-            username = uname
+            username = uname;
+            trackId=id;
+            userId=uId
         }
         const volumeContainerStyle = {
             ...this.volumeContainerStyle,
@@ -148,8 +148,20 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
                     </div>
                     <div className={styles.content_dur}>
-                        <span className={styles.trackName}>{trackName}</span>
-                        <span className={styles.author}>{username}</span>
+                        <StreamLink
+                            className={styles.trackName}
+                            id={trackId}
+                        >
+                            {trackName}
+                        </StreamLink>
+
+                        <UserLink
+                            className={styles.author}
+                            path=""
+                            id={userId}
+                        >
+                            {username}
+                        </UserLink>
                     </div>
                 </div>
 

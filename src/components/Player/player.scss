@@ -12,20 +12,13 @@
   background: rgba(226,226,226,1);
 
   @include respond-to($break-medium){
-
     overflow:visible;
-
     .blurredContentFrame{
       display: none;
     }
     .content{
       padding:5px 10px;
     }
-
-    .content_name{
-
-    }
-
     .volume_container{
       right: 10px;
       position: absolute;
@@ -34,24 +27,38 @@
       padding: 20px;
     }
     .trackName{
-
       @include ellipsisTexts(px2rem(150px));
-
     }
-
     .content_plays{
-
     }
     .content_name{
       flex:3 ;
     }
+
     .content_options{
       flex:0;
       > div {
         margin: 0 5px;
+
       }
     }
+  }
 
+  @include respond-to($break-handset){
+    .content_plays{
+      > div:nth-child(1){
+        display: none;
+      }
+      > div:nth-child(2){
+        display: none;
+      }
+    }
+    .content_options{
+
+      > div:nth-child(2){
+        display: none;
+      }
+    }
   }
 
 }
@@ -92,12 +99,14 @@
   }
 }
 .trackName{
+  display: block;
   font-size: $mediumIcon;
   font-weight: bold;
   @include ellipsisTexts(px2rem(250px));
 
 }
 .author{
+  display: block;
   font-size: $smallIcon;
   color: $seconFontColor;
 }

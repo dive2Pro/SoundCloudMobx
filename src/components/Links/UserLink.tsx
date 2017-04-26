@@ -6,7 +6,7 @@ interface IRouterLinkProp {
   path: string,
   id: number
   children?: any
-  clazz?: string
+  className?: string
 }
 
 const RouterLink = (prop: IRouterLinkProp) => {
