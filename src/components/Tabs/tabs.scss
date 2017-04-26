@@ -8,32 +8,35 @@
   position: relative;
   box-shadow: 0px 0px 2px 0px #a9a9a9;
   overflow: hidden;
+  @include respond-to($break-large){
+    overflow-x: auto;
+    .tabs{
+      > div {
+        min-width:  (115px);
+        max-width:  (115px);
+      }
+    }
+  }
 }
 
 .tabs{
   display: flex;
   width: 100%;
-}
-
-.tabs>div{
-  flex: 1;
-  text-align: center;  
-  height: 100%;
-  font-size: $bigIcon;
-  line-height: $tabHeight;
-  &:hover{
-    cursor:pointer;
+  > div{
+    flex: 1;
+    text-align: center;
+    height: 100%;
+    font-size: $bigIcon;
+    line-height: $tabHeight;
+    &:hover{
+      cursor:pointer;
+    }
   }
 }
+
 .link{
   position: absolute;
   height: px2rem(5px);
   background: white;  
   bottom: 0;
-}
-
-@media screen and (max-width: 1200px){
-  .tabs_container{
-    //width: 1200px;
-  }
 }
