@@ -83,9 +83,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
             playerStore.addToPlaylist(playlist.tracks)
             playerStore.setPlayingTrack(playlist.tracks[0])
         }
-
     }
-
 
     render() {
         const {bigPic, user, label_name, playerStore, track} = this.props
@@ -103,12 +101,15 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
                     className={styles.infos}
                 >
                     <div className={styles.artwork_wrapper}>
+
+                        <div className={styles.artworks_vinly}>
                             <span
                                 className={styles.artwork}
                                 style={{
                                     backgroundImage: `url(${bigPic ? getSpecPicPath(bigPic, PicSize.MASTER) : preImage})`
                                 }}
                             />
+                        </div>
                     </div>
                     <div className={styles.artwork_infos}>
                         <ButtonInline

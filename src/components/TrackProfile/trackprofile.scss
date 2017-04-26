@@ -34,12 +34,37 @@
   @include respond-to($break-handset){
     position: absolute;
     height: 80vh;;
+    .infos{
+      padding:0;
+      margin-left: 0;
+
+      align-items: center;
+    }
     .artwork_infos{
       display: none;
     }
     .artwork_wrapper{
       position: relative;
+      width: 50vh;
+      height: 50vh;
+      top: px2rem(30px);
+      left: 0;
     }
+    .artworks_vinly{
+      width: inherit;
+      height: inherit;
+      /* background-size: 120%; */
+      padding: 2.3rem;
+      background: url(http://thosepoorbastards.com/store/image/cache/data/vinyl/vinyl_sab_vinyl-600x600.png) 50%;
+      border-radius: 50%;
+      background-size: 126%;
+      border: 5px solid rgba(221, 221, 221, 0.31);
+    }
+    .artwork{
+      border-radius: 50%;
+      background-size:100% ;
+    }
+
   }
 
 }
@@ -81,7 +106,7 @@
   z-index: 1;
   width: px2rem(340px);
   height: px2rem(340px);
-  background-image: linear-gradient(135deg, #8e8485, #e6846e);
+  //background-image: linear-gradient(135deg, #8e8485, #e6846e);
 }
 
 .artwork {

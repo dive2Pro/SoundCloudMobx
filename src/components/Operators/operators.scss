@@ -14,7 +14,6 @@
     &:active{
       color: $mainColor;
     }
-
   }
 
   @include respond-to($break-medium) {
