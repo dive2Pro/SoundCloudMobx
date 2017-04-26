@@ -106,7 +106,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             playerStore
         } = this.props
 
-        if (pstore.iUnderMedium) {
+        if (pstore.isUnderMedium) {
             playerStore.toggleVolumeOpen();
         }
     }
@@ -131,7 +131,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
         const shuffleClazz = isShuffleMode && styles.active;
         const pstore = this.props.performanceStore
-        const isUnderMediumFa = pstore.iUnderMedium?"fa-2x":"fa-2x"
+        const isUnderMediumFa = pstore.isUnderMedium?"fa-2x":"fa-2x"
         return (
             <div
                 ref={n => this.playerContainer = n}
@@ -210,12 +210,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                             className={`fa fa-volume-${volume > 0.5 ?
                                 'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
                         <div
-                            style={{display:pstore.iUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
+                            style={{display:pstore.isUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
                             ref={n => this.volumeContainer = n}
                             className={styles.volume_container}
                         >
                             {
-                                (pstore.iUnderMedium
+                                (pstore.isUnderMedium
                                 &&!store.isVolumeOpen)
                                 || (
                                     <Range
@@ -226,7 +226,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                                         value={100 * volume}
                                         backgroundColor={'#9e9f9f'}
                                         defaultColor={'#b6bbbb'}
-                                        vertical={pstore.iUnderMedium}
+                                        vertical={pstore.isUnderMedium}
                                         dotStyle={{
                                             backgroundColor: 'white',
                                             boxShadow: '0px 0px 2px 0px black'
@@ -253,7 +253,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
         return (
             <div
-                className={rangeClazz}
+                className={`${rangeClazz}`}
             >
                 <Range
                     onDragEnd={this.handleProcessChange}
@@ -261,7 +261,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                     data={playingTrack && playingTrack.duration}
                     dotStyle={{visibility: 'hidden'}}
                     contaiStyle={{height: '4px'}}
-                    backgroundColor={'#9e9f9f'}
                     defaultColor={'#b6bbbb'}
                     value={this.processValue * duration}/>
             </div>
@@ -405,19 +404,20 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
 
     render() {
 
-        const {playerStore} = this.props;
+        const {playerStore,performanceStore} = this.props;
         let clazzName = styles.base;
 
         if (this.isVisible) {
             clazzName = styles.player_visible;
         }
 
-
+        const backgroundColor = performanceStore.trackPalatteColor;
         return (
             <div
                 className={clazzName}
                 onMouseEnter={this.mouseEnter}
                 onMouseLeave={this.mouseOut}
+                style={{background:backgroundColor}}
                 ref={r => this.main = r}
             >
                 <div
