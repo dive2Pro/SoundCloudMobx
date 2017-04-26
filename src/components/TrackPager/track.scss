@@ -6,34 +6,34 @@
   background: $background;
   margin: auto;
   @include respond-to($break-large) {
-    .comment_body{
+    .comment_body {
       max-width: 100%;
-      & >div:nth-child(1){
+      & > div:nth-child(1) {
         display: none;
       }
     }
-    .comments{
-      padding:px2rem(20px);
+    .comments {
+      padding: px2rem(20px);
     }
 
   }
 
-  @include respond-to($break-medium){
-    .comments{
-      padding:px2rem(10px);
+  @include respond-to($break-medium) {
+    .comments {
+      padding: px2rem(10px);
     }
   }
 
-  @include respond-to($break-handset){
-    padding:0;
-    .trackPager{
+  @include respond-to($break-handset) {
+    padding: 0;
+    .trackPager {
       display: flex;
       flex-direction: column;
 
       position: relative;
     }
 
-    .comments{
+    .comments {
       z-index: 1;
       position: relative;
       display: flex;
@@ -84,3 +84,7 @@
     cursor: auto;
   }
 }
+
+/**----------------keyframes-------------*/
+
+
