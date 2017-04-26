@@ -38,15 +38,22 @@
       display: none;
     }
   }
-
   @include respond-to($break-medium){
-
     .indexPlay{
       display: none;
     }
 
     ._stream_act_plus{
       display: none;
+    }
+  }
+
+  @include respond-to($break-handset){
+    ._stream_duration{
+      display: none;
+    }
+    ._stream_info_title {
+      @include ellipsisTexts(px2rem(200px));
     }
   }
 }

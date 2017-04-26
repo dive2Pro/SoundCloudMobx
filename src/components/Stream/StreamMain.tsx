@@ -16,14 +16,17 @@ import {PerformanceStore} from "../../store/PerformanceStore";
 interface IStreamMainProp {
   track: ITrack
   , store: PlayerStore
-    performanceStore?:PerformanceStore
+    performanceStore?:PerformanceStore,
+    withinPlayer?:boolean
+
 }
 
 interface IndexAndPlayViewProp {
   track: ITrack
   isPlaying: boolean
   isHidden: boolean
-  onClick: () => void
+  onClick: () => void;
+
 }
 
 const IndexAndPlayView =
@@ -56,7 +59,7 @@ const IndexAndPlayView =
     )
   });
 
-const StreamMain = inject(PERFORMANCE_STORE)(observer(({ store, track,performanceStore }: IStreamMainProp) => {
+const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, track,performanceStore }: IStreamMainProp) => {
   const { isPlaying, playingTrack } = store
   const { user
     , title,
@@ -70,11 +73,14 @@ const StreamMain = inject(PERFORMANCE_STORE)(observer(({ store, track,performanc
       if(!performanceStore){
           return
       }
+
       const root = streamMain
-      if(root.offsetWidth<performanceStore.__breaks.$breakMedium){
+
+      if(root.offsetWidth<performanceStore.__breaks.$breakMedium&&!withinPlayer){
            store.setPlayingTrack(track)
            event.preventDefault()
       }
+
   }
 
   return (
