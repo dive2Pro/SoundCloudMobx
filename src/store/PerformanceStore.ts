@@ -93,18 +93,25 @@ export class PerformanceStore {
     this.windowWidth = size
   }
 
+  @computed get isUnderMedium(){
+    const is =  !this.isUnderHandsets&&this.windowWidth <= 680
+    return is;
+  }
+
+  @computed get isUnderHandsets(){
+     const is= this.windowWidth <= 475
+
+    return is
+  }
+
   @computed get isUnderLarge(){
-    return this.windowWidth < 1200
+    return !this.isUnderMedium&&this.windowWidth < 1200
   }
 
-  @computed get iUnderMedium(){
-    return this.windowWidth < 680
+  @observable trackPalatteColor
+  @action setTrackPalettesBackground(backgroundColor:string){
+    this.trackPalatteColor=backgroundColor
   }
-
-  @computed get iUnderHandsets(){
-    return this.windowWidth < 475
-  }
-
 }
 
 export default new PerformanceStore()

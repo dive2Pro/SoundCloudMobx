@@ -115,9 +115,7 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
             this.promiseLoading = makeCancelable(asyncLoadImage.call(this,src));
             this.promiseLoading.promise
                 .then(path => {
-
                     this.changeImagePath(src)
-
                     if (this.handlerObserver && !live) {
                         this.handlerObserver()
                     }

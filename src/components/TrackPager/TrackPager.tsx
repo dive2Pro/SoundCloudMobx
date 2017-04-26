@@ -100,7 +100,6 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
               name="replay"
               type="text"
             />
-
           </div>
         </div>
       </form>
@@ -109,12 +108,10 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
 
 
   renderContent = (currentTrack: ITrack) => {
-    const { label_name
-      // , release_day
-      , user, artwork_url } = currentTrack
+    const { label_name, user, artwork_url } = currentTrack
     const ps = this.props.performanceStore
     return (
-      <div >
+      <div className={styles.trackPager}>
         <TrackProfile
           bigPic={artwork_url}
           label_name={label_name}
@@ -138,9 +135,9 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
               isFollowing={false}
             />
             <CommentsContainer
-              commentStore={this.props.commentStore}
-              track={currentTrack}
-              scrollFunc={this.handleFetchMoreComments}
+                commentStore={this.props.commentStore}
+                track={currentTrack}
+                scrollFunc={this.handleFetchMoreComments}
             />
           </div>
         </div>

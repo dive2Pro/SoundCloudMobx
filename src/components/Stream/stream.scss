@@ -1,6 +1,8 @@
 @import '../../styles/variable.scss';
 
-
+.mainColor{
+  color:$mainColor;
+}
 ._stream{
   display: inline-flex;
   padding: 5px 0 ;
