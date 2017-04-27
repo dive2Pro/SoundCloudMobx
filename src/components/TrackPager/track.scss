@@ -17,6 +17,7 @@
     }
 
   }
+
   @include respond-to(900px){
     .trackPager{
       width: 900px;

@@ -24,11 +24,12 @@
     }
   }
   @include respond-to($break-handset){
+   border-bottom: none;
 
     text-align: center;
-   button{
-    @include circlrBtn();
-     margin-right: 0.71429rem;
-   }
+     button{
+      @include circlrBtn();
+       margin-right: 0.71429rem;
+     }
   }
 }

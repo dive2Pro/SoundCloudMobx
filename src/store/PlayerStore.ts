@@ -113,7 +113,8 @@ export class PlayerStore {
   }
 
   addToPlaylist(tracks: ITrack | ITrack[]) {
-    if (Array.isArray(tracks)) {
+    let ts:any = tracks
+    if (ts.slice&&Array.isArray(ts.slice())) {
       (<ITrack[]>tracks).slice().forEach((t, i) => {
         i === 0 && this.setPlayingTrack(t)
         this.pushToPlayerlist(t)
