@@ -31,11 +31,11 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 ## 截图
 
 
-![gif1](/screens/browse_response.gif)
+![gif1](http://ooul6pnb3.bkt.clouddn.com/browse_response.gif)
 
-![gif2](/screens/dashboard_response.gif)
+![gif2](http://ooul6pnb3.bkt.clouddn.com/dashboard_response.gif)
 
-![gif3](/screens/trackpapager_response.gif)
+![gif3](http://ooul6pnb3.bkt.clouddn.com/trackpapager-response.gif)
 
 
 ## 注意 🔥🔥
