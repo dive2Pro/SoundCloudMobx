@@ -27,12 +27,7 @@
 
     text-align: center;
    button{
-     background-color: rgba(58, 58, 58, 0.05);
-     border: 2px solid lightgray;
-     padding: 10px;
-     border-radius: 50%;
-     cursor: pointer;
-     color: #fbfbfb;
+    @include circlrBtn();
      margin-right: 0.71429rem;
    }
   }

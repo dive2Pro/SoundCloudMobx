@@ -1,116 +1,170 @@
 @import "../../styles/variable.scss";
+@import "../Tabs/tabs";
+@import "../Stream/stream";
 
-.container{
+.container {
   margin-bottom: $playerHeight;
   justify-content: space-around;
   position: relative;
+  padding: 30px;
+  @include respond-to(1000px) {
+    ._contentBody_community {
+      display: none;
+    }
+    ._songs_tag {
+      display: none;
+    }
+    .dashtabs {
+
+      display: flex;
+    }
+    .tabs {
+      > div {
+        min-width: (115px);
+        max-width: inherit;
+      }
+    }
+  }
+  @include respond-to($break-handset) {
+    padding:0;
+    ._contentHeader_blur {
+      visibility: hidden;
+    }
+    ._contentHeader_info {
+      padding: 0;
+    }
+    ._contentHeader_username {
+      font-size: 26px;
+    }
+    ._contentHeader_actions{
+      button{
+        padding: px2rem(5px) px2rem(20px);
+
+      }
+    }
+  }
+
 }
 
-._contentHeader{
+.stream {
+  background: red;
+}
+
+.dashtabs {
+  display: none;
+}
+
+._contentHeader {
   position: relative;
   box-shadow: 0 0 2px black;
-    margin: 1px;
+  margin: 1px;
 }
-._contentHeader_img{
+
+._contentHeader_img {
   /*background: url("./images/mountain.jpg")*/
-     background-size: cover;
-     background-repeat: no-repeat;
-     background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
-._contentHeader_info{
-  // background: linear-gradient(to bottom,transparent,white); 
+
+._contentHeader_info {
   padding: $padding px2rem(40px);
   position: absolute;
   bottom: 0;
   left: 0;
-  // top:0;
-  // right: 40%;
-  z-index: 2; 
+  z-index: 2;
   overflow: hidden;
 }
 
-._contentHeader_actions{
-  padding: $padding 0; 
+._contentHeader_actions {
+  padding: $padding 0;
   width: 100%;
 }
-._contentHeader_actions button{
-  padding: px2rem(5px) px2rem(40px) ;
-  margin-right: $padding;
-  outline: none;
-  border-radius: $padding;
-  background: white;
-  border: 1px solid white;
-  box-shadow: 0px 0px 2px 1px #a9a9a9;
-  font-weight: bold;
+
+._contentHeader_actions {
+  button {
+    padding: px2rem(5px) px2rem(40px);
+    margin-right: $padding;
+    outline: none;
+    border-radius: $padding;
+    background: white;
+    border: 1px solid white;
+    box-shadow: 0px 0px 2px 1px #a9a9a9;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+._contentHeader_username {
+  font-size: 36px;
+  color: white;
+  font-weight: 600;
   cursor: pointer;
 }
 
-._contentHeader_genre{
+._contentHeader_genre {
   color: #a9a9a9;
 }
-._contentHeader_actions button:hover{
+
+._contentHeader_actions button:hover {
   background: #a9a9a9;
   box-shadow: none;
   overflow: hidden
- }
+}
 
- ._contentHeader_profile{
-      font-size: px2rem(18px);
-      justify-content: space-around;
-      min-width: px2rem(180px);
-    &>span{
-       border:none;
-    }
-    &>img{
-      border-radius: 25%; 
-      // display: flex;
-       border:none;
-    }
- }
-
-
- ._contentHeader_actions>img{ 
-   
- }
+._contentHeader_profile {
+  font-size: px2rem(18px);
+  justify-content: space-around;
+  min-width: px2rem(180px);
+  & > span {
+    border: none;
+  }
+  & > img {
+    border-radius: 25%;
+    // display: flex;
+    border: none;
+  }
+}
 
 /*--------body-----------*/
-._contentBody{
-  display: flex; 
+._contentBody {
+  display: flex;
   position: relative;
-  padding: $padding/2  0;
-  &>*{
-    &:first-child{
+  padding: $padding/2 0;
+  & > * {
+    &:first-child {
       flex: 4;
       overflow: hidden;
     }
   }
 }
-._songs_tag{
+
+._songs_tag {
   color: #333;
   font-size: 1.2em;
-    font-weight: bold;
-    padding-left: 1.358em;
+  font-weight: bold;
+  padding-left: 1.358em;
 }
 
-._contentBody_main{
+._contentBody_main {
   padding: 0 $contentPadding;
   flex: 4;
-  // width: 83em;
 }
 
-._contentBody_community{
-   flex: 1;
-   border-left: 1px solid #a9a9a9;
-   padding-left: $padding;
- }
+._contentBody_community {
+  flex: 1;
+  border-left: 1px solid #a9a9a9;
+  padding-left: $padding;
+}
 
-._contentBody_community_tag{
+._contentBody_community_tag {
   padding-left: px2rem(10px);
   font-size: px2rem(18px);
   padding-bottom: $padding;
   font-weight: bold;
-} 
-._contentBody_community_list{
+}
+
+._contentBody_community_list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

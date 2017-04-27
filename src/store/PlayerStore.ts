@@ -80,7 +80,6 @@ export class PlayerStore {
     if (this.playingTrack) {
       let url = this.playingTrack.uri + '/stream';
       url = addClientId(url, '?');
-
       return url
     }
     return ''

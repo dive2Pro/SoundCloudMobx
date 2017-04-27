@@ -45,8 +45,15 @@ class Browse extends React.Component<IDashBorardProps, any> {
   }
   render() {
     const { currentGenre } = this.props.trackStore
+    const {performanceStore} = this.props
     const index = GENRES.indexOf(currentGenre)
     const selectedStyle = '#f55874';
+    let tempStyle={}
+
+    if(performanceStore.windowWidth<900){
+      tempStyle={...tempStyle,minWidth:115};
+    }
+
     return (
       <div
         id={this.id}
@@ -55,9 +62,10 @@ class Browse extends React.Component<IDashBorardProps, any> {
         <Tabs
           onActive={this.handleTabActive}
           initialSelectedIndex={index}
-          inkBarStyle={{ background: selectedStyle }}
+          inkBarStyle={{...tempStyle, background: selectedStyle }}
           selectedTextColor={selectedStyle}
           value={currentGenre}
+          tabTemplateStyle={tempStyle}
         >
           {
             GENRES.map((item, i) => {

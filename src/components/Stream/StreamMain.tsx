@@ -1,6 +1,6 @@
 import * as React from 'react'
 const styles = require('./stream.scss')
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { ITrack } from '../../interfaces/interface';
 
 import ButtonInline from '../ButtonInline'
@@ -14,11 +14,11 @@ import {PERFORMANCE_STORE} from "../../constants/storeTypes";
 import {PerformanceStore} from "../../store/PerformanceStore";
 
 interface IStreamMainProp {
-  track: ITrack
+  track: any
   , store: PlayerStore
     performanceStore?:PerformanceStore,
-    withinPlayer?:boolean
-
+    withinPlayer?:boolean,
+    ellipisMaxWidth?:number
 }
 
 interface IndexAndPlayViewProp {
@@ -59,12 +59,18 @@ const IndexAndPlayView =
     )
   });
 
-const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, track,performanceStore }: IStreamMainProp) => {
+const StreamMain = inject(PERFORMANCE_STORE)(observer(({ ellipisMaxWidth,withinPlayer,store, track,performanceStore }: IStreamMainProp) => {
   const { isPlaying, playingTrack } = store
+    // todo
+    if(track.slice&&Array.isArray(track.slice())){
+        track=track[0];
+    }
+
   const { user
     , title,
     id
   } = track
+
   const { username } = user
   let streamMain
   const isHidden = !playingTrack || playingTrack.id !== id;
@@ -73,10 +79,8 @@ const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, tra
       if(!performanceStore){
           return
       }
-
       const root = streamMain
-
-      if(root.offsetWidth<performanceStore.__breaks.$breakMedium&&!withinPlayer){
+      if(performanceStore.isUnderMedium&&!withinPlayer){
            store.setPlayingTrack(track)
            event.preventDefault()
       }
@@ -84,7 +88,6 @@ const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, tra
   }
 
   return (
-
     <div
         onClickCapture={handlePlayStream}
         ref={n=>streamMain=n}
@@ -96,17 +99,19 @@ const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, tra
         onClick={() => store.setPlayingTrack(track)}
       />
         <div className={styles._stream_info}>
-        <Link
+
+        <NavLink
           className={styles._stream_info_title}
           to={{
             pathname: '/stream',
             search: `?id=${id}`
           }}
+          style={{maxWidth:ellipisMaxWidth}}
         >
           {title}
-        </Link>
+        </NavLink>
 
-        <Link
+        <NavLink
           className={styles._stream_info_author}
           to={{
             pathname: '/users'
@@ -114,7 +119,7 @@ const StreamMain = inject(PERFORMANCE_STORE)(observer(({ withinPlayer,store, tra
           }}
         >
             {username}
-        </Link>
+        </NavLink>
       </div>
 
     </div>

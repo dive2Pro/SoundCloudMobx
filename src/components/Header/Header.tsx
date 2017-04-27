@@ -56,9 +56,6 @@ class Header extends React.Component<IHeaderProp, any> {
     state={isOpen:false}
 
     toggleMenusShowing =(e)=>{
-        console.log(this.state.isOpen)
-        e.stopPropagation();
-        e.preventDefault();
         this.setState(prev=>({isOpen:!prev.isOpen}))
     }
 
@@ -268,7 +265,6 @@ class Header extends React.Component<IHeaderProp, any> {
 
     render() {
         const menusStyle = this.state.isOpen?{display:'block'}:{};
-        console.log(menusStyle)
         return (
             <section className={styles._aside}>
                 {this.renderTop()}
