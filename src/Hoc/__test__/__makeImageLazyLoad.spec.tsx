@@ -46,28 +46,27 @@ describe('makeImageLazyLoad HOC', () => {
     /**
      * omg
      * @link
-     *  http://stackoverflow.com/questions/38308214/react-enzyme-test-componentdidmount-async-call/40875174#40875174
+        *  http://stackoverflow.com/questions/38308214/react-enzyme-test-componentdidmount-async-call/40875174#40875174
      */
     setImmediate(() => {
       expect(wrapper.update().find(tempWrapper).prop("src")).toEqual(props.src)
       expect(ToJson(wrapper)).toMatchSnapshot()
-      // 这里在渲染之前执行 
-      expect(wrapper.state('imageSrc')).toEqual(props.src)
-
+      // 这里在渲染之前执行
+      // console.log(wrapper.instance())
+      expect(wrapper.instance().imageSrc).toEqual(props.src)
+      //
       const newProps = {
         src: 'http://ooul6pnb3.bkt.clouddn.com/23192045-large.jpg',
         size: 50
       }
-
+      //
       wrapper.setProps(newProps)
       setImmediate(() => {
 
         let expectedSrc = 'http://ooul6pnb3.bkt.clouddn.com/23192045-badge.jpg'
         expect(ToJson(wrapper)).toMatchSnapshot()
-        expect(wrapper.state('imageSrc')).toEqual(expectedSrc)
+        expect(wrapper.instance().imageSrc).toEqual(expectedSrc)
         expect(wrapper.find(tempWrapper).prop('src')).toEqual(expectedSrc)
-
-        // expect(wrapper.find(tempWrapper).prop('src')).toEqual(props.src)
         done()
       })
 

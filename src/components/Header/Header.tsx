@@ -1,20 +1,21 @@
 import * as React from 'react';
 import {observer, inject} from 'mobx-react';
 import LoadingSpinner from '../LoadingSpinner'
-import {
-    withRouter
-} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {FETCH_PLAYLIST, FETCH_QUERY} from '../../constants/fetchTypes'
+
 const styles = require('./header.scss');
 const Motion = require("react-motion").Motion;
 const spring = require("react-motion").spring;
-const diveMusicPng = require('../../../public/images/divemusic.png')
 const NavLink = require("react-router-dom").NavLink;
+
 import {UserStore, User} from '../../store/UserStore';
 import {SessionStore} from '../../store/SessionStore';
 import {SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes'
 import SearchPanel from '../SearchPanel'
 import {TrackStore} from '../../store/TrackStore';
+import {whyRun} from 'mobx'
+const diveMusicPng = require('../../../public/images/divemusic.png')
 
 interface IHeaderProp {
     sessionStore: SessionStore
@@ -53,10 +54,10 @@ class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProp
 const StyleLink =
     withRouter(WidhtRouterStyleLink);
 
-@inject(SESSION_STORE, USER_STORE, TRACK_STORE,PERFORMANCE_STORE)
+@inject(SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE)
 @observer
 @makeCatchoutside
-class Header extends React.Component<IHeaderProp, any> {
+export class Header extends React.Component<IHeaderProp, any> {
     state = {isOpen: false}
 
     toggleMenusShowing = () => {
@@ -76,19 +77,19 @@ class Header extends React.Component<IHeaderProp, any> {
         }
     }
 
-    handle2Browser=()=>{
+    handle2Browser = () => {
         this.props.history.push("/main")
     }
 
     renderTop = () => {
-        const {performanceStore,location, history, trackStore} = this.props
-        const searchStyle = !performanceStore.isUnderLarge?{
-            flexDirection:"column-reverse",
-            alignItems:"center"
-        }:{}
-        const spanImage = performanceStore.windowWidth<430?{
-            width:"100%"
-        }:{}
+        const {performanceStore, location, history, trackStore} = this.props
+        const searchStyle = !performanceStore.isUnderLarge ? {
+            flexDirection: "column-reverse",
+            alignItems: "center"
+        } : {}
+        const spanImage = performanceStore.windowWidth < 430 ? {
+            width: "100%"
+        } : {}
         return (
             <div className={styles._aside_header}>
                 <div
@@ -130,6 +131,8 @@ class Header extends React.Component<IHeaderProp, any> {
 
     renderMyPlaylist = () => {
         const loginModel = this.getLoginUserModel()
+        const islogined = this.props.userStore.isLogined
+        console.log('islogined = ' + islogined)
         if (!loginModel) {
             return (
                 <noscript />
@@ -184,10 +187,10 @@ class Header extends React.Component<IHeaderProp, any> {
 
             return false
         }
+
     renderMyCommuPaner = () => {
-
         const loginModel = this.getLoginUserModel()
-
+        console.log(loginModel, 'loginModel')
         if (!loginModel) {
             return (
                 <noscript />
@@ -253,7 +256,7 @@ class Header extends React.Component<IHeaderProp, any> {
     }
 
     renderBasicItems() {
-
+        const isLogined = this.props.userStore.isLogined
         const loginModel = this.getLoginUserModel()
 
         return (
@@ -268,7 +271,7 @@ class Header extends React.Component<IHeaderProp, any> {
                     <StyleLink to="/ssr">Radio</StyleLink>
                 </li>
                 <li>
-                    {loginModel ?
+                    {isLogined && loginModel ?
                         (
                             <StyleLink
                                 to={{
@@ -285,18 +288,19 @@ class Header extends React.Component<IHeaderProp, any> {
 
     render() {
         const {performanceStore} = this.props
-        const isOpen =this.state.isOpen ||!performanceStore.isUnderLarge
-        const menusStyle =  isOpen? {display: 'block'} : {};
+        const isOpen = this.state.isOpen || !performanceStore.isUnderLarge
+        const menusStyle = isOpen ? {display: 'block'} : {};
+        this.props.userStore.isLogined;
         return (
             <section className={styles._aside}>
                 {this.renderTop()}
                 <Motion style={{x: isOpen ? spring(0) : spring(-100)}}>
                     {
-                        value => {
+                        (value) => {
                             return (
                                 <div
                                     onClickCapture={this.toggleMenusShowing}
-                                    style={{...menusStyle, left: value.x+"%"}}
+                                    style={{...menusStyle, left: value.x + "%"}}
                                     className={styles._menus}
                                 >
                                     {this.renderBasicItems()}

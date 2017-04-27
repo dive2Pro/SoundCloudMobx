@@ -26,14 +26,15 @@ interface ITrackProfileProps {
 
 
 
-
 @inject(PERFORMANCE_STORE)
 @observer
 class TrackProfile extends React.Component<ITrackProfileProps, any> {
     isTrack: boolean
-    palettes: any[][]
+    state={
+        palettes: [[]]
+    }
     renderBackgroundGradient = () => {
-        if (!this.palettes || this.palettes.length < 2) {
+        if (!this.state.palettes || this.state.palettes.length < 2) {
             return (
                 <div className={styles.backgroundGradient}>
                     <div className={styles.backgroundGradient_buffer}/>
@@ -41,7 +42,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
                 </div>
             )
         }
-        const [a, b, c, d] = this.palettes
+        const [a, b, c, d] = this.state.palettes
         const [a1, a2, a3] = a
         const [b1, b2, b3] = b
         const [c1, c2, c3] = c
@@ -64,18 +65,12 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
         )
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const {type, bigPic} = this.props
         this.isTrack = type !== 'list'
-        Promise.resolve(bigPic)
-            .then(source => {
-                const pic = getSpecPicPath(bigPic, PicSize.MASTER)
-                colorThief.getColorFromUrl(pic, (palettes, url) => {
-                    this.palettes = palettes
-                    this.forceUpdate()
-                })
-            })
-
+        colorThief.getColorFromUrl(bigPic, (palettes, url) => {
+            this.setState({palettes:palettes})
+        })
     }
 
     handlePlay = () => {
