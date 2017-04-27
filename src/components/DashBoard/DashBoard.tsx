@@ -1,14 +1,11 @@
 import * as React from 'react'
 const styles = require('./dashboard.scss')
+const Switch = require("react-router-dom").Switch;
 import Profile from '../Profile/Profile';
 import {observer, inject} from 'mobx-react'
 import FilterActivities from '../FilterActivities'
 import FollowsPanel from '../FollowsPanel'
 import FavoritesPanel from '../FavoritesPanel';
-import {
-    Switch
-    // , Route
-} from 'react-router-dom'
 import CommunityContainer from '../Community'
 import * as fetchTypes from '../../constants/fetchTypes'
 import Activities from '../Activities'
@@ -44,7 +41,6 @@ export const BlankView = () => {
         </div>
     )
 }
-
 @makeTranslateXMotion
 @observer
 class FavoView extends React.PureComponent<any, any> {
@@ -103,9 +99,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     }
 
     renderContentBodyMain = (us: UserStore, performanceStore: PerformanceStore) => {
+
         const {match: {url}} = this.props
         const {userModel} = us
-
         const selectedStyle="#f55874";
 
         return (
@@ -309,6 +305,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
         const us = this.props.userStore
         const userModel = us.initUser(this.id)
         us.setCurrentUserModel(userModel)
+        this.setState({tabValue:DASH_GENRES[0]})
     }
 
     handleRouteToUserMain = () => {
@@ -316,7 +313,7 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
         history.push(`/users/home?id=${this.id}`);
     }
 
-    componentDidUpdate(prevProps: any, prevState: any) {
+    componentDidUpdate(prevProps: any) {
         const loc = this.props.location;
         if (loc.search !== prevProps.location.search) {
             const id = +qs.parse(loc.search.substr(1)).id
