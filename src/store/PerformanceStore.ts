@@ -99,7 +99,7 @@ export class PerformanceStore {
     }
 
     @computed get isUnderHandsets() {
-        const is = this.windowWidth <= 475
+        const is = this.windowWidth <= 575
 
         return is
     }

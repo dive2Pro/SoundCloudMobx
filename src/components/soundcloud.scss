@@ -3,6 +3,7 @@
 .fave_div {
   flex-basis: 80%;
   max-width: 80%;
+  margin-bottom: $playerHeight;
   @include respond-to($break-large){
     margin-top:$headerHight;
   }
