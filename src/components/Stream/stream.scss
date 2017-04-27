@@ -1,5 +1,71 @@
 @import '../../styles/variable.scss';
 
+.mainColor{
+  color:$mainColor;
+}
+
+._stream{
+  display: inline-flex;
+  padding: 5px 0 ;
+  width: 100%;
+  align-items: center;
+  border-radius: 5px;
+  text-align: center;
+  cursor:pointer;
+  &>*{
+    flex: 1;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  & .indexPlay{
+    border-radius: 5px;
+    box-shadow: inherit;
+  }
+
+  &:hover{
+    background: $streamHoverColor;
+    box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.48);
+    text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+    color:white!important;
+    ._stream_duration{
+      color: white;
+    }
+    div.play{
+      display: flex;
+    }
+    div.actions{
+      display: flex;
+      visibility: visible;
+    }
+    div.duration{
+      display: none;
+    }
+  }
+
+
+  @include respond-to($break-medium){
+
+    .indexPlay{
+      display: none;
+    }
+
+    ._stream_info_title{
+      @include ellipsisTexts(200px);
+    }
+
+    ._stream_act_plus{
+      display: none;
+    }
+  }
+
+  @include respond-to($break-handset){
+    ._stream_duration{
+      display: none;
+    }
+    ._stream_info_title {
+    }
+  }
+}
 
 div .indexPlay{
   display: flex;
@@ -32,7 +98,8 @@ div .indexPlay{
 .duration{
     display: block;
  }
-.actions{ 
+
+.actions{
     display: none;    
     justify-content: space-around;
     width: 100%;
@@ -42,53 +109,15 @@ div .indexPlay{
   padding: 0 $contentPadding;
   flex: 3;
 }
+
 ._contentBody_streams_tag{
   padding-left: px2rem(25px);
   font-size: px2rem(18px);
   padding-bottom: $padding;
   font-weight: bold;
-  
 }
 
 
-._stream{
-  display: inline-flex;
-  padding: 5px 0 ;
-  width: 100%;
-  align-items: center; 
-  border-radius: 5px;
-  text-align: center;
-  cursor:pointer;
-      &>*{
-        flex: 1;
-        font-weight: bold;
-        font-size: 16px;
-      }
-      & .indexPlay{
-          border-radius: 5px;
-          box-shadow: inherit;
-      }
-
-      &:hover{
-        background: $streamHoverColor;
-        box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.48);
-        text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
-        color:white!important;
-        ._stream_duration{
-           color: white;
-        }
-        div.play{
-           display: flex; 
-        }
-        div.actions{ 
-            display: flex;
-            visibility: visible;
-        }
-        div.duration{
-          display: none;
-        }
-    }
-}
 ._stream_main{
   display: flex;
   flex: 10;
@@ -108,15 +137,17 @@ div .indexPlay{
       color: white;
     }
     }
-} 
+}
+
 ._stream_info_title{
   font-weight: bold;
-  display: table-cell;  
-  @include ellipsisTexts(px2rem(300px));
+  display: table-cell;
+  @include ellipsisTexts($streamEllipsisWidth);
    &:visited{
       color:#333;
      }
 }
+
 ._stream_info_author{
   color: #bababa;
    &:visited{
@@ -125,7 +156,6 @@ div .indexPlay{
 }
 ._stream_duration{
   color: #777;
-  // margin-right: $padding;
   flex: 2;
 }
 ._stream_settings{

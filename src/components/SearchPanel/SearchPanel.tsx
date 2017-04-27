@@ -4,10 +4,8 @@ import {
   observer
 } from 'mobx-react';
 const debounce = require('lodash/debounce')
-
 import { Component } from "react";
-import * as ReactDOM from 'react-dom'
-
+import makeCatchoutside from "../../Hoc/makeCatchoutside";
 
 interface ISearchPanelProps {
   handleSearch: (value: string) => void;
@@ -41,47 +39,6 @@ const defaultStyle = {
   }
 }
 
-
-function catchOutSideCLick<Props, State>(Comp: new () => Component<Props
-  , State>
-) {
-  return class CatchOutSideWrapper extends React.PureComponent<Props & { onClick: () => void, isOpen: boolean }, any>{
-
-    componentDidMount() {
-      document.addEventListener('mousedown', this.onOutsideClick);
-    }
-
-    componentWillUnmount() {
-      document.addEventListener('mousedown', this.onOutsideClick);
-    }
-
-    onOutsideClick = (event) => {
-      if (!this.props.isOpen) { return }
-      event.preventDefault();
-      const local = ReactDOM.findDOMNode(this)
-
-
-      let target = event.target
-      while (target.parentNode) {
-        if (target === local) {
-          return
-        }
-        target = target.parentNode
-      }
-      this.props.onClick();
-
-    }
-    render() {
-      return (
-        <Comp
-          {...this.props}
-        />
-      )
-    }
-  }
-}
-
-
 const animationStyle = {
   transition: 'width 0.2s ease'
 }
@@ -89,24 +46,15 @@ const animationStyle = {
 function makeExpandingAnimation<Props, State>(
   Comp: new () => Component<Props
     & {
-      onClick: () => void, isOpen: boolean,
       additionalStyles: any,
     }, State>
 ) {
   return class ExpandingAnimationWrapper extends React.PureComponent<Props, any>{
 
-    state = { isOpen: false }
-
-    handleExpandClick = () => {
-      this.setState((prevState) => ({ isOpen: !prevState.isOpen }))
-    }
-
     render() {
 
       return (
         <Comp
-          onClick={this.handleExpandClick}
-          isOpen={this.state.isOpen}
           additionalStyles={{ text: animationStyle }}
           {...this.props}
         />
@@ -116,11 +64,16 @@ function makeExpandingAnimation<Props, State>(
 }
 
 @observer
+@makeCatchoutside
 class SearchPanel extends React.Component<ISearchPanelProps, any> {
   query: HTMLInputElement;
+  state={
+      isOpen:false
+  }
   handleChange = (value: string) => {
     debounce(() => this.props.handleSearch(value), 500)();
   }
+
   handleKeyUp = (event) => {
     const ENTER_KEY = 13;
     if (event.keyCode === ENTER_KEY) {
@@ -128,15 +81,25 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
       this.props.handleSearch(event.target.value);
     }
   }
+
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.isOpen) {
+    if (this.state.isOpen) {
       this.query.focus();
+
     }
   }
 
+  handleTouchOutside=()=>{
+    this.setState({isOpen:false})
+  }
+
+  handleToggle = ()=>{
+   this.setState(prev=>({isOpen:!prev.isOpen}))
+  }
   render() {
     const debounceChange = debounce(this.handleChange, 599);
-    const { additionalStyles, isOpen, onClick, autoSearch } = this.props
+    const { additionalStyles, autoSearch } = this.props;
+    const {isOpen} = this.state
     let textStyle = isOpen ? defaultStyle.open : defaultStyle.close
     textStyle = { ...textStyle, ...additionalStyles ? additionalStyles.text : {} }
     let divStyle = {
@@ -151,7 +114,7 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
         style={divStyle}
       >
         <i
-          onClick={onClick}
+          onClick={this.handleToggle}
           className="fa fa-search" />
         <input
           type="text"
@@ -168,4 +131,4 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
 
 export default makeExpandingAnimation<{
   handleSearch: (value: string) => void, autoSearch?: boolean
-}, any>(catchOutSideCLick(SearchPanel));
+}, any>( (SearchPanel));

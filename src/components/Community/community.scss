@@ -1,7 +1,21 @@
 @import '../../styles/variable.scss';
 .main{
   margin: $padding auto;
-  
+
+  @include respond-to($break-handset){
+    .bigpic{
+      margin-right: 0.42857rem;
+      padding-bottom: 0.42857rem;
+    }
+
+    .toggle{
+      visibility: visible;
+    }
+    .username{
+      @include ellipsisTexts(120px)
+    }
+  }
+
 }
 .bigpic{
   display: inline-flex;

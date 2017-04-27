@@ -1,9 +1,17 @@
 
+@import "medias";
+
+$rem:14px;
+
 @function px2rem($px){
-  $rem:14px;
+
   @return ($px/$rem)+rem;
 }
 
+
+@function negPx2rem($px){
+  @return -($px/$rem+rem);
+}
 
 $padding: px2rem(20px);
 
@@ -35,7 +43,7 @@ $_100pxEm: px2rem(100px);
 $_30pxEm: px2rem(30px);
 $_180pxEm: px2rem(180px);
 $borderGray:1px solid #dadada;
-$headerHight:/*5em*/ 0;
+$headerHight: px2rem(50px);
 $circleRadius:50%;
 
 $contentMinWidth: px2rem(1289px);
@@ -64,7 +72,7 @@ $tabHeight:px2rem(50px);
    }
    @else{
      border-bottom: 1px solid $color;
-   } 
+   }
 }
 
 @mixin btn_white_padding(){
@@ -85,15 +93,32 @@ $tabHeight:px2rem(50px);
 .panel{
   background: $mainColor;
   color:$fontColor;
-  border:$border; 
+  border:$border;
   font-size: $mediumIcon;
   padding: px2rem(10px);
 }
+
+$streamEllipsisWidth:px2rem(300px);
+
+@mixin changeStreamEllipsisWidth($px){
+  $streamEllipsisWidth :px2rem($px)!global;
+}
+
 
 @mixin ellipsisTexts($maxWidth){
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   max-width: $maxWidth;
+}
 
+
+
+@mixin circlrBtn(){
+  background-color: rgba(58, 58, 58, 0.05);
+  border: 2px solid lightgray;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fbfbfb;
 }

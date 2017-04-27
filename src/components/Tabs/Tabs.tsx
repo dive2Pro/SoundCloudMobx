@@ -2,12 +2,13 @@ import * as React from 'react';
 import { computed, observable, autorun, expr, action } from 'mobx';
 import { observer } from 'mobx-react';
 const styles = require('./tabs.scss')
+import {docMethods} from '../../services/docMethos'
 
 interface ITabsProps {
   initialSelectedIndex?: number,
   tabTemplateStyle?: object
   onActive?: (value: string, index: number) => void
-  inkBarStyle?: object,
+  inkBarStyle?: any,
   selectedTextColor?: string,
   value: any
 }
@@ -38,11 +39,13 @@ class Tabs extends React.Component<ITabsProps, any> {
   tabContent: any[] = [];
 
   getSelectedStyle = (i) => {
+    const width =this.width
 
     const root = {
-      color: this.index === i ? this.props.selectedTextColor : "#333"
+      color: this.index === i ? this.props.selectedTextColor : "#333",
     }
-    const tempStyle = this.props.tabTemplateStyle
+    let tempStyle = this.props.tabTemplateStyle
+
     return { ...tempStyle, ...root }
   };
 
@@ -58,9 +61,6 @@ class Tabs extends React.Component<ITabsProps, any> {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-
-  }
 
   @action setIndex = (index: number) => {
     this.index = index
@@ -139,17 +139,31 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @action componentDidMount() {
     this.width = this.link.offsetWidth;
+    docMethods.addEvent('resize',this.resizeListener,false);
+  }
+
+  @action resizeListener = ()=>{
+    if(this.link)
+    this.width = this.link.offsetWidth
+  }
+
+  componentWillUnmount(){
+   docMethods.removeEvent('resize',this.resizeListener,false);
   }
 
   @computed get linkStyle() {
     const i = this.index;
+    let width = 1 / this.getTabs().length * this.width;
 
-    const width = 1 / this.getTabs().length * this.width;
     const { inkBarStyle } = this.props
+    if(inkBarStyle.minWidth){
+      width=inkBarStyle.minWidth
+    }
+
     return {
       width: width + 'px',
       transition: 'transform 0.3s ease',
-      transform: `translateX(${width * i + 'px'})`,
+      transform: `translateX(${width * i+ 'px'})`,
       background: '#0f0',
       height: '100%'
       , ...inkBarStyle,

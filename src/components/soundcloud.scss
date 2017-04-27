@@ -1,5 +1,27 @@
 @import '../styles/variable.scss';
 
-.fave_div{
-  width:$contentMinWidth;
+.fave_div {
+  flex-basis: 80%;
+  max-width: 80%;
+  margin-bottom: $playerHeight;
+  @include respond-to($break-large){
+    margin-top:$headerHight;
+  }
+  @include respond-to($break-handset){
+    margin-top: 4.87143rem;
+  }
+}
+
+.app {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+  @include respond-to($break-large){
+      flex-direction: column;
+    .fave_div{
+      max-width: 100%;
+    }
+  }
 }

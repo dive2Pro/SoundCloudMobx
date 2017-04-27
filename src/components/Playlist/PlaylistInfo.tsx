@@ -62,7 +62,7 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
     const { label_name, title, artwork_url, user, tracks } = playlist
     const isFollowing = userStore.isFollowingUser(user.id)
     return (
-      <div className={styles.playlistmain}>
+      <div className={styles.playlistinfo}>
         <TrackProfile
           label_name={title || label_name}
           type="list"
@@ -71,7 +71,8 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
           playlist={playlist}
           playerStore={this.props.playerStore}
         />
-        <div style={{ padding: '20px' }}>
+
+        <div className={styles.playlist_main}>
           <Operators
             tracks={tracks}
             isPlaylist={true}

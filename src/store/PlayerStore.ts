@@ -7,9 +7,11 @@ export class PlayerStore {
   @observable playingTrack: ITrack
   @observable isPlaying: boolean = false;
   @observable playList: ITrack[] = [];
+
   @observable isPlaylistOpen: boolean = false;
   @observable isShuffleMode: boolean = false;
   @observable isVolumeOpen: boolean = false
+
   @observable volume: number = 0.25
 
   @action setVolume(v: number) {
@@ -32,7 +34,13 @@ export class PlayerStore {
   }
 
   @action togglePlaying() {
-    this.isPlaying = !this.isPlaying;
+    if(!this.playingTrack){
+        this.playNextTrack(1)
+    }else{
+      this.isPlaying = !this.isPlaying;
+
+    }
+
   }
   @action toggleVolumeOpen(open?: boolean) {
     if (open != null) {
@@ -72,7 +80,6 @@ export class PlayerStore {
     if (this.playingTrack) {
       let url = this.playingTrack.uri + '/stream';
       url = addClientId(url, '?');
-
       return url
     }
     return ''
@@ -106,7 +113,8 @@ export class PlayerStore {
   }
 
   addToPlaylist(tracks: ITrack | ITrack[]) {
-    if (Array.isArray(tracks)) {
+    let ts:any = tracks
+    if (ts.slice&&Array.isArray(ts.slice())) {
       (<ITrack[]>tracks).slice().forEach((t, i) => {
         i === 0 && this.setPlayingTrack(t)
         this.pushToPlayerlist(t)

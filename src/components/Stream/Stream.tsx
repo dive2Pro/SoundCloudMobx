@@ -8,6 +8,7 @@ const styles = require('./stream.scss')
 import StreamExtends from './StreamExtends'
 import StreamMain from './StreamMain'
 import { PlayerStore } from "../../store/PlayerStore";
+const isEqual = require('lodash/isEqual')
 // import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
 
 interface IStreamProps {
@@ -20,7 +21,7 @@ interface IStreamProps {
 @observer
 class Stream extends React.PureComponent<IStreamProps, any>  {
   render() {
-    const { track, store, type, i, additionalStyles } = this.props
+    const { track, store, type, i, additionalStyles ,...rest} = this.props
     const handleSectionClick = (e: any) => {
       const name = e.target.className
       if (name === (styles._stream_act_plus) || e.target.tagName === 'A' || e.target.tagName === 'I') {
@@ -33,6 +34,9 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
     if (additionalStyles) {
       style = { opacity: additionalStyles.opacity, height: additionalStyles.height + "%" }
     }
+
+    const imCurrentPlayingTrack = isEqual(track,store.playingTrack)
+
     return (
       <section
         onClick={(e) => handleSectionClick(e)}
@@ -41,7 +45,11 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
       >
         <span
           className={styles._stream_position}
-        >{i}
+        >
+          {imCurrentPlayingTrack?
+              (<em
+                  className={`fa fa-volume-up ${styles.mainColor}`} />)
+              :i}
         </span>
         <span
           onClick={(e: any) => {
@@ -52,8 +60,16 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
         >
           <i className="fa fa-plus" />
         </span>
-        <StreamMain store={store} track={track} />
-        <StreamExtends store={store} track={track} />
+        <StreamMain
+            store={store}
+            track={track}
+            {...rest}
+        />
+        <StreamExtends
+            store={store}
+            track={track}
+            {...rest}
+        />
       </section >
     );
   }

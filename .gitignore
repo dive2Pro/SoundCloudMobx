@@ -19,4 +19,4 @@ yarn-error.log*
 # environment
 .idea
 .vscode
-src/**/**/__snapshots__
+**/__snapshots__/**

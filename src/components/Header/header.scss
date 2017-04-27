@@ -1,6 +1,6 @@
 @import '../../styles/variable.scss';
 
-._aside{
+._aside {
   position: relative;
   background: #f7f7f7;
   min-width: $_asiderWidth;
@@ -8,126 +8,197 @@
   display: flex;
   flex-direction: column;
   padding: $padding;
-  font-weight: bold!important; 
+  font-weight: bold !important;
+
+  a:hover {
+    // composes:aside_hover;
+    background: $mainRed;
+    color: #FBFBFB;
+    box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
+    text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
+    border-radius: 5px;
+  }
+
+  @include respond-to($break-large) {
+    //min-height: inherit;
+    //height: $headerHight;
+    background: $white;
+    min-height: 0;
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding-bottom: 0;
+    ._aside_header{
+      display: flex;
+      align-content: space-between;
+      justify-content: flex-end;
+      flex-direction: row-reverse;
+
+      ._aside_header_search{
+        justify-content: flex-start;
+        flex:1;
+      }
+      ._aside_header_bars{
+        visibility: visible;
+        display: flex;
+        margin-right: px2rem(10px);
+        height: 47px;
+        border-radius: 5px;
+        width: 48px;
+      }
+    }
+    ._menus{
+      display: none;
+    }
+    ._aside_header_img{
+      margin-bottom: 0;
+    }
+    .dropdown_content{
+      right:0;
+      &::before{
+        right: 7%;
+      }
+    }
+  }
 }
 
-._aside_playlist{ 
+._menus {
+  position: relative;
+}
+
+._aside_header {
+
+  > button {
+    font-size: $mediumIcon;
+  }
+}
+
+.divemusic{
+  background: url("../../../public/images/divemusic.png");
+  background-size: 200%;
+  background-repeat: no-repeat;
+  height:45px;
+  width: 200px;
+}
+._aside_header_search {
+  display: flex;
+  justify-content: center;
+  margin-bottom: px2rem(5px);
+}
+
+._aside_header_bars{
+  display: none;
+  background: $mainColor;
+  text-align: center;
+  padding: px2rem(10px);
+  color: white;
+
+}
+
+._aside_playlist {
   // overflow: hidden;
 }
 
-._aside_header_img{
+._aside_header_img {
   text-align: center;
   margin-bottom: $padding;
 }
- ._aside_header_ul{ 
+
+._aside_header_ul {
   text-align: left;
-}
-._aside_title{
-  color: $seconFontColor;
-  padding: 20px 0 20px 8px ;
-  display: flex;
-  justify-content: space-between;
-  @include bottom_border(2px,rgba(58, 58, 58, 0.05))
-
-}
-._aside_header button{
-  font-size: $mediumIcon;
-}
-
-._aside_header_ul li a{
-  font-weight: bold;
-  border: none;
-  background: inherit;
-  padding: 10px;
-  width: 100%;
-  text-align: inherit;
-  color: $nav;  
-  display: block;
-  &>i{
-       width: 25px;
-       display: inline-block;
+  > li a {
+    font-weight: bold;
+    border: none;
+    background: inherit;
+    padding: 10px;
+    width: 100%;
+    text-align: inherit;
+    color: $nav;
+    display: block;
+    & > i {
+      width: 25px;
+      display: inline-block;
+    }
   }
 }
 
- .aside_hover{
-  background: $mainRed!important;
-  color: #FBFBFB!important;
-  box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
-  text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
-  border-radius: 5px;
-
+._aside_title {
+  color: $seconFontColor;
+  padding: 20px 0 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  @include bottom_border(2px, rgba(58, 58, 58, 0.05))
 }
 
-._aside a:hover{
-  // composes:aside_hover;
-  background: $mainRed;
-  color: #FBFBFB;
+.aside_hover {
+  background: $mainRed !important;
+  color: #FBFBFB !important;
   box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.48);
   text-shadow: 0px 0px 6px rgba(221, 221, 221, 0.31);
   border-radius: 5px;
 }
-
 
 .dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
 }
 
 .dropbtn:hover, .dropbtn:focus {
-    background-color: #3e8e41;
+  background-color: #3e8e41;
 }
 
 .dropdown {
-    position: relative;
-    display: flex;
-    justify-content: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .dropdown_content {
-    display: none; 
-    background-color: #f9f9f9;
-    min-width: px2rem(160px); 
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top:px2rem(15px);
-    position:absolute; 
-    padding:px2rem(10px);
-    color:#f9f9f9;
+  display: none;
+  background-color: #f9f9f9;
+  min-width: px2rem(160px);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  top: px2rem(15px);
+  position: absolute;
+  padding: px2rem(10px);
+  color: #f9f9f9;
+
 }
-.dropdown_content_visible{
+
+.dropdown_content_visible {
   display: block;
-  composes:dropdown_content;
+  composes: dropdown_content;
   position: absolute;
   filter: drop-shadow(0 0 6px #bababa);
-  top: calc(100% + 15px); 
-  & button{
-      background: $soundcloudColor;
-      padding: px2rem(15px) $padding;
-      font-size: $smallIcon;
-      width: 100%;
-      height: 100%;
-      white-space: nowrap;
-  } 
-  &:focus{
+  top: calc(100% + 15px);
+  & button {
+    background: $soundcloudColor;
+    padding: px2rem(15px) $padding;
+    font-size: $smallIcon;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+  }
+  &:focus {
     background: red;
   }
-  &::before{
-    position:absolute;
-    content:"";
-    right:calc(50% - 7px);
-    top:px2rem(-6px);
-    height:px2rem(15px); 
-    width:px2rem(15px);
-    background:currentColor;
-    z-index:-1;
-    transform:rotateZ(45deg);
-  } 
+  &::before {
+    position: absolute;
+    content: "";
+    right: calc(50% - 7px);
+    top: px2rem(-6px);
+    height: px2rem(15px);
+    width: px2rem(15px);
+    background: currentColor;
+    z-index: -1;
+    transform: rotateZ(45deg);
+  }
 }
 
-.dropdown_content:focus{
-
-}

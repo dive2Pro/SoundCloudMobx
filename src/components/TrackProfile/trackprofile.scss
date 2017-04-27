@@ -1,124 +1,219 @@
 @import '../../styles/variable.scss';
 
-.view{
-  height:px2rem(387.5px);
+.view {
+  height: px2rem(387.5px);
   display: flex;
   position: relative;
   width: 100%;
   box-shadow: 0px 0px 4px 0px black;
+  @include respond-to($break-large){
+    height: 40vh;
+    .artwork_wrapper{
+      width: 30vh;
+      height: 30vh;
+    }
+    .artwork{
+      background-size: 30vh 30vh;
+
+    }
+    .infos_actions_play{
+      height: 7vh;
+      width: 7vh;
+    }
+
+    .artwork_infos{
+      left: 30vw;
+    }
+  }
+  @include respond-to(1000px){
+    .artwork_infos{
+      left:45vw;
+    }
+  }
+  @include respond-to($break-medium){
+    .artwork_infos{
+      left:40vw;
+    }
+  }
+
+  @include respond-to($break-handset){
+    position: absolute;
+    height: 80vh;;
+    .infos{
+      padding:0;
+      margin-left: 0;
+
+      align-items: center;
+    }
+    .artwork_infos{
+      display: none;
+    }
+    .artwork_wrapper{
+      position: relative;
+      width: 50vh;
+      height: 50vh;
+      top: px2rem(30px);
+      left: 0;
+    }
+    .artworks_vinly{
+      width: inherit;
+      height: inherit;
+      /* background-size: 120%; */
+      padding: 2.3rem;
+      background: url(http://thosepoorbastards.com/store/image/cache/data/vinyl/vinyl_sab_vinyl-600x600.png) 50%;
+      border-radius: 50%;
+      background-size: 126%;
+      border: 5px solid rgba(221, 221, 221, 0.31);
+    }
+    .artwork{
+      border-radius: 50%;
+      background-size:100% ;
+    }
+
+  }
+
 }
 
+.artworks_vinly{
+  width: 100%;
+  height: 100%;
+}
 
-.backgroundGradient{
+.artwork_infos{
+  position: relative;
+  height: 100%;
+  left: 40vw;
+
+}
+
+.backgroundGradient {
   position: relative;
   width: 100%;
   height: 100%;
   z-index: 0;
 }
 
-.backgroundGradient_buffer{
+.backgroundGradient_buffer {
   position: absolute;
-  top:0;right: 0;left: 0;bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   transition: opacity 0.3s;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg,$thirdMainColor 0%,$mainColor 100%)
-}
-.backgroundGradient_hidden{
-  composes:backgroundGradient_buffer;
-}
-.artwork_wrapper{
-    position: absolute;
-    top: $padding;
-    left: $padding;
-    z-index: 1;
-    width: px2rem(340px);
-    height: px2rem(340px); 
-    background-image: linear-gradient(135deg,#8e8485,#e6846e)
+  background: linear-gradient(45deg, $thirdMainColor 0%, $mainColor 100%)
 }
 
-.artwork{
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-    display: block;
-    box-shadow: rgba(0,0,0,.1)0 0 0 1px inset;
+.backgroundGradient_hidden {
+  composes: backgroundGradient_buffer;
 }
 
-.commentsCount{
-  font-size: $mediumIcon;
-  @include bottom_border($usualPadding,$mainColor);
+.artwork_wrapper {
+  position: absolute;
+  top: $padding;
+  left: $padding;
+  z-index: 1;
+  width: px2rem(340px);
+  height: px2rem(340px);
+  //background-image: linear-gradient(135deg, #8e8485, #e6846e);
 }
 
-
-.playlist_avatar{
+.artwork {
   width: 100%;
-  height:px2rem(400px);
+  height: 100%;
+  opacity: 1;
+  display: block;
+  box-shadow: rgba(0, 0, 0, .1) 0 0 0 1px inset;
 }
 
+.commentsCount {
+  font-size: $mediumIcon;
+  @include bottom_border($usualPadding, $mainColor);
+}
 
-.infos{
+.playlist_avatar {
+  width: 100%;
+  height: px2rem(400px);
+}
+
+.infos {
   margin-left: $padding;
   display: flex;
   flex-direction: column;
   position: absolute;
-  z-index: 10;
+  z-index: 1;
   width: 100%;
   height: 100%;
   padding: px2rem(40px);
   background-repeat: no-repeat;
-   
+
 }
-.infos_operators{
+
+.infos_operators {
   position: absolute;
-  left: px2rem(400px); 
 }
-.infos_title{ 
+
+.infos_title {
   align-items: center;
   align-content: flex-start;
   justify-content: flex-start;
   color: $mainFontColor;
-  & a{
+  & a {
     color: #333;
     font-size: $mediumIcon;
   }
 }
-.userlink{
+
+.userlink {
 }
-.infos_user{
+
+.infos_user {
   display: inline-flex;
   align-items: center;
   font-size: 14px;
   color: lightgray;
   margin-bottom: 20px;
-  & > *{
-  margin-right: 10px;
-     }
-  & img{
-  width: 50px;
-  height: 50px;
+  & > * {
+    margin-right: 10px;
+  }
+  & img {
+    width: 50px;
+    height: 50px;
   }
 }
-.infos_actions{ 
-  color:#333;
-  & > *{
+
+.infos_actions {
+  color: #333;
+  & > * {
     margin-right: 5px;
   }
-  
-  }
-  .infos_actions_play{
-    @include btn_white_padding();
-    border-radius: 50%;
-    padding: 0;
-    padding-left: 10px;
-    text-align: center;
-    height: px2rem(55px);
-    width: px2rem(55px);
-    position: absolute;
-    left: px2rem(400px);
-    bottom: px2rem(40px);
-    &:hover{  
 
-    }
-    color: $mainRed;
+}
+
+.infos_actions_play {
+  @include btn_white_padding();
+  border-radius: 50%;
+  padding: 0 0 0 10px;
+  text-align: center;
+  height: px2rem(55px);
+  width: px2rem(55px);
+  position: absolute;
+  bottom: px2rem(40px);
+  &:hover {
+
   }
+  color: $mainRed;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate_animation{
+  animation:rotate   30s linear 0s infinite reverse;;
+}

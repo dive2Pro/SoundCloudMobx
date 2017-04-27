@@ -4,7 +4,7 @@
 
 body {
   background: $background;
-  font: 400 px2rem(14px) "CoreSans", Arial,sans-serif;
+  font: 400  $rem "CoreSans", Arial,sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   color: $fontColor;
@@ -42,4 +42,26 @@ a {
 h1,h2,h3,h4,h5{
   margin: 0;
   padding: 0;
+}
+
+
+@media only screen and (min-width: 401px){
+  body {
+    font-size: 15px !important;
+  }
+}
+@media only screen and (min-width: 428px){
+  body {
+    font-size: 15.75px !important;
+  }
+}
+@media only screen and (min-width: 481px){
+  body {
+    font-size: 16px !important;
+  }
+}
+@media only screen and (min-width: 569px){
+  body {
+    font-size: 14px !important;
+  }
 }

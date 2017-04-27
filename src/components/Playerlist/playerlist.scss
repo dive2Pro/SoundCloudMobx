@@ -2,15 +2,29 @@
 
 .main{
   position: fixed;
-  bottom: 4.7em;
+  bottom: 4rem;
   z-index: 10;
   height: px2rem(280px);
   right:  14.543em;
-  background: $backgroundSecondary;
   width: 36.429em;
-  overflow-y: hidden; 
+  background: $backgroundSecondary;
+  overflow-y: hidden;
   font-size: $smallIcon;
   padding: px2rem(5px);
+  transition:all 0.2s ease;
+
+  @include respond-to($break-large){
+      right:  px2rem(20px);
+      width: px2rem(400px);
+  }
+  @include respond-to($break-medium){
+    width: 100%;
+    right:0;
+    overflow-y: auto;
+    .playlistitem{
+
+    }
+  }
 }
 
 .top{

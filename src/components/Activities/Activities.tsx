@@ -15,12 +15,13 @@ interface IActivitiesProps extends IAddtionalProps {
   isLoading: boolean,
   datas: ITrack[],
   type: string
-  isError?: boolean
+  isError?: boolean,
+  streamStyle?:any
 }
 
 @inject(PLAYER_STORE)
 @observer
-class Activities extends React.Component<IActivitiesProps, any> {
+class Activities extends React.Component<IActivitiesProps, {}> {
   addToTrackList = (track: ITrack) => {
     const { playerStore } = this.props
     if (playerStore) {
@@ -60,6 +61,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
                     track={track}
                     i={i + 1}
                     store={store}
+                    {...this.props.streamStyle}
                   />
                 </div>
               )
@@ -71,6 +73,7 @@ class Activities extends React.Component<IActivitiesProps, any> {
                   track={item}
                   i={i + 1}
                   store={store}
+                  {...this.props.streamStyle}
                 />
               )
             })}

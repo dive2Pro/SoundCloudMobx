@@ -1,19 +1,21 @@
 import * as React from 'react'
 import ButtonInline from '../ButtonInline'
 import { observer, inject } from 'mobx-react';
-import { PLAYER_STORE } from '../../constants/storeTypes';
+import {PERFORMANCE_STORE, PLAYER_STORE} from '../../constants/storeTypes';
 import { PlayerStore } from '../../store/PlayerStore';
 import { ITrack } from '../../interfaces/interface';
-const styles = require('./operators.scss')
-
+import {PerformanceStore} from "../../store/PerformanceStore";
+const styles = require('./operators.scss');
+import makeDumbProps from '../../Hoc/makeDumbProps'
 interface IOperatorsProp {
-  isPlaylist?: boolean
-  playerStore?: PlayerStore
-  track?: ITrack
-  tracks?: ITrack[]
+  isPlaylist: boolean
+  playerStore: PlayerStore
+  performanceStore: PerformanceStore
+  track: ITrack
+  tracks: ITrack[]
 }
 
-@inject(PLAYER_STORE)
+@inject(PLAYER_STORE,PERFORMANCE_STORE)
 @observer
 class Operators extends React.PureComponent<IOperatorsProp, any>  {
 
@@ -30,31 +32,28 @@ class Operators extends React.PureComponent<IOperatorsProp, any>  {
 
   }
   render() {
-    const { isPlaylist } = this.props
+    const { performanceStore,isPlaylist } = this.props
+    const _2xfa = performanceStore.isUnderHandsets?"fa-2x":"";
     return (
       <div className={styles.infos_actions}>
         <ButtonInline
           onClick={this.handleAddToPlaylist}>
-          <i className="fa fa-plus" />
+          <em className={`fa fa-plus ${_2xfa}`} />
         </ButtonInline>
         <ButtonInline>
-          <i className="fa fa-heart" />
+          <em className={`fa fa-heart ${_2xfa}`} />
           <span>likes</span>
         </ButtonInline>
         <ButtonInline>
-          <i className="fa fa-share-square-o" />
-          <span>
-            Share
-          </span>
+          <em className={`fa fa-share-square-o ${_2xfa}`} />
+          <span>Share</span>
         </ButtonInline>
         {
           !isPlaylist &&
           (
             <ButtonInline>
-              <i className="fa fa-comments" />
-              <span>
-                Comments
-                  </span>
+              <em className={`fa fa-comments ${_2xfa}`} />
+              <span>Comments</span>
             </ButtonInline>
           )
         }
@@ -64,4 +63,4 @@ class Operators extends React.PureComponent<IOperatorsProp, any>  {
 
 }
 
-export default Operators;
+export default makeDumbProps(Operators)
