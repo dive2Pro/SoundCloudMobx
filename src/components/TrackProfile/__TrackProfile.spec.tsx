@@ -3,7 +3,7 @@ import TrackProfile from './index'
 import { shallow, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import { HomeLink } from '../Links'
-import playerStore from '../../store/PlayerStore';
+import {playerStore,performanceStore} from '../../store';
 import ButtonInline from '../ButtonInline'
 import { StaticRouter } from 'react-router-dom'
 describe('TrackProfile Component', () => {
@@ -17,6 +17,7 @@ describe('TrackProfile Component', () => {
     label_name: 'label',
     user: { id: 123, username: 'hoho' },
     playerStore,
+    performanceStore,
     track
   }
   let wrapper

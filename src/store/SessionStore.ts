@@ -83,6 +83,7 @@ export class SessionStore {
     UserList.initUser(rawUser);
     UserList.setLoginUserModel(rawUser.id)
   }
+
   @action loginout() {
     this.oauth_token = '';
     this.session = null;
@@ -90,18 +91,15 @@ export class SessionStore {
     this.user = undefined
     UserList.setLoginUserModel(undefined)
   }
-  // tslint:disable-next-line:variable-name
+
   @action fetchUser(oauth_token: string) {
     const url = apiUrl(`me`, '?')
-
-
     fetch(url)
       .then(data => data.json())
       .then((rawuser: any) => {
         this.setUser(rawuser)
         UserList.initUser(rawuser);
         UserList.setLoginUserModel(rawuser.id)
-
       }).catch(err => {
         this.catchError(err);
       })
