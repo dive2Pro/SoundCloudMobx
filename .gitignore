@@ -19,4 +19,7 @@ yarn-error.log*
 # environment
 .idea
 .vscode
-**/__snapshots__/**
+
+__snapshots__/
+public/assert/
+

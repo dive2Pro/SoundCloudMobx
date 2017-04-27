@@ -301,7 +301,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             node$.style.margin = '0px';
 
             style.width = 100 + 'vw';
-            console.log(node$.style, node$.wide, node$.offsetWidth)
             style.height = node$.offsetHeight + 'px';
             resetPositoin();
         }
@@ -403,7 +402,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
     }
 
     render() {
-
         const {playerStore,performanceStore} = this.props;
         let clazzName = styles.base;
 
