@@ -144,11 +144,8 @@ exports[`makeImageLazyLoad HOC 检测src的变化 2`] = `
       "genre": "Test",
       "getLoadingStateWidthKey": [Function],
       "isError": [Function],
-      "isErrorsMap": Object {
-        "Country": false,
-      },
+      "isErrorsMap": Object {},
       "isLoadingsByKey": Object {
-        "Country": true,
         "comments": false,
         "post_track_comment": false,
       },
@@ -175,11 +172,8 @@ exports[`makeImageLazyLoad HOC 检测src的变化 2`] = `
         "genre": "Test",
         "getLoadingStateWidthKey": [Function],
         "isError": [Function],
-        "isErrorsMap": Object {
-          "Country": false,
-        },
+        "isErrorsMap": Object {},
         "isLoadingsByKey": Object {
-          "Country": true,
           "comments": false,
           "post_track_comment": false,
         },
