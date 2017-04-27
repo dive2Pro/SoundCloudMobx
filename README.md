@@ -30,15 +30,14 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 
 ## 截图
 
+![gif1](/screens/br-min.gif)
 
-![gif1](http://ooul6pnb3.bkt.clouddn.com/browse_response.gif)
+![gif2](/screens/da-min.gif)
 
-![gif2](http://ooul6pnb3.bkt.clouddn.com/dashboard_response.gif)
- 
-![gif3](http://ooul6pnb3.bkt.clouddn.com/trackpapager-response.gif) 
+![gif3](/screens/tr-min.gif)
 
 
-## 注意 
+## 注意 🔥🔥
 
  因为 soundcloud 被墙,所以需要`工具`才能获取数据.
 
@@ -49,7 +48,7 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 3. cnpm start
 4. cnpm build
 
-## todo 
+## todo 📇📇
 - [ ] 添加测试ing
 - [ ] react-native版本
 - [ ] 服务端
@@ -61,4 +60,4 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 ## issues
 
 如果你有任何问题,可以开issue,我会及时关注和解决,
-你有任何的建议或者指点同样非常感谢,keepcoding  
+你有任何的建议或者指点同样非常感谢,keepcoding  ✈️✈️
