@@ -6,23 +6,26 @@ const styles = require('./playerlist.scss');
 import { StreamMain } from '../Stream'
 import { ITrack } from '../../interfaces/interface';
 import { PlayerStore } from '../../store/PlayerStore';
-import { PLAYER_STORE } from '../../constants/storeTypes';
+import {PERFORMANCE_STORE, PLAYER_STORE} from '../../constants/storeTypes';
 import makeDumbProps from '../../Hoc/makeDumbProps';
+import {PerformanceStore} from "../../store/PerformanceStore";
 
 interface IPlaylistProp {
   playerStore: PlayerStore
+  performanceStore: PerformanceStore
 }
 interface IPlaylistItemProp {
   track: ITrack
   store: PlayerStore
+  performanceStore: PerformanceStore
+
 }
 
-const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
+const PlaylistItem = observer(({performanceStore, track, store }: IPlaylistItemProp) => {
   const { playingTrack } = store
   const isPlaying = playingTrack ? playingTrack.id === track.id : false;
   const isHidden = !playingTrack || playingTrack.id !== track.id;
 
-  // const itemIsplaying = isPlaying && playingTrack === item
   const configurations = [{
     fn: () => { store.setPlayingTrack(track) },
     className: `fa fa-${isPlaying ? 'pause' : 'play'}`
@@ -35,11 +38,14 @@ const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
   }
   ];
 
+  const ellipisMaxWidth = performanceStore.isUnderHandsets?200:300;
+  performanceStore.isUnderHandsets&&configurations.shift();
   return (
     <div className={styles.playlistitem}>
       <StreamMain
         track={track}
         store={store}
+        ellipisMaxWidth={ellipisMaxWidth}
       />
       <div
         className={styles.playlistitem_hover}
@@ -54,7 +60,7 @@ const PlaylistItem = observer(({ track, store }: IPlaylistItemProp) => {
 })
 
 
-@inject(PLAYER_STORE)
+@inject(PLAYER_STORE,PERFORMANCE_STORE)
 @observer
 class Playerlist extends React.Component<IPlaylistProp, any> {
 
@@ -65,7 +71,7 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
   };
 
   render() {
-    const { playerStore } = this.props;
+    const { playerStore,performanceStore } = this.props;
 
     const { playList, isPlaylistOpen } = playerStore;
     const mainClass = isPlaylistOpen ? styles.main : styles.none;
@@ -85,6 +91,7 @@ class Playerlist extends React.Component<IPlaylistProp, any> {
           playList.map((item, i) => {
             return (
               <PlaylistItem
+                performanceStore={performanceStore}
                 store={playerStore}
                 track={item}
                 key={i + ' playlist item'}

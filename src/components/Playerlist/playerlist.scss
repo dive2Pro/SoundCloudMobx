@@ -20,6 +20,10 @@
   @include respond-to($break-medium){
     width: 100%;
     right:0;
+    overflow-y: auto;
+    .playlistitem{
+
+    }
   }
 }
 
