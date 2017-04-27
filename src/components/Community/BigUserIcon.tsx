@@ -7,6 +7,7 @@ import { IMiniUser } from '../../interfaces/interface';
 import ButtonGhost from '../ButtonGhost';
 import {PerformanceStore} from "../../store/PerformanceStore";
 
+
 interface IBigUserPicProps {
   user: IMiniUser
   , handleFollow: (id: number) => void
