@@ -1,29 +1,33 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom'
-import {observer, inject,IReactComponent} from 'mobx-react';
-import {NavLink} from 'react-router-dom'
+import {observer, inject} from 'mobx-react';
 import LoadingSpinner from '../LoadingSpinner'
 import {
     withRouter
 } from 'react-router-dom'
 import {FETCH_PLAYLIST, FETCH_QUERY} from '../../constants/fetchTypes'
 const styles = require('./header.scss');
-import {observable, action} from 'mobx';
+const Motion = require("react-motion").Motion;
+const spring = require("react-motion").spring;
+const diveMusicPng = require('../../../public/images/divemusic.png')
+const NavLink = require("react-router-dom").NavLink;
 import {UserStore, User} from '../../store/UserStore';
 import {SessionStore} from '../../store/SessionStore';
-import {SESSION_STORE, USER_STORE, TRACK_STORE} from '../../constants/storeTypes'
+import {SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes'
 import SearchPanel from '../SearchPanel'
 import {TrackStore} from '../../store/TrackStore';
+
 interface IHeaderProp {
     sessionStore: SessionStore
     userStore: UserStore,
     trackStore: TrackStore
+    performanceStore: PerformanceStore
     location: any,
     history: any
 }
 import AuthImage from './AuthImage';
 import Any = jasmine.Any;
 import makeCatchoutside from "../../Hoc/makeCatchoutside";
+import {PerformanceStore} from "../../store/PerformanceStore";
 interface IWidhtRouterStyleLinkProps {
     to?: string | Object
     isActive?: (match: any, location: any) => boolean
@@ -49,30 +53,42 @@ class WidhtRouterStyleLink extends React.PureComponent<IWidhtRouterStyleLinkProp
 const StyleLink =
     withRouter(WidhtRouterStyleLink);
 
-@inject(SESSION_STORE, USER_STORE, TRACK_STORE)
+@inject(SESSION_STORE, USER_STORE, TRACK_STORE,PERFORMANCE_STORE)
 @observer
 @makeCatchoutside
 class Header extends React.Component<IHeaderProp, any> {
-    state={isOpen:false}
+    state = {isOpen: false}
 
-    toggleMenusShowing =(e)=>{
-        this.setState(prev=>({isOpen:!prev.isOpen}))
+    toggleMenusShowing = () => {
+        this.setState(prev => ({isOpen: !prev.isOpen}))
     }
 
-    handleTouchOutside=()=>{
-        this.setState(prev=>({isOpen:false}))
+    handleTouchOutside = () => {
+        this.setState(prev => ({isOpen: false}))
     }
 
-    handleAuthClick = ()=>{
-        const {sessionStore:store} = this.props;
+    handleAuthClick = () => {
+        const {sessionStore: store} = this.props;
         if (!store.user) {
             store.login()
         } else {
             store.loginout()
         }
     }
+
+    handle2Browser=()=>{
+        this.props.history.push("/main")
+    }
+
     renderTop = () => {
-        const {userStore, location, history, trackStore} = this.props
+        const {performanceStore,location, history, trackStore} = this.props
+        const searchStyle = !performanceStore.isUnderLarge?{
+            flexDirection:"column-reverse",
+            alignItems:"center"
+        }:{}
+        const spanImage = performanceStore.windowWidth<430?{
+            width:"100%"
+        }:{}
         return (
             <div className={styles._aside_header}>
                 <div
@@ -83,7 +99,10 @@ class Header extends React.Component<IHeaderProp, any> {
                         store={this.props.sessionStore}
                     />
                 </div>
-                <div className={styles._aside_header_search}>
+                <div
+                    className={styles._aside_header_search}
+                    style={searchStyle}
+                >
                     <SearchPanel
                         handleSearch={(value) => {
                             if (location.pathname !== 'main') {
@@ -94,11 +113,16 @@ class Header extends React.Component<IHeaderProp, any> {
                             })
                         }}
                     />
+                    <span
+                        onClick={this.handle2Browser}
+                        className={styles.divemusic}
+                        style={spanImage}
+                    />
                 </div>
                 <div
                     onClick={this.toggleMenusShowing}
                     className={styles._aside_header_bars}>
-                    <i className="fa fa-bars fa-2x"/>
+                    <em className="fa fa-bars fa-2x"/>
                 </div>
             </div>
         )
@@ -117,7 +141,7 @@ class Header extends React.Component<IHeaderProp, any> {
         return (
             <div className={styles._aside_playlist}>
                 <div className={styles._aside_title}>
-                    <span> MY PLAYLIST </span> <i className="fa fa-plus "/>
+                    <span> MY PLAYLIST </span> <em className="fa fa-plus "/>
                 </div>
                 <ul className={styles._aside_header_ul}>
                     {
@@ -136,7 +160,7 @@ class Header extends React.Component<IHeaderProp, any> {
                                             , search: `?id=${item.id}`
                                         }}
                                     >
-                                        <i>🎶</i> {item.title || item.label_name}
+                                        <em>🎶</em> {item.title || item.label_name}
                                     </StyleLink>
                                 </li>)
                         })
@@ -184,12 +208,12 @@ class Header extends React.Component<IHeaderProp, any> {
                                 pathname: `/users/favorites`,
                                 search: `?id=${user && user.id}`
                             }}
-                        > <i className="fa fa-star"/> likes
+                        > <em className="fa fa-star"/> likes
                         </StyleLink>
                     </li>
                     <li>
                         <StyleLink>
-                            <i className="fa fa-music"/> Tracks </StyleLink></li>
+                            <em className="fa fa-music"/> Tracks </StyleLink></li>
                     <li>
                         <StyleLink
                             isActive={isActive}
@@ -198,7 +222,7 @@ class Header extends React.Component<IHeaderProp, any> {
                                 search: `?id=${user && user.id}`
                             }}
                         >
-                            <i className="fa fa-users"/> Followings
+                            <em className="fa fa-users"/> Followings
                         </StyleLink></li>
                     <li>
                         <StyleLink
@@ -208,7 +232,7 @@ class Header extends React.Component<IHeaderProp, any> {
                                 pathname: `/users/followers`,
                                 search: `?id=${user && user.id}`
                             }}
-                        > <i className="fa fa-user"/> Followers
+                        > <em className="fa fa-user"/> Followers
                         </StyleLink></li>
                     {/*wating*/}
                     {/*<li><StyleLink> <i>o</i> Albums</StyleLink> </li>
@@ -219,10 +243,6 @@ class Header extends React.Component<IHeaderProp, any> {
             </div>
         )
     }
-    loginIn = () => {
-        const {sessionStore} = this.props;
-        sessionStore.login();
-    };
 
     componentDidMount() {
         this.props.sessionStore.loadDataFromCookie();
@@ -264,17 +284,29 @@ class Header extends React.Component<IHeaderProp, any> {
     }
 
     render() {
-        const menusStyle = this.state.isOpen?{display:'block'}:{};
+        const {performanceStore} = this.props
+        const isOpen =this.state.isOpen ||!performanceStore.isUnderLarge
+        const menusStyle =  isOpen? {display: 'block'} : {};
         return (
             <section className={styles._aside}>
                 {this.renderTop()}
-                 <div
-                     onClickCapture={this.toggleMenusShowing}
-                     style={menusStyle} className={styles._menus} >
-                    {this.renderBasicItems()}
-                    {this.renderMyCommuPaner()}
-                    {this.renderMyPlaylist()}
-                </div>
+                <Motion style={{x: isOpen ? spring(0) : spring(-100)}}>
+                    {
+                        value => {
+                            return (
+                                <div
+                                    onClickCapture={this.toggleMenusShowing}
+                                    style={{...menusStyle, left: value.x+"%"}}
+                                    className={styles._menus}
+                                >
+                                    {this.renderBasicItems()}
+                                    {this.renderMyCommuPaner()}
+                                    {this.renderMyPlaylist()}
+                                </div>
+                            )
+                        }
+                    }
+                </Motion>
             </section>
         );
     }

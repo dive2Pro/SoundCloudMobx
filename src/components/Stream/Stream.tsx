@@ -47,7 +47,7 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
           className={styles._stream_position}
         >
           {imCurrentPlayingTrack?
-              (<i
+              (<em
                   className={`fa fa-volume-up ${styles.mainColor}`} />)
               :i}
         </span>
