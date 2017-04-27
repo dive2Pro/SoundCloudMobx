@@ -88,7 +88,9 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
     }
     const { avatar_url } = um.user
     return (
-      <form action="#" onSubmit={this.handleReplay}>
+      <form
+
+          action="#" onSubmit={this.handleReplay}>
         <div className={styles.replay_div}>
           <ArtWork
             size={50}
@@ -100,7 +102,6 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
               name="replay"
               type="text"
             />
-
           </div>
         </div>
       </form>
@@ -109,12 +110,10 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
 
 
   renderContent = (currentTrack: ITrack) => {
-    const { label_name
-      // , release_day
-      , user, artwork_url } = currentTrack
+    const { label_name, user, artwork_url } = currentTrack
     const ps = this.props.performanceStore
     return (
-      <div >
+      <div className={styles.trackPager}>
         <TrackProfile
           bigPic={artwork_url}
           label_name={label_name}
@@ -126,9 +125,11 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
         <div className={styles.comments}>
           <section className={styles.replay_operators}>
             {this.renderReplay()}
-            <Operators
-              track={currentTrack}
-            />
+           <div className={styles.operators}>
+             <Operators
+                 track={currentTrack}
+             />
+           </div>
           </section>
 
           <div className={styles.comment_body}>
@@ -138,9 +139,9 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
               isFollowing={false}
             />
             <CommentsContainer
-              commentStore={this.props.commentStore}
-              track={currentTrack}
-              scrollFunc={this.handleFetchMoreComments}
+                commentStore={this.props.commentStore}
+                track={currentTrack}
+                scrollFunc={this.handleFetchMoreComments}
             />
           </div>
         </div>

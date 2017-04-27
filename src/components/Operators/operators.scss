@@ -1,11 +1,35 @@
 @import '../../styles/variable.scss';
-.infos_actions{
+
+.infos_actions {
   padding: px2rem(10px) 0;
-  @include bottom_border(2px,rgba(58, 58, 58, 0.05));
+  @include bottom_border(2px, rgba(58, 58, 58, 0.05));
   margin-bottom: px2rem(10px);
-  button{
+  button {
     @include btn_white_padding();
     margin-right: px2rem(10px);
+    &:focus{
+      outline: none;
+    }
+
+    &:active{
+      color: $mainColor;
+    }
   }
-  
+
+  @include respond-to($break-medium) {
+    button {
+      > span {
+        display: none;
+      }
+    }
+  }
+  @include respond-to($break-handset){
+   border-bottom: none;
+
+    text-align: center;
+     button{
+      @include circlrBtn();
+       margin-right: 0.71429rem;
+     }
+  }
 }

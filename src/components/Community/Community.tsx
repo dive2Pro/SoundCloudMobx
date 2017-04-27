@@ -6,14 +6,16 @@ const styles = require('./community.scss')
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from 'mobx-react';
 import { UserStore, User } from '../../store/UserStore';
-import { USER_STORE } from '../../constants/storeTypes';
+import {PERFORMANCE_STORE, USER_STORE} from '../../constants/storeTypes';
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
+import {PerformanceStore} from "../../store/PerformanceStore";
 
 
 interface ICommunityProps {
   userStore?: UserStore
   path: string
   scrollFunc?: () => void
+  performanceStore?:PerformanceStore
 }
 
 
@@ -23,7 +25,7 @@ export class EmptyView extends React.Component<any, any> {
   }
 }
 
-@inject(USER_STORE)
+@inject(USER_STORE,PERFORMANCE_STORE)
 @observer
 class Community extends React.Component<ICommunityProps, any> {
 
@@ -54,6 +56,7 @@ class Community extends React.Component<ICommunityProps, any> {
               user={user}
               isFollowing={user.isFollowing}
               handleFollow={() => this.handleFollow(user)}
+              performanceStore={this.props.performanceStore}
             />
           ))
         }

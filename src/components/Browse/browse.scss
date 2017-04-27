@@ -1,23 +1,38 @@
 @import '../../styles/variable.scss';
+@import '../Tabs/tabs';
+@import '../Stream/stream';
 
-.container{  
+.container {
   padding: $padding;
+
+
 }
-.nav{
-    display: flex;
-    justify-content: space-between;
-    padding: px2rem(10px);
-    background: $secondMainColor;
-    div{
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: px2rem(10px);
+  background: $secondMainColor;
+  div {
+    color: $white;
+    padding: 20px;
+    font-size: $mediumIcon;
+    &.active {
+      background-color: $thirdMainColor;
       color: $white;
-      padding: $padding;
-      font-size: $mediumIcon;
-      &.active{
-        background-color: $thirdMainColor;
-        color: $white;
-      }
-      a{
-        color: inherit;
+    }
+    a {
+      color: inherit;
+    }
+  }
+  @include respond-to($break-large) {
+    .tabs {
+      > div {
+        min-width: (115px);
+        max-width: (115px);
       }
     }
+  }
+
 }
+

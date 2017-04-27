@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 interface IStreamLinkProp {
   id: number,
   children?: any
+  className?:string
 }
 
 const StreamLink = (props: IStreamLinkProp) => {

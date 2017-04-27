@@ -1,4 +1,6 @@
-.main{ 
+@import '../../styles/variable.scss';
+
+.main{
     height: inherit;
     width: inherit;
     
@@ -37,5 +39,6 @@
 }
 .process{ 
     z-index: 0;
-    border-radius: 5px; 
+    border-radius: 5px;
+    background:$mainColor;
 } 
