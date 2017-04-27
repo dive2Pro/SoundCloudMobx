@@ -21,7 +21,7 @@ interface IStreamProps {
 @observer
 class Stream extends React.PureComponent<IStreamProps, any>  {
   render() {
-    const { track, store, type, i, additionalStyles } = this.props
+    const { track, store, type, i, additionalStyles ,...rest} = this.props
     const handleSectionClick = (e: any) => {
       const name = e.target.className
       if (name === (styles._stream_act_plus) || e.target.tagName === 'A' || e.target.tagName === 'I') {
@@ -63,10 +63,12 @@ class Stream extends React.PureComponent<IStreamProps, any>  {
         <StreamMain
             store={store}
             track={track}
+            {...rest}
         />
         <StreamExtends
             store={store}
             track={track}
+            {...rest}
         />
       </section >
     );

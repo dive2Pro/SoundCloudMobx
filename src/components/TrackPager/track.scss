@@ -17,7 +17,11 @@
     }
 
   }
-
+  @include respond-to(900px){
+    .trackPager{
+      width: 900px;
+    }
+  }
   @include respond-to($break-medium) {
     .comments {
       padding: px2rem(10px);
@@ -27,9 +31,9 @@
   @include respond-to($break-handset) {
     padding: 0;
     .trackPager {
+      width: 100%;
       display: flex;
       flex-direction: column;
-
       position: relative;
     }
 

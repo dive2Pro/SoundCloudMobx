@@ -3,6 +3,7 @@
 .mainColor{
   color:$mainColor;
 }
+
 ._stream{
   display: inline-flex;
   padding: 5px 0 ;
@@ -41,8 +42,13 @@
     }
   }
   @include respond-to($break-medium){
+
     .indexPlay{
       display: none;
+    }
+
+    ._stream_info_title{
+      @include ellipsisTexts(200px);
     }
 
     ._stream_act_plus{
@@ -55,7 +61,6 @@
       display: none;
     }
     ._stream_info_title {
-      @include ellipsisTexts(px2rem(200px));
     }
   }
 }
@@ -130,15 +135,17 @@ div .indexPlay{
       color: white;
     }
     }
-} 
+}
+
 ._stream_info_title{
   font-weight: bold;
-  display: table-cell;  
-  @include ellipsisTexts(px2rem(300px));
+  display: table-cell;
+  @include ellipsisTexts($streamEllipsisWidth);
    &:visited{
       color:#333;
      }
 }
+
 ._stream_info_author{
   color: #bababa;
    &:visited{

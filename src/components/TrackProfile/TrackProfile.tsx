@@ -108,7 +108,7 @@ class TrackProfile extends React.Component<ITrackProfileProps, any> {
 
                         <div
                             style={{animationPlayState:isCurrentTrackPlaying?"running":"paused"}}
-                            className={`${styles.artworks_vinly} ${styles.rotate_animation}`}>
+                            className={`${styles.artworks_vinly}  ${styles.rotate_animation}`}>
                             <span
                                 className={styles.artwork}
                                 style={{

@@ -10,7 +10,14 @@
  cursor:pointer;
  font-weight: bold;
  box-sizing:content-box;
- 
+ @include respond-to($break-handset){
+   font-weight: 500;
+   padding: 0.5em;
+   background: transparent;
+   line-height: 1.02857rem;
+   height: 1.02857rem;
+
+ }
  &:hover{
    background-color: $mainColor;
    color:$white;

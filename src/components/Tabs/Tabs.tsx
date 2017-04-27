@@ -8,7 +8,7 @@ interface ITabsProps {
   initialSelectedIndex?: number,
   tabTemplateStyle?: object
   onActive?: (value: string, index: number) => void
-  inkBarStyle?: object,
+  inkBarStyle?: any,
   selectedTextColor?: string,
   value: any
 }
@@ -39,11 +39,13 @@ class Tabs extends React.Component<ITabsProps, any> {
   tabContent: any[] = [];
 
   getSelectedStyle = (i) => {
+    const width =this.width
 
     const root = {
-      color: this.index === i ? this.props.selectedTextColor : "#333"
+      color: this.index === i ? this.props.selectedTextColor : "#333",
     }
-    const tempStyle = this.props.tabTemplateStyle
+    let tempStyle = this.props.tabTemplateStyle
+
     return { ...tempStyle, ...root }
   };
 
@@ -153,12 +155,11 @@ class Tabs extends React.Component<ITabsProps, any> {
     const i = this.index;
     let width = 1 / this.getTabs().length * this.width;
 
-    if(this.width<900){
-       width = 115
+    const { inkBarStyle } = this.props
+    if(inkBarStyle.minWidth){
+      width=inkBarStyle.minWidth
     }
 
-    const { inkBarStyle } = this.props
-    const scrollLeft = this.link?this.link.scrollLeft:0
     return {
       width: width + 'px',
       transition: 'transform 0.3s ease',
