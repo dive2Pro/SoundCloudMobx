@@ -141,7 +141,6 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
 
         componentWillReceiveProps(nextProps) {
             if (!!nextProps.src && nextProps.src !== this.imageSrc) {
-
                 this.caclImg(nextProps.src, nextProps.size)
             }
         }
@@ -153,6 +152,7 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
             }
             return true
         }
+ 
 
 
         render() {
