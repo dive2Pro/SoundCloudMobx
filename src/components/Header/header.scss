@@ -65,7 +65,7 @@
 }
 
 ._menus {
-
+  position: relative;
 }
 
 ._aside_header {
@@ -73,9 +73,15 @@
   > button {
     font-size: $mediumIcon;
   }
-
 }
 
+.divemusic{
+  background: url("../../../public/images/divemusic.png");
+  background-size: 200%;
+  background-repeat: no-repeat;
+  height:45px;
+  width: 200px;
+}
 ._aside_header_search {
   display: flex;
   justify-content: center;

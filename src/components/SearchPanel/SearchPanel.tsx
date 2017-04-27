@@ -98,8 +98,7 @@ class SearchPanel extends React.Component<ISearchPanelProps, any> {
   }
   render() {
     const debounceChange = debounce(this.handleChange, 599);
-    const { additionalStyles, autoSearch } = this.props
-      ;
+    const { additionalStyles, autoSearch } = this.props;
     const {isOpen} = this.state
     let textStyle = isOpen ? defaultStyle.open : defaultStyle.close
     textStyle = { ...textStyle, ...additionalStyles ? additionalStyles.text : {} }

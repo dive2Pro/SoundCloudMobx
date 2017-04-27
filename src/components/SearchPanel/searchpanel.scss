@@ -4,7 +4,7 @@
   composes:panel;
   color:white;
   height: 100%;
-
+  display: flex;
   input{
     border: none;
     &:focus{
