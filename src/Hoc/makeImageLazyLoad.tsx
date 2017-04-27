@@ -44,6 +44,9 @@ const makeCancelable = (promise) => {
         }
     }
 }
+
+
+
 function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { src: string }> | React.StatelessComponent<
     Props
     & { src: string }>): React.ComponentClass<Props> {
@@ -54,8 +57,6 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
         imgPath: HTMLImageElement;
         retryCount = 3
         @observable  imageSrc= preImage
-
-
         componentDidMount() {
             const imgNode = ReactDOM.findDOMNode(this)
 
