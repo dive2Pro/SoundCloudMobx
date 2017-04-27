@@ -94,7 +94,7 @@ export class PerformanceStore {
     }
 
     @computed get isUnderMedium() {
-        const is = !this.isUnderHandsets && this.windowWidth <= 680
+        const is =  this.windowWidth <= 680
         return is;
     }
 
@@ -105,7 +105,7 @@ export class PerformanceStore {
     }
 
     @computed get isUnderLarge() {
-        return !this.isUnderMedium && this.windowWidth < 1200
+        return   this.windowWidth < 1200
     }
 
     @observable trackPalatteColor
