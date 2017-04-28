@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer, inject} from 'mobx-react';
 import LoadingSpinner from '../LoadingSpinner'
-import {withRouter} from 'react-router-dom'
+import {withRouter,location,history} from 'react-router-dom'
 import {FETCH_PLAYLIST, FETCH_QUERY} from '../../constants/fetchTypes'
 
 const styles = require('./header.scss');
@@ -19,8 +19,8 @@ interface IHeaderProp {
     userStore: UserStore,
     trackStore: TrackStore
     performanceStore: PerformanceStore
-    location: any,
-    history: any
+    location: location,
+    history: history
 }
 import AuthImage from './AuthImage';
 import Any = jasmine.Any;
@@ -80,6 +80,7 @@ export class Header extends React.Component<IHeaderProp, any> {
 
     renderTop = () => {
         const {performanceStore, location, history, trackStore} = this.props
+
         const searchStyle = !performanceStore.isUnderLarge ? {
             flexDirection: "column-reverse",
             alignItems: "center"
@@ -103,7 +104,10 @@ export class Header extends React.Component<IHeaderProp, any> {
                 >
                     <SearchPanel
                         handleSearch={(value) => {
-                            if (location.pathname !== 'main') {
+
+                            if (
+
+                                location.pathname !== 'main') {
                                 history.push('/main')
                             }
                             trackStore.setGenre(`${FETCH_QUERY}_${value}`, function () {

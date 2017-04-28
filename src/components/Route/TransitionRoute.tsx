@@ -8,8 +8,9 @@ interface ITransitionRouteProp {
   strict?: boolean,
   component?: (match?: any) => JSX.Element,
   render?: (match?: any) => JSX.Element,
-  location?: object
+  location?: object,
 }
+
 @makeTranslateXMotion
 class TransitionRoute extends React.PureComponent<ITransitionRouteProp, any>{
 
