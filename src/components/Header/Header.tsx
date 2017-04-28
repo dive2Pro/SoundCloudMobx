@@ -1,20 +1,17 @@
 import * as React from 'react';
 import {observer, inject} from 'mobx-react';
 import LoadingSpinner from '../LoadingSpinner'
-import {withRouter} from 'react-router-dom'
+import {withRouter,location,history} from 'react-router-dom'
 import {FETCH_PLAYLIST, FETCH_QUERY} from '../../constants/fetchTypes'
 
 const styles = require('./header.scss');
-const Motion = require("react-motion").Motion;
-const spring = require("react-motion").spring;
+import {Motion,spring,presets} from 'react-motion'
 const NavLink = require("react-router-dom").NavLink;
-
 import {UserStore, User} from '../../store/UserStore';
 import {SessionStore} from '../../store/SessionStore';
 import {SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes'
 import SearchPanel from '../SearchPanel'
 import {TrackStore} from '../../store/TrackStore';
-import {whyRun} from 'mobx'
 const diveMusicPng = require('../../../public/images/divemusic.png')
 
 interface IHeaderProp {
@@ -22,8 +19,8 @@ interface IHeaderProp {
     userStore: UserStore,
     trackStore: TrackStore
     performanceStore: PerformanceStore
-    location: any,
-    history: any
+    location: location,
+    history: history
 }
 import AuthImage from './AuthImage';
 import Any = jasmine.Any;
@@ -83,6 +80,7 @@ export class Header extends React.Component<IHeaderProp, any> {
 
     renderTop = () => {
         const {performanceStore, location, history, trackStore} = this.props
+
         const searchStyle = !performanceStore.isUnderLarge ? {
             flexDirection: "column-reverse",
             alignItems: "center"
@@ -106,7 +104,10 @@ export class Header extends React.Component<IHeaderProp, any> {
                 >
                     <SearchPanel
                         handleSearch={(value) => {
-                            if (location.pathname !== 'main') {
+
+                            if (
+
+                                location.pathname !== 'main') {
                                 history.push('/main')
                             }
                             trackStore.setGenre(`${FETCH_QUERY}_${value}`, function () {
