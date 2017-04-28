@@ -67,7 +67,6 @@ function makeOpacityTransition<Props, State>
 
     getStyles = () => {
       return this.state.datas.map((item, index) => {
-
         return {
           ...item,
           style: {

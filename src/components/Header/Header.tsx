@@ -5,16 +5,13 @@ import {withRouter} from 'react-router-dom'
 import {FETCH_PLAYLIST, FETCH_QUERY} from '../../constants/fetchTypes'
 
 const styles = require('./header.scss');
-const Motion = require("react-motion").Motion;
-const spring = require("react-motion").spring;
+import {Motion,spring,presets} from 'react-motion'
 const NavLink = require("react-router-dom").NavLink;
-
 import {UserStore, User} from '../../store/UserStore';
 import {SessionStore} from '../../store/SessionStore';
 import {SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE} from '../../constants/storeTypes'
 import SearchPanel from '../SearchPanel'
 import {TrackStore} from '../../store/TrackStore';
-import {whyRun} from 'mobx'
 const diveMusicPng = require('../../../public/images/divemusic.png')
 
 interface IHeaderProp {
