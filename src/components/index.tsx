@@ -15,7 +15,6 @@ import {inject} from "mobx-react";
 import {PERFORMANCE_STORE} from "../constants/storeTypes";
 import {docMethods} from "../services/docMethos";
 const styles: any = require('./soundcloud.scss');
-import * as ReactDOM from 'react-dom'
 
 class Abadon extends React.PureComponent<any, any>{
   handleTimeout: any;
