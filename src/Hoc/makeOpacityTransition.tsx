@@ -25,6 +25,7 @@ function makeOpacityTransition<Props, State>
   ) {
 
   // tslint:disable-next-line:class-name
+  @observer
   class makeOpacityTransitionComponent extends Component<Props
     & ImakeOpacityTransitionProp, any>{
     state = {
