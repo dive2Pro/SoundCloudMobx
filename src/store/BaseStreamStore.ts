@@ -34,8 +34,6 @@ abstract class BaseStreamStore<T> implements IBaseActStore {
 
   autorunHandle: IReactionDisposer;
 
-
-
   @computed get isLoading(): boolean {
     return this.isLoadingByGenre.get(this.currentGenre)
   }

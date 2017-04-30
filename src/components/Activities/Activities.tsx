@@ -1,97 +1,85 @@
 import * as React from 'react'
 const styles = require('./activities.scss')
-import { observer, inject } from 'mobx-react';
-import { ITrack } from '../../interfaces/interface';
+import {observer, inject} from 'mobx-react';
+import {ITrack} from '../../interfaces/interface';
 import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
 import Stream from '../Stream'
-import { PlayerStore } from '../../store/PlayerStore';
-import { PLAYER_STORE } from '../../constants/storeTypes';
+import {PlayerStore} from '../../store/PlayerStore';
+import {PLAYER_STORE} from '../../constants/storeTypes';
 import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
-import makeOpacityTransition, { IAddtionalProps } from '../../Hoc/makeOpacityTransition'
-import makeTranslateXMotionWrapper from '../../Hoc/makeTranslateXStragged'
+import {IAddtionalProps} from '../../Hoc/makeOpacityTransition'
 
 interface IActivitiesProps extends IAddtionalProps {
-  playerStore?: PlayerStore
-  isLoading: boolean,
-  datas: ITrack[],
-  type: string
-  isError?: boolean,
-  streamStyle?:any
+    playerStore?: PlayerStore
+    isLoading: boolean,
+    datas: ITrack[],
+    type: string
+    isError?: boolean,
+    streamStyle?: any
 }
 
 @inject(PLAYER_STORE)
 @observer
 class Activities extends React.Component<IActivitiesProps, {}> {
-  addToTrackList = (track: ITrack) => {
-    const { playerStore } = this.props
-    if (playerStore) {
-      playerStore.addToPlaylist(track);
-    }
-  }
-
-  render() {
-    const {
-      datas,
-      type,
-      playerStore: store
-      , interpolatedStyles
-    } = this.props;
-
-    if (!store || !datas) {
-      return <noscript />
+    addToTrackList = (track: ITrack) => {
+        const {playerStore} = this.props
+        if (playerStore) {
+            playerStore.addToPlaylist(track);
+        }
     }
 
-    return (
-      <div className={styles.main}>
-        <div className={styles.tracks}>
-          {
-            interpolatedStyles ? interpolatedStyles.map((item, i) => {
-              const style: any = item.style || item
+    render() {
+        const {
+            datas,
+            type,
+            playerStore: store
+            , interpolatedStyles
+        } = this.props;
 
-              const track: any = item.data || datas[i]
-
-              return (
-                <div
-                  key={item.key + track.id + '-' + i}
-                  style={{
-                    ...style, left: `${style.left}`
-                  }}>
-                  <Stream
-                    type={type}
-                    track={track}
-                    i={i + 1}
-                    store={store}
-                    {...this.props.streamStyle}
-                  />
+        if (!store || !datas) {
+            return <noscript />
+        }
+        const isinterpolatedStyles = !!interpolatedStyles
+        const items: any = isinterpolatedStyles ? interpolatedStyles : datas
+        return (
+            <div className={styles.main}>
+                <div className={styles.tracks}>
+                    {
+                        items.map((item, i) => {
+                            const style: any = isinterpolatedStyles ? (item.style || item) : {}
+                            const track: any = isinterpolatedStyles ? (item.data || datas[i]) : item;
+                            const key = isinterpolatedStyles ? item.key + track.id : track.id;
+                            return (
+                                <div
+                                    key={key + '-' + i}
+                                    style={{
+                                        ...style, left: `${style.left}`
+                                    }}>
+                                    <Stream
+                                        type={type}
+                                        track={track}
+                                        i={i + 1}
+                                        store={store}
+                                        {...this.props.streamStyle}
+                                    />
+                                </div>
+                            )
+                        }) }
                 </div>
-              )
-            }) : datas.map((item, i) => {
-              return (
-                <Stream
-                  key={item.id + '-' + i}
-                  type={type}
-                  track={item}
-                  i={i + 1}
-                  store={store}
-                  {...this.props.streamStyle}
-                />
-              )
-            })}
-        </div>
-      </div >
-    );
-  }
+            </div >
+        );
+    }
 }
 
 
 // let  ActivitiesCount = 0
 // 这里不需要传入 type,因为已经在 TrackStore中setGenre的时候设置了
 export default Hoc(
-  // makeOpacityTransition(
-  makeLoadingSpinner(
-    // makeTranslateXMotionWrapper(
-    Activities
-    // )
-    // , styles.main
-  )
+    // makeOpacityTransition(
+    makeLoadingSpinner(
+        // makeTranslateXMotionWrapper(
+        Activities
+        // )
+        // , styles.main
+    )
 )
