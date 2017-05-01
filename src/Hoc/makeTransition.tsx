@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { Component } from 'react'
 import { spring, TransitionMotion, presets } from 'react-motion'
+import {observer} from "mobx-react";
 
 interface ImakeOpacityTransitionProp {
   datas?: Object[]
@@ -65,6 +66,7 @@ function makeOpacityTransition<Props, State>
   TargetClassName?: string
   ) {
   // tslint:disable-next-line:class-name
+  @observer
   class makeOpacityTransitionComponent extends Component<Props
     & ImakeOpacityTransitionProp, any>{
     state = {

@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { Component } from "react"
 import { Motion, presets, spring } from 'react-motion'
+import {observer} from "mobx-react";
 
 export default function makeTranslateMotion<Props, State>(
   Comp: new () => Component<Props, State>
 ) {
-
-  return class makeTranslateXMotionWrapper extends Component<any, any>{
+@observer
+    class makeTranslateXMotionWrapper extends Component<any, any>{
     state = {
       mounted: false
     }
@@ -52,4 +53,5 @@ export default function makeTranslateMotion<Props, State>(
       )
     }
   }
+  return  makeTranslateXMotionWrapper
 }

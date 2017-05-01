@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Component } from "react"
-import { Motion, presets, spring, StaggeredMotion } from 'react-motion'
+import { presets, spring, StaggeredMotion } from 'react-motion'
 import { IAddtionalProps } from './makeTransition'
+import {observer} from "mobx-react";
 
 function AcontainB(a, b): boolean {
   return b.every((item, i) => {
@@ -12,9 +13,8 @@ function AcontainB(a, b): boolean {
 export default function makeTranslateMotion<Props, State>(
   Comp: new () => Component<Props & IAddtionalProps, State>
 ) {
-
-  return class makeTranslateXMotionWrapper extends Component<any, any>{
-
+@observer
+class makeTranslateXMotionWrapper extends Component<any, any>{
 
     state = {
       datas: []
@@ -86,9 +86,7 @@ export default function makeTranslateMotion<Props, State>(
           >
             {
               (interpolatedStyles, i) => {
-                {/*console.log(interpolatedStyles,*/ }
-                {/*this.getStyles(interpolatedStyles)*/ }
-                {/*);*/ }
+
                 return (
                   <Comp
                     {...this.props}
@@ -103,4 +101,5 @@ export default function makeTranslateMotion<Props, State>(
         )
     }
   }
+  return  makeTranslateXMotionWrapper
 }

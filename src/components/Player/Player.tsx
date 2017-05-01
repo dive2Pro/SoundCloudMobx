@@ -204,11 +204,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                     <div
                         ref={n => this.volumeTag = n}
                         className={styles.content_action}>
-                        <i
+                        <em
                             onClick={this.handleVolumeOpen}
-                            style={{width: '25px'}}
+                            style={{width: '25px',marginRight:'5px'}}
                             className={`fa fa-volume-${volume > 0.5 ?
-                                'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
+                                'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</em>
                         <div
                             style={{display:pstore.isUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
                             ref={n => this.volumeContainer = n}
@@ -224,7 +224,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                                         wide={120}
                                         data={100}
                                         value={100 * volume}
-                                        backgroundColor={'#9e9f9f'}
+                                        backgroundColor={'#f55874'}
                                         defaultColor={'#b6bbbb'}
                                         vertical={pstore.isUnderMedium}
                                         dotStyle={{
@@ -243,13 +243,13 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         )
     }
 
-
     renderPlayerRanges = (store: PlayerStore) => {
         const {
             playingTrack
         } = store
         const rangeClazz = styles.range;
         const duration = playingTrack ? playingTrack.duration : 0
+        const {performanceStore}  =this.props
 
         return (
             <div
@@ -259,7 +259,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                     onDragEnd={this.handleProcessChange}
                     onDragIng={this.handleProcessChange}
                     data={playingTrack && playingTrack.duration}
-                    dotStyle={{visibility: 'hidden'}}
+                    dotStyle={{width:12,height:12}}
                     contaiStyle={{height: '4px'}}
                     defaultColor={'#b6bbbb'}
                     value={this.processValue * duration}/>

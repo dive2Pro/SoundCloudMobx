@@ -68,10 +68,6 @@ class FavoView extends React.PureComponent<any, any> {
     }
 }
 
-
-
-
-
 /**
  * 用户界面
  */
@@ -101,9 +97,9 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     renderContentBodyMain = (us: UserStore, performanceStore: PerformanceStore) => {
 
         const {match: {url}} = this.props
+
         const {userModel} = us
         const selectedStyle="#f55874";
-
         return (
             <div>
                 <div className={styles.dashtabs}>
@@ -292,12 +288,15 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     }
 
     componentWillMount() {
-        const loc = this.props.location
-        if (loc) {
+        if (this.props.location) {
+            const {location:{pathname,search}}=this.props
             // todo id undefined redicet to other
-            const id = +qs.parse(loc.search.substr(1)).id
+            const id = +qs.parse(search.substr(1)).id
             this.changeUserId(id)
+            const tabValue = pathname.substr(pathname.lastIndexOf("/")+1).toUpperCase();
+            this.setState({tabValue})
         }
+
     }
 
     changeUserId(id: number) {

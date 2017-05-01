@@ -14,7 +14,7 @@ import TrackProfile from '../TrackProfile'
 import Activities from '../Activities'
 import LoadingSpinner from '../LoadingSpinner'
 import { IPlaylist, IisLoading } from '../../interfaces/interface';
-const styles = require('./playlist.scss')
+const styles = require('./playlistInfo.scss')
 
 interface IPlaylistInfoProp {
   location: any

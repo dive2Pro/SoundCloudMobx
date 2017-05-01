@@ -1,0 +1,79 @@
+@import '../../styles/variable.scss';
+
+.playlistinfo {
+  width: $contentMinWidth;
+  padding: px2rem(30px);
+  background: #ffffff;
+  margin: auto;
+  @include respond-to($break-large) {
+    .playlist_body {
+      section {
+        width: 75vw;
+      }
+    }
+  }
+
+  @include respond-to(1000px) {
+
+    .playlist_body {
+      section {
+        width: 92vw;
+
+      }
+      & > div:nth-child(1) {
+        display: none;
+      }
+    }
+
+    .playlistmain {
+      section {
+        width: 90vw;
+      }
+    }
+  }
+
+  @include respond-to($break-medium) {
+    width: 100%;
+    padding: 0;
+    .playlist_body {
+      section {
+        width: 90vw;
+      }
+    }
+  }
+
+  @include respond-to($break-handset) {
+    padding: 1px 0;
+    > div {
+      &:first-child {
+        height: 67vh;
+      }
+    }
+    .playlist_main {
+      margin-top: 52vh;
+      z-index: 9;
+    }
+
+  }
+
+}
+
+.playlist_body {
+
+  display: flex;
+  width: 100%;
+  section {
+    width: 55vw;
+  }
+  & > div {
+    &:nth-last-child {
+      margin-top: $padding;
+    }
+  }
+}
+
+
+.playlist_main {
+  padding: $padding;
+  position: relative;
+}

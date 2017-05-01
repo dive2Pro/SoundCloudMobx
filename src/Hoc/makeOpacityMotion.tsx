@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Component } from "react"
 import { Motion, presets, spring } from 'react-motion'
+import {observer} from "mobx-react";
 interface ImakeOpacityMotionProp {
 
 }
@@ -11,8 +12,8 @@ export interface IAddtionalProps {
 export default function makeOpacityMotion<Props, State>(
   Comp: new () => Component<Props & IAddtionalProps, State>
 ) {
-
-  return class makeOpacityMotionWrapper extends Component<Props, any>{
+  @observer
+  class makeOpacityMotionWrapper extends Component<Props, any>{
     state = {
       opacity: 0
     }
@@ -65,4 +66,5 @@ export default function makeOpacityMotion<Props, State>(
       )
     }
   }
+  return makeOpacityMotionWrapper
 }

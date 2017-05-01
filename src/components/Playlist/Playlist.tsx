@@ -12,6 +12,7 @@ import makeLoadingSpinner from '../../Hoc/makeLoadingSpiner'
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 import {PERFORMANCE_STORE} from "../../constants/storeTypes";
 import {PerformanceStore} from "../../store/PerformanceStore";
+import HocLoadingEmitLimit from "../HocLoadingMore/HocLoadingEmitLimit";
 
 
 interface IPlaylistProps extends IisLoading {
@@ -28,21 +29,24 @@ class PlaylistItem extends React.PureComponent<{ info: IPlaylist,performanceStor
     const to = { pathname: '/playlist', search: `?id=${id}` }
     const ps = this.props.performanceStore
 
-    const artSize = ps?ps.getSizeWithSpecWidth(250,210,170,130):250;
-
+    const artSize = ps?ps.getSizeWithSpecWidth(250,210,170,100):250;
+    console.log(artwork_url,artSize)
     return (
       <div className={styles.itemContainer}>
         <Link to={to}>
           <ArtWork src={artwork_url} size={artSize} />
         </Link>
         <div className={styles.itemTitle}>
-          <Link to={to}><h3>{label_name || title}</h3></Link>
+          <Link to={to}>
+            <h3 className={styles.label_name}>{label_name || title}</h3>
+          </Link>
         </div>
       </div>
     )
   }
 }
-
+@HocLoadingEmitLimit
+@HocLoadingMore
 @makeTranslateXMotion
 @inject(PERFORMANCE_STORE)
 @observer
@@ -74,7 +78,7 @@ class Playlist extends React.Component<IPlaylistProps, any>{
   }
 }
 
-export default HocLoadingMore<IPlaylistProps, any>(makeLoadingSpinner(Playlist, FETCH_PLAYLIST))
+export default ((makeLoadingSpinner(Playlist, FETCH_PLAYLIST)))
 
 
 

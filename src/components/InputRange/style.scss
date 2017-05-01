@@ -5,12 +5,19 @@
     width: inherit;
     
 }
+
 .input_container{
     position: relative;    
     text-align: center;
     height: 10px;
     border-radius: 5px;
+    &:hover{
+        .input_dot{
+            visibility: visible!important;
+        }
+    }
 }
+
 .input_dot{
     z-index: 2;
     position: absolute;
@@ -20,6 +27,7 @@
     background: gold;
     left: -8.5px;
     top:-8.5px;
+
     &:hover {
         .input_tooltip {
             visibility: visible !important;
@@ -28,6 +36,7 @@
         }
     }
 }
+
 .input_tooltip{
     position: relative;
     background: lightblue;
@@ -37,6 +46,7 @@
     padding: 5px;
     transition: all 0.2s ease-in;    
 }
+
 .process{ 
     z-index: 0;
     border-radius: 5px;
