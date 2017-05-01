@@ -19,9 +19,10 @@ interface IInputRange {
   backgroundColor?: string,
   defaultColor?: string,
   defaultTransition?: string
-  dotStyle?: {}
+  dotStyle?: any
   cusProcessStyle?: {}
   contaiStyle?: {}
+
 }
 
 
@@ -52,6 +53,11 @@ class InputRange extends React.Component<IInputRange, any> {
   @computed get dotStyle() {
     let position = this.position;
     let style = {};
+    let percent = this.getPercent();
+
+    const dotSize=this.props.dotStyle&&this.props.dotStyle.size?this.props.dotStyle.size:25
+    percent=position/dotSize
+    
     if (this.isVertical) {
       // const difHeight = this.dot ? this.dot.offsetHeight / 2 : 0
       style = { transform: `translateY(${position}px)` };
@@ -74,17 +80,23 @@ class InputRange extends React.Component<IInputRange, any> {
     return this.isVertical ? h - position : position;
   }
 
-  @computed get ProcessStyle() {
+  getPercent(){
     const position = this.position;
+    let max = this.positionLimit[1];
+    let percent = position/max*100
+    return percent
+  }
+  @computed get ProcessStyle() {
+    let percent = this.getPercent()
     let style = this.isVertical
       ? {
-        height: position + 'px',
+        height: percent + '%',
         width: '100%',
         backgroundColor: this.props.defaultColor,
         left: '-8.5px'
       }
       : {
-        width: position + 'px',
+        width: percent + '%',
         height: '100%',
         backgroundColor: this.props.backgroundColor
       };
@@ -279,7 +291,7 @@ class InputRange extends React.Component<IInputRange, any> {
       if (!this.isMoving) {
         pos = e.offsetY
       } else {
-        // 如果是垂直状态 在移动状态 
+        // 如果是垂直状态 在移动状态
         const diff = (e.pageY - this.downPointY);
         if (diff == 0) {
           return this.position

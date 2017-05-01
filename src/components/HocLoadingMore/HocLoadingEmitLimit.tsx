@@ -9,8 +9,10 @@ interface IE {
   performanceStore?: PerformanceStore
 }
 export default function HocLoadingEmitLimit<Props, ComponentState>(
-  Comp: new () => React.Component<Props, ComponentState>, type?: string
+  Comp:new (Props?: any | undefined, context?: any) => React.Component<Props,any>,
+  type?: string
 ) {
+
   @inject(PERFORMANCE_STORE)
   class HocWrapper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
     debounceFun: any;

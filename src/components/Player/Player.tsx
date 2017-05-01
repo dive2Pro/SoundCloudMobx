@@ -204,11 +204,11 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                     <div
                         ref={n => this.volumeTag = n}
                         className={styles.content_action}>
-                        <i
+                        <em
                             onClick={this.handleVolumeOpen}
-                            style={{width: '25px'}}
+                            style={{width: '25px',marginRight:'5px'}}
                             className={`fa fa-volume-${volume > 0.5 ?
-                                'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</i>
+                                'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</em>
                         <div
                             style={{display:pstore.isUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
                             ref={n => this.volumeContainer = n}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
-import {action, autorun, IReactionDisposer, observable, toJS} from 'mobx'
+import {action, autorun, IReactionDisposer, observable, toJS, whyRun} from 'mobx'
 import {PERFORMANCE_STORE} from '../constants/storeTypes';
 import {PerformanceStore} from '../store/PerformanceStore';
 import * as ReactDOM from 'react-dom'
@@ -46,7 +46,6 @@ const makeCancelable = (promise) => {
 }
 
 
-
 function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { src: string }> | React.StatelessComponent<
     Props
     & { src: string }>): React.ComponentClass<Props> {
@@ -56,7 +55,8 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
         handlerObserver: IReactionDisposer;
         imgPath: HTMLImageElement;
         retryCount = 3
-        @observable  imageSrc= preImage
+        @observable imageSrc = preImage
+
         componentDidMount() {
             const imgNode = ReactDOM.findDOMNode(this)
 
@@ -88,21 +88,21 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
             if (src && (size && size <= 50)) {
                 src = src.replace(reg, '-badge\.')
 
-            } else {
+            } else if(size>100) {
                 let width = size, height = size
+                console.log(src)
                 let replace
-
                 if (style) {
                     width = parseInt(style.width, 10)
                     height = parseInt(style.height, 10);
                 }
 
                 size = Math.max(Math.ceil(width), Math.ceil(height))
-                if (size > 100 && size < 300) {
+                if (size < 300) {
                     replace = 't300x300'
                 } else if (size > 300 && size < 500) {
                     replace = 'crop'
-                } else {
+                } else  {
                     replace = 't500x500'
                 }
                 src = src.replace(reg, `-${replace}\.`);
@@ -113,11 +113,11 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
         promiseLoading
         setImagePath = (src) => {
             const {live} = this.props
-            this.promiseLoading = makeCancelable(asyncLoadImage.call(this,src));
+            this.promiseLoading = makeCancelable(asyncLoadImage.call(this, src));
             this.promiseLoading.promise
                 .then(path => {
                     this.changeImagePath(src)
-                    if (this.handlerObserver && !live) {
+                    if (!!src&&this.handlerObserver && !live) {
                         this.handlerObserver()
                     }
                 })
@@ -129,15 +129,15 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
                 })
 
         }
-        @action changeImagePath=(path)=>{
-            this.imageSrc=path
+        @action changeImagePath = (path) => {
+            this.imageSrc = path||preImage
         }
 
-     @action   componentWillUnmount() {
+        @action componentWillUnmount() {
             if (this.promiseLoading) {
                 this.promiseLoading.cancel()
             }
-           this.imageSrc=toJS(this.imageSrc)
+            this.imageSrc = toJS(this.imageSrc)
         }
 
         componentWillReceiveProps(nextProps) {
@@ -153,7 +153,6 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
             }
             return true
         }
- 
 
 
         render() {

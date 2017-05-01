@@ -3,6 +3,7 @@ const preImage = require('../../../public/images/preload.jpg')
 
 import { PerformanceStore } from '../../store/PerformanceStore';
 import makeImageLazyLoad from '../../Hoc/makeImageLazyLoad'
+import {observer} from "mobx-react";
 export interface IArtWorkProps {
   src: string
   size?: number
@@ -15,7 +16,7 @@ export interface IArtWorkProps {
   onClick?: (e: any) => void
 }
 
-const ArtWork = (props: IArtWorkProps) => {
+const ArtWork = observer((props: IArtWorkProps) => {
   const { size
     , clazz
     , alt
@@ -23,15 +24,15 @@ const ArtWork = (props: IArtWorkProps) => {
     , src, onClick } = props
 
   return (
-    <img
-      className={clazz}
-      src={src}
-      width={size}
-      height={size}
-      alt={alt}
-      style={style}
-      onClick={onClick}
-    />
+      <img
+          className={clazz}
+          src={src}
+          width={size}
+          height={size}
+          alt={alt}
+          style={style}
+          onClick={onClick}
+      />
   )
-}
+})
 export default makeImageLazyLoad(ArtWork);
