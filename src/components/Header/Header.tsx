@@ -175,7 +175,6 @@ export class Header extends React.Component<IHeaderProp, any> {
         }
         const isLoading = loginModel.isLoading(FETCH_PLAYLIST);
         const isError = loginModel.isError(FETCH_PLAYLIST);
-        console.log('isLoading = ' + isLoading)
         return (
             <div className={styles._aside_playlist}>
                 <div className={styles._aside_title}>
@@ -203,7 +202,6 @@ export class Header extends React.Component<IHeaderProp, any> {
 
     renderMyCommuPaner = () => {
         const loginModel = this.getLoginUserModel()
-        console.log(loginModel, 'loginModel')
         if (!loginModel) {
             return (
                 <noscript />

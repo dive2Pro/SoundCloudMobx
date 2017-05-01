@@ -250,6 +250,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         } = store
         const rangeClazz = styles.range;
         const duration = playingTrack ? playingTrack.duration : 0
+        const {performanceStore}  =this.props
 
         return (
             <div
@@ -259,7 +260,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                     onDragEnd={this.handleProcessChange}
                     onDragIng={this.handleProcessChange}
                     data={playingTrack && playingTrack.duration}
-                    dotStyle={{visibility: 'hidden'}}
+                    dotStyle={{width:12,height:12}}
                     contaiStyle={{height: '4px'}}
                     defaultColor={'#b6bbbb'}
                     value={this.processValue * duration}/>

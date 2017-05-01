@@ -87,10 +87,8 @@ function makeImageLazyLoad<Props, State>(Comp: React.ComponentClass<Props & { sr
             size = newSize ? newSize : size
             if (src && (size && size <= 50)) {
                 src = src.replace(reg, '-badge\.')
-
             } else if(size>100) {
                 let width = size, height = size
-                console.log(src)
                 let replace
                 if (style) {
                     width = parseInt(style.width, 10)
