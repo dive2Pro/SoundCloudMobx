@@ -10,7 +10,7 @@ interface ImakeLoadingSinnerProp {
   rootClazz?: string,
   scrollFunc?: () => void
   performanceStore?: PerformanceStore
-  type: string
+  type?: string
   onErrorHandler?: () => void
   isLoading?: boolean
   isError?: boolean

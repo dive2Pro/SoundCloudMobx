@@ -69,7 +69,7 @@ class Community extends React.Component<ICommunityProps, any> {
   }
 }
 
-export default (Hoc<ICommunityProps, any>(
+export default ((
   makeTranslateXMotion(
     withRouter(Community))
 ))

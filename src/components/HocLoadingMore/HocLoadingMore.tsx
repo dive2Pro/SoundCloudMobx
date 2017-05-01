@@ -8,10 +8,11 @@ interface ET {
 interface MyState {
   limit: number[]
 }
+
 function HocLoadingMore<Props, State>(
-  Comp: new () => Component<Props, State>
+    Comp:new (Props?: any | undefined, context?: any) => React.Component<Props,any>
 ) {
-  class InnerComponent extends Component<Props & ET, MyState> {
+  class LoadingMoreWrapper extends Component<Props & ET, MyState> {
     cpt: any;
     div: HTMLDivElement;
     constructor() {
@@ -48,7 +49,7 @@ function HocLoadingMore<Props, State>(
       );
     }
   }
-  return InnerComponent;
+  return LoadingMoreWrapper;
 }
 
 export default HocLoadingMore;

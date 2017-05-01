@@ -55,6 +55,9 @@ button{
         display: none;
       }
     }
+    .trackName{
+      @include ellipsisTexts(130px)
+    }
     .content_options{
 
       > div:nth-child(2){
