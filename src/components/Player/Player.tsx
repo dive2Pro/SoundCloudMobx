@@ -224,7 +224,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                                         wide={120}
                                         data={100}
                                         value={100 * volume}
-                                        backgroundColor={'#9e9f9f'}
+                                        backgroundColor={'#f55874'}
                                         defaultColor={'#b6bbbb'}
                                         vertical={pstore.isUnderMedium}
                                         dotStyle={{
@@ -242,7 +242,6 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             </div>
         )
     }
-
 
     renderPlayerRanges = (store: PlayerStore) => {
         const {

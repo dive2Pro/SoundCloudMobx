@@ -49,6 +49,7 @@ class InputRange extends React.Component<IInputRange, any> {
   container: HTMLElement
   process: HTMLElement
   dot: HTMLElement
+  private dragrunning: boolean;
 
   @computed get dotStyle() {
     let position = this.position;
@@ -57,7 +58,7 @@ class InputRange extends React.Component<IInputRange, any> {
 
     const dotSize=this.props.dotStyle&&this.props.dotStyle.size?this.props.dotStyle.size:25
     percent=position/dotSize
-    
+
     if (this.isVertical) {
       // const difHeight = this.dot ? this.dot.offsetHeight / 2 : 0
       style = { transform: `translateY(${position}px)` };
@@ -206,22 +207,29 @@ class InputRange extends React.Component<IInputRange, any> {
 
 
   actualPosition(pos: number) {
-    let value = pos * this.gap;
-    // console.log(value, pos, this.gap)
-    const [, h] = this.valueLimit;
-    if (this.isVertical) {
-      value = h - value;
-    }
-    this.setValue(value);
+      if(this.dragrunning){
+          return
+      }
+    this.dragrunning=true
+    // requestAnimationFrame(()=>{
+        this.dragrunning=false
+        let value = pos * this.gap;
+        const [, h] = this.valueLimit;
+        if (this.isVertical) {
+          value = h - value;
+        }
+        this.setValue(value);
+    // })
   }
+
   @action toggleMoving(b: boolean) {
     this.isMoving = b
   }
+
   @action setValue(value: string | number) {
     const [l, h] = this.valueLimit;
     value = value < l ? l : value > h ? h : value;
     this.currentValue = Math.round(+value);
-
     const { onDragIng } = this.props;
     if (this.isMoving && onDragIng) {
       const process = this.getCurrentProcssPercent()
@@ -258,21 +266,20 @@ class InputRange extends React.Component<IInputRange, any> {
       onDragStart(this.currentValue);
     }
     this.container.addEventListener('mouseup', this.handleMoveend, false);
-    window.addEventListener('mousemove', this.handleMovind, false);
+    window.addEventListener('mousemove', this.handleMoving, false);
     window.addEventListener('mouseup', this.handleMoveend, false);
-    this.dot.addEventListener('mousemove', this.handleMovind, false);
-    this.dot.addEventListener('mouseup', this.handleMovind, false);
+    this.dot.addEventListener('mousemove', this.handleMoving, false);
+    this.dot.addEventListener('mouseup', this.handleMoving, false);
   };
 
-  handleMovind = (e: any) => {
+  handleMoving = (e: any) => {
     if (!this.isMoving) { return };
     e.preventDefault();
     this.actualPosition(this.getPos(e));
   };
 
-  handleMoveend = (e: any) => {
-    e.preventDefault();
-    this.actualPosition(this.getPos(e));
+
+  afterOperator=()=>{
     this.toggleMoving(false)
     this.downPointY = 0
     this.downPosition = 0;
@@ -281,8 +288,18 @@ class InputRange extends React.Component<IInputRange, any> {
       const process = this.getCurrentProcssPercent()
       onDragEnd(process);
     }
-    window.removeEventListener('mousemove', this.handleMovind, false);
+  }
+
+  handleMoveend = (e: any) => {
+    e.preventDefault();
+    this.actualPosition(this.getPos(e));
+    this.afterOperator();
+
+    this.container.removeEventListener('mouseup', this.handleMoveend, false);
+    window.removeEventListener('mousemove', this.handleMoving, false);
     window.removeEventListener('mouseup', this.handleMoveend, false);
+    this.dot.removeEventListener('mousemove', this.handleMoving, false);
+    this.dot.removeEventListener('mouseup', this.handleMoving, false);
   };
   isCurrentValueIntheRange() {
     const value = this.currentValue
@@ -310,18 +327,47 @@ class InputRange extends React.Component<IInputRange, any> {
     return pos - this.offLength;
   }
 
+  handleTouchStart=(e)=>{
+    let touchInfo =e.touches[0];
+    if (e.target == this.dot) {
+      this.toggleMoving(true)
+      this.downPointY = touchInfo.pageY
+      this.downPosition = this.position
+    }
+    const { onDragStart } = this.props;
+    if (onDragStart) {
+      onDragStart(this.currentValue);
+    }
+
+    document.addEventListener('touchmove', this.handleTouchMove);
+    ['touchup', 'touchend', 'touchcancel'].forEach(item=>{
+      document.addEventListener(item, this.handleTouchEnd);
+    })
+  }
+  handleTouchMove=(e)=>{
+    let touchInfo =e.touches[0];
+    this.actualPosition(this.getPos(touchInfo));
+
+  }
+  handleTouchEnd=(e)=>{
+    this.afterOperator()
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    ['touchup', 'touchend', 'touchcancel'].forEach(item=>{
+    document.removeEventListener(item, this.handleTouchEnd);
+    })
+  }
   componentWillReceiveProps(nextProps: any) {
-    if (nextProps.value && nextProps.value !== this.currentValue) {
+    if (!this.dragrunning&&nextProps.value && nextProps.value !== this.currentValue) {
 
       this.setValue(nextProps.value)
     }
   }
 
   componentWillUnmount() {
-    this.dot.removeEventListener('mousemove', this.handleMovind, false);
+    this.dot.removeEventListener('mousemove', this.handleMoving, false);
     this.process.removeEventListener('mouseup', this.handleMoveend, false);
     this.process.removeEventListener('mouseup', this.handleMoveend, false);
-    window.removeEventListener('mousemove', this.handleMovind, false);
+    window.removeEventListener('mousemove', this.handleMoving, false);
     window.removeEventListener('mouseup', this.handleMoveend, false);
   }
 
@@ -347,6 +393,7 @@ class InputRange extends React.Component<IInputRange, any> {
         >
           <div
             onMouseDown={this.handleMouseDown}
+            onTouchStart={this.handleTouchStart}
             ref={n => this.dot = n}
             className={styles.input_dot}
             style={this.dotStyle}
