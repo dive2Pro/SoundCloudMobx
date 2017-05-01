@@ -70,8 +70,13 @@ class InputRange extends React.Component<IInputRange, any> {
         transition: 'transform ' + this.props.defaultTransition
       };
     }
+
     const dotStyle = this.props.dotStyle
-    return { ...style, ...dotStyle };
+    const width = dotStyle.width
+    const top =width?-width/3:"";
+    const left =width?-width/2:"";
+
+    return { ...style, ...dotStyle,top,left };
   }
 
   @computed get position() {
