@@ -1,6 +1,6 @@
 # SoundCloundMobx
 
-[Live Demo](https://build-fsmvyspoxv.now.sh)
+[Live Demo](https://build-gnyhzuzaht.now.sh)
 
 > 这是一个soundcloud的个人客户端 , 基于create-react-app构建,升级到了webpack2
 
