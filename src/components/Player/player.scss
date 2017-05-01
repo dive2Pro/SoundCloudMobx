@@ -24,8 +24,8 @@ button{
     .volume_container{
       right: 10px;
       position: absolute;
-      bottom: 50px;
-      background: cadetblue;
+      bottom: $playerHeight;
+      background: #f7f7f7;
       padding: 20px;
     }
     .trackName{
