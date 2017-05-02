@@ -108,6 +108,10 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
     )
   }
 
+  handleLike=()=>{
+    const {userStore,trackStore:{currentTrack}} = this.props
+    userStore.toggleLikes(currentTrack);
+  }
 
   renderContent = (currentTrack: ITrack) => {
     const { label_name, user, artwork_url } = currentTrack
@@ -128,6 +132,7 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
            <div className={styles.operators}>
              <Operators
                  track={currentTrack}
+                 handleLike={this.handleLike}
              />
            </div>
           </section>

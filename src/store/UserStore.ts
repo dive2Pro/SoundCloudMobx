@@ -28,8 +28,9 @@ import {
 
 import  performanceStore  from './PerformanceStore'
 import {RaceFetch as fetch} from '../services/Fetch'
+import {TrackStore} from "./TrackStore";
 const debounce = require('lodash/debounce')
-
+const isEqual = require('lodash/isEqual')
 interface ICatchErr {
     err: {
         type: string,
@@ -41,7 +42,6 @@ const limitPageSize = 20;
 
 export class UserStore {
     //
-    debouncedRequestFollowUser: any;
     @observable fetchedPlaylist: IPlaylist | undefined
     @observable userModel: UserModel | undefined
 
@@ -49,8 +49,12 @@ export class UserStore {
     // 当前的登录用户
     @observable private loginedUserId: number | undefined
 
+    debouncedRequestFollowUser: any;
+    toggleLikes: any;
+
     constructor() {
         this.debouncedRequestFollowUser = debounce(this.followUser, 500)
+        this.toggleLikes=debounce(this.debouncedRequestFavorityTrack,500);
     }
 
     initUser(obj: number | User): UserModel {
@@ -166,9 +170,46 @@ export class UserStore {
         const data = await fetch(unauthApiUrlV2(`users/${id}/followings/not_followed_by/${this.loginedUserId}`, '?'))
     }
 
+    // 检查是否在favorite列表中
+    checkLiked = async (track: ITrack) => {
+        when(() => !!this.getLoginUserModel, async () => {
+            const data: any = await fetch(apiUrl(`me/favorites/${track.id}`, "?"), {
+                method: "get"
+            })
+            if (data.errors) {
+
+            } else {
+                const umodel:any = this.getLoginUserModel
+                umodel.pushOrDelLiked(data);
+
+            }
+        })
+    }
+
+    isTrackLiked = (track:ITrack):boolean=>{
+        if(!!this.getLoginUserModel){
+            return this.getLoginUserModel.favorites.some(item=>isEqual(item,track));
+        }
+        return false
+    }
+
+     debouncedRequestFavorityTrack= async (track: ITrack) => {
+        if (!this.getLoginUserModel) {
+            return
+        }
+
+        const data :any= await  fetch(apiUrl(`me/favorites/${track.id}`, "?"), {
+            method: this.isTrackLiked(track)?"delete": "put"
+        })
+        if(data.status==="200 - OK"||data.status==="201 - Created"){
+            this.getLoginUserModel.pushOrDelLiked(track);
+        }
+    }
+
+
     /**
      * follow用户
-     * todo fix 404
+     *
      */
     private async  followUser(user: User) {
         // todo 添加modal?
@@ -310,7 +351,11 @@ export class UserModel {
         this.fetchWithType(FETCH_FAVORITES);
 
     }
-
+    @action pushOrDelLiked=(track:ITrack)=>{
+        let index = this.favorites.indexOf(track);
+        debugger
+        index>-1?this.favorites.splice(index,1):this.favorites.push(track)
+}
     @action
     async fetchUser() {
         const url = apiUrl(`users/${this.user.userId}`, '?')

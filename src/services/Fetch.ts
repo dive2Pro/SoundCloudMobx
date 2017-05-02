@@ -15,7 +15,7 @@ export const RaceFetch = (p: string, method?: object, time?: number) => {
     Promise.race([pfetch, timeoutPromise])
       .then(
       (data: any) => {
-        res(data.json())
+        res(<object>data.json())
       },
       err => {
         rej(err)
