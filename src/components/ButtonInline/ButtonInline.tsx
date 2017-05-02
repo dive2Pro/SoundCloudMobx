@@ -5,6 +5,7 @@ interface IButtonInlineProp {
   onClick?: (...args: any[]) => void;
   children?: React.ReactElement<any>
   className?: string
+  style?:object
 }
 
 const ButtonInline = ({ onClick, children, ...rest }: IButtonInlineProp) => {
