@@ -14,6 +14,7 @@ import { PerformanceStore } from '../../store/PerformanceStore';
 import { BigUserIcon } from '../Community/index';
 import { UserStore } from '../../store/UserStore';
 import ArtWork from '../ArtWork'
+import makeBackToTop from "../../Hoc/makeBackToTop";
 const qs = require('qs')
 const styles = require('./track.scss');
 
@@ -177,4 +178,4 @@ class TrackPager extends React.Component<ITrackPagerProps, any> {
   }
 }
 
-export default TrackPager;
+export default makeBackToTop(TrackPager);

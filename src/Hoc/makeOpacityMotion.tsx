@@ -2,9 +2,7 @@ import * as React from 'react'
 import { Component } from "react"
 import { Motion, presets, spring } from 'react-motion'
 import {observer} from "mobx-react";
-interface ImakeOpacityMotionProp {
 
-}
 export interface IAddtionalProps {
   additionalStyles?: Object
   className?: string
