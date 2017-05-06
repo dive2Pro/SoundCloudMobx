@@ -14,6 +14,7 @@ import TrackProfile from '../TrackProfile'
 import Activities from '../Activities'
 import LoadingSpinner from '../LoadingSpinner'
 import { IPlaylist, IisLoading } from '../../interfaces/interface';
+import makeBackToTop from "../../Hoc/makeBackToTop";
 const styles = require('./playlistInfo.scss')
 
 interface IPlaylistInfoProp {
@@ -25,7 +26,7 @@ interface IPlaylistInfoProp {
 
 @inject(TRACK_STORE, PLAYER_STORE, USER_STORE, PERFORMANCE_STORE)
 @observer
-export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
+class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp, any> {
   id = 'playlistView'
   handlePlay = () => {
     const { playerStore } = this.props
@@ -115,3 +116,5 @@ export default class PlaylistInfo extends React.PureComponent<IPlaylistInfoProp,
     );
   }
 }
+
+export default makeBackToTop(PlaylistInfo)

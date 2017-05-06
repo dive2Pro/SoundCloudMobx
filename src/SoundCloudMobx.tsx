@@ -6,7 +6,9 @@ import { Provider } from 'mobx-react';
 import * as stores from './store';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import App from './components'
+const {pollyfill} = require('./services/SmoothWindowScrollPollyfill')
 
+pollyfill();
 
 require('font-awesome/css/font-awesome.min.css');
 useStrict(true)

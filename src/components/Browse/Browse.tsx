@@ -11,6 +11,7 @@ import { TRACK_STORE, PERFORMANCE_STORE } from '../../constants/storeTypes';
 import { PerformanceStore } from '../../store/PerformanceStore';
 import Tabs, { Tab } from '../Tabs';
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
+import makeBackToTop from "../../Hoc/makeBackToTop";
 
 interface IDashBorardProps {
   location?: any,
@@ -85,4 +86,5 @@ class Browse extends React.Component<IDashBorardProps, any> {
   }
 }
 
-export default makeTranslateXMotion(Browse)
+export default makeBackToTop(
+    makeTranslateXMotion(Browse))
