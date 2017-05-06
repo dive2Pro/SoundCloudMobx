@@ -11,10 +11,15 @@ interface IViewALLProp {
 }
 
 const ViewALL = (prop: IViewALLProp) => {
-
+    let viewAll
+    const handleClick = function(){
+        viewAll.scrollIntoView({behavior:'smooth'});
+    }
   return (
-    <div className={styles.base}>
-      <div >
+    <div
+        ref={n=>viewAll = n}
+        className={styles.base}>
+      <div onClick={handleClick}>
         <i className={prop.clazz} />
         <span>{transBigMath(prop.count)}  {prop.typeContent}</span>
       </div >
