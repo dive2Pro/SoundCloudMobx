@@ -24,6 +24,7 @@ const qs = require('qs')
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 import Tabs, { Tab } from '../Tabs';
 import {DASH_GENRES} from "../../constants/trackTypes";
+import makeBackToTop from "../../Hoc/makeBackToTop";
 
 interface IDashBorardProps {
     userStore: UserStore
@@ -366,4 +367,4 @@ class DashBorard extends React.Component<IDashBorardProps, any> {
     }
 }
 
-export default DashBorard;
+export default makeBackToTop(DashBorard)

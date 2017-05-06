@@ -55,6 +55,7 @@ export interface IActivitiesItem {
     tags: string,
     origin: ITrack;
 }
+
 export interface ITrack {
 
     artwork_url: string,
@@ -131,6 +132,9 @@ export interface ITrack {
     },
     stream_url: string
     attachments_uri: string
+
+
+    isLiked?:boolean
 }
 
 export interface IPlaylist {

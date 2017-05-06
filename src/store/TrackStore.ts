@@ -1,7 +1,8 @@
 import {
   action, observable, runInAction
-  , computed, ObservableMap, autorun
-  , IReactionDisposer, IObservableArray
+  , computed, ObservableMap, autorun,
+  extendObservable
+  , IReactionDisposer, IObservableArray, isObservable
 } from 'mobx';
 import {
   ITrack
@@ -64,7 +65,19 @@ export class TrackStore extends BaseStreamStore<ITrack> {
   }
 
   @action setCurrentTrack(track: ITrack) {
+
     this.currentTrack = track
+    if(!track.isLiked&&UserStore.isLogined){
+        // 检查是否liked
+      UserStore.checkLiked(track)
+    }
+  }
+
+  @action changeLiked(track:ITrack,liked:boolean){
+    if(!isObservable(track.isLiked)){
+      extendObservable(track,'isLiked')
+    }
+      track.isLiked=liked
   }
 
 
