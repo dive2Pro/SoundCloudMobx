@@ -12,6 +12,7 @@ import { PerformanceStore } from '../../store/PerformanceStore';
 import Tabs, { Tab } from '../Tabs';
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 import makeBackToTop from "../../Hoc/makeBackToTop";
+import {computed,expr} from "mobx";
 
 interface IDashBorardProps {
   location?: any,
@@ -44,6 +45,20 @@ class Browse extends React.Component<IDashBorardProps, any> {
   handleTabActive = (value: string, index: number) => {
     this.props.trackStore.setGenre(value);
   }
+
+  @computed get tabFixedStyle(){
+    const {performanceStore} = this.props
+    const style = {}
+
+    let isScrolled = expr(()=>{
+      console.log(performanceStore.scrollY)
+      return performanceStore.scrollY > 100;
+    })
+
+    return {...style,isScrolled}
+  }
+
+
   render() {
     const { currentGenre } = this.props.trackStore
     const {performanceStore} = this.props
@@ -67,6 +82,7 @@ class Browse extends React.Component<IDashBorardProps, any> {
           selectedTextColor={selectedStyle}
           value={currentGenre}
           tabTemplateStyle={tempStyle}
+          containerStyle={this.tabFixedStyle}
         >
           {
             GENRES.map((item, i) => {

@@ -11,6 +11,7 @@ interface ITabsProps {
   inkBarStyle?: any,
   selectedTextColor?: string,
   value: any
+  containerStyle?:object
 }
 
 const TabTemplatestyles = {
@@ -171,10 +172,13 @@ class Tabs extends React.Component<ITabsProps, any> {
   }
 
   render() {
+    const {containerStyle} = this.props
     return (
       <div
         ref={n => this.link = n}
-        className={styles.tabs_container}>
+        className={styles.tabs_container}
+        style={containerStyle}
+      >
         <div className={styles.tabs}>
           {this.tabs()}
         </div>

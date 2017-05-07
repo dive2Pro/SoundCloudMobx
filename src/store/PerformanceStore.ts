@@ -7,6 +7,7 @@ import {
     , expr
 } from 'mobx'
 
+let $rem = 14;
 export class PerformanceStore {
 
     __breaks = {
@@ -91,6 +92,11 @@ export class PerformanceStore {
 
     @action setWindowSize(size) {
         this.windowWidth = size
+
+    }
+
+    isUnder(size):boolean{
+        return this.windowWidth<size
     }
 
     @computed get isUnderMedium() {
@@ -124,6 +130,12 @@ export class PerformanceStore {
                     : def;
     }
 
+    px2rem($px){
+
+    return  ($px/$rem)
+        // +this.getSizeWithSpecWidth(14:);
 }
+}
+
 
 export default new PerformanceStore()
