@@ -34,11 +34,11 @@ function clickOutsideFunc(event){
 
 const catchClickOutSideMixin={
     'componentDidMount':function(){
-        docMethods.addEvent('mousedown',clickOutsideFunc.bind(this))
+        docMethods.addEvent(window,'mousedown',clickOutsideFunc.bind(this))
     },
-    'componentWillUnmount':function(){
-        docMethods.removeEvent('mousedown',clickOutsideFunc.bind(this))
 
+    'componentWillUnmount':function(){
+        docMethods.removeEvent(window,'mousedown',clickOutsideFunc.bind(this))
     }
 }
 

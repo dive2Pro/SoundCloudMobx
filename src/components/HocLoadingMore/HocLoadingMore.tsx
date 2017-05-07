@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react'
+import {docMethods} from "../../services/docMethos";
 
 interface ET {
   scrollFunc: () => void;
@@ -33,11 +34,11 @@ function HocLoadingMore<Props, State>(
     }
 
     componentDidMount() {
-      window.addEventListener('scroll', this.handleScrolling)
+      docMethods.addEvent(window,'scroll', this.handleScrolling)
     }
 
     componentWillUnmount() {
-      window.removeEventListener('scroll', this.handleScrolling)
+      docMethods.removeEvent(window,'scroll', this.handleScrolling)
     }
     render() {
       return (

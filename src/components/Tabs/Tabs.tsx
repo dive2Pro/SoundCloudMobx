@@ -139,7 +139,7 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @action componentDidMount() {
     this.width = this.link.offsetWidth;
-    docMethods.addEvent('resize',this.resizeListener,false);
+    docMethods.addEvent(window,'resize',this.resizeListener);
   }
 
   @action resizeListener = ()=>{
@@ -148,7 +148,7 @@ class Tabs extends React.Component<ITabsProps, any> {
   }
 
   componentWillUnmount(){
-   docMethods.removeEvent('resize',this.resizeListener,false);
+   docMethods.removeEvent(window,'resize',this.resizeListener);
   }
 
   @computed get linkStyle() {

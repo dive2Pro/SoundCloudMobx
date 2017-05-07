@@ -99,7 +99,7 @@ const routes = [
 class Main extends React.Component<any, undefined> {
   app :HTMLDivElement
   componentDidMount() {
-    docMethods.addEvent('resize',this.resizeListener,false);
+    docMethods.addEvent(window,'resize',this.resizeListener);
   }
 
     resizeListener = ()=>{
@@ -111,7 +111,7 @@ class Main extends React.Component<any, undefined> {
   }
 
   componentWillUnmount(){
-    docMethods.removeEvent('resize',this.resizeListener,false);
+    docMethods.removeEvent(window,'resize',this.resizeListener);
   }
 
 
