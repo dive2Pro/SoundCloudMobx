@@ -3,6 +3,7 @@
  */
 import * as React from 'react'
 import * as ReactDOM from "react-dom";
+import {docMethods} from "../services/docMethos";
 
 const defaultContainer = {
     position: 'relative' as 'relative'
@@ -39,8 +40,8 @@ export default function makeBackToTop<Props>(Comp: new (Props?: any
         state={tagVisible:false}
         componentDidMount() {
             const node = this.node = ReactDOM.findDOMNode(this)
-            window.addEventListener('scroll', this.handleScroll, false)
-            this.tag.addEventListener('click',this.handleScrollTop,false)
+            docMethods.addEvent(window,'scroll', this.handleScroll)
+            docMethods.addEvent(this.tag,'click',this.handleScrollTop)
         }
 
         handleScrollTop = () => {
@@ -57,8 +58,8 @@ export default function makeBackToTop<Props>(Comp: new (Props?: any
             }
         }
         componentWillUnmount(){
-            this.tag.removeEventListener('click',this.handleScrollTop,false);
-            window.removeEventListener('scroll',this.handleScroll,false);
+            docMethods.removeEvent(window,'scroll', this.handleScroll)
+            docMethods.removeEvent(this.tag,'click',this.handleScrollTop)
         }
         render() {
             const style = {...defaultBackToTopStyle,display:this.state.tagVisible?"block":'none'};
