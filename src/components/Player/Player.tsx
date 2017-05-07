@@ -25,6 +25,7 @@ interface IPlayerState {
 @inject(PLAYER_STORE, PERFORMANCE_STORE)
 @observer
 class Player extends React.Component<IPlayerProps, IPlayerState> {
+    volumeVerticalWidth= 1000;
     blurredContentFrame: HTMLDivElement;
     scrollNode: any;
     fronsted_glass: HTMLDivElement;
@@ -106,7 +107,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
             playerStore
         } = this.props
 
-        if (pstore.isUnderMedium) {
+        if (pstore.isUnder(this.volumeVerticalWidth)) {
             playerStore.toggleVolumeOpen();
         }
     }
@@ -132,6 +133,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
         const shuffleClazz = isShuffleMode && styles.active;
         const pstore = this.props.performanceStore
         const isUnderMediumFa = pstore.isUnderMedium?"fa-2x":"fa-2x"
+        let isUnderWidth = pstore.isUnder(this.volumeVerticalWidth);
         return (
             <div
                 ref={n => this.playerContainer = n}
@@ -170,7 +172,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                         alt={'random track'}
                         className={shuffleClazz}>
                         <ButtonInline onClick={this.handleShuffleMode}>
-                            <i className={`fa fa-random ${isUnderMediumFa}`}>&nbsp;</i>
+                            <em className={`fa fa-random ${isUnderMediumFa}`}>&nbsp;</em>
                         </ButtonInline>
                     </div>
 
@@ -178,18 +180,18 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                         alt={'next Stream'}
                         className={styles.content_action}>
                         <ButtonInline onClick={() => this.handlePlayNext(-1)}>
-                            <i className={`fa fa-backward ${isUnderMediumFa}`}>&nbsp;</i>
+                            <em className={`fa fa-backward ${isUnderMediumFa}`}>&nbsp;</em>
                         </ButtonInline>
                     </div>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={() => store.togglePlaying()}>
-                            <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'} ${isUnderMediumFa}`}/>
+                            <em className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'} ${isUnderMediumFa}`}/>
                             &nbsp;
                         </ButtonInline>
                     </div>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={() => this.handlePlayNext(1)}>
-                            <i className={`fa fa-step-forward ${isUnderMediumFa}`}>&nbsp;</i>
+                            <em className={`fa fa-step-forward ${isUnderMediumFa}`}>&nbsp;</em>
                             &nbsp;
                         </ButtonInline>
                     </div>
@@ -198,7 +200,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                 <div className={styles.content_options}>
                     <div className={styles.content_action}>
                         <ButtonInline onClick={this.handleOpenPlaylist}>
-                            <i className={`fa fa-bars fa-2x`}>&nbsp; </i>
+                            <em className={`fa fa-bars fa-2x`}>&nbsp; </em>
                         </ButtonInline>
                     </div>
                     <div
@@ -210,12 +212,12 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                             className={`fa fa-volume-${volume > 0.5 ?
                                 'up' : volume == 0 ? 'off' : 'down'} fa-2x`}>&nbsp;</em>
                         <div
-                            style={{display:pstore.isUnderMedium?store.isVolumeOpen?"block":"none":'block'}}
+                            style={{display: isUnderWidth ? store.isVolumeOpen? "block" : "none" : 'block' }}
                             ref={n => this.volumeContainer = n}
                             className={styles.volume_container}
                         >
                             {
-                                (pstore.isUnderMedium
+                                (isUnderWidth
                                 &&!store.isVolumeOpen)
                                 || (
                                     <Range
@@ -226,7 +228,7 @@ class Player extends React.Component<IPlayerProps, IPlayerState> {
                                         value={100 * volume}
                                         backgroundColor={'#f55874'}
                                         defaultColor={'#b6bbbb'}
-                                        vertical={pstore.isUnderMedium}
+                                        vertical={isUnderWidth}
                                         dotStyle={{
                                             backgroundColor: 'white',
                                             boxShadow: '0px 0px 2px 0px black'

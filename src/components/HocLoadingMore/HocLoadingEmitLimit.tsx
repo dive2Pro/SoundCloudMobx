@@ -14,7 +14,7 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
 ) {
 
   @inject(PERFORMANCE_STORE)
-  class HocWrapper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
+  class HocLoadingEmitLimitWrappper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
     debounceFun: any;
     constructor() {
       super()
@@ -52,5 +52,5 @@ export default function HocLoadingEmitLimit<Props, ComponentState>(
       this.emitScrollY();
     }
   }
-  return HocWrapper
+  return HocLoadingEmitLimitWrappper
 }

@@ -27,3 +27,30 @@ $information-handset: "only screen and (max-width: "+$break-handset+")";
     }
   }
 }
+
+$rem:14px;
+
+@media only screen and (min-width: 1200px){
+  body {
+    font-size: 14px !important;
+  }
+}
+
+@media only screen and (min-width: 680px){
+  body {
+    font-size: 15px !important;
+  }
+}
+
+@media only screen and (min-width: 575px){
+  body {
+    font-size: 15.75px !important;
+  }
+}
+
+@media only screen and (min-width: 428px){
+  body {
+    font-size: 16px !important;
+  }
+}
+
