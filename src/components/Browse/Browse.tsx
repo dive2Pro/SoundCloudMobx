@@ -12,7 +12,9 @@ import { PerformanceStore } from '../../store/PerformanceStore';
 import Tabs, { Tab } from '../Tabs';
 import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
 import makeBackToTop from "../../Hoc/makeBackToTop";
-
+import {computed,expr} from "mobx";
+const Slider = require("dive-slider")
+require("dive-slider/lib/slider.css")
 interface IDashBorardProps {
   location?: any,
   genre?: string
@@ -44,6 +46,24 @@ class Browse extends React.Component<IDashBorardProps, any> {
   handleTabActive = (value: string, index: number) => {
     this.props.trackStore.setGenre(value);
   }
+
+  @computed get tabFixedStyle(){
+    const {performanceStore} = this.props
+    const style = {}
+
+    let isScrolled = expr(()=>{
+      return performanceStore.scrollY > 100;
+    })
+
+    return {...style,isScrolled}
+  }
+
+  handleSliderImageClicked = (src,index)=>{
+    const {trackStore,history} = this.props
+    const id = trackStore.sliderImages[index].id
+    history.push(`/stream?id=${id}`)
+
+  }
   render() {
     const { currentGenre } = this.props.trackStore
     const {performanceStore} = this.props
@@ -54,33 +74,44 @@ class Browse extends React.Component<IDashBorardProps, any> {
     if(performanceStore.windowWidth<900){
       tempStyle={...tempStyle,minWidth:115};
     }
-
+    const sliderTracks = this.props.trackStore.sliderImages.map(item=>item.src);
     return (
       <div
         id={this.id}
         className={styles.container}
       >
-        <Tabs
-          onActive={this.handleTabActive}
-          initialSelectedIndex={index}
-          inkBarStyle={{...tempStyle, background: selectedStyle }}
-          selectedTextColor={selectedStyle}
-          value={currentGenre}
-          tabTemplateStyle={tempStyle}
-        >
-          {
-            GENRES.map((item, i) => {
-              return (
-                <Tab
-                  key={`${item} -- ${i}`}
-                  label={item}
-                  value={item}
-                />)
-            })}
-        </Tabs>
-        <TrackList
-          trackStore={this.props.trackStore}
-        />
+        <header>
+          { !performanceStore.isUnderLarge&& <Slider
+              height={400}
+              width={500}
+              srcs={sliderTracks}
+              handleImageClick={this.handleSliderImageClicked}
+          />}
+        </header>
+        <main>
+          <Tabs
+              onActive={this.handleTabActive}
+              initialSelectedIndex={index}
+              inkBarStyle={{...tempStyle, background: selectedStyle }}
+              selectedTextColor={selectedStyle}
+              value={currentGenre}
+              tabTemplateStyle={tempStyle}
+              containerStyle={this.tabFixedStyle}
+          >
+            {
+              GENRES.map((item, i) => {
+                return (
+                    <Tab
+                        key={`${item} -- ${i}`}
+                        label={item}
+                        value={item}
+                    />)
+              })}
+          </Tabs>
+          <TrackList
+              trackStore={this.props.trackStore}
+          />
+        </main>
       </div>
     );
   }

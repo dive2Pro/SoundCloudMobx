@@ -8,6 +8,11 @@
   box-shadow: 0px 0px 4px 0px black;
   @include respond-to($break-large){
     height: 40vh;
+    .infos_title{
+      > h1{
+        @include ellipsisTexts(500px)
+      }
+    }
     .artwork_wrapper{
       width: 30vh;
       height: 30vh;
@@ -24,10 +29,18 @@
     .artwork_infos{
       left: 30vw;
     }
+
   }
+
   @include respond-to(1000px){
+    width: 92vw;
     .artwork_infos{
-      left:45vw;
+      left:35vw;
+    }
+    .infos_title{
+      > h1{
+        @include ellipsisTexts(300px)
+      }
     }
   }
   @include respond-to($break-medium){

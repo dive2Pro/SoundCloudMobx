@@ -11,6 +11,7 @@ interface ITabsProps {
   inkBarStyle?: any,
   selectedTextColor?: string,
   value: any
+  containerStyle?:object
 }
 
 const TabTemplatestyles = {
@@ -139,7 +140,7 @@ class Tabs extends React.Component<ITabsProps, any> {
 
   @action componentDidMount() {
     this.width = this.link.offsetWidth;
-    docMethods.addEvent('resize',this.resizeListener,false);
+    docMethods.addEvent(window,'resize',this.resizeListener);
   }
 
   @action resizeListener = ()=>{
@@ -148,7 +149,7 @@ class Tabs extends React.Component<ITabsProps, any> {
   }
 
   componentWillUnmount(){
-   docMethods.removeEvent('resize',this.resizeListener,false);
+   docMethods.removeEvent(window,'resize',this.resizeListener);
   }
 
   @computed get linkStyle() {
@@ -171,10 +172,13 @@ class Tabs extends React.Component<ITabsProps, any> {
   }
 
   render() {
+    const {containerStyle} = this.props
     return (
       <div
         ref={n => this.link = n}
-        className={styles.tabs_container}>
+        className={styles.tabs_container}
+        style={containerStyle}
+      >
         <div className={styles.tabs}>
           {this.tabs()}
         </div>
