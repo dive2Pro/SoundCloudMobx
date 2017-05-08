@@ -2,12 +2,13 @@ import {
   action, observable, runInAction
   , computed, ObservableMap, autorun,
   extendObservable
-  , IReactionDisposer, IObservableArray, isObservable
+  , IReactionDisposer, IObservableArray, isObservable, createTransformer
 } from 'mobx';
 import {
   ITrack
 } from '../interfaces/interface';
 import {
+  PicSize,
   unauthApiUrl
 } from '../services/soundcloundApi'
 import UserStore from './UserStore'
@@ -15,7 +16,7 @@ import { RaceFetch as fetch } from '../services/Fetch'
 import activitiesStore from './ActivitiesStore';
 import BaseStreamStore from './BaseStreamStore'
 import { GENRES } from '../constants/trackTypes'
-
+import {getSpecPicPath} from '../services/soundcloundApi'
 const debounce = require('lodash/debounce')
 
 export class TrackStore extends BaseStreamStore<ITrack> {
@@ -80,6 +81,11 @@ export class TrackStore extends BaseStreamStore<ITrack> {
       track.isLiked=liked
   }
 
+  @computed get sliderImages(){
+      return this.currentTracks.slice(0,5).map( createTransformer((track:ITrack)=>
+          ({ src:getSpecPicPath(track.artwork_url,PicSize.MASTER),id:track.id})
+      ))
+  }
 
   transToTracks(ts: ITrack[]) {
     return ts;
