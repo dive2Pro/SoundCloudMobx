@@ -51,7 +51,7 @@ class FavoView extends React.PureComponent<any, any> {
         const {favorites, isError} = userModel
         const isloadingFavorites = performanceStore.getLoadingState(FETCH_FAVORITES);
         const streamStyle={
-            ellipisMaxWidth:performanceStore.windowWidth>1000?300:200
+            ellipisMaxWidth:performanceStore.windowWidth>1000?270:200
         }
         return (
             <div>

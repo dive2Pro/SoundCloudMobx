@@ -8,6 +8,13 @@ $information-large: "only screen and (max-width: "+$break-large+")";
 $information-medium: "only screen and (max-width: "+$break-medium+")";
 $information-handset: "only screen and (max-width: "+$break-handset+")";
 
+
+@mixin respond-min-to($media){
+    @media #{"only screen and (min-width: "+$media+ ")"}{
+      @content;
+    }
+}
+
 @mixin respond-to($media) {
   @if $media == $break-large {
     @media #{$information-large} {
@@ -22,7 +29,7 @@ $information-handset: "only screen and (max-width: "+$break-handset+")";
       @content
     }
   } @else {
-    @media #{"only screen and (max-width: "$media+")"}{
+    @media #{"only screen and (max-width: "+$media+")"}{
       @content
     }
   }

@@ -97,7 +97,7 @@ $tabHeight:px2rem(50px);
   padding: px2rem(10px);
 }
 
-$streamEllipsisWidth:px2rem(300px);
+$streamEllipsisWidth:px2rem(260px);
 
 @mixin changeStreamEllipsisWidth($px){
   $streamEllipsisWidth :px2rem($px)!global;
