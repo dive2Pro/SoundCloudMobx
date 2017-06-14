@@ -58,6 +58,9 @@ export enum PicSize {
  */
 export const getSpecPicPath = (url: string, tag: number = PicSize.NORMAL): string => {
   // if (!tag) return url;
+  if (!url) {
+    return "";
+  }
   let afterPrev = ''
   switch (tag) {
     case PicSize.NORMAL:
