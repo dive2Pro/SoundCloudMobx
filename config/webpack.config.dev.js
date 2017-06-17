@@ -109,14 +109,13 @@ module.exports = {
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
-    // preLoaders: [
-    //   {
-    //     test: /\.(ts|tsx)$/,
-    //     loader: 'tslint',
-    //     include: paths.appSrc
-    //   }
-    // ],
     rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        enforce: 'pre',
+        loader: 'tslint-loader',
+        include: paths.appSrc
+      },
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.
       // The `exclude` list *must* be updated with every change to loader extensions.
@@ -158,7 +157,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {loader: 'css-loader', options: {importLoaders: 1}},
           postcssLoader
         ],
         exclude: [path.resolve(__dirname, 'src/styles/font-awesome.min.css')]
@@ -168,7 +167,7 @@ module.exports = {
         test: /\.svg$/,
         use: {
           loader: 'file-loader',
-          options: { name: 'static/media/[name].[hash:8].[ext]' }
+          options: {name: 'static/media/[name].[hash:8].[ext]'}
         }
       },
       // ** STOP ** Are you adding a new loader?
@@ -176,7 +175,11 @@ module.exports = {
       {
         test: /\.scss$/,
         include: path.resolve(__dirname, 'src/styles'),
-        use: ['style-loader', 'css-loader', { loader: 'sass-loader', options: { sourceMap: true } }]
+        use: [
+          'style-loader',
+          'css-loader',
+          {loader: 'sass-loader', options: {sourceMap: true}}
+        ]
       },
       {
         test: /\.scss$/,
@@ -185,10 +188,10 @@ module.exports = {
           'style-loader',
           {
             loader: 'css-loader',
-            options: { modules: true, localIdentName: '[name]__[local]' }
+            options: {modules: true, localIdentName: '[name]__[local]'}
           },
           postcssLoader,
-          { loader: 'sass-loader', options: { sourceMap: true } }
+          {loader: 'sass-loader', options: {sourceMap: true}}
         ]
       }
     ]

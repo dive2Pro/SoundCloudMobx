@@ -1,56 +1,64 @@
 import performanceStore from './PerformanceStore';
 import {
-  action, observable, runInAction
-  , computed, ObservableMap, autorun
-  , IReactionDisposer, IObservableArray
+  action,
+  observable,
+  runInAction,
+  computed,
+  ObservableMap,
+  autorun,
+  IReactionDisposer,
+  IObservableArray
 } from 'mobx';
 
-import {
-  ITrack
-} from '../interfaces/interface';
-import { GENRES } from '../constants/trackTypes'
+import {ITrack} from '../interfaces/interface';
+import {GENRES} from '../constants/trackTypes';
 
 export interface IBaseActStore {
   isLoading: boolean;
-  currentGenre: string
-  isError: (genre: string) => boolean
+  currentGenre: string;
+  isError: (genre: string) => boolean;
 }
 abstract class BaseStreamStore<T> implements IBaseActStore {
-  static displayName = 'BaseAct'
+  static displayName = 'BaseAct';
   // 记得初始化
   protected itemsMap = new ObservableMap<T[]>();
   @observable protected nextHrefsByGenre = new ObservableMap<string>();
   protected isLoadingByGenre = {
     get: performanceStore.getLoadingStateWidthKey
-  }
-  protected isErrorsMap = new ObservableMap<boolean>()
+  };
+  protected isErrorsMap = new ObservableMap<boolean>();
 
   // 排序和搜索过滤
-  @observable filterType: string
-  @observable filterTitle: string
-  @observable sortType: string
-  @observable filteredTracks: ITrack[] = []
-  @observable currentGenre: string = GENRES[0]
+  @observable filterType: string;
+  @observable filterTitle: string;
+  @observable sortType: string;
+  @observable filteredTracks: ITrack[] = [];
+  @observable currentGenre: string = GENRES[0];
 
   autorunHandle: IReactionDisposer;
 
-  @computed get isLoading(): boolean {
-    return this.isLoadingByGenre.get(this.currentGenre)
-  }
-  
-  @computed get nextHref() {
-    return this.nextHrefsByGenre.get(this.currentGenre) || ''
+  @computed
+  get isLoading(): boolean {
+    return this.isLoadingByGenre.get(this.currentGenre);
   }
 
-  @action setFilterTitle(title: string) {
+  @computed
+  get nextHref() {
+    return this.nextHrefsByGenre.get(this.currentGenre) || '';
+  }
+
+  @action
+  setFilterTitle(title: string) {
     this.filterTitle = title;
   }
 
-  @action setSortType(type: string) {
+  @action
+  setSortType(type: string) {
     this.sortType = type;
   }
 
-  @action setFilterType(filterType: string = '') {
+  @action
+  setFilterType(filterType: string = '') {
     this.filterType = filterType;
   }
 
@@ -59,53 +67,62 @@ abstract class BaseStreamStore<T> implements IBaseActStore {
     performanceStore.setLoadingStateWithKey(genre, loading);
   }
 
-  @action setNextHrefByGenre(genre: string, nextHref: string) {
-    this.nextHrefsByGenre.set(genre, nextHref)
+  @action
+  setNextHrefByGenre(genre: string, nextHref: string) {
+    this.nextHrefsByGenre.set(genre, nextHref);
   }
 
-  @action setGenre(genre: string) {
+  @action
+  setGenre(genre: string) {
     // genre = genre.toLocaleLowerCase();
     this.currentGenre = genre;
-    performanceStore.setCurrentGenre(this.currentGenre)
+    performanceStore.setCurrentGenre(this.currentGenre);
     this.initFilterFunction(genre);
   }
 
-  @computed get currentItems(): T[] {
-    const hasItems = this.itemsMap.has(this.currentGenre)
+  @computed
+  get currentItems(): T[] {
+    const hasItems = this.itemsMap.has(this.currentGenre);
     if (!hasItems) {
-      this.itemsMap.set(this.currentGenre,[])
+      this.itemsMap.set(this.currentGenre, []);
     }
     const item = this.itemsMap.get(this.currentGenre);
-    return <T[]>item
+    return <T[]>item;
   }
 
   isError = (genre: string): boolean => {
-    return performanceStore.isError(genre)
-  }
+    return performanceStore.isError(genre);
+  };
 
-  @action protected catchErr = (err: any, genre: string) => {
-    performanceStore.catchErr(err, genre)
-    console.error(err, genre)
-  }
+  @action
+  protected catchErr = (err: any, genre: string) => {
+    performanceStore.catchErr(err, genre);
+    console.error(err, genre);
+  };
   protected resetErrorWithType = (type: string) => {
-    performanceStore.resetErrorsMap(type)
-  }
+    performanceStore.resetErrorsMap(type);
+  };
   protected filterByFilterType(fs: T[]): T[] {
     return fs;
   }
   abstract transToTracks(act: T[]): ITrack[];
 
-  private async filterFunc(activities: T[], filterTitle: string, sortType: string, filterType: string) {
-    let fs: ITrack[] = []
-    const filterByTypes = await this.filterByFilterType(activities)
+  private async filterFunc(
+    activities: T[],
+    filterTitle: string,
+    sortType: string,
+    filterType: string
+  ) {
+    let fs: ITrack[] = [];
+    const filterByTypes = await this.filterByFilterType(activities);
     // console.log(filterByTypes)
-    fs = await this.transToTracks(filterByTypes)
+    fs = await this.transToTracks(filterByTypes);
     fs = await this.filterByFilterTitle(fs);
     fs = await this.filterBySortType(fs);
 
     runInAction('set-filteredTracks', () => {
-      (<IObservableArray<ITrack>>this.filteredTracks).replace(fs)
-    })
+      (<IObservableArray<ITrack>>this.filteredTracks).replace(fs);
+    });
   }
   private filterBySortType(fs: ITrack[]) {
     let temp = fs.slice();
@@ -116,23 +133,21 @@ abstract class BaseStreamStore<T> implements IBaseActStore {
         pCount = !Number.isNaN(pCount) ? pCount : 0;
         nCount = !Number.isNaN(nCount) ? nCount : 0;
         return nCount - pCount;
-      })
+      });
     }
-    return temp
+    return temp;
   }
   private filterByFilterTitle(fs: ITrack[]) {
     let temp = fs.slice();
     if (!!this.filterTitle) {
       temp = fs.filter(item => {
-        return item.title.indexOf(this.filterTitle) > -1
-      })
+        return item.title.indexOf(this.filterTitle) > -1;
+      });
     }
-    return temp
+    return temp;
   }
 
-
   private initFilterFunction(type: string) {
-
     if (this.autorunHandle) {
       this.autorunHandle();
     }
@@ -141,8 +156,13 @@ abstract class BaseStreamStore<T> implements IBaseActStore {
       this.itemsMap.set(type, []);
     }
     this.autorunHandle = autorun(() => {
-      this.filterFunc(<T[]>this.itemsMap.get(type), this.filterTitle, this.sortType, this.filterType)
-    })
-  } 
+      this.filterFunc(
+        <T[]>this.itemsMap.get(type),
+        this.filterTitle,
+        this.sortType,
+        this.filterType
+      );
+    });
+  }
 }
-export default BaseStreamStore
+export default BaseStreamStore;

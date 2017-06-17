@@ -6,8 +6,6 @@
     "rules": {
         "align": [
             true,
-            "parameters",
-            "arguments",
             "statements"
         ],
         "ban": false,
@@ -30,7 +28,10 @@
         "jsdoc-format": true,
         "jsx-no-lambda": false,
         "jsx-no-multiline-js": false,
+        "jsx-curly-spacing":{"when":"never"},
         "label-position": true,
+        "jsx-wrap-multiline":false,
+        "jsx-alignment":false,
         "max-line-length": [
             true,
             120
@@ -41,11 +42,11 @@
             "static-before-instance",
             "variables-before-functions"
         ],
-        "no-any": true,
+        "no-any": false,
         "no-arg": true,
-        "no-bitwise": true,
+        "no-bitwise": false,
         "no-console": [
-            true,
+            false,
             "log",
             "error",
             "debug",
@@ -61,13 +62,13 @@
         "no-empty": true,
         "no-eval": true,
         "no-shadowed-variable": true,
-        "no-string-literal": true,
+        "no-string-literal": false,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": false,
         "no-use-before-declare": true,
         "no-unused-variable": [
-            true
+          false
         ],
         "one-line": [
             true,
@@ -89,11 +90,11 @@
         "switch-default": true,
         "trailing-comma": false,
         "triple-equals": [
-            true,
+            false,
             "allow-null-check"
         ],
         "typedef": [
-            true,
+            false,
             "parameter",
             "property-declaration"
         ],
@@ -108,11 +109,12 @@
             }
         ],
         "variable-name": [
-            true,
+            false,
             "ban-keywords",
             "check-format",
             "allow-leading-underscore",
-            "allow-pascal-case"
+            "allow-pascal-case",
+            "allow-trailing-underscore"
         ],
         "whitespace": [
             true,
@@ -120,9 +122,7 @@
             "check-decl",
             "check-module",
             "check-operator",
-            "check-separator",
-            "check-type",
-            "check-typecast"
+            "check-separator"
         ]
     }
 }

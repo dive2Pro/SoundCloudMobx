@@ -1,19 +1,20 @@
 export function logInfo(title: any, ...messages: any[]) {
-  title = '😘 ' + title + ' 😘' || '😘'
-  console.group(title)
+  title = '😘 ' + title + ' 😘' || '😘';
+  console.group(title);
   messages.forEach(m => {
-    console.info(m)
-    console.log('--------------------------')
-  })
+    console.info(m);
+    console.log('--------------------------');
+  });
 
-  console.groupEnd()
-} export function logError(title: string, ...messages: any[]) {
-  title = '😘 ' + title + ' 😘' || '😘'
-  console.group(title)
+  console.groupEnd();
+}
+export function logError(title: string, ...messages: any[]) {
+  title = '😘 ' + title + ' 😘' || '😘';
+  console.group(title);
   messages.forEach(m => {
-    console.error(m)
-    console.log('--------------------------')
-  })
+    console.error(m);
+    console.log('--------------------------');
+  });
 
-  console.groupEnd()
+  console.groupEnd();
 }

@@ -1,20 +1,19 @@
-import { OAUTH_TOKEN, CLIENT_ID } from '../constants/authentification'
-const Cookies = require("js-cookie")
+import {OAUTH_TOKEN, CLIENT_ID} from '../constants/authentification';
+const Cookies = require('js-cookie');
 
 export const unauthApiUrl = (url: string, symbol: string) => {
   return `//api.soundcloud.com/${url}${symbol}client_id=${CLIENT_ID}`;
-}
+};
 export const unauthApiUrlV2 = (url: string, plus: string) => {
   return `//api-v2.soundcloud.com/${url}?client_id=${CLIENT_ID}&${plus}`;
-
-}
+};
 export const apiUrl = (url: string, symbol: string) => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
   if (!accessToken || accessToken == 'null') {
     return unauthApiUrl(url, symbol);
   }
   return `//api.soundcloud.com/${url}${symbol}oauth_token=${accessToken}`;
-}
+};
 
 export const apiUrlV2 = (url: string, symbol: string) => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
@@ -22,25 +21,29 @@ export const apiUrlV2 = (url: string, symbol: string) => {
     return unauthApiUrl(url, symbol);
   }
   return `//api-v2.soundcloud.com/${url}${symbol}client_id=${accessToken}`;
-}
+};
 export const addClientId = (url: string, symbol: string): string => {
-
-  return `${url}${symbol}client_id=${CLIENT_ID}`
-}
+  return `${url}${symbol}client_id=${CLIENT_ID}`;
+};
 
 export const addAccessToken = (url: string, symbol: string): string => {
   const accessToken = Cookies.get(OAUTH_TOKEN);
   if (accessToken && accessToken != 'null') {
-    return `${url}${symbol}oauth_token=${accessToken}`
+    return `${url}${symbol}oauth_token=${accessToken}`;
   }
-  return addClientId(url, symbol)
-}
+  return addClientId(url, symbol);
+};
 export enum PicSize {
-  NORMAL, SMALL, BIG, CROP, MASTER, X67, BADGE, TINY, MINI
+  NORMAL,
+  SMALL,
+  BIG,
+  CROP,
+  MASTER,
+  X67,
+  BADGE,
+  TINY,
+  MINI
 }
-
-
-
 
 /**
  * t500x500: 500×500
@@ -56,41 +59,44 @@ export enum PicSize {
  * @param url 
  * @param tag 
  */
-export const getSpecPicPath = (url: string, tag: number = PicSize.NORMAL): string => {
+export const getSpecPicPath = (
+  url: string,
+  tag: number = PicSize.NORMAL
+): string => {
   // if (!tag) return url;
   if (!url) {
-    return "";
+    return '';
   }
-  let afterPrev = ''
+  let afterPrev = '';
   switch (tag) {
     case PicSize.NORMAL:
-      break
-    case PicSize.SMALL: afterPrev = '32x32'
-      break
+      break;
+    case PicSize.SMALL:
+      afterPrev = '32x32';
+      break;
     case PicSize.BIG:
-      afterPrev = 't300x300'
-      break
+      afterPrev = 't300x300';
+      break;
     case PicSize.MASTER:
-      afterPrev = 't500x500'
-      break
+      afterPrev = 't500x500';
+      break;
     case PicSize.X67:
-      afterPrev = 'small'
-      break
+      afterPrev = 'small';
+      break;
     case PicSize.TINY:
-      afterPrev = 'tiny'
-      break
+      afterPrev = 'tiny';
+      break;
     case PicSize.MINI:
-      afterPrev = 'mini'
-      break
+      afterPrev = 'mini';
+      break;
     case PicSize.CROP:
-      afterPrev = 'crop'
-      break
+      afterPrev = 'crop';
+      break;
     default:
-      
   }
-  const reg = /-{1}large\.{1}/
+  const reg = /-{1}large\.{1}/;
   return url.replace(reg, `-${afterPrev}\.`);
-}
+};
 export const getSPecPicSize = (n: number) => {
-
-}
+  /***/
+};

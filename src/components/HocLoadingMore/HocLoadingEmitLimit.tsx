@@ -1,56 +1,61 @@
-import * as React from 'react'
-import HocLoadingMore from './HocLoadingMore'
-import { inject } from 'mobx-react'
-import { PerformanceStore } from '../../store/PerformanceStore';
-import { PERFORMANCE_STORE } from '../../constants/storeTypes';
-const debounce = require('lodash/debounce')
+import * as React from 'react';
+import HocLoadingMore from './HocLoadingMore';
+import {inject} from 'mobx-react';
+import {PerformanceStore} from '../../store/PerformanceStore';
+import {PERFORMANCE_STORE} from '../../constants/storeTypes';
+const debounce = require('lodash/debounce');
 
 interface IE {
-  performanceStore?: PerformanceStore
+  performanceStore?: PerformanceStore;
 }
 export default function HocLoadingEmitLimit<Props, ComponentState>(
-  Comp:new (Props?: any | undefined, context?: any) => React.Component<Props,any>,
+  Comp: new (Props?: any | undefined, context?: any) => React.Component<
+    Props,
+    any
+  >,
   type?: string
 ) {
-
   @inject(PERFORMANCE_STORE)
-  class HocLoadingEmitLimitWrappper extends HocLoadingMore<Props & IE, ComponentState>(Comp) {
+  class HocLoadingEmitLimitWrappper extends HocLoadingMore<
+    Props & IE,
+    ComponentState
+  >(Comp) {
     debounceFun: any;
     constructor() {
-      super()
+      super();
       this.debounceFun = debounce(this.handleEmit, 500);
     }
 
     componentDidMount() {
-      super.componentDidMount()
+      super.componentDidMount();
       if (type) {
-        const ps: any = this.props.performanceStore
+        const ps: any = this.props.performanceStore;
         ps.setCurrentGenre(type);
       }
     }
 
     handleEmit = () => {
-      const ps: any = this.props.performanceStore
+      const ps: any = this.props.performanceStore;
 
       if (ps) {
-        const l = window.innerHeight + window.scrollY
-        const h = window.scrollY
+        const l = window.innerHeight + window.scrollY;
+        const h = window.scrollY;
         ps.setScrollLimit(l, h);
       }
-    }
+    };
     emitScrollY = () => {
-      const ps: any = this.props.performanceStore
+      const ps: any = this.props.performanceStore;
 
       if (ps) {
         ps.setScrollY(window.scrollY);
       }
-    }
+    };
 
     handleScrolling(e: any) {
-      super.handleScrolling(e)
-      this.debounceFun()
+      super.handleScrolling(e);
+      this.debounceFun();
       this.emitScrollY();
     }
   }
-  return HocLoadingEmitLimitWrappper
+  return HocLoadingEmitLimitWrappper;
 }

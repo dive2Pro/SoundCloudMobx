@@ -1,16 +1,13 @@
-
-import * as React from 'react'
+import * as React from 'react';
 import Activities from '../Activities';
 import FilterPanel from '../FilterPanel';
 import SearchPanel from '../SearchPanel';
 
-import { inject, observer } from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import * as sortTypes from '../../constants/sortTypes';
-import { ActivitiesStore } from '../../store/ActivitiesStore';
-import { ACTIVITIES_STORE } from '../../constants/storeTypes'
-const styles = require('./filteractivities.scss')
-
-
+import {ActivitiesStore} from '../../store/ActivitiesStore';
+import {ACTIVITIES_STORE} from '../../constants/storeTypes';
+const styles = require('./filteractivities.scss');
 
 const sortItems = sortTypes.sortObjs.map(item => {
   const key = Object.keys(item)[0];
@@ -23,13 +20,12 @@ const sortItems = sortTypes.sortObjs.map(item => {
 @inject(ACTIVITIES_STORE)
 @observer
 class FilterActivities extends React.Component<any, any> {
-  actStore: ActivitiesStore
+  actStore: ActivitiesStore;
   componentWillMount() {
-    this.actStore = this.props[ACTIVITIES_STORE]
+    this.actStore = this.props[ACTIVITIES_STORE];
   }
   handleSearchValue = (value: string) => {
-    this.actStore
-      && this.actStore.setFilterTitle(value);
+    this.actStore && this.actStore.setFilterTitle(value);
   };
   handleSortType = (type: string) => {
     this.actStore.setSortType(type);
@@ -46,7 +42,6 @@ class FilterActivities extends React.Component<any, any> {
   handleScroll = () => {
     this.actStore.fetchNextActivities();
   };
-
 
   render() {
     const filterProp = {
@@ -81,13 +76,14 @@ class FilterActivities extends React.Component<any, any> {
     };
 
     const {
-       filteredTracks
-      , isLoading
-      , sortType
-      , currentGenre
-      , isError } = this.actStore
+      filteredTracks,
+      isLoading,
+      sortType,
+      currentGenre,
+      isError
+    } = this.actStore;
     // 这里为了mobx更新
-    filteredTracks.length
+    filteredTracks.length;
 
     return (
       <div>

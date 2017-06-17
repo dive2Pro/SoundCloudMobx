@@ -1,4 +1,4 @@
-function  makeDumbProps (any)  {
-  return any
+function makeDumbProps(a) {
+  return a;
 }
-export default makeDumbProps
+export default makeDumbProps;

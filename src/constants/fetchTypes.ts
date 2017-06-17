@@ -9,6 +9,4 @@ export const FETCH_STREAM = 'streams';
 export const FETCH_TRACK = 'tracks';
 export const FETCH_COMMENTS = 'comments';
 
-
 export const FETCH_QUERY = 'FETCH_QUERY';
-

@@ -1,2 +1,2 @@
-import T from './TrackProfile'
-export { T as default }
+import T from './TrackProfile';
+export {T as default};

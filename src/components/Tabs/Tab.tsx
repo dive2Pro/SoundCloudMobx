@@ -1,26 +1,26 @@
-import * as React from 'react'
+import * as React from 'react';
 
 interface ITabProps {
-  label: string
-  , index?: number,
-  handleClick?: (value: object, event: any, tab: Tab) => void,
-  selected?: boolean
-  , style?: any
-  , value: any
-  icon?: any
+  label: string;
+  index?: number;
+  handleClick?: (value: object, event: any, tab: Tab) => void;
+  selected?: boolean;
+  style?: any;
+  value: any;
+  icon?: any;
 }
 
 class Tab extends React.Component<ITabProps, any> {
   static uiName = 'Tab';
-  handleClick = (event) => {
+  handleClick = event => {
     event.preventDefault();
     if (this.props.handleClick) {
-      this.props.handleClick(this.props.value, event, this)
+      this.props.handleClick(this.props.value, event, this);
     }
-  }
+  };
   render() {
-    const { icon, label, style } = this.props
-    let iconElement
+    const {icon, label, style} = this.props;
+    let iconElement = {};
     if (icon && React.isValidElement(icon)) {
       const iconProps = {
         style: {
@@ -28,18 +28,15 @@ class Tab extends React.Component<ITabProps, any> {
           color: style.color,
           marginBottom: label ? 5 : 0
         },
-        color: ""
-      }
+        color: ''
+      };
       if (icon.type['uiName'] != 'FontIcon') {
-        iconProps.color = style.color
+        iconProps.color = style.color;
       }
-      iconElement = React.cloneElement(icon, iconElement)
+      iconElement = React.cloneElement(icon, iconElement);
     }
     return (
-      <div
-        style={Object.assign(style)}
-        onClick={this.handleClick}
-      >
+      <div style={Object.assign(style)} onClick={this.handleClick}>
         {iconElement}
         {label}
       </div>

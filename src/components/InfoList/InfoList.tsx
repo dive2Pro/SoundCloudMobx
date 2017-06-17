@@ -1,5 +1,5 @@
-import * as React from 'react'
-const styles = require('./infolist.scss')
+import * as React from 'react';
+const styles = require('./infolist.scss');
 
 export interface IInfoActionModel {
   clazz: string;
@@ -12,24 +12,27 @@ export interface IInfoListProp {
   data: IInfoActionModel[];
 }
 
-const InfoList = ({ data }: IInfoListProp) => {
+const InfoList = ({data}: IInfoListProp) => {
   const infos = data.map((item, i) => {
-    const { clazz: clz, clickable = true, count, onClickHandle } = item
+    const {clazz: clz, clickable = true, count, onClickHandle} = item;
     const clazz = clz;
-    const styleName = clickable ? styles.active : styles.infoitem
+    const styleName = clickable ? styles.active : styles.infoitem;
     return (
       <div
         className={styleName}
         key={i + clazz + count}
-        onClick={(onClickHandle)}>
+        onClick={onClickHandle}
+      >
         <i className={clazz}>{count}</i>
-      </div>)
-  })
+      </div>
+    );
+  });
 
   return (
     <div className={styles.container}>
       {infos}
-    </div>)
-}
+    </div>
+  );
+};
 
-export default (InfoList);
+export default InfoList;

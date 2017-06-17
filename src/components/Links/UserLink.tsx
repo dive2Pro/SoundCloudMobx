@@ -1,16 +1,15 @@
-import * as React from 'react'
-import { NavLink as Link } from 'react-router-dom'
+import * as React from 'react';
+import {NavLink as Link} from 'react-router-dom';
 // const styles = require('./.scss')
 
 interface IRouterLinkProp {
-  path: string,
-  id: number
-  children?: any
-  className?: string
+  path: string;
+  id: number;
+  children?: any;
+  className?: string;
 }
 
 const RouterLink = (prop: IRouterLinkProp) => {
-
   return (
     <Link
       to={{
@@ -21,7 +20,6 @@ const RouterLink = (prop: IRouterLinkProp) => {
       {prop.children}
     </Link>
   );
+};
 
-}
-
-export default (RouterLink);
+export default RouterLink;

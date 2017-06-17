@@ -1,25 +1,21 @@
 export const RaceFetch = (p: string, method?: object, time?: number) => {
-
-  return new Promise((res, rej) => { 
+  return new Promise((res, rej) => {
     const timeoutPromise = new Promise((timeRes, timeRej) => {
-      setTimeout(
-        () => {
-          timeRej({
-            type: 'TimeOut',
-            msg: '请求超时'
-          })
-        },
-        time || 1000 * 20)
-    })
-    const pfetch = fetch(p, method)
-    Promise.race([pfetch, timeoutPromise])
-      .then(
+      setTimeout(() => {
+        timeRej({
+          type: 'TimeOut',
+          msg: '请求超时'
+        });
+      }, time || 1000 * 20);
+    });
+    const pfetch = fetch(p, method);
+    Promise.race([pfetch, timeoutPromise]).then(
       (data: any) => {
-        res(<object>data.json())
+        res(<object> data.json());
       },
       err => {
-        rej(err)
-      })
-  })
-}
-
+        rej(err);
+      }
+    );
+  });
+};

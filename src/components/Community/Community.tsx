@@ -1,75 +1,67 @@
-import * as React from 'react'
-import Hoc from '../HocLoadingMore/HocLoadingEmitLimit'
-import LoadingSpinner from '../LoadingSpinner'
-import { BigUserIcon } from './index'
-const styles = require('./community.scss')
-import { withRouter } from 'react-router-dom'
-import { observer, inject } from 'mobx-react';
-import { UserStore, User } from '../../store/UserStore';
+import * as React from 'react';
+import LoadingSpinner from '../LoadingSpinner';
+import {BigUserIcon} from './index';
+const styles = require('./community.scss');
+import {withRouter} from 'react-router-dom';
+import {observer, inject} from 'mobx-react';
+import {UserStore, User} from '../../store/UserStore';
 import {PERFORMANCE_STORE, USER_STORE} from '../../constants/storeTypes';
-import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion'
-import {PerformanceStore} from "../../store/PerformanceStore";
-
+import makeTranslateXMotion from '../../Hoc/makeTranslateXMotion';
+import {PerformanceStore} from '../../store/PerformanceStore';
 
 interface ICommunityProps {
-  userStore?: UserStore
-  path: string
-  scrollFunc?: () => void
-  performanceStore?:PerformanceStore
+  userStore?: UserStore;
+  path: string;
+  scrollFunc?: () => void;
+  performanceStore?: PerformanceStore;
 }
-
 
 export class EmptyView extends React.Component<any, any> {
   render() {
-    return <div />
+    return <div />;
   }
 }
 
-@inject(USER_STORE,PERFORMANCE_STORE)
+@inject(USER_STORE, PERFORMANCE_STORE)
 @observer
 class Community extends React.Component<ICommunityProps, any> {
-
   handleFollow = (user: User) => {
     // TODO
     // console.log('Todo : toggleFollowing')
-    const us = this.props.userStore
+    const us = this.props.userStore;
     if (us) {
-      us.debouncedRequestFollowUser(user)
+      us.debouncedRequestFollowUser(user);
     }
-  }
+  };
 
   render() {
-    const { userStore: us, path, scrollFunc } = this.props
+    const {userStore: us, path, scrollFunc} = this.props;
     if (!us || !path || !scrollFunc || !us.userModel) {
-      return (<noscript />)
+      return <noscript />;
     }
 
-    const { isError } = us.userModel
-    const users: User[] = us.userModel[path]
+    const {isError} = us.userModel;
+    const users: User[] = us.userModel[path];
     const isLoading = us.userModel.isLoading(path);
     return (
       <div className={styles.main}>
-        {
-          users.map(user => (
-            <BigUserIcon
-              key={user.id + '_ bigpic'}
-              user={user}
-              isFollowing={user.isFollowing}
-              handleFollow={() => this.handleFollow(user)}
-              performanceStore={this.props.performanceStore}
-            />
-          ))
-        }
+        {users.map(user =>
+          <BigUserIcon
+            key={user.id + '_ bigpic'}
+            user={user}
+            isFollowing={user.isFollowing}
+            handleFollow={() => this.handleFollow(user)}
+            performanceStore={this.props.performanceStore}
+          />
+        )}
         <LoadingSpinner
           isError={isError(path)}
           onErrorHandler={scrollFunc}
-          isLoading={isLoading} />
+          isLoading={isLoading}
+        />
       </div>
     );
   }
 }
 
-export default ((
-  makeTranslateXMotion(
-    withRouter(Community))
-))
+export default makeTranslateXMotion(withRouter(Community));

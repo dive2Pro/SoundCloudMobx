@@ -1,31 +1,34 @@
 import * as React from 'react';
-import { Component } from 'react'
-import {docMethods} from "../../services/docMethos";
+import {Component} from 'react';
+import {docMethods} from '../../services/docMethos';
 
 interface ET {
   scrollFunc: () => void;
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 interface MyState {
-  limit: number[]
+  limit: number[];
 }
 
 function HocLoadingMore<Props, State>(
-    Comp:new (Props?: any | undefined, context?: any) => React.Component<Props,any>
+  Comp: new (Props?: any | undefined, context?: any) => React.Component<
+    Props,
+    any
+  >
 ) {
   class LoadingMoreWrapper extends Component<Props & ET, MyState> {
     cpt: any;
     div: HTMLDivElement;
     constructor() {
-      super()
-      this.handleScrolling = this.handleScrolling.bind(this)
-
+      super();
+      this.handleScrolling = this.handleScrolling.bind(this);
     }
 
     handleScrolling(e: any) {
       if (window) {
-        const trigger = window.innerHeight + window.pageYOffset
-          >= document.body.scrollHeight - 500
+        const trigger =
+          window.innerHeight + window.pageYOffset >=
+          document.body.scrollHeight - 500;
 
         if (trigger && this.props.scrollFunc) {
           this.props.scrollFunc();
@@ -34,20 +37,14 @@ function HocLoadingMore<Props, State>(
     }
 
     componentDidMount() {
-      docMethods.addEvent(window,'scroll', this.handleScrolling)
+      docMethods.addEvent(window, 'scroll', this.handleScrolling);
     }
 
     componentWillUnmount() {
-      docMethods.removeEvent(window,'scroll', this.handleScrolling)
+      docMethods.removeEvent(window, 'scroll', this.handleScrolling);
     }
     render() {
-      return (
-        <Comp
-          ref={n => this.cpt = n}
-          {...this.props}
-          {...this.state}
-        />
-      );
+      return <Comp ref={n => (this.cpt = n)} {...this.props} {...this.state} />;
     }
   }
   return LoadingMoreWrapper;

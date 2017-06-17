@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { HomeLink } from '../Links';
-import { observer } from 'mobx-react'
-import { observable } from "mobx/lib/mobx";
+import {HomeLink} from '../Links';
+import {observer} from 'mobx-react';
+import {observable} from 'mobx/lib/mobx';
 interface IPlaylistitemProp {
-  title: string
-  id: number
-  tag: string
+  title: string;
+  id: number;
+  tag: string;
 }
 export const PlaylistItem = observer((data: IPlaylistitemProp) => {
-
   return (
     <div className="list-item">
       <img src="#" alt="#" width={50} height={50} />
@@ -21,13 +20,12 @@ export const PlaylistItem = observer((data: IPlaylistitemProp) => {
 
 interface ISidebarItemProp {
   items: any[];
-  title: string
+  title: string;
 }
 
 @observer
 class SidebarItem extends React.Component<ISidebarItemProp, any> {
-
-  state = { opened: false };
+  state = {opened: false};
   @observable opened = false;
   handleOpened = () => {
     this.setState(preState => {
@@ -39,9 +37,9 @@ class SidebarItem extends React.Component<ISidebarItemProp, any> {
   };
 
   render() {
-    const { items, title } = this.props;
+    const {items, title} = this.props;
 
-    const { opened } = this.state;
+    const {opened} = this.state;
     const clazz = opened ? 'list opened' : 'list';
     return (
       <div className="main">
@@ -51,14 +49,14 @@ class SidebarItem extends React.Component<ISidebarItemProp, any> {
             <span>{title}</span>
           </div>
           <span>
-            <HomeLink id={123} >
+            <HomeLink id={123}>
               {'View All'}
             </HomeLink>
           </span>
         </div>
         <div className={clazz}>
           {items.map(t => {
-            const { } = t;
+            const {} = t;
             return <div />;
           })}
         </div>

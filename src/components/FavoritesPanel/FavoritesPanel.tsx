@@ -1,24 +1,24 @@
-import * as React from 'react'
+import * as React from 'react';
 import ViewAll from '../ViewAll';
-import MiniTrack from '../MiniTrack'
-import LoadingSpinner from '../LoadingSpinner'
-import { observer } from 'mobx-react'
-import { FETCH_FAVORITES } from '../../constants/fetchTypes'
-import { UserModel } from '../../store/UserStore';
-import { ITrack } from '../../interfaces/interface';
-import { PlayerStore } from '../../store/PlayerStore';
+import MiniTrack from '../MiniTrack';
+import LoadingSpinner from '../LoadingSpinner';
+import {observer} from 'mobx-react';
+import {FETCH_FAVORITES} from '../../constants/fetchTypes';
+import {UserModel} from '../../store/UserStore';
+import {ITrack} from '../../interfaces/interface';
+import {PlayerStore} from '../../store/PlayerStore';
 
-const styles = require('./favorites.scss')
+const styles = require('./favorites.scss');
 
 interface IFavoritesProp {
-  playerStore: PlayerStore
-  UserModel: UserModel
+  playerStore: PlayerStore;
+  UserModel: UserModel;
 }
 
 const Favorites = observer((prop: IFavoritesProp) => {
-  const { playerStore, UserModel } = prop
-  const { favorites } = UserModel
-  const isLoading = UserModel.isLoading(FETCH_FAVORITES)
+  const {playerStore, UserModel} = prop;
+  const {favorites} = UserModel;
+  const isLoading = UserModel.isLoading(FETCH_FAVORITES);
   const isError = UserModel.isError(FETCH_FAVORITES);
   const obj = {
     clazz: 'fa fa-like',
@@ -26,7 +26,7 @@ const Favorites = observer((prop: IFavoritesProp) => {
     typeContent: 'Favorites',
     path: 'favorites',
     id: UserModel.user && UserModel.user.userId
-  }
+  };
 
   return (
     <section className={styles.base}>
@@ -40,7 +40,8 @@ const Favorites = observer((prop: IFavoritesProp) => {
               playerStore={playerStore}
               key={track.id + ' - ' + obj.path}
               track={track}
-            />)
+            />
+          );
         })}
         <LoadingSpinner
           isError={isError}
@@ -50,6 +51,6 @@ const Favorites = observer((prop: IFavoritesProp) => {
       </div>
     </section>
   );
-})
+});
 
-export default Favorites
+export default Favorites;

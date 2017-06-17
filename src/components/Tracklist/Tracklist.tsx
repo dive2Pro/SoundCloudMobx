@@ -1,29 +1,29 @@
 import * as React from 'react';
-import Activities from '../Activities'
-import ButtonMore from '../ButtonMore'
-import { observer } from 'mobx-react'
-import { TrackStore } from '../../store/TrackStore';
-import makeOpacityMotion, { IAddtionalProps } from '../../Hoc/makeOpacityMotion'
+import Activities from '../Activities';
+import ButtonMore from '../ButtonMore';
+import {observer} from 'mobx-react';
+import {TrackStore} from '../../store/TrackStore';
+import makeOpacityMotion, {IAddtionalProps} from '../../Hoc/makeOpacityMotion';
 
 export function getGenreFromPathname(pathname: string) {
   const reg = /=\w{2,8}/g;
-  let reged = reg.exec(pathname) || []
+  let reged = reg.exec(pathname) || [];
   let genre = reged[0].substr(1);
   return genre;
 }
 @observer
-class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
-
-
+class Tracklist extends React.Component<{trackStore: TrackStore}, any> {
   handleScroll = () => {
     const trackStore = this.props.trackStore;
-    const { isLoading } = trackStore;
-    if (!isLoading) { trackStore.fetchTracks(); }
+    const {isLoading} = trackStore;
+    if (!isLoading) {
+      trackStore.fetchTracks();
+    }
   };
 
   render() {
-    const { trackStore } = this.props;
-    const { currentTracks, isLoading, isError, currentGenre } = trackStore
+    const {trackStore} = this.props;
+    const {currentTracks, isLoading, isError, currentGenre} = trackStore;
     const ie = isError(currentGenre);
     return (
       <div
@@ -47,7 +47,7 @@ class Tracklist extends React.Component<{ trackStore: TrackStore }, any> {
         />
 
       </div>
-    )
+    );
   }
 }
 export default makeOpacityMotion(Tracklist);
