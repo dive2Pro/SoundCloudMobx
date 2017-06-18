@@ -30,11 +30,11 @@ mobx是一个mvvm的状态管理层,可以让你更多的关注ui层,
 
 ## 截图
 
-![gif1](/screens/br-min.gif)
+![screen1](/screens/screen1.png)
 
-![gif2](/screens/da-min.gif)
+![screen2](/screens/screen2.png)
 
-![gif3](/screens/tr-min.gif)
+![screen3](/screens/screen3.png)
 
 
 ## 注意 🔥🔥
