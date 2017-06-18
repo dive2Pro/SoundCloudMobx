@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-export default class Callback extends React.Component<any, any> {
-  protected componentDidMount() {
+export default class Callback extends React.Component<{}, {}> {
+  componentDidMount() {
     window.setTimeout(opener.SC.connectCallback, 0);
   }
   render() {

@@ -20,7 +20,7 @@ class Tab extends React.Component<ITabProps, any> {
   };
   render() {
     const {icon, label, style} = this.props;
-    let iconElement = {};
+    let iconElement;
     if (icon && React.isValidElement(icon)) {
       const iconProps = {
         style: {
@@ -33,7 +33,7 @@ class Tab extends React.Component<ITabProps, any> {
       if (icon.type['uiName'] != 'FontIcon') {
         iconProps.color = style.color;
       }
-      iconElement = React.cloneElement(icon, iconElement);
+      iconElement = React.cloneElement(icon, {});
     }
     return (
       <div style={Object.assign(style)} onClick={this.handleClick}>

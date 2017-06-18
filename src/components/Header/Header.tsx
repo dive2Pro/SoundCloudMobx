@@ -35,7 +35,6 @@ interface IWidhtRouterStyleLinkProps {
   isActive?: (match: any, location: any) => boolean;
 }
 
-const StyleLink = withRouter(WidhtRouterStyleLink);
 const diveMusicPng = require('../../../public/images/divemusic.png');
 function StyleLinkIsActive(item: IPlaylist) {
   return (match: any, location: any) => {
@@ -45,6 +44,46 @@ function StyleLinkIsActive(item: IPlaylist) {
     return false;
   };
 }
+
+class WidhtRouterStyleLink extends React.PureComponent<
+  IWidhtRouterStyleLinkProps,
+  any
+> {
+  render() {
+    const {to, isActive} = this.props;
+
+    return (
+      <NavLink
+        to={to || '/abondan'}
+        activeClassName={styles.aside_hover}
+        exact={to === '/'}
+        isActive={isActive}
+      >
+        {this.props.children}
+      </NavLink>
+    );
+  }
+}
+
+const StyleLink = withRouter(WidhtRouterStyleLink);
+const ObservableMotion = observer(({isOpen, style, children}: any) => {
+  const menusStyle = isOpen ? {display: 'block'} : {};
+  return (
+    <Motion style={style}>
+      {value => {
+        return (
+          <div
+            onClickCapture={this.toggleMenusShowing}
+            style={{...menusStyle, left: value.x + '%'}}
+            className={styles._menus}
+          >
+            {children}
+          </div>
+        );
+      }}
+    </Motion>
+  );
+});
 
 const HeaderPlaylist = ({loginModel}: {loginModel: UserModel}) => {
   return (
@@ -67,45 +106,6 @@ const HeaderPlaylist = ({loginModel}: {loginModel: UserModel}) => {
     </ul>
   );
 };
-
-class WidhtRouterStyleLink extends React.PureComponent<
-  IWidhtRouterStyleLinkProps,
-  any
-> {
-  render() {
-    const {to, isActive} = this.props;
-
-    return (
-      <NavLink
-        to={to || '/abondan'}
-        activeClassName={styles.aside_hover}
-        exact={to === '/'}
-        isActive={isActive}
-      >
-        {this.props.children}
-      </NavLink>
-    );
-  }
-}
-
-const ObservableMotion = observer(({isOpen, style, children}: any) => {
-    const menusStyle = isOpen ? {display: 'block'} : {};
-    return (
-        <Motion style={style}>
-            {value => {
-                return (
-                    <div
-                        onClickCapture={this.toggleMenusShowing}
-                        style={{...menusStyle, left: value.x + '%'}}
-                        className={styles._menus}
-                    >
-                        {children}
-                    </div>
-                );
-            }}
-        </Motion>
-    );
-});
 @inject(SESSION_STORE, USER_STORE, TRACK_STORE, PERFORMANCE_STORE)
 @observer
 @makeCatchoutside
