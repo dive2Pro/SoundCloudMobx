@@ -21,11 +21,6 @@ export class ActivitiesStore extends BaseStreamStore<IActivitiesItem> {
   addActivities(arr: IActivitiesItem[]) {
     const itemsLength = this.currentItems.length;
     this.currentItems.splice(itemsLength, 0, ...arr);
-    // const t : any= []
-    // const iis:any = t.splice(0, 0, ...arr)
-    // console.log(
-    //   // t, '-------------',
-    //   this.currentItems)
   }
 
   transToTracks(items: IActivitiesItem[]): ITrack[] {
